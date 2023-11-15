@@ -1,0 +1,30 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@discordjs/opus": "^0.9.0",
+    "@discordjs/voice": "^0.16.0",
+    "@prisma/client": "^5.5.0",
+    "@tobyg74/tiktok-api-dl": "^1.0.10",
+    "canvas": "^2.11.2",
+    "chalk": "^5.3.0",
+    "chartjs-node-canvas": "^4.1.6",
+    "discord-api-types": "^0.37.61",
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1",
+    "ffmpeg-static": "^5.2.0",
+    "find-process": "^1.4.7",
+    "gamedig": "^4.1.0",
+    "node-fetch": "^3.3.2",
+    "opusscript": "^0.0.8",
+    "tweetnacl": "^1.0.3"
+  },
+  "name": "skyndalex2023forked",
+  "description": "- [ ] Version: `v1.1.1` -  <h1 align=\"center\">skyndala projekt TM (trejdmark)</h1> <p align=\"right\">Polecamy: <code>goracy femboj</code>, <code>skill issue korrumza</code> oraz <code>majonez binary</code> jako dodatek do kazdego dania</p> <h2>Menu el clasico</h2>  - <code>goracy femboj</code> <strong>danie roku 2022, polecane osobiscie przez magde gesler</strong><br >  - <code>skill issue korrumza</code> <strong>deser roku 2007 AŻ DO TERAZ!!</strong><br >  - <code>ify i els ify</code><br >  - <code>brak koleguw</code><br >  - <code>depresja</code> <strong>najczesciej wybierane w okresie covidu</strong><br >  - <code>co to cyrlica</code><br >  oraz:  - <code>bi(com) emo</code> <strong>osobiscie wybrane przez mesik kotlecik</strong> <h2>Dodatki</h2>  - <code>majonez binary</code> <strong>uwielbiane przez deweloperow</strong> <br > <br > <br > <p align=\"center\"> wkrotce JESZCZE wiecej!!! pozdrawiam wnmka! <br > <!-- tu tez pozdrawiam!!! kc smugaska <333 --> projekt wspierany osobiscie przez jaroslaw kaczynski, korrumz uncorporated issues, mesik bije kota TM <br > na jezyk polski przelozyl: andrzej tata ale zabraklo mu polskich znakow <br > <img src=\"https://user-images.githubusercontent.com/49320100/198320267-9cef5cb4-8949-4b1a-91bc-96fa4aad708c.png\"  /> </p>",
+  "version": "1.1.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

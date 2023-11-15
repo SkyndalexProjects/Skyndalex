@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model settings {
+  guildId          String  @id
+  voiceLogsChannel String?
+  welcomeChannel   String?
+  leaveChannel     String?
+  autoRole         String?
+}
+
+model customBots {
+  userId   String  @unique
+  clientId String  @unique
+  token    String? @unique
+
+  @@id([userId, clientId])
+}
