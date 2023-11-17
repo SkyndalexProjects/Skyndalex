@@ -33,7 +33,12 @@ export async function onCommandInteraction(client, interaction) {
     });
 
   try {
-    await command.execute(client, interaction);
+    if (interaction.isAutocomplete()) {
+      await command.autocomplete(interaction)
+    }
+    if (interaction.isCommand()) {
+      await command.execute(client, interaction);
+    }
   } catch (error) {
     console.error(error);
     if (interaction.replied || interaction.deferred) {
