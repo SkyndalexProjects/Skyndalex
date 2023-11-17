@@ -2,9 +2,9 @@
   "type": "module",
   "dependencies": {
     "@discordjs/opus": "^0.9.0",
-    "@discordjs/voice": "^0.16.0",
+    "@discordjs/voice": "^0.16.1",
     "@prisma/client": "^5.5.0",
-    "@tobyg74/tiktok-api-dl": "^1.0.10",
+    "@tobyg74/tiktok-api-dl": "^1.0.13",
     "canvas": "^2.11.2",
     "chalk": "^5.3.0",
     "chartjs-node-canvas": "^4.1.6",
@@ -16,6 +16,7 @@
     "gamedig": "^4.1.0",
     "node-fetch": "^3.3.2",
     "opusscript": "^0.0.8",
+    "shoukaku": "^3.4.2",
     "tweetnacl": "^1.0.3"
   },
   "name": "skyndalex2023forked",
