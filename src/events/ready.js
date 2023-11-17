@@ -37,7 +37,6 @@ export default async function ready(client) {
       { body: cmds },
     );
 
-
     console.log(
       `${chalk.whiteBright(
         chalk.underline(`[${new Date().toUTCString()}]`),

@@ -47,6 +47,17 @@ export default {
             .setName("auto-role")
             .setDescription("Automatically give a role to new members"),
         ),
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("radio")
+        .setDescription("Set radio channel")
+        .addChannelOption((option) =>
+          option
+            .setName("radio-channel")
+            .setDescription("Channel for radio")
+            .addChannelTypes(ChannelType.GuildVoice),
+        ),
     ),
 
   async execute(client, interaction) {

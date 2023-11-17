@@ -34,7 +34,7 @@ export async function onCommandInteraction(client, interaction) {
 
   try {
     if (interaction.isAutocomplete()) {
-      await command.autocomplete(interaction)
+      await command.autocomplete(interaction);
     }
     if (interaction.isCommand()) {
       await command.execute(client, interaction);
