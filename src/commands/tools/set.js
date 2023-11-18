@@ -4,14 +4,15 @@ import {
   EmbedBuilder,
   PermissionFlagsBits,
 } from "discord.js";
+import fetch from "node-fetch";
 
 export default {
   data: new SlashCommandBuilder()
     .setName("set")
     .setDescription("Bot settings")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-    .addSubcommand((subcommand) =>
-      subcommand
+    .addSubcommand((sub) =>
+      sub
         .setName("logs")
         .setDescription("Set logs")
         .addChannelOption((option) =>
@@ -21,8 +22,8 @@ export default {
             .addChannelTypes(ChannelType.GuildText),
         ),
     )
-    .addSubcommand((subcommand) =>
-      subcommand
+    .addSubcommand((sub) =>
+      sub
         .setName("channels")
         .setDescription("Set channels")
         .addChannelOption((option) =>
@@ -38,8 +39,8 @@ export default {
             .addChannelTypes(ChannelType.GuildText),
         ),
     )
-    .addSubcommand((subcommand) =>
-      subcommand
+    .addSubcommand((sub) =>
+      sub
         .setName("role-settings")
         .setDescription("Set role settings")
         .addRoleOption((option) =>
@@ -48,8 +49,8 @@ export default {
             .setDescription("Automatically give a role to new members"),
         ),
     )
-    .addSubcommand((subcommand) =>
-      subcommand
+    .addSubcommand((sub) =>
+      sub
         .setName("radio")
         .setDescription("Set radio channel")
         .addChannelOption((option) =>
@@ -57,79 +58,69 @@ export default {
             .setName("radio-channel")
             .setDescription("Channel for radio")
             .addChannelTypes(ChannelType.GuildVoice),
+        )
+        .addBooleanOption((option) =>
+          option.setName("radio").setDescription("Enable radio"),
+        )
+        .addStringOption((option) =>
+          option
+            .setName("station")
+            .setDescription("Radio station/City name")
+            .setAutocomplete(true),
         ),
     ),
+  async autocomplete(interaction) {
+    const focusedValue = interaction.options.getFocused();
+    const url = `https://radio.garden/api/search?q=${focusedValue}`;
 
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "accept: application/json" },
+    });
+    const json = await response.json();
+    const data = json.hits.hits.map(
+      (hit) => `${hit._source.title}-${hit._source.url.split("/")[3]}`,
+    );
+
+    await interaction.respond(
+      data.map((choice) => ({ name: choice, value: choice })),
+    );
+  },
   async execute(client, interaction) {
     const options = interaction.options._hoistedOptions;
-    console.log("options", options);
-    const updatedChannels = [];
-    const updatedRoles = [];
+    const updatedSettings = [];
+
+    const fieldMaps = {
+      "voice-logs-channel": "voiceLogsChannel",
+      "welcome-channel": "welcomeChannel",
+      "leave-channel": "leaveChannel",
+      "auto-role": "autoRole",
+      radio: "radioEnabled",
+      station: "radioStation",
+    };
 
     for (const option of options) {
-      const channelName = option.name;
-      const channelID = option.value;
+      const { name: optionName, value: optionValue } = option;
 
-      const roleName = option.name;
-      const roleID = option.value;
+      const fieldToUpdate = fieldMaps[optionName];
 
-      const channelsFieldMap = {
-        "voice-logs-channel": "voiceLogsChannel",
-        "welcome-channel": "welcomeChannel",
-        "leave-channel": "leaveChannel",
-      };
-
-      const rolesFieldMap = {
-        "auto-role": "autoRole",
-      };
-
-      const channelFieldToUpdate = channelsFieldMap[channelName];
-      const roleFieldToUpdate = rolesFieldMap[roleName];
-
-      if (channelFieldToUpdate) {
+      if (fieldToUpdate) {
         await client.prisma.settings.upsert({
-          where: {
-            guildId: interaction.guild.id,
-          },
+          where: { guildId: interaction.guild.id },
           create: {
             guildId: interaction.guild.id,
-            [channelFieldToUpdate]: channelID,
+            [fieldToUpdate]: optionValue,
           },
-          update: {
-            [channelFieldToUpdate]: channelID,
-          },
+          update: { [fieldToUpdate]: optionValue },
         });
 
-        updatedChannels.push(
-          `**${channelName}:** <#${channelID}> \`[${channelID}]\``,
-        );
-      } else {
-        if (roleFieldToUpdate) {
-          await client.prisma.settings.upsert({
-            where: {
-              guildId: interaction.guild.id,
-            },
-            create: {
-              guildId: interaction.guild.id,
-              [roleFieldToUpdate]: roleID,
-            },
-            update: {
-              [roleFieldToUpdate]: roleID,
-            },
-          });
-
-          updatedRoles.push(`**${roleName}:** <@&${roleID}> \`[${roleID}]\``);
-        }
+        updatedSettings.push(`${fieldToUpdate} : : : \`${optionValue}\``);
       }
     }
 
     const embed = new EmbedBuilder()
       .setTitle("Updated settings")
-      .setDescription(
-        `${updatedChannels.length ? updatedChannels.join("\n") : ""}\n\n${
-          updatedRoles.length ? updatedRoles.join("\n") : ""
-        }`,
-      )
+      .setDescription(updatedSettings.join("\n"))
       .setColor("#0099ff")
       .setTimestamp();
 
