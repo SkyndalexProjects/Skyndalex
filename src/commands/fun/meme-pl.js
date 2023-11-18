@@ -7,7 +7,7 @@ export default {
     .setDescription("Generate random polish meme.")
     .setNSFW(true),
 
-  execute(client, interaction) {
+    async execute(client, interaction) {
     const memeSubreddits = ["polskiememy", "Polska", "PolskieMemyReborn"];
     const subreddit =
       memeSubreddits[Math.floor(Math.random() * memeSubreddits.length)];

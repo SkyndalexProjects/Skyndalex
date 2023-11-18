@@ -7,6 +7,15 @@ import chalk from "chalk";
 import loadCommands from "./handlers/commandHandler.js";
 import loadEvents from "./handlers/eventHandler.js";
 import loadInteractions from "./handlers/interactionHandler.js";
+import { Shoukaku, Connectors } from "shoukaku";
+
+const Nodes = [
+  {
+    name: "Localhost",
+    url: "127.0.0.1:6969",
+    auth: "youshallnotpass",
+  },
+];
 
 const client = new Client({
   intents: [
@@ -20,7 +29,10 @@ const client = new Client({
   ],
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
+const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), Nodes);
+shoukaku.on("error", (_, error) => console.error(error));
 
+client.shoukaku = shoukaku;
 client.interactions = new Collection();
 client.prisma = new PrismaClient();
 
