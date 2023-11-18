@@ -19,7 +19,7 @@ export default async function interactionCreate(client, interaction) {
     )}]`,
   );
 
-  if (interaction.isCommand())
+  if (interaction.isCommand() || interaction.isAutocomplete())
     return await onCommandInteraction(client, interaction);
 
   const embedNotFound = new EmbedBuilder()
@@ -42,6 +42,11 @@ export default async function interactionCreate(client, interaction) {
           )
           ?.first();
 
+        if (
+          interaction.customId.startsWith("next-") ||
+          interaction.customId.startsWith("previous-")
+        )
+          return;
         if (!button)
           return (
             console.log(`Button with ${interaction.customId} was not found.`) ||

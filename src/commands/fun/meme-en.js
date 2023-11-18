@@ -3,11 +3,11 @@ import fetch from "node-fetch";
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("meme")
+    .setName("meme-en")
     .setDescription("Generate random english meme.")
     .setNSFW(true),
 
-  execute(client, interaction) {
+    async execute(client, interaction) {
     const memeSubreddits = ["memes", "Darkhumourmemes", "cringememes"];
     const subreddit =
       memeSubreddits[Math.floor(Math.random() * memeSubreddits.length)];
