@@ -95,6 +95,7 @@ export default {
       "welcome-channel": "welcomeChannel",
       "leave-channel": "leaveChannel",
       "auto-role": "autoRole",
+      "radio-channel": "radioChannel",
       radio: "radioEnabled",
       station: "radioStation",
     };
@@ -120,7 +121,7 @@ export default {
 
     const embed = new EmbedBuilder()
       .setTitle("Updated settings")
-      .setDescription(updatedSettings.join("\n"))
+        .setDescription(updatedSettings.length ? updatedSettings.join("\n") : "No settings updated, or something went wrong.")
       .setColor("#0099ff")
       .setTimestamp();
 
