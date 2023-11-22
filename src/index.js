@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
+import { Client, Collection, GatewayIntentBits, Partials, EmbedBuilder } from "discord.js";
 config();
 import { PrismaClient } from "@prisma/client";
 import chalk from "chalk";
@@ -8,6 +8,12 @@ import loadCommands from "./handlers/commandHandler.js";
 import loadEvents from "./handlers/eventHandler.js";
 import loadInteractions from "./handlers/interactionHandler.js";
 import { Shoukaku, Connectors } from "shoukaku";
+
+import express from "express";
+import Topgg from "@top-gg/sdk";
+
+const app = express();
+const webhook = new Topgg.Webhook(process.env.TOPGG_WEBHOOK_AUTH);
 
 const Nodes = [
   {
@@ -35,6 +41,21 @@ shoukaku.on("error", (_, error) => console.error(error));
 client.shoukaku = shoukaku;
 client.interactions = new Collection();
 client.prisma = new PrismaClient();
+
+app.post("/dblwebhook", webhook.listener(vote => {
+    console.log(vote.user)
+
+    const user = client.users.cache.get(vote.user);
+    if (!user) return client.users.fetch(vote.user);
+    const embed = new EmbedBuilder()
+        .setTitle(`${user.username} just voted!`)
+        .setFooter({ text: `ID: ${vote.user}`, iconURL: user.displayAvatarURL({ dynamic: true }) })
+        .setColor("Green")
+        .setTimestamp()
+    client.channels.cache.get("1176945793631015074").send({ embeds: [embed] })
+}))
+
+app.listen(3001, () => console.log(chalk.bold(chalk.green("[TOPGG] Listening on port 3001"))));
 
 loadEvents(client).then(() =>
   console.log(
