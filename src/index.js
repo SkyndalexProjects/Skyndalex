@@ -1,22 +1,22 @@
-import { config } from "dotenv";
+import { PrismaClient } from "@prisma/client";
+import chalk from "chalk";
 import {
   Client,
   Collection,
+  EmbedBuilder,
   GatewayIntentBits,
   Partials,
-  EmbedBuilder,
 } from "discord.js";
+import { config } from "dotenv";
 config();
-import { PrismaClient } from "@prisma/client";
-import chalk from "chalk";
 
+import { Connectors, Shoukaku } from "shoukaku";
 import loadCommands from "./handlers/commandHandler.js";
 import loadEvents from "./handlers/eventHandler.js";
 import loadInteractions from "./handlers/interactionHandler.js";
-import { Shoukaku, Connectors } from "shoukaku";
 
-import express from "express";
 import Topgg from "@top-gg/sdk";
+import express from "express";
 
 const app = express();
 const webhook = new Topgg.Webhook(process.env.TOPGG_WEBHOOK_AUTH);

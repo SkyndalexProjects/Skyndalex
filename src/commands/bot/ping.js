@@ -1,8 +1,8 @@
 import {
-  SlashCommandBuilder,
+  ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  ActionRowBuilder,
+  SlashCommandBuilder,
 } from "discord.js";
 
 export default {

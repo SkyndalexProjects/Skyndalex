@@ -1,17 +1,17 @@
 import {
-  SlashCommandBuilder,
-  ActionRowBuilder,
-  EmbedBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-} from "discord.js";
-import { TiktokDL } from "@tobyg74/tiktok-api-dl";
-import {
   createAudioPlayer,
   createAudioResource,
   getVoiceConnection,
   joinVoiceChannel,
 } from "@discordjs/voice";
+import { TiktokDL } from "@tobyg74/tiktok-api-dl";
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  EmbedBuilder,
+  SlashCommandBuilder,
+} from "discord.js";
 
 export default {
   data: new SlashCommandBuilder()

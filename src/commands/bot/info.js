@@ -31,7 +31,7 @@ export default {
             0,
           )}\n**Channels:** ${client.channels.cache.size}\n**Emojis:** ${
             client.emojis.cache.size
-          }\n**Version:** ${version}`,
+          }`,
           inline: true,
         },
         {

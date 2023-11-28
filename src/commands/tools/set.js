@@ -1,8 +1,8 @@
 import {
-  SlashCommandBuilder,
   ChannelType,
   EmbedBuilder,
   PermissionFlagsBits,
+  SlashCommandBuilder,
 } from "discord.js";
 import fetch from "node-fetch";
 

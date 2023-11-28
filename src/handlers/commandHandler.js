@@ -1,7 +1,7 @@
+import { Collection } from "discord.js";
 import { readdir } from "fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Collection } from "discord.js";
 
 export const commands = new Collection();
 

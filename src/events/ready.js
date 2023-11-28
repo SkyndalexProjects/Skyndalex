@@ -1,6 +1,6 @@
+import chalk from "chalk";
 import { Routes } from "discord.js";
 import { commands } from "../handlers/commandHandler.js";
-import chalk from "chalk";
 
 export default async function ready(client) {
   const presences = [

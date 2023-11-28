@@ -19,6 +19,7 @@
     "gamedig": "^4.1.0",
     "node-fetch": "^3.3.2",
     "opusscript": "^0.0.8",
+    "prettier-plugin-organize-imports": "^3.2.4",
     "shoukaku": "^3.4.2",
     "tweetnacl": "^1.0.3"
   },

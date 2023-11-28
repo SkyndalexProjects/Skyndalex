@@ -1,6 +1,6 @@
-import { ButtonBuilder, ButtonStyle, ActionRowBuilder } from "discord.js";
-import find from "find-process";
 import { fork } from "child_process";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import find from "find-process";
 export default {
   customId: `customBotPowerState`,
   type: "button",
