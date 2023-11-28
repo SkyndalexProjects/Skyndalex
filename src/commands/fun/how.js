@@ -12,25 +12,31 @@ export default {
           option.setName("user").setDescription("User").setRequired(true),
         ),
     )
-      .addSubcommand((sub) =>
-        sub
-            .setName("simp")
-            .setDescription("Simp?")
-            .addUserOption((option) =>
-            option.setName("user").setDescription("User").setRequired(true),
-            )),
+    .addSubcommand((sub) =>
+      sub
+        .setName("simp")
+        .setDescription("Simp?")
+        .addUserOption((option) =>
+          option.setName("user").setDescription("User").setRequired(true),
+        ),
+    ),
 
-    async execute(client, interaction) {
-      await interaction.deferReply()
-      const random = Math.floor(Math.random() * 100);
+  async execute(client, interaction) {
+    await interaction.deferReply();
+    const random = Math.floor(Math.random() * 100);
 
-      console.log(interaction)
+    console.log(interaction);
 
-        if (interaction.options.getUser("user") === interaction.user) return interaction.reply("Noob");
+    if (interaction.options.getUser("user") === interaction.user)
+      return interaction.reply("Noob");
 
-        const embed = new EmbedBuilder()
-            .setDescription(`${interaction.options.getUser("user")} is ${random}% ${interaction.options.getSubcommand()}`)
-            .setColor("#0cfdd2");
-        await interaction.editReply({ embeds: [embed] })
+    const embed = new EmbedBuilder()
+      .setDescription(
+        `${interaction.options.getUser(
+          "user",
+        )} is ${random}% ${interaction.options.getSubcommand()}`,
+      )
+      .setColor("#0cfdd2");
+    await interaction.editReply({ embeds: [embed] });
   },
 };

@@ -7,7 +7,7 @@ export default {
     .setDescription("Generate random english meme.")
     .setNSFW(true),
 
-    async execute(client, interaction) {
+  async execute(client, interaction) {
     const memeSubreddits = ["memes", "Darkhumourmemes", "cringememes"];
     const subreddit =
       memeSubreddits[Math.floor(Math.random() * memeSubreddits.length)];
