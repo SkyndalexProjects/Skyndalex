@@ -1,5 +1,4 @@
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
-import fetch from "node-fetch";
 import Gamedig from "gamedig";
 
 export default {

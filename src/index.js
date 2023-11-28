@@ -42,7 +42,9 @@ const client = new Client({
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), Nodes);
-shoukaku.on("error", (_, error) => console.error(`${chalk.bold(chalk.red(`[E: SHOUKAKU]: ${error}`))}`));
+shoukaku.on("error", (_, error) =>
+  console.error(`${chalk.bold(chalk.red(`[E: SHOUKAKU]: ${error}`))}`),
+);
 
 client.shoukaku = shoukaku;
 client.interactions = new Collection();
@@ -72,24 +74,26 @@ app.post(
       .setTimestamp();
     client.channels.cache.get("1176945793631015074").send({ embeds: [embed] });
 
-      await client.prisma.economy.upsert({
-          where: {
-              uid_guildId: {
-                  guildId: process.env.SUPPORT_SERVER_ID,
-                  uid: vote.user,
-              },
-          },
-          create: {
-              guildId: interaction.guild.id,
-              uid: vote.user,
-              wallet: "200",
-          },
-          update: {
-              wallet: "200",
-          },
-      });
+    await client.prisma.economy.upsert({
+      where: {
+        uid_guildId: {
+          guildId: process.env.SUPPORT_SERVER_ID,
+          uid: vote.user,
+        },
+      },
+      create: {
+        guildId: interaction.guild.id,
+        uid: vote.user,
+        wallet: "200",
+      },
+      update: {
+        wallet: "200",
+      },
+    });
 
-      client.channels.cache.get("1176945793631015074").send(`:tada: <@${vote.user}> just voted and got 200$!`);
+    client.channels.cache
+      .get("1176945793631015074")
+      .send(`:tada: <@${vote.user}> just voted and got 200$!`);
   }),
 );
 
