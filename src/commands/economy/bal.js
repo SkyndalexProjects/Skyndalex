@@ -10,36 +10,31 @@ export default {
 
   async execute(client, interaction) {
     const user = interaction.options.getUser("user") || interaction.user;
-    const table = await client.prisma.economy.findUnique({
+    const table = (await client.prisma.economy.findUnique({
       where: {
         uid_guildId: {
           uid: user.id,
           guildId: interaction.guild.id,
         },
       },
-    });
+    })) || { wallet: null, bank: null };
 
-    if (!table)
-      return interaction.reply({
-        content: "This user doesn't have an economy account yet!",
-        ephemeral: true,
-      });
+    const wallet = table.wallet !== null ? BigInt(table.wallet) : BigInt(0);
+    const bank = table.bank !== null ? BigInt(table.bank) : BigInt(0);
 
-    const allMoney = (
-      BigInt(table.wallet || 0) + BigInt(table?.bank || 0)
-    ).toLocaleString("en");
+    const allMoney = (wallet + bank).toLocaleString("en");
 
     const embed = new EmbedBuilder()
       .setTitle(`${user.username}'s balance`)
       .addFields([
         {
           name: "Wallet",
-          value: `${BigInt(table?.wallet || 0).toLocaleString("en")}`,
+          value: `${wallet.toLocaleString("en")}`,
           inline: true,
         },
         {
           name: "Bank",
-          value: `${BigInt(table?.bank || 0).toLocaleString("en")}`,
+          value: `${bank.toLocaleString("en")}`,
           inline: true,
         },
         { name: "All", value: `${allMoney}`, inline: true },

@@ -6,7 +6,7 @@ export default {
   async execute(client, interaction) {
     const money = Math.floor(Math.random() * (1000 + 1));
 
-    const table = await client.prisma.economy.findFirst({
+    const user = await client.prisma.economy.findFirst({
       where: { uid: interaction.user.id },
     });
 
@@ -23,7 +23,7 @@ export default {
         wallet: String(money),
       },
       update: {
-        wallet: (parseInt(table?.wallet || "0") + money).toString(),
+        wallet: (parseInt(user?.wallet || "0") + money).toString(),
       },
     });
 

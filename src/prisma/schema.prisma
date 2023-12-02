@@ -27,12 +27,20 @@ model customBots {
 }
 
 model economy {
-  guildId   String
-  uid       String
-  wallet    String?
-  bank      String?
-  jobJoined Boolean?
-  job       String?
+  guildId String
+  uid     String
+  wallet  String?
+  bank    String?
 
   @@id([uid, guildId])
+}
+
+model economySettings {
+  id       Int
+  guildId  String
+  sentence String?
+  type     String?
+  action   String?
+
+  @@id([id, guildId])
 }
