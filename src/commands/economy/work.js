@@ -8,11 +8,11 @@ export default {
     const actions = ["Win", "Lose"];
     const action = actions[Math.floor(Math.random() * actions.length)];
 
-    const user = client.prisma.economy.findFirst({
+    const user = await client.prisma.economy.findFirst({
       where: { uid: interaction.user.id },
     });
 
-    const settings = client.prisma.economy.findFirst({
+    const settings = await client.prisma.economy.findFirst({
       where: { guildId: interaction.guild.id },
     });
 
@@ -65,7 +65,7 @@ export default {
     };
 
     if (action === "Win") {
-      await updateWallet(money);
+      await updateWallet(+money);
       const embedSuccess = new EmbedBuilder()
         .setDescription(`${replaceStrWin}`)
         .setColor("DarkGreen");
