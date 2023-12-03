@@ -46,7 +46,7 @@ export async function onCommandInteraction(client, interaction) {
       .addFields([
         { name: "Command", value: `\`${command.data.name}\``, inline: true },
         { name: "Executed by", value: `<@${interaction.user.id}> [${interaction.user.username}]`, inline: true },
-        { name: "Guild", value: `<@${interaction.guild.id}> [${interaction.guild.name}]`, inline: true },
+        { name: "Guild", value: `\`${interaction.guild.id}\` [${interaction.guild.name}]`, inline: true },
         { name: "Channel", value: `<#${interaction.channel.id}> [${interaction.channel.name}]`, inline: true },
       ])
       .setFooter({ text: `This embed was sent to the developers.`, iconURL: client.user.displayAvatarURL({ dynamic: true }) })
