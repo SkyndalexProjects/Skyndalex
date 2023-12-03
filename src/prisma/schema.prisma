@@ -41,6 +41,7 @@ model economySettings {
   sentence String?
   type     String?
   action   String?
+  cooldown Int?
 
   @@id([id, guildId])
 }

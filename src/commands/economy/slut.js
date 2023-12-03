@@ -1,7 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
 export default {
-  data: new SlashCommandBuilder().setName("work").setDescription("Work"),
+  data: new SlashCommandBuilder().setName("slut").setDescription("Slut"),
 
   async execute(client, interaction) {
     const money = Math.floor(Math.random() * (1000 + 1));
@@ -20,7 +20,7 @@ export default {
       const sentences = await client.prisma.economySettings.findMany({
         where: {
           guildId: interaction.guild.id,
-          type: "work",
+          type: "slut",
           action: actionType,
         },
       });
@@ -31,7 +31,6 @@ export default {
     const listLoseSentences = await getSentences("lose");
 
     if (!listWinSentences || listLoseSentences.length < 2) return interaction.reply(`I'm sorry, but the server administrator did not quite set up the economy system on the server. More than one set sentence is missing from the \`/text set\` command.`)
-
     const getRandomSentence = (sentenceList) =>
       sentenceList[Math.floor(Math.random() * sentenceList.length)];
 

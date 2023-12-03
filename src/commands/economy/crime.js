@@ -1,7 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
 export default {
-  data: new SlashCommandBuilder().setName("work").setDescription("Work"),
+  data: new SlashCommandBuilder().setName("crime").setDescription("Crime"),
 
   async execute(client, interaction) {
     const money = Math.floor(Math.random() * (1000 + 1));
@@ -20,7 +20,7 @@ export default {
       const sentences = await client.prisma.economySettings.findMany({
         where: {
           guildId: interaction.guild.id,
-          type: "work",
+          type: "crime",
           action: actionType,
         },
       });
