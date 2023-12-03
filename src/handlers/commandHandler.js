@@ -41,24 +41,44 @@ export async function onCommandInteraction(client, interaction) {
     }
   } catch (error) {
     console.error(error);
+
     const embedError = new EmbedBuilder()
       .setDescription(`\`\`\`${error}\`\`\``)
       .addFields([
         { name: "Command", value: `\`${command.data.name}\``, inline: true },
-        { name: "Executed by", value: `<@${interaction.user.id}> [${interaction.user.username}]`, inline: true },
-        { name: "Guild", value: `\`${interaction.guild.id}\` [${interaction.guild.name}]`, inline: true },
-        { name: "Channel", value: `<#${interaction.channel.id}> [${interaction.channel.name}]`, inline: true },
+        {
+          name: "Executed by",
+          value: `<@${interaction.user.id}> [${interaction.user.username}]`,
+          inline: true,
+        },
+        {
+          name: "Guild",
+          value: `\`${interaction.guild.id}\` [${interaction.guild.name}]`,
+          inline: true,
+        },
+        {
+          name: "Channel",
+          value: `<#${interaction.channel.id}> [${interaction.channel.name}]`,
+          inline: true,
+        },
       ])
-      .setFooter({ text: `This embed was sent to the developers.`, iconURL: client.user.displayAvatarURL({ dynamic: true }) })
+      .setFooter({
+        text: `This embed was sent to the developers.`,
+        iconURL: client.user.displayAvatarURL({ dynamic: true }),
+      })
       .setTimestamp()
       .setColor("DarkButNotBlack");
 
     if (interaction.replied || interaction.deferred) {
-      client.channels.cache.get("1071407744894128178").send({ embeds: [embedError] });
-      await interaction.reply({ embeds: [embedError]})
+      client.channels.cache
+        .get("1071407744894128178")
+        .send({ embeds: [embedError] });
+      await interaction.reply({ embeds: [embedError] });
     } else {
-      client.channels.cache.get("1071407744894128178").send({ embeds: [embedError] });
-      await interaction.reply({ embeds: [embedError]})
+      client.channels.cache
+        .get("1071407744894128178")
+        .send({ embeds: [embedError] });
+      await interaction.reply({ embeds: [embedError] });
     }
   }
 }
