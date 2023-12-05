@@ -1,5 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
+const cooldowns = new Map();
+
 export default {
   data: new SlashCommandBuilder().setName("crime").setDescription("Crime"),
 
@@ -15,6 +17,29 @@ export default {
     const settings = await client.prisma.economy.findFirst({
       where: { guildId: interaction.guild.id },
     });
+
+    const getCooldown = await client.prisma.economySettings.findFirst({
+      where: {
+        guildId: interaction.guild.id,
+        sentence: null,
+        action: null,
+        type: "slut",
+      },
+    });
+
+    if (cooldowns.has(interaction.user.id)) {
+      const remainingTime = cooldowns.get(interaction.user.id) - Date.now();
+      return interaction.reply(
+        `You are on cooldown. Please wait ${Math.ceil(
+          remainingTime / 1000,
+        )} seconds.`,
+      );
+    }
+    cooldowns.set(interaction.user.id, Date.now() + getCooldown.cooldown);
+
+    setTimeout(() => {
+      cooldowns.delete(interaction.user.id);
+    }, getCooldown.cooldown);
 
     const getSentences = async (actionType) => {
       const sentences = await client.prisma.economySettings.findMany({
