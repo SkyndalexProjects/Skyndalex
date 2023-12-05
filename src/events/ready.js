@@ -4,10 +4,9 @@ import { commands } from "../handlers/commandHandler.js";
 
 export default async function ready(client) {
   const presences = [
-    `with ${client.guilds.cache.size} servers`,
-    `with ${client.users.cache.size} users`,
-    `Site https://skyndalex.xyz`,
-    `Docs: https://docs.skyndalex.xyz`,
+    `Check out new economy update! (/updates)`,
+    `Site https://skyndalex.xyz (soon)`,
+    `Docs: https://docs.skyndalex.xyz (soon)`,
   ];
 
   setInterval(() => {
