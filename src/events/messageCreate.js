@@ -1,5 +1,6 @@
-import { AttachmentBuilder } from "discord.js";
+import { AttachmentBuilder, EmbedBuilder } from "discord.js";
 import { config } from "dotenv";
+import createEmbedPaginator from "../functions/createEmbedPaginator.js";
 
 config();
 
@@ -14,77 +15,134 @@ export default async function messageCreate(client, message) {
       guildId: message.guild.id,
     },
   });
-
-  if (getWhitelist[0].whitelisted) {
+  if (getWhitelist[0]?.whitelisted) {
     if (
       message.channel.id === getCurrentSettings[0]?.aiChannel &&
       !message.author.bot
     ) {
       if (message.content.startsWith("//")) return;
-      await message.channel.sendTyping();
 
-      try {
-        if (message.content.startsWith("--genimg")) {
-          async function query(data) {
-            const response = await fetch(
-              "https://api-inference.huggingface.co/models/openskyml/dalle-3-xl",
-              {
-                headers: { Authorization: `Bearer ${process.env.HF_TOKEN}` },
-                method: "POST",
-                body: JSON.stringify(data),
-              },
-            );
-            const result = await response.blob();
-            return result;
-          }
+      if (message.content.startsWith("--genimg")) {
+        await message.channel.sendTyping();
 
-          try {
-            const response = await query({ inputs: message.content });
-            console.log(response);
+        if (!message.content) return;
+        const response = await imgGen({ inputs: message.content });
+        console.log(response);
 
-            const imageBuffer = await response.arrayBuffer();
-            const image = new AttachmentBuilder(
-              Buffer.from(imageBuffer),
-              "image.png",
-            );
+        const imageBuffer = await response.arrayBuffer();
+        const image = new AttachmentBuilder(
+          Buffer.from(imageBuffer),
+          "image.png",
+        );
+        await message.reply({ files: [image] });
+      } else if (message.content) {
+        const sentMessage = await message.reply(
+          "<a:4704loadingicon:1183416396223352852> Running text generation...",
+        );
+        await message.channel.sendTyping();
 
-            await message.reply({ files: [image] });
-          } catch (error) {
-            console.error("Error:", error);
-          }
-        } else {
-          const result = await textGen(message.content);
-          const response = result.generated_text;
-          await message.reply(response);
+        const result = await textGen(message.content);
+        const response = result.generated_text;
+
+        await sentMessage.edit(response);
+      } else if (message.attachments.size === 1) {
+        const sentSingleAttachment = await message.reply(
+          "<a:4704loadingicon:1183416396223352852> Running single image classification...",
+        );
+
+        await message.channel.sendTyping();
+
+        const response = await imgClassification(
+          message.attachments.first().url,
+        );
+        console.log(response);
+        await sentSingleAttachment.edit(response[0]?.generated_text);
+      } else if (message.attachments.size > 1) {
+        await message.reply(
+          "<a:4704loadingicon:1183416396223352852> Running multiple image classification...",
+        );
+
+        let responseMessages = [];
+
+        for (const [key, attachment] of message.attachments) {
+          const response = await imgClassification(attachment.url);
+          const generatedText = response[0]?.generated_text;
+          const url = attachment.url;
+
+          responseMessages.push({
+            generated_text: generatedText,
+            url: url,
+          });
         }
-      } catch (error) {
-        console.error("Error while generating:", error);
-      }
 
-      async function getLastMessages(limit) {
-        const messages = await message.channel.messages.fetch({ limit: limit });
-        const messagesWithoutBot = messages.filter(
-          (message) => !message.author.bot,
-        );
-        return messagesWithoutBot.map((m) => m.content);
-      }
+        const totalPages = responseMessages.length;
+        const items = responseMessages;
 
-      async function textGen(input) {
-        const response = await fetch(
-          "https://api-inference.huggingface.co/models/microsoft/DialoGPT-large",
-          {
-            headers: { Authorization: `Bearer ${process.env.HF_TOKEN}` },
-            method: "POST",
-            body: JSON.stringify({
-              inputs: {
-                text: input,
-                past_user_inputs: [await getLastMessages(10)],
-              },
-            }),
-          },
-        );
-        return await response.json();
+        const generateEmbed = async (page) => {
+          const msgs = items[page];
+          const embed = new EmbedBuilder()
+            .setTitle(`Image Classification ${page + 1} of ${items.length}`)
+            .setDescription(msgs.generated_text)
+            .setImage(msgs.url)
+            .setColor("Green");
+
+          return embed;
+        };
+
+        // Assuming you have a function createEmbedPaginator implemented in your code
+        await createEmbedPaginator(message, generateEmbed, totalPages);
       }
+    }
+  }
+  async function textGen(input) {
+    try {
+      const response = await fetch(
+        "https://api-inference.huggingface.co/models/microsoft/DialoGPT-large",
+        {
+          headers: { Authorization: `Bearer ${process.env.HF_TOKEN}` },
+          method: "POST",
+          body: JSON.stringify({
+            inputs: {
+              text: input,
+            },
+          }),
+        },
+      );
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function imgGen(input) {
+    try {
+      const response = await fetch(
+        "https://api-inference.huggingface.co/models/openskyml/dalle-3-xl",
+        {
+          headers: { Authorization: `Bearer ${process.env.HF_TOKEN}` },
+          method: "POST",
+          body: JSON.stringify(input),
+        },
+      );
+      return await response.blob();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function imgClassification(input) {
+    try {
+      const response = await fetch(
+        "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large",
+        {
+          headers: { Authorization: `Bearer ${process.env.HF_TOKEN}` },
+          method: "POST",
+          body: input,
+        },
+      );
+      return await response.json();
+    } catch (error) {
+      console.log(error);
     }
   }
 }
