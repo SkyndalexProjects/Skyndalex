@@ -1,13 +1,25 @@
-import { config } from "dotenv";
-import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
-config();
 import { PrismaClient } from "@prisma/client";
 import chalk from "chalk";
+import {
+  Client,
+  Collection,
+  EmbedBuilder,
+  GatewayIntentBits,
+  Partials,
+} from "discord.js";
+import { config } from "dotenv";
+config();
 
+import { Connectors, Shoukaku } from "shoukaku";
 import loadCommands from "./handlers/commandHandler.js";
 import loadEvents from "./handlers/eventHandler.js";
 import loadInteractions from "./handlers/interactionHandler.js";
-import { Shoukaku, Connectors } from "shoukaku";
+
+import Topgg from "@top-gg/sdk";
+import express from "express";
+
+const app = express();
+const webhook = new Topgg.Webhook(process.env.TOPGG_WEBHOOK_AUTH);
 
 const Nodes = [
   {
@@ -21,6 +33,7 @@ const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildModeration,
     GatewayIntentBits.GuildPresences,
@@ -30,11 +43,64 @@ const client = new Client({
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), Nodes);
-shoukaku.on("error", (_, error) => console.error(error));
+shoukaku.on("error", (_, error) =>
+  console.error(`${chalk.bold(chalk.red(`[E: SHOUKAKU]: ${error}`))}`),
+);
 
 client.shoukaku = shoukaku;
 client.interactions = new Collection();
 client.prisma = new PrismaClient();
+
+app.post(
+  "/dblwebhook",
+  webhook.listener(async (vote) => {
+    const user = client.guilds.cache
+      .get("1058882286210261073")
+      .members.cache.get(vote.user);
+    if (!user) return client.users.fetch(vote.user);
+
+    const role = client.guilds.cache
+      .get("1058882286210261073")
+      .roles.cache.get("1177715371822813275");
+    await user.roles.add(role.id);
+
+    const embed = new EmbedBuilder()
+      .setTitle(`${user.user.username} just voted!`)
+      .setFooter({
+        text: `ID: ${vote.user}`,
+        iconURL: user.user.displayAvatarURL({ dynamic: true }),
+      })
+      .setColor("Green")
+      .setURL(`https://top.gg/bot/${client.user.id}`)
+      .setTimestamp();
+    client.channels.cache.get("1176945793631015074").send({ embeds: [embed] });
+
+    await client.prisma.economy.upsert({
+      where: {
+        uid_guildId: {
+          guildId: process.env.SUPPORT_SERVER_ID,
+          uid: vote.user,
+        },
+      },
+      create: {
+        guildId: interaction.guild.id,
+        uid: vote.user,
+        wallet: "200",
+      },
+      update: {
+        wallet: "200",
+      },
+    });
+
+    client.channels.cache
+      .get("1176945793631015074")
+      .send(`:tada: <@${vote.user}> just voted and got 200$!`);
+  }),
+);
+
+app.listen(2137, () =>
+  console.log(chalk.bold(chalk.green("[TOPGG] Listening on port 2137"))),
+);
 
 loadEvents(client).then(() =>
   console.log(
@@ -65,15 +131,6 @@ loadInteractions(client).then(() =>
     )} ${chalk.bold(chalk.green("Loaded interactions"))}`,
   ),
 );
-// loadInteractions(client).then(() =>
-//     console.log(
-//         `${chalk.whiteBright(
-//             chalk.underline(`[${new Date().toUTCString()}]`)
-//         )} ${chalk.bold(chalk.red(`(CLIENT)`))} ${chalk.bold(
-//             chalk.blue("[200]")
-//         )} ${chalk.bold(chalk.green("Loaded interactions"))}`
-//     )
-// );
 
 process.on("unhandledRejection", async (reason, p) => {
   console.log(" [antiCrash] :: Unhandled Rejection/Catch");
@@ -89,5 +146,4 @@ process.on("uncaughtExceptionMonitor", async (err, origin) => {
   console.log(" [antiCrash] :: Uncaught Exception/Catch (MONITOR)");
   console.log(err, origin);
 });
-
 client.login(process.env.BOT_TOKEN);

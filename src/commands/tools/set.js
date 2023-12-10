@@ -1,10 +1,9 @@
 import {
-  SlashCommandBuilder,
   ChannelType,
   EmbedBuilder,
   PermissionFlagsBits,
+  SlashCommandBuilder,
 } from "discord.js";
-import fetch from "node-fetch";
 
 export default {
   data: new SlashCommandBuilder()
@@ -36,6 +35,12 @@ export default {
           option
             .setName("leave-channel")
             .setDescription("Channel for leave")
+            .addChannelTypes(ChannelType.GuildText),
+        )
+        .addChannelOption((option) =>
+          option
+            .setName("ai-channel")
+            .setDescription("Channel for AI")
             .addChannelTypes(ChannelType.GuildText),
         ),
     )
@@ -69,23 +74,7 @@ export default {
             .setAutocomplete(true),
         ),
     ),
-  async autocomplete(interaction) {
-    const focusedValue = interaction.options.getFocused();
-    const url = `https://radio.garden/api/search?q=${focusedValue}`;
 
-    const response = await fetch(url, {
-      method: "GET",
-      headers: { "Content-Type": "accept: application/json" },
-    });
-    const json = await response.json();
-    const data = json.hits.hits.map(
-      (hit) => `${hit._source.title}-${hit._source.url.split("/")[3]}`,
-    );
-
-    await interaction.respond(
-      data.map((choice) => ({ name: choice, value: choice })),
-    );
-  },
   async execute(client, interaction) {
     const options = interaction.options._hoistedOptions;
     const updatedSettings = [];
@@ -98,6 +87,7 @@ export default {
       "radio-channel": "radioChannel",
       radio: "radioEnabled",
       station: "radioStation",
+      "ai-channel": "aiChannel", // Added for AI channel
     };
 
     for (const option of options) {
@@ -121,7 +111,11 @@ export default {
 
     const embed = new EmbedBuilder()
       .setTitle("Updated settings")
-        .setDescription(updatedSettings.length ? updatedSettings.join("\n") : "No settings updated, or something went wrong.")
+      .setDescription(
+        updatedSettings.length
+          ? updatedSettings.join("\n")
+          : "No settings updated, or something went wrong.",
+      )
       .setColor("#0099ff")
       .setTimestamp();
 

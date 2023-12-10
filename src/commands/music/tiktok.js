@@ -1,25 +1,25 @@
 import {
-  SlashCommandBuilder,
-  ActionRowBuilder,
-  EmbedBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-} from "discord.js";
-import { TiktokDL } from "@tobyg74/tiktok-api-dl";
-import {
   createAudioPlayer,
   createAudioResource,
   getVoiceConnection,
   joinVoiceChannel,
 } from "@discordjs/voice";
+import { TiktokDL } from "@tobyg74/tiktok-api-dl";
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  EmbedBuilder,
+  SlashCommandBuilder,
+} from "discord.js";
 
 export default {
   data: new SlashCommandBuilder()
-      .setName("tiktok")
-      .setDescription("Play tiktok sound.")
-      .addStringOption((option) =>
-          option.setName("url").setDescription("Tiktok url").setRequired(true),
-      ),
+    .setName("tiktok")
+    .setDescription("Play tiktok sound.")
+    .addStringOption((option) =>
+      option.setName("url").setDescription("Tiktok url").setRequired(true),
+    ),
 
   async execute(client, interaction) {
     await interaction.deferReply();
@@ -29,7 +29,7 @@ export default {
 
     if (!memberChannel) {
       return await interaction.editReply(
-          `Hey, ${interaction.user.tag}! You must be in a voice channel to use this command.`,
+        `Hey, ${interaction.user.tag}! You must be in a voice channel to use this command.`,
       );
     }
     const result = await TiktokDL(tiktok_url, {
@@ -41,7 +41,7 @@ export default {
     if (result && result.result && result.result.video2) {
       if (!response) {
         return await interaction.editReply(
-            `❌ | Something has gone terribly wrong! Probably you provided the wrong song URL! (url: ${tiktok_url})`,
+          `❌ | Something has gone terribly wrong! Probably you provided the wrong song URL! (url: ${tiktok_url})`,
         );
       }
 
@@ -61,29 +61,26 @@ export default {
           connection.destroy();
 
           const customId =
-              result.result.video2.length <= 100
-                  ? `play_again=${result.result.video2}`
-                  : "play_again";
+            result.result.video2.length <= 100
+              ? `play_again=${result.result.video2}`
+              : "play_again";
 
           const playAgain = new ButtonBuilder()
-              .setCustomId(customId)
-              .setLabel("Play again")
-              .setStyle(ButtonStyle.Success);
+            .setCustomId(customId)
+            .setLabel("Play again")
+            .setStyle(ButtonStyle.Success);
 
-
-          const row = new ActionRowBuilder().addComponents(
-              playAgain,
-          );
+          const row = new ActionRowBuilder().addComponents(playAgain);
 
           const endedPlaying = new EmbedBuilder()
-              .setTitle(`✅ | Ended playing`)
-              .setDescription(`🎶 | [sound](${tiktok_url})`)
-              .setColor("Green");
+            .setTitle(`✅ | Ended playing`)
+            .setDescription(`🎶 | [sound](${tiktok_url})`)
+            .setColor("Green");
 
           await interaction.editReply({
             embeds: [endedPlaying],
             components: [row],
-            files: [result.result.video2]
+            files: [result.result.video2],
           });
         }
       });
@@ -98,16 +95,16 @@ export default {
       player.play(resource);
 
       const addedToQueue = new EmbedBuilder()
-          .setTitle(`✅ Sound playing!`)
-          .setDescription(`🎶 | [sound](${tiktok_url})`)
-          .setColor("Blurple")
-          .setFooter({ text: `To stop playing, kick me from voice channel`})
-          .setTimestamp();
+        .setTitle(`✅ Sound playing!`)
+        .setDescription(`🎶 | [sound](${tiktok_url})`)
+        .setColor("Blurple")
+        .setFooter({ text: `To stop playing, kick me from voice channel` })
+        .setTimestamp();
 
       await interaction.editReply({ embeds: [addedToQueue] });
     } else {
       return await interaction.editReply(
-          `❌ | Invalid Tiktok URL provided: ${tiktok_url}`,
+        `❌ | Invalid Tiktok URL provided: ${tiktok_url}`,
       );
     }
   },

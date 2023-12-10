@@ -1,6 +1,6 @@
 # Project info:
 
-- [ ] Version: `v1.0.0`
+- [ ] Version: `v1.1.1`
 - <h1 align="center">skyndala projekt TM (trejdmark)</h1>
   <p align="right">Polecamy: <code>goracy femboj</code>, <code>skill issue korrumza</code> oraz <code>majonez binary</code> jako dodatek do kazdego dania</p>
   <h2>Menu el clasico</h2>
