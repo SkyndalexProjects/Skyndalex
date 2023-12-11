@@ -16,6 +16,7 @@ model settings {
   radioChannel     String?
   radioEnabled     Boolean @default(false)
   radioStation     String?
+  aiChannel        String?
 }
 
 model customBots {
@@ -44,4 +45,9 @@ model economySettings {
   cooldown Int?
 
   @@id([id, guildId])
+}
+
+model whitelist {
+  guildId     String  @id
+  whitelisted Boolean
 }

@@ -4,7 +4,7 @@ import { commands } from "../handlers/commandHandler.js";
 
 export default async function ready(client) {
   const presences = [
-    `Check out new economy update! (/updates)`,
+    `Check out new AI update! (/updates)`,
     `Site https://skyndalex.xyz (soon)`,
     `Docs: https://docs.skyndalex.xyz (soon)`,
   ];
