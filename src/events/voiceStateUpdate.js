@@ -70,19 +70,22 @@ export default async function voiceStateUpdate(client, oldState, newState) {
 
           await player.playTrack({ track: metadata.track }).setVolume(0.5);
         }
-      } else if (oldState.channel && !newState.channel) {
-        if (oldState.channel.members.size === 1) {
-          const node = client.shoukaku.getNode();
-          if (!node) return;
+      }
+    }
+  }
 
-          const existingPlayer = node.players.has(oldState.guild.id);
 
-          if (existingPlayer) {
-            const currentPlayer = await node.players.get(oldState.guild.id);
-            await currentPlayer.stopTrack();
-            await node.leaveChannel(oldState.guild.id);
-          }
-        }
+  if (oldState.channel && !newState.channel) {
+    if (oldState.channel.members.size === 1) {
+      const node = client.shoukaku.getNode();
+      if (!node) return;
+
+      const existingPlayer = node.players.has(oldState.guild.id);
+
+      if (existingPlayer) {
+        const currentPlayer = await node.players.get(oldState.guild.id);
+        await currentPlayer.stopTrack();
+        await node.leaveChannel(oldState.guild.id);
       }
     }
   }
