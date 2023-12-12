@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import fetch from "node-fetch";
 
 export default {
@@ -7,7 +7,7 @@ export default {
     .setDescription("Generate random polish meme.")
     .setNSFW(true),
 
-    async execute(client, interaction) {
+  async execute(client, interaction) {
     const memeSubreddits = ["polskiememy", "Polska", "PolskieMemyReborn"];
     const subreddit =
       memeSubreddits[Math.floor(Math.random() * memeSubreddits.length)];

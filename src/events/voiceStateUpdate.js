@@ -1,4 +1,4 @@
-import { Embed, EmbedBuilder } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import fetch from "node-fetch";
 
 export default async function voiceStateUpdate(client, oldState, newState) {

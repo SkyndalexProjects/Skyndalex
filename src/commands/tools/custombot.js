@@ -5,7 +5,6 @@ import {
   EmbedBuilder,
   PermissionFlagsBits,
   SlashCommandBuilder,
-  version,
 } from "discord.js";
 import find from "find-process";
 

@@ -1,6 +1,6 @@
 import chalk from "chalk";
-import { onCommandInteraction } from "../handlers/commandHandler.js";
 import { EmbedBuilder } from "discord.js";
+import { onCommandInteraction } from "../handlers/commandHandler.js";
 
 export default async function interactionCreate(client, interaction) {
   console.log(

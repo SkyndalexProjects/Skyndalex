@@ -1,7 +1,6 @@
 import { readdir } from "fs/promises";
 import { resolve } from "path";
 import { pathToFileURL } from "url";
-import { Collection } from "discord.js";
 
 export default async function loadInteractions(
   client,

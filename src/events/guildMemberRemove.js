@@ -1,4 +1,4 @@
-import { Embed, EmbedBuilder } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
 export default async function guildMemberAdd(client, member) {
   const getSettings = await client.prisma.settings.findUnique({

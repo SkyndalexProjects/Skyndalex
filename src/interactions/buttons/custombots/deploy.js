@@ -1,5 +1,5 @@
-import { commands } from "../../../handlers/commandHandler.js";
 import { REST, Routes } from "discord.js";
+import { commands } from "../../../handlers/commandHandler.js";
 
 export default {
   customId: "customBotDeploy",

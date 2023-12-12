@@ -1,5 +1,5 @@
-import { AttachmentBuilder, SlashCommandBuilder } from "discord.js";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
+import { AttachmentBuilder, SlashCommandBuilder } from "discord.js";
 import Gamedig from "gamedig";
 
 export default {
