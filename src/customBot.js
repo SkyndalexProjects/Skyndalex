@@ -1,8 +1,8 @@
-import { Client, Collection, GatewayIntentBits } from "discord.js";
 import { PrismaClient } from "@prisma/client";
+import { Client, Collection, GatewayIntentBits } from "discord.js";
+import loadCommands from "./handlers/commandHandler.js";
 import loadEvents from "./handlers/eventHandler.js";
 import loadInteractions from "./handlers/interactionHandler.js";
-import loadCommands from "./handlers/commandHandler.js";
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],

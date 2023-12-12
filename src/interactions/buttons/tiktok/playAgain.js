@@ -1,4 +1,3 @@
-import { TiktokDL } from "@tobyg74/tiktok-api-dl";
 import {
   createAudioPlayer,
   createAudioResource,

@@ -16,6 +16,7 @@ model settings {
   radioChannel     String?
   radioEnabled     Boolean @default(false)
   radioStation     String?
+  aiChannel        String?
 }
 
 model customBots {
@@ -24,4 +25,29 @@ model customBots {
   token    String? @unique
 
   @@id([userId, clientId])
+}
+
+model economy {
+  guildId String
+  uid     String
+  wallet  String?
+  bank    String?
+
+  @@id([uid, guildId])
+}
+
+model economySettings {
+  id       Int
+  guildId  String
+  sentence String?
+  type     String?
+  action   String?
+  cooldown Int?
+
+  @@id([id, guildId])
+}
+
+model whitelist {
+  guildId     String  @id
+  whitelisted Boolean
 }

@@ -1,5 +1,4 @@
 import { readdir } from "fs/promises";
-import chalk from "chalk";
 
 export default async function loadEvents(client) {
   const jsEventFiles = (await readdir("./events")).filter((file) =>
