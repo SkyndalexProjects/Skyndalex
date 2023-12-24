@@ -27,16 +27,16 @@ export default {
     console.log(json.hits.hits[0]);
 
     let data = [];
-      for (let i in json.hits.hits) {
-        if (json.hits.hits[i]._source.type === 'channel') {
-          data.push(
-            `${json.hits.hits[i]._source.title}-${
-              json.hits.hits[i]._source.url.split("/")[3]
-            }`,
-          );
-        }
-        console.log(data.map((choice) => ({ name: choice, value: choice })))
+    for (let i in json.hits.hits) {
+      if (json.hits.hits[i]._source.type === "channel") {
+        data.push(
+          `${json.hits.hits[i]._source.title}-${
+            json.hits.hits[i]._source.url.split("/")[3]
+          }`,
+        );
       }
+      console.log(data.map((choice) => ({ name: choice, value: choice })));
+    }
 
     await interaction.respond(
       data.map((choice) => ({ name: choice, value: choice })),

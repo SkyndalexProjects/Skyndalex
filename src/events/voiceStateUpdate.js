@@ -34,7 +34,7 @@ export default async function voiceStateUpdate(client, oldState, newState) {
       .send({ embeds: [embed] });
   }
 
-  if (getSettings.radioEnabled) {
+  if (getSettings?.radioEnabled) {
     if (getSettings.radioChannel) {
       if (!oldState.channel && newState.channel) {
         if (newState.channel.id !== getSettings.radioChannel) return;
@@ -73,7 +73,6 @@ export default async function voiceStateUpdate(client, oldState, newState) {
       }
     }
   }
-
 
   if (oldState.channel && !newState.channel) {
     if (oldState.channel.members.size === 1) {
