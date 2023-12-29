@@ -51,3 +51,13 @@ model whitelist {
   guildId     String  @id
   whitelisted Boolean
 }
+
+model shops {
+  id           Int
+  guildId      String
+  name         String
+  description  String
+  itemsBuyable Boolean
+
+  @@id([id, guildId])
+}
