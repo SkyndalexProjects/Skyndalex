@@ -18,8 +18,8 @@ export default {
         .setName("input")
         .setDescription("Input for the AI")
         .setRequired(true),
-    )
-    .setNSFW(true),
+    ),
+  // .setNSFW(true),
 
   async execute(client, interaction) {
     try {
@@ -28,6 +28,26 @@ export default {
       const taskId = `${interaction.guild.id}-${
         interaction.user.id
       }-${Date.now()}`;
+
+      const like = new ButtonBuilder()
+        .setCustomId("like")
+        .setLabel("👍")
+        .setStyle(ButtonStyle.Primary);
+
+      const dislike = new ButtonBuilder()
+        .setCustomId("dislike")
+        .setLabel("👎")
+        .setStyle(ButtonStyle.Primary);
+
+      const deleteAttachment = new ButtonBuilder()
+        .setCustomId("deleteAttachment")
+        .setLabel("Delete")
+        .setStyle(ButtonStyle.Danger);
+
+      const rerun = new ButtonBuilder()
+        .setCustomId("rerun")
+        .setLabel("Rerun")
+        .setStyle(ButtonStyle.Success);
 
       if (!imageQueue.has(taskId)) {
         imageQueue.set(taskId, {
@@ -58,7 +78,7 @@ export default {
             .setColor("#e74c3c")
             .setDescription("❌ Error: " + response.error)
             .setFooter({ text: "Task ID: " + taskId });
-          await queueReply.edit({ embeds: [errorEmbed] });
+          await queueReply.edit({ embeds: [errorEmbed], components: [rerun] });
           return;
         }
 
@@ -71,7 +91,7 @@ export default {
               "❌ Cannot load the image. Got `application/json` response, instead of `image` (HF Model is still loading). Please try again later or try another prompt",
             )
             .setFooter({ text: "Task ID: " + taskId });
-          await queueReply.edit({ embeds: [cannotLoad] });
+          await queueReply.edit({ embeds: [cannotLoad], components: [rerun] });
           return;
         }
 
@@ -86,6 +106,10 @@ export default {
             `✅ Generated img "**${input}**" requested from input by **${interaction.user.username}**`,
           )
           .setColor("#12ff00");
+        if (interaction.channel.nsfw)
+          newEmbed.setFooter({
+            text: "WARNING! Watch out your prompts. The bot can generate NSFW image",
+          });
 
         const botMessage = await queueReply.edit({
           embeds: [newEmbed],
@@ -97,39 +121,23 @@ export default {
           .setLabel("Download")
           .setStyle(ButtonStyle.Link);
 
-        const like = new ButtonBuilder()
-          .setCustomId("like")
-          .setLabel("👍")
-          .setStyle(ButtonStyle.Primary);
-
-        const dislike = new ButtonBuilder()
-          .setCustomId("dislike")
-          .setLabel("👎")
-          .setStyle(ButtonStyle.Primary);
-
-        const deleteAttachment = new ButtonBuilder()
-          .setCustomId("deleteAttachment")
-          .setLabel("Delete")
-          .setStyle(ButtonStyle.Danger);
-
-        const rerun = new ButtonBuilder()
-          .setCustomId("rerun")
-          .setLabel("Rerun")
-          .setStyle(ButtonStyle.Success);
-
         await botMessage.edit({
           components: [
             {
               type: 1,
-              components: [download, like, dislike, deleteAttachment, rerun],
+              components: [download, like, dislike, deleteAttachment],
             },
           ],
         });
 
         const secondMessage = new EmbedBuilder()
           .setColor("#12ff00")
-          .setDescription("✅ Your image is ready!")
-          .setFooter({ text: "Task ID: " + taskId });
+          .setDescription("✅ Your image is ready!");
+        if (interaction.channel.nsfw)
+          secondMessage.setFooter({
+            text: "WARNING! Watch out your prompts. The bot can generate NSFW image",
+          });
+
         await interaction.followUp({
           content: `<@${interaction.user.id}>,`,
           embeds: [secondMessage],
