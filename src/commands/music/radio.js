@@ -14,6 +14,7 @@ export default {
     ),
   async autocomplete(interaction) {
     const focusedValue = interaction.options.getFocused();
+    console.log("focusedValue", focusedValue);
     const url = `https://radio.garden/api/search?q=${focusedValue}`;
 
     const response = await fetch(url, {
@@ -43,71 +44,80 @@ export default {
     );
   },
   async execute(client, interaction) {
-    const id = interaction.options.getString("radio").split("-")[1];
-    const memberChannel = interaction.member.voice.channel;
+    try {
+      const id = interaction.options.getString("radio").split("-")[1];
+      const memberChannel = interaction.member.voice.channel;
 
-    if (!memberChannel) {
-      return await interaction.reply(
-        `Hey, ${interaction.user.tag}! You must be in a voice channel to use this command.`,
-      );
-    }
+      if (!memberChannel) {
+        return await interaction.reply(
+          `Hey, ${interaction.user.tag}! You must be in a voice channel to use this command.`,
+        );
+      }
 
-    const url = `https://radio.garden/api/ara/content/channel/${id}`;
-    const resourceUrl = `https://radio.garden/api/ara/content/listen/${id}/channel.mp3`;
+      const url = `https://radio.garden/api/ara/content/channel/${id}`;
+      const resourceUrl = `https://radio.garden/api/ara/content/listen/${id}/channel.mp3`;
 
-    const fetchStation = await fetch(url, {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-      },
-    });
-
-    const json = await fetchStation.json();
-    if (json.error === "Not found")
-      return interaction.reply("❌ | Station not found!");
-
-    const node = client.shoukaku.getNode();
-    if (!node) return;
-
-    const result = await node.rest.resolve(resourceUrl);
-    if (!result?.tracks.length) return;
-    const metadata = result.tracks.shift();
-
-    const existingPlayer = node.players.has(interaction.guild.id);
-
-    if (!existingPlayer) {
-      const player = await node.joinChannel({
-        guildId: interaction.guild.id,
-        channelId: memberChannel.id,
-        shardId: 0,
+      const fetchStation = await fetch(url, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+        },
       });
 
-      await player.playTrack({ track: metadata.track }).setVolume(0.5);
+      const json = await fetchStation.json();
+      if (json.error === "Not found")
+        return interaction.reply("❌ | Station not found!");
 
-      const embed = new EmbedBuilder()
-        .setTitle(`✅ Playing radio "${json.data.title} 🎶"`)
-        .setDescription(
-          `🌐 | **Country:** ${json.data.country.title} || 🗺️ | **Place:** ${json.data.place.title}`,
-        )
-        .setFooter({ text: `🖥️ | Radio website: ${json.data.website}` })
-        .setTimestamp()
-        .setColor("Green");
+      const node = client.shoukaku.getNode();
+      if (!node) return;
 
-      await interaction.reply({ embeds: [embed] });
-    } else {
-      const currentPlayer = await node.players.get(interaction.guild.id);
-      await currentPlayer.stopTrack();
-      await currentPlayer.playTrack({ track: metadata.track }).setVolume(0.5);
+      const result = await node.rest.resolve(resourceUrl);
+      if (!result?.tracks.length) return;
+      const metadata = result.tracks.shift();
 
-      const switchedEmbed = new EmbedBuilder()
-        .setTitle(`🔀 | Switched radio to "${json.data.title} 🎶"`)
-        .setDescription(
-          `🌐 | **Country:** ${json.data.country.title} || 🗺️ | **Place:** ${json.data.place.title}`,
-        )
-        .setFooter({ text: `🖥️ | Radio website: ${json.data.website}` })
-        .setColor("Blurple")
-        .setTimestamp();
-      await interaction.reply({ embeds: [switchedEmbed] });
+      const existingPlayer = node.players.has(interaction.guild.id);
+
+      if (!existingPlayer) {
+        const player = await node.joinChannel({
+          guildId: interaction.guild.id,
+          channelId: memberChannel.id,
+          shardId: 0,
+        });
+
+        await player.playTrack({ track: metadata.track }).setVolume(0.5);
+
+        const embed = new EmbedBuilder()
+          .setTitle(`✅ Playing radio "${json.data.title} 🎶"`)
+          .setDescription(
+            `🌐 | **Country:** ${json.data.country.title} || 🗺️ | **Place:** ${json.data.place.title}`,
+          )
+          .setFooter({ text: `🖥️ | Radio website: ${json.data.website}` })
+          .setTimestamp()
+          .setColor("Green");
+
+        await interaction.reply({ embeds: [embed] });
+      } else {
+        const node = client.shoukaku.getNode();
+        if (!node) return;
+
+        const currentPlayer = await node.players.get(interaction.guild.id);
+        await currentPlayer.stopTrack();
+        await currentPlayer.playTrack({ track: metadata.track }).setVolume(0.5);
+
+        // node.leaveChannel(interaction.guild.id);
+
+        const switchedEmbed = new EmbedBuilder()
+          .setTitle(`🔀 | Switched radio to "${json.data.title} 🎶"`)
+          .setDescription(
+            `🌐 | **Country:** ${json.data.country.title} || 🗺️ | **Place:** ${json.data.place.title}`,
+          )
+          .setFooter({ text: `🖥️ | Radio website: ${json.data.website}` })
+          .setColor("Blurple")
+          .setTimestamp();
+        await interaction.reply({ embeds: [switchedEmbed] });
+      }
+    } catch (e) {
+      console.log(e);
     }
   },
 };
