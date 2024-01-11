@@ -1,4 +1,8 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import {
+  AttachmentBuilder,
+  EmbedBuilder,
+  SlashCommandBuilder,
+} from "discord.js";
 import fetch from "node-fetch";
 
 export default {
@@ -91,8 +95,13 @@ export default {
           .setDescription(`Finished playing TikTok sound from ${tiktok_url}`)
           .setColor("Yellow");
         await interaction.followUp({
-          content: `<@${interaction.user.id}>`,
+          content: `<@${interaction.user.id}>\n[🔗 | Immediately download?](${resourceUrl})`,
           embeds: [embed],
+          files: [
+            new AttachmentBuilder()
+              .setFile(resourceUrl)
+              .setName("skyndalex.xyz.mp3"),
+          ],
         });
 
         await node.leaveChannel(interaction.guild.id);
