@@ -28,7 +28,6 @@ const Nodes = [
     auth: "youshallnotpass",
   },
 ];
-
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -43,9 +42,7 @@ const client = new Client({
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), Nodes);
-shoukaku.on("error", (_, error) =>
-  console.error(`${chalk.bold(chalk.red(`[E: SHOUKAKU]: ${error}`))}`),
-);
+shoukaku.on("error", (_, error) => console.error(error));
 
 client.shoukaku = shoukaku;
 client.interactions = new Collection();
