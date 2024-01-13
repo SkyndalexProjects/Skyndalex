@@ -1,4 +1,10 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  EmbedBuilder,
+  SlashCommandBuilder,
+} from "discord.js";
 import fetch from "node-fetch";
 
 export default {
@@ -77,6 +83,12 @@ export default {
 
       const existingPlayer = node.players.has(interaction.guild.id);
 
+      const resumeRadio = new ButtonBuilder()
+        .setCustomId(`resume_radio-${resourceUrl}`)
+        .setLabel("Resume")
+        .setStyle(ButtonStyle.Success);
+      const row = new ActionRowBuilder().addComponents(resumeRadio);
+
       if (!existingPlayer) {
         const player = await node.joinChannel({
           guildId: interaction.guild.id,
@@ -95,7 +107,7 @@ export default {
           .setTimestamp()
           .setColor("Green");
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ embeds: [embed], components: [row] });
       } else {
         const node = client.shoukaku.getNode();
         if (!node) return;
@@ -114,7 +126,7 @@ export default {
           .setFooter({ text: `🖥️ | Radio website: ${json.data.website}` })
           .setColor("Blurple")
           .setTimestamp();
-        await interaction.reply({ embeds: [switchedEmbed] });
+        await interaction.reply({ embeds: [switchedEmbed], components: [row] });
       }
     } catch (e) {
       console.log(e);
