@@ -2,15 +2,17 @@ import { EmbedBuilder } from "discord.js";
 import fetch from "node-fetch";
 
 export default {
-  customId: "play_again",
+  customId: "play",
   type: "button",
 
   run: async (client, interaction) => {
     await interaction.deferReply();
 
-    const tiktok_url =
-      interaction.message.embeds[0].data.description.split("from ")[1];
-    const url = new URL(tiktok_url);
+    console.log(interaction.message.embeds[0])
+    const sound_url =
+      interaction.message.embeds[0]?.data?.description?.split("from ")[1] || interaction.message.embeds[0]?.data?.footer?.text
+
+    const url = new URL(sound_url);
 
     const memberChannel = interaction.member.voice.channel;
 
@@ -27,7 +29,7 @@ export default {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        url: encodeURI(tiktok_url),
+        url: encodeURI(sound_url),
       }),
     });
 
@@ -36,7 +38,7 @@ export default {
     const embedError = new EmbedBuilder()
       .setTitle("❌ Error")
       .setDescription(
-        `Error while fetching ${url.hostname} sound from ${tiktok_url}.\n\n**Error title:**\n\`${json.text}\``,
+        `Error while fetching ${url.hostname} sound from ${sound_url}.\n\n**Error title:**\n\`${json.text}\``,
       )
       .setColor("Red");
 
@@ -56,7 +58,7 @@ export default {
 
     const playingEmbed = new EmbedBuilder()
       .setTitle(`✅ Playing again ${url.hostname} sound`)
-      .setDescription(`Playing ${url.hostname} sound from ${tiktok_url}`)
+      .setDescription(`Playing ${url.hostname} sound from ${sound_url}`)
       .setFooter({
         text: `Requested by ${interaction.user.username}`,
         iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
@@ -66,7 +68,7 @@ export default {
     const finishedPlayingAgainEembed = new EmbedBuilder()
       .setTitle(`✅ Finished playing again ${url.hostname} sound`)
       .setDescription(
-        `Finished playing ${url.hostname} sound from ${tiktok_url}`,
+        `Finished playing ${url.hostname} sound from ${sound_url}`,
       )
       .setColor("Yellow");
 

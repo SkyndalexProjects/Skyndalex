@@ -100,7 +100,7 @@ export default {
       .setColor("Green");
 
     const playAgainButton = new ButtonBuilder()
-      .setCustomId(`play_again`)
+      .setCustomId(`play`)
       .setLabel("Play again")
       .setStyle(ButtonStyle.Success);
 

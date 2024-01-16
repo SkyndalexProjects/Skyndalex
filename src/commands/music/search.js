@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { EmbedBuilder, SlashCommandBuilder, ButtonStyle, ButtonBuilder, ActionRowBuilder } from "discord.js";
 import fetch from "node-fetch";
 import findClientID from "../../functions/findClientID.js";
 const clientID = await findClientID();
@@ -45,8 +45,16 @@ export default {
     const json = await fetchTrack.json();
     if (!json) return await interaction.reply("No results found!");
 
+    const play = new ButtonBuilder()
+      .setCustomId("play")
+      .setLabel("Play")
+      .setStyle(ButtonStyle.Success)
+      .setEmoji("▶️");
+    const row = new ActionRowBuilder().addComponents(play);
+
     const embed = new EmbedBuilder()
       .setURL(json[0].permalink_url)
+      .setFooter({ text: `${json[0].permalink_url}`})
       .setTitle(
         `${json[0].kind}: *${json[0].title}* by *${json[0].user.username} (${
           json[0].user.full_name || "No fullname provided."
@@ -82,6 +90,6 @@ export default {
       ])
       .setColor("Green");
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], components: [row] });
   },
 };
