@@ -1,19 +1,15 @@
-import {
-  ActionRowBuilder,
-  AttachmentBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
-  SlashCommandBuilder,
-} from "discord.js";
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import fetch from "node-fetch";
-
+import createPlayer from "../../functions/player.js";
 export default {
   data: new SlashCommandBuilder()
     .setName("play")
-    .setDescription("Play TikTok sound.")
+    .setDescription("Play TikTok/Soundcloud sound.")
     .addStringOption((option) =>
-      option.setName("url").setDescription("TikTok URL").setRequired(true),
+      option
+        .setName("url")
+        .setDescription("Tiktok/Soundcloud URL")
+        .setRequired(true),
     )
     .addStringOption((option) =>
       option
@@ -74,94 +70,15 @@ export default {
 
     const resourceUrl = json.url || json.audio;
 
-    const node = client.shoukaku.getNode();
-    if (!node) return;
-
-    const result = await node.rest.resolve(resourceUrl);
-    if (!result?.tracks.length) return;
-
-    const metadata = result.tracks.shift();
-
-    const playingEmbed = new EmbedBuilder()
-      .setTitle(`✅ Playing *${custom_title || url.hostname}* sound`)
-      .setDescription(`Playing ${url.hostname} sound from ${tiktok_url}`)
-      .setColor("Green");
-
-    const songSwitchedEmbed = new EmbedBuilder()
-      .setTitle(`🔀 Switched to *${custom_title || url.hostname}* sound`)
-      .setDescription(`Switched to ${url.hostname} sound from ${tiktok_url}`)
-      .setColor("Green");
-
-    const finishedPlayingSongEmbed = new EmbedBuilder()
-      .setTitle(`✅ Finished playing *${custom_title || url.hostname}* sound`)
-      .setDescription(
-        `Finished playing ${url.hostname} sound from ${tiktok_url}`,
-      )
-      .setColor("Green");
-
-    const playAgainButton = new ButtonBuilder()
-      .setCustomId(`play`)
-      .setLabel("Play again")
-      .setStyle(ButtonStyle.Success);
-
-    let player = node.players.get(interaction.guild.id);
-
-    if (!player) {
-      console.log("I'm here! (Started player)");
-
-      player = await node.joinChannel({
-        guildId: interaction.guild.id,
-        channelId: memberChannel.id,
-        shardId: 0,
-      });
-
-      await player.stopTrack();
-      await player.playTrack({ track: metadata.track }).setVolume(0.5);
-
-      await interaction.editReply({
-        embeds: [playingEmbed],
-        files: [
-          new AttachmentBuilder()
-            .setFile(resourceUrl)
-            .setName("skyndalex.xyz.mp3"),
-        ],
-        components: [new ActionRowBuilder().addComponents(playAgainButton)],
-      });
-    } else {
-      console.log("I'm here! (Switched player)");
-
-      await player.stopTrack();
-      await player.playTrack({ track: metadata.track }).setVolume(0.5);
-
-      await interaction.followUp({
-        embeds: [songSwitchedEmbed],
-        content: `<@${interaction.user.id}>`,
-        files: [
-          new AttachmentBuilder()
-            .setFile(resourceUrl)
-            .setName("skyndalex.xyz.mp3"),
-        ],
-        components: [new ActionRowBuilder().addComponents(playAgainButton)],
-      });
-    }
-
-    player.on("end", async () => {
-      console.log("I'm here! (Player ended)");
-
-      await player.stopTrack();
-
-      await interaction.editReply({
-        embeds: [finishedPlayingSongEmbed],
-        content: `<@${interaction.user.id}>`,
-        files: [
-          new AttachmentBuilder()
-            .setFile(resourceUrl)
-            .setName("skyndalex.xyz.mp3"),
-        ],
-        components: [new ActionRowBuilder().addComponents(playAgainButton)],
-      });
-
-      await node.leaveChannel(interaction.guild.id);
-    });
+    await createPlayer(
+      client,
+      interaction,
+      resourceUrl,
+      interaction.guild.id,
+      memberChannel.id,
+      tiktok_url,
+      url.hostname,
+      custom_title,
+    );
   },
 };
