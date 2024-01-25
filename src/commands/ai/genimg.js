@@ -29,6 +29,8 @@ export default {
         interaction.user.id
       }-${Date.now()}`;
 
+      // TODO:       const row = new ActionRowBuilder().addComponents(resumeRadio);
+
       const like = new ButtonBuilder()
         .setCustomId("like")
         .setLabel("👍")
@@ -133,9 +135,9 @@ export default {
         const secondMessage = new EmbedBuilder()
           .setColor("#12ff00")
           .setDescription("✅ Your image is ready!");
-        if (interaction.channel.nsfw)
-          secondMessage.setFooter({
-            text: "WARNING! Watch out your prompts. The bot can generate NSFW image",
+        if (!interaction.channel.nsfw)
+          newEmbed.setFooter({
+            text: "WARNING! Watch out your prompts. The AI model can generate NSFW image",
           });
 
         await interaction.followUp({
