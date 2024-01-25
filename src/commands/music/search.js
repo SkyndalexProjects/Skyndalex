@@ -1,4 +1,10 @@
-import { EmbedBuilder, SlashCommandBuilder, ButtonStyle, ButtonBuilder, ActionRowBuilder } from "discord.js";
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  EmbedBuilder,
+  SlashCommandBuilder,
+} from "discord.js";
 import fetch from "node-fetch";
 import findClientID from "../../functions/findClientID.js";
 const clientID = await findClientID();
@@ -17,24 +23,25 @@ export default {
 
   async autocomplete(interaction) {
     const focusedValue = interaction.options.getFocused();
-    console.log("query", focusedValue);
-    const url = `https://api-v2.soundcloud.com/search/tracks?q=${focusedValue}&variant_ids=&facet=genre&user_id=303439-863403-472017-158497&client_id=${clientID}&limit=20&offset=0&linked_partitioning=1&app_version=1705403008&app_locale=pl`;
+    if (focusedValue) {
+      const url = `https://api-v2.soundcloud.com/search/tracks?q=${focusedValue}&variant_ids=&facet=genre&user_id=303439-863403-472017-158497&client_id=${clientID}&limit=20&offset=0&linked_partitioning=1&app_version=1705403008&app_locale=pl`;
 
-    const response = await fetch(url);
-    const json = await response.json();
+      const response = await fetch(url);
+      const json = await response.json();
 
-    let data = [];
+      let data = [];
 
-    for (let i in json.collection) {
-      data.push({
-        name: json.collection[i].title,
-        value: String(json.collection[i].id),
-      });
+      for (let i in json.collection) {
+        data.push({
+          name: json.collection[i].title,
+          value: String(json.collection[i].id),
+        });
+      }
+
+      console.log("Data", data);
+
+      await interaction.respond(data);
     }
-
-    console.log("Data", data);
-
-    await interaction.respond(data);
   },
 
   async execute(client, interaction) {
@@ -54,7 +61,7 @@ export default {
 
     const embed = new EmbedBuilder()
       .setURL(json[0].permalink_url)
-      .setFooter({ text: `${json[0].permalink_url}`})
+      .setFooter({ text: `${json[0].permalink_url}` })
       .setTitle(
         `${json[0].kind}: *${json[0].title}* by *${json[0].user.username} (${
           json[0].user.full_name || "No fullname provided."
@@ -85,6 +92,11 @@ export default {
         {
           name: "💭 | Comments",
           value: `${json[0].comment_count || "*None*"}`,
+          inline: true,
+        },
+        {
+          name: "🎧 | Plays",
+          value: `${json[0].playback_count || "*None*"}`,
           inline: true,
         },
       ])
