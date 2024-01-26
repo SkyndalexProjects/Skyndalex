@@ -57,7 +57,14 @@ export default async function voiceStateUpdate(client, oldState, newState) {
         .get(getSettings.voiceLogsChannel)
         .send({ embeds: [embed] });
     }
+  }
 
+  if (
+    getSettings.radioEnabled &&
+    getSettings.radioChannel &&
+    newState.channel &&
+    newState.channel.id === getSettings.radioChannel
+  ) {
     const id = getSettings.radioStation.split("-")[1];
     const url = `https://radio.garden/api/ara/content/channel/${id}`;
     const resourceUrl = `https://radio.garden/api/ara/content/listen/${id}/channel.mp3`;
@@ -75,58 +82,48 @@ export default async function voiceStateUpdate(client, oldState, newState) {
     const node = client.shoukaku.getNode();
     if (!node) return;
 
-    if (getSettings?.radioEnabled) {
-      if (getSettings?.radioChannel) {
-        if (!oldState.channel && newState.channel) {
-          let player = node.players.get(newState.guild.id);
+    const result = await node.rest.resolve(resourceUrl);
+    if (!result?.tracks.length) return;
+    const metadata = result.tracks.shift();
 
-          const result = await node.rest.resolve(resourceUrl);
-          if (!result?.tracks.length) return;
-          const metadata = result.tracks.shift();
+    const existingPlayer = node.players.has(oldState.guild.id);
 
-          if (!player) {
-            player = await node.joinChannel({
-              guildId: oldState.guild.id,
-              channelId: getSettings.radioChannel,
-              shardId: 0,
-            });
+    if (!existingPlayer) {
+      const player = await node.joinChannel({
+        guildId: oldState.guild.id,
+        channelId: getSettings.radioChannel,
+        shardId: 0,
+      });
 
-            await player.playTrack({ track: metadata.track }).setVolume(0.5);
-
-            const playingRadioEmbed = new EmbedBuilder()
-              .setTitle(
-                `✅ Successfully playing radio (AUTO): "${json.data.title} 🎶"`,
-              )
-              .setDescription(
-                `Executed by: \`${newState.id}\` **[<@${newState.id}>]**`,
-              )
-              .setTimestamp()
-              .setColor("Green");
-            await client.channels.cache
-              .get(getSettings?.voiceLogsChannel)
-              .send({ embeds: [playingRadioEmbed] });
-          }
-        }
-      }
+      await player.playTrack({ track: metadata.track }).setVolume(0.5);
     }
+  }
 
-    const stoppedSong = new EmbedBuilder()
-      .setTitle(`👋 Stopped playing song. (AUTO)`)
-      .setDescription(`**Reason:** *All users left the voice channel.*`)
-      .setTimestamp()
-      .setColor("Red");
+  const stoppedSong = new EmbedBuilder()
+    .setTitle(`👋 Stopped playing song. (AUTO)`)
+    .setDescription(`**Reason:** *All users left the voice channel.*`)
+    .setTimestamp()
+    .setColor("Red");
 
-    if (oldState.channel && !newState.channel) {
-      if (oldState.channel.members.size === 1) {
-        const player = node.players.get(oldState.guild.id);
+  if (
+    oldState.channel &&
+    (!newState.channel || oldState.channel.id !== newState.channel.id)
+  ) {
+    if (oldState.channel.members.size === 1) {
+      const node = client.shoukaku.getNode();
+      if (!node) return;
 
-        if (player) {
-          await player.stopTrack();
-          await node.leaveChannel(oldState.guild.id);
+      const existingPlayer = node.players.has(oldState.guild.id);
+
+      if (existingPlayer) {
+        const currentPlayer = await node.players.get(oldState.guild.id);
+        await currentPlayer.stopTrack();
+        await node.leaveChannel(oldState.guild.id);
+
+        if (getSettings?.voiceLogsChannel)
           await client.channels.cache
             .get(getSettings?.voiceLogsChannel)
             .send({ embeds: [stoppedSong] });
-        }
       }
     }
   }
