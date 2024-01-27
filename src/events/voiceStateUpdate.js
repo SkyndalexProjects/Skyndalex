@@ -60,8 +60,8 @@ export default async function voiceStateUpdate(client, oldState, newState) {
   }
 
   if (
-    getSettings.radioEnabled &&
-    getSettings.radioChannel &&
+    getSettings?.radioEnabled &&
+    getSettings?.radioChannel &&
     newState.channel &&
     newState.channel.id === getSettings.radioChannel
   ) {
