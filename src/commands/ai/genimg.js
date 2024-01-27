@@ -4,6 +4,7 @@ import {
   ButtonStyle,
   EmbedBuilder,
   SlashCommandBuilder,
+  ActionRowBuilder
 } from "discord.js";
 import { fetchData } from "../../events/messageCreate.js";
 
@@ -19,7 +20,6 @@ export default {
         .setDescription("Input for the AI")
         .setRequired(true),
     ),
-  // .setNSFW(true),
 
   async execute(client, interaction) {
     try {
@@ -28,8 +28,6 @@ export default {
       const taskId = `${interaction.guild.id}-${
         interaction.user.id
       }-${Date.now()}`;
-
-      // TODO:       const row = new ActionRowBuilder().addComponents(resumeRadio);
 
       const like = new ButtonBuilder()
         .setCustomId("like")
@@ -80,7 +78,7 @@ export default {
             .setColor("#e74c3c")
             .setDescription("❌ Error: " + response.error)
             .setFooter({ text: "Task ID: " + taskId });
-          await queueReply.edit({ embeds: [errorEmbed], components: [rerun] });
+          await queueReply.edit({ embeds: [errorEmbed], components: [new ActionRowBuilder().addComponents(rerun)] });
           return;
         }
 
@@ -93,7 +91,7 @@ export default {
               "❌ Cannot load the image. Got `application/json` response, instead of `image` (HF Model is still loading). Please try again later or try another prompt",
             )
             .setFooter({ text: "Task ID: " + taskId });
-          await queueReply.edit({ embeds: [cannotLoad], components: [rerun] });
+          await queueReply.edit({ embeds: [cannotLoad], components: [new ActionRowBuilder().addComponents(rerun)] });
           return;
         }
 
