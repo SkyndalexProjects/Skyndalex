@@ -21,7 +21,11 @@ export default {
     if (!existingPlayer)
       return interaction.editReply("❌ | I'm not playing anything.");
 
+    const player = node.players.get(interaction.guild.id);
+
+    await player.stopTrack()
     node.leaveChannel(interaction.guild.id);
+
     await interaction.editReply(`👋 I left channel!`);
   },
 };
