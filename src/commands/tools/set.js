@@ -4,6 +4,7 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from "discord.js";
+import fetch from "node-fetch";
 
 export default {
   data: new SlashCommandBuilder()
@@ -75,6 +76,36 @@ export default {
         ),
     ),
 
+  async autocomplete(interaction) {
+    const focusedValue = interaction.options.getFocused();
+    const url = `https://radio.garden/api/search?q=${focusedValue}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "accept: application/json",
+      },
+    });
+    const json = await response.json();
+
+    console.log(json.hits.hits[0]);
+
+    let data = [];
+    for (let i in json.hits.hits) {
+      if (json.hits.hits[i]._source.type === "channel") {
+        data.push(
+          `${json.hits.hits[i]._source.title}-${
+            json.hits.hits[i]._source.url.split("/")[3]
+          }`,
+        );
+      }
+      console.log(data.map((choice) => ({ name: choice, value: choice })));
+    }
+
+    await interaction.respond(
+      data.map((choice) => ({ name: choice, value: choice })),
+    );
+  },
   async execute(client, interaction) {
     const options = interaction.options._hoistedOptions;
     const updatedSettings = [];
@@ -87,7 +118,7 @@ export default {
       "radio-channel": "radioChannel",
       radio: "radioEnabled",
       station: "radioStation",
-      "ai-channel": "aiChannel", // Added for AI channel
+      "ai-channel": "aiChannel",
     };
 
     for (const option of options) {
