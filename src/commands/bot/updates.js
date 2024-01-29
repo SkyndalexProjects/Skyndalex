@@ -1,5 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import createEmbedPaginator from "../../functions/createEmbedPaginator.js";
+import createEmbedPaginator from "../../utils/createEmbedPaginator.js";
 export default {
   data: new SlashCommandBuilder()
     .setName("updates")

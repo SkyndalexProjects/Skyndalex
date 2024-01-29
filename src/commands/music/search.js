@@ -6,7 +6,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import fetch from "node-fetch";
-import findClientID from "../../functions/findClientID.js";
+import findClientID from "../../utils/findClientID.js";
 const clientID = await findClientID();
 
 export default {

@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 import { config } from "dotenv";
-import createEmbedPaginator from "../functions/createEmbedPaginator.js";
+import createEmbedPaginator from "../utils/createEmbedPaginator.js";
 config();
 export default async function messageCreate(client, message) {
   const getWhitelist = await client.prisma.whitelist.findMany({

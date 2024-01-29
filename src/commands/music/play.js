@@ -1,6 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import fetch from "node-fetch";
-import createPlayer from "../../functions/player.js";
+import createPlayer from "../../utils/player.js";
 export default {
   data: new SlashCommandBuilder()
     .setName("play")
