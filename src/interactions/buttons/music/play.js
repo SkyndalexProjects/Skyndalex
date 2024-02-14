@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import createPlayer from "../../../utils/player.js";
+import createPlayer from "../../../functions/player.js";
 
 export default {
   customId: "play",

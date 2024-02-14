@@ -12,12 +12,11 @@ export default {
     const user = await client.prisma.economy.findFirst({
       where: { uid: interaction.user.id },
     });
-    console.log("user", user)
 
     const settings = await client.prisma.economy.findFirst({
       where: { guildId: interaction.guild.id },
     });
-    console.log("settings", settings)
+
     const getCooldown = await client.prisma.economySettings.findFirst({
       where: {
         guildId: interaction.guild.id,
@@ -54,6 +53,12 @@ export default {
 
     const listWinSentences = await getSentences("win");
     const listLoseSentences = await getSentences("lose");
+
+    if (!listWinSentences || listLoseSentences.length < 1)
+      return interaction.reply(
+        `I'm sorry, but the server administrator did not quite set up the economy system on the server. More than one set sentence is missing from the \`/text set\` command.`,
+      );
+
     const getRandomSentence = (sentenceList) =>
       sentenceList[Math.floor(Math.random() * sentenceList.length)];
 

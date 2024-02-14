@@ -40,78 +40,45 @@ export async function onCommandInteraction(client, interaction) {
       await command.execute(client, interaction);
     }
   } catch (error) {
-    // TODO: move it to strings.json
-    const errorMessages = {
-      "work": {
-        "cooldown": "`cooldown` parameter is missing in **bot settings, contact with the guild administrator.**",
-        "permission": "Guild administrator did not set up permissions correctly!",
-        "replace": "Guild needs to set up the **sentences** for the work command!"
-      },
-      "crime": {
-        "cooldown": "`cooldown` parameter is missing in **bot settings, contact with the guild administrator.**",
-        "permission": "Guild administrator did not set up permissions correctly!",
-        "replace": "Guild needs to set up the **sentences** for the work command!"
-      },
-      "slut": {
-        "cooldown": "`cooldown` parameter is missing in **bot settings, contact with the guild administrator.**",
-        "permission": "Guild administrator did not set up permissions correctly!",
-        "replace": "Guild needs to set up the **sentences** for the work command!"
-      }
-    };
-    let errorMessage = error.message;
-    const commandName = command.data.name;
+    console.error(error);
 
-    if (errorMessages[commandName]) {
-      for (const [key, message] of Object.entries(errorMessages[commandName])) {
-        if (errorMessage.includes(key)) {
-          errorMessage = message;
-          break;
-        }
-      }
-    }
+    const embedError = new EmbedBuilder()
+      .setDescription(`\`\`\`${error}\`\`\``)
+      .addFields([
+        { name: "Command", value: `\`${command.data.name}\``, inline: true },
+        {
+          name: "Executed by",
+          value: `<@${interaction.user.id}> [${interaction.user.username}]`,
+          inline: true,
+        },
+        {
+          name: "Guild",
+          value: `\`${interaction.guild.id}\` [${interaction.guild.name}]`,
+          inline: true,
+        },
+        {
+          name: "Channel",
+          value: `<#${interaction.channel.id}> [${interaction.channel.name}]`,
+          inline: true,
+        },
+      ])
+      .setFooter({
+        text: `This embed was sent to the developers.`,
+        iconURL: client.user.displayAvatarURL({ dynamic: true }),
+      })
+      .setTimestamp()
+      .setColor("DarkButNotBlack");
 
-    if (errorMessage !== error.message) {
-      await interaction.reply({ content: `${errorMessage}`, ephemeral: true });
+    if (interaction.replied || interaction.deferred) {
+      client.channels.cache
+        .get("1071407744894128178")
+        .send({ embeds: [embedError] });
+      await interaction.reply({ embeds: [embedError] });
     } else {
-      const embedError = new EmbedBuilder()
-        .setDescription(`\`\`\`${error}\`\`\``)
-        .addFields([
-          { name: "Command", value: `\`${command.data.name}\``, inline: true },
-          {
-            name: "Executed by",
-            value: `<@${interaction.user.id}> [${interaction.user.username}]`,
-            inline: true,
-          },
-          {
-            name: "Guild",
-            value: `\`${interaction.guild.id}\` [${interaction.guild.name}]`,
-            inline: true,
-          },
-          {
-            name: "Channel",
-            value: `<#${interaction.channel.id}> [${interaction.channel.name}]`,
-            inline: true,
-          },
-        ])
-        .setFooter({
-          text: `This embed was sent to the developers.`,
-          iconURL: client.user.displayAvatarURL({ dynamic: true }),
-        })
-        .setTimestamp()
-        .setColor("DarkButNotBlack");
-
-      if (interaction.replied || interaction.deferred) {
-        client.channels.cache
-          .get("1071407744894128178")
-          .send({ embeds: [embedError] });
-        await interaction.reply({ embeds: [embedError] });
-      } else {
-        client.channels.cache
-          .get("1071407744894128178")
-          .send({ embeds: [embedError] });
-        await interaction.reply({ embeds: [embedError] });
-      }
+      client.channels.cache
+        .get("1071407744894128178")
+        .send({ embeds: [embedError] });
+      await interaction.reply({ embeds: [embedError] });
     }
-
   }
 }
