@@ -1,6 +1,9 @@
 import { EmbedBuilder } from "discord.js";
 import { config } from "dotenv";
 import createEmbedPaginator from "../functions/createEmbedPaginator.js";
+import { HfInference } from '@huggingface/inference'
+const hf = new HfInference(process.env.HF_TOKEN)
+
 config();
 export default async function messageCreate(client, message) {
   const getWhitelist = await client.prisma.whitelist.findMany({
@@ -28,69 +31,29 @@ export default async function messageCreate(client, message) {
 
     if (message.attachments.size === 1) {
       const sentMessage = await message.reply(
-        "<a:4704loadingicon:1183416396223352852> Running...",
+        "<a:4704loadingicon:1183416396223352852> Running image classification...",
       );
 
-      response = await fetchData(
-        "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large",
-        message.attachments.first().url,
-        "json",
-      );
-      await sentMessage.edit(response[0]?.generated_text);
-    } else if (message.attachments.size > 1) {
-      const sentMessage = await message.reply(
-        "<a:4704loadingicon:1183416396223352852> Running...",
-      );
-
-      let responseMessages = [];
-      const queueMessage = await message.channel.send({
-        content: "🔄 Generating images. This may take a while...",
-      });
-
-      for (const [key, attachment] of message.attachments) {
-        response = await fetchData(
-          "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large",
-          attachment.url,
-          "json",
-        );
-
-        const generatedText = response[0]?.generated_text;
-        const url = attachment.url;
-
-        responseMessages.push({
-          generated_text: generatedText,
-          url: url,
-        });
-      }
-
-      const totalPages = responseMessages.length;
-      const items = responseMessages;
-
-      const generateEmbed = async (page) => {
-        const msgs = items[page];
-        const embed = new EmbedBuilder()
-          .setTitle(`Image Classification ${page + 1} of ${items.length}`)
-          .setDescription(msgs.generated_text)
-          .setImage(msgs.url)
-          .setColor("Green");
-
-        return embed;
-      };
-
-      await createEmbedPaginator(message, generateEmbed, totalPages);
-
-      // Delete the queue message
-      await queueMessage.delete();
+      response = await hf.imageToText({
+        data: message.attachments.first().url,
+        model: 'Salesforce/blip-image-captioning-large',
+        use_cache: false,
+        wait_for_model: true
+      })
+      console.log(response)
+      await sentMessage.edit(response.generated_text);
     }
   }
 }
 
-export async function fetchData(url, options, responseType) {
+export async function fetchData(url, input, responseType) {
   try {
+    console.log({ inputs: input, options: { wait_for_model: true, use_cache: false }})
+
     const response = await fetch(url, {
       headers: { Authorization: `Bearer ${process.env.HF_TOKEN}` },
       method: "POST",
-      body: options,
+      body: { inputs: input, options: { wait_for_model: 1, use_cache: 0 } },
     });
 
     if (responseType === "json") return await response.json();
