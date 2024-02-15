@@ -43,7 +43,7 @@ export default {
           name: `🚀 | RAM Usage`,
           value: `${(process.memoryUsage().rss / 1024 / 1024).toFixed(
             2,
-          )} MB (heapUsed)/${(os.totalmem() / 1024 / 1024 / 1024).toFixed(
+          )} MB (rss)/${(os.totalmem() / 1024 / 1024 / 1024).toFixed(
             2,
           )} GB`,
           inline: true,
