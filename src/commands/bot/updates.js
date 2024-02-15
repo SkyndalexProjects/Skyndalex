@@ -8,7 +8,7 @@ export default {
   async execute(client, interaction) {
     let messagesArray = [];
     const channel = client.channels.cache.get("1183142476270276819");
-    channel.messages.fetch({ limit: 100 });
+    await channel.messages.fetch({ limit: 100 });
     const messages = await channel.messages.fetch({ limit: 100 });
 
     messages.forEach((message) => {
