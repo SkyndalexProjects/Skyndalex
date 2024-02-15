@@ -20,7 +20,6 @@ export default {
         if (
           post.url.endsWith(".jpg") ||
           post.url.endsWith(".png") ||
-          post.url.endsWith(".gif") ||
           post.url.endsWith(".jpeg")
         )
           embed.setImage(post.url);

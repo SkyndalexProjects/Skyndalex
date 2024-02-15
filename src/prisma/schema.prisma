@@ -47,11 +47,6 @@ model economySettings {
   @@id([id, guildId])
 }
 
-model whitelist {
-  guildId     String  @id
-  whitelisted Boolean
-}
-
 model shops {
   id           Int
   guildId      String

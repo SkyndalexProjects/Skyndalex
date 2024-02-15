@@ -18,7 +18,7 @@ export default {
       interaction.options.getUser("user1") ===
       interaction.options.getUser("user2")
     )
-      return interaction.editReply("Really?");
+      return interaction.editReply("Really? Noob.");
 
     const embed = new EmbedBuilder()
       .setTitle(`❤️ | Test`)

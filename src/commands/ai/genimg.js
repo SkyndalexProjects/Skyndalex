@@ -6,8 +6,9 @@ import {
   SlashCommandBuilder,
   ActionRowBuilder
 } from "discord.js";
-import { fetchData } from "../../events/messageCreate.js";
+import { HfInference } from '@huggingface/inference'
 
+const hf = new HfInference(process.env.HF_TOKEN)
 const imageQueue = new Map();
 
 export default {
@@ -59,17 +60,21 @@ export default {
         const queueMessage = new EmbedBuilder()
           .setColor("#3498db")
           .setDescription(
-            `⌛ Your image is in the queue at position ${queuePosition}.(input: **${input}**) Please wait...`,
+            `⌛ Your image is in the queue at position ${queuePosition}.(input: **${input}**) Please wait...\n\n**Estimated time: 1 to 10 minutes.**`,
           )
           .setFooter({ text: "Task ID: " + taskId });
 
         const queueReply = await interaction.reply({ embeds: [queueMessage] });
 
-        const response = await fetchData(
-          "https://api-inference.huggingface.co/models/openskyml/dalle-3-xl",
-          JSON.stringify({ inputs: input }),
-          "blob",
-        );
+        const response = await hf.textToImage({
+          inputs: input,
+          model: 'stabilityai/stable-diffusion-2-1',
+          parameters: {
+            negative_prompt: 'blurry',
+          },
+          use_cache: false,
+          wait_for_model: true
+        });
 
         if (response?.error) {
           imageQueue.delete(taskId);

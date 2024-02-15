@@ -19,6 +19,7 @@ export default {
       },
     })) || { wallet: null, bank: null };
 
+
     const wallet = table.wallet !== null ? BigInt(table.wallet) : BigInt(0);
     const bank = table.bank !== null ? BigInt(table.bank) : BigInt(0);
 
