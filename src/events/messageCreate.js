@@ -6,11 +6,6 @@ const hf = new HfInference(process.env.HF_TOKEN)
 
 config();
 export default async function messageCreate(client, message) {
-  const getWhitelist = await client.prisma.whitelist.findMany({
-    where: {
-      guildId: message.guild.id,
-    },
-  });
   const getCurrentSettings = await client.prisma.settings.findMany({
     where: {
       guildId: message.guild.id,
@@ -22,10 +17,6 @@ export default async function messageCreate(client, message) {
     !message.author.bot
   ) {
     if (message.content.startsWith("//")) return;
-    if (!getWhitelist[0]?.whitelisted)
-      return message.reply(
-        "❌ | This guild is not whitelisted. Please contact the server owner to whitelist this channel.\n\nSupport: [`here`](https://discord.gg/BknGx3NuHJ)",
-      );
 
     let response;
 
