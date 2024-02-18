@@ -23,7 +23,7 @@ export default {
 
     const player = node.players.get(interaction.guild.id);
 
-    await player.stopTrack()
+    await player.stopTrack();
     node.leaveChannel(interaction.guild.id);
 
     await interaction.editReply(`👋 I left channel!`);

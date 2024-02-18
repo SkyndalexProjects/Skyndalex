@@ -1,8 +1,6 @@
-import { EmbedBuilder } from "discord.js";
+import { HfInference } from "@huggingface/inference";
 import { config } from "dotenv";
-import createEmbedPaginator from "../functions/createEmbedPaginator.js";
-import { HfInference } from '@huggingface/inference'
-const hf = new HfInference(process.env.HF_TOKEN)
+const hf = new HfInference(process.env.HF_TOKEN);
 
 config();
 export default async function messageCreate(client, message) {
@@ -27,11 +25,11 @@ export default async function messageCreate(client, message) {
 
       response = await hf.imageToText({
         data: message.attachments.first().url,
-        model: 'Salesforce/blip-image-captioning-large',
+        model: "Salesforce/blip-image-captioning-large",
         use_cache: false,
-        wait_for_model: true
-      })
-      console.log(response)
+        wait_for_model: true,
+      });
+      console.log(response);
       await sentMessage.edit(response.generated_text);
     }
   }
@@ -39,7 +37,10 @@ export default async function messageCreate(client, message) {
 
 export async function fetchData(url, input, responseType) {
   try {
-    console.log({ inputs: input, options: { wait_for_model: true, use_cache: false }})
+    console.log({
+      inputs: input,
+      options: { wait_for_model: true, use_cache: false },
+    });
 
     const response = await fetch(url, {
       headers: { Authorization: `Bearer ${process.env.HF_TOKEN}` },

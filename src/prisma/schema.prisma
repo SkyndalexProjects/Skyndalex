@@ -56,3 +56,10 @@ model shops {
 
   @@id([id, guildId])
 }
+
+model spotify {
+  accessToken  String?
+  expiresIn    Int?
+  refreshToken String?
+  uid          String  @id
+}

@@ -4,25 +4,35 @@ export default {
   data: new SlashCommandBuilder().setName("cat").setDescription("Random cat"),
 
   async execute(client, interaction) {
-    const response = await fetch("https://www.reddit.com/r/cats.json?limit=10000")
+    const response = await fetch(
+      "https://www.reddit.com/r/cats.json?raw_json=1",
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    // console.log("response", response)
     const json = await response.json();
+    const imagePosts = json.data.children.filter(
+      (post) =>
+        post.data.url.match(/\.(jpeg|jpg|gif|png)$/i) && post.data.preview,
+    );
 
-    let post =
-      json.data.children[
-        Math.floor(Math.random() * json.data.children.length)
-      ].data;
+    const randomIndex = Math.floor(Math.random() * imagePosts.length);
+    const post = imagePosts[randomIndex].data;
+
+    console.log(post);
+
+    console.log(post.preview);
+    // console.log(post.preview.images[0].source.url)
+    console.log(post);
 
     const embed = new EmbedBuilder()
       .setTitle(`\`r/${post.subreddit}:\` ${post.title}`)
       .setURL(post.url)
       .setColor("#3498db");
-
-    if (
-      post.url.endsWith(".jpg") ||
-      post.url.endsWith(".png") ||
-      post.url.endsWith(".jpeg")
-    )
-      embed.setImage(post.url);
+    embed.setImage(post.preview.images[0].source.url);
     await interaction.reply({ embeds: [embed] });
   },
 };

@@ -16,7 +16,7 @@ export default {
     const data = await Gamedig.query({
       type: interaction.options.getString("game"),
       host: interaction.options.getString("server"),
-    })
+    });
 
     // console.log("data", data)
 
@@ -48,7 +48,5 @@ export default {
     }
 
     await interaction.reply({ embeds: [embed] });
-
-
   },
 };

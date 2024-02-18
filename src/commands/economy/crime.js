@@ -49,7 +49,10 @@ export default {
           action: actionType,
         },
       });
-      if (!sentences) return interaction.reply("There is no custom economy sentences setup on this server!")
+      if (!sentences)
+        return interaction.reply(
+          "There is no custom economy sentences setup on this server!",
+        );
       return sentences.map((x) => x.sentence);
     };
 

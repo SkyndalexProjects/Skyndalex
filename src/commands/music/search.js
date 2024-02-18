@@ -13,34 +13,57 @@ export default {
   data: new SlashCommandBuilder()
     .setName("search")
     .setDescription("Search tracks")
-    .addStringOption((option) =>
-      option
-        .setName("track")
-        .setDescription("Search tracks")
-        .setRequired(true)
-        .setAutocomplete(true),
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("spotify")
+        .setDescription("Search for a track on Spotify")
+        .addStringOption((option) =>
+          option
+            .setName("track")
+            .setDescription("The track you want to search for")
+            .setAutocomplete(true)
+            .setRequired(true),
+        ),
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("soundcloud")
+        .setDescription("Search for a track on SoundCloud")
+        .addStringOption((option) =>
+          option
+            .setName("track")
+            .setDescription("The track you want to search for")
+            .setAutocomplete(true)
+            .setRequired(true),
+        ),
     ),
 
   async autocomplete(interaction) {
-    const focusedValue = interaction.options.getFocused();
-    if (focusedValue) {
-      const url = `https://api-v2.soundcloud.com/search/tracks?q=${focusedValue}&variant_ids=&facet=genre&user_id=303439-863403-472017-158497&client_id=${clientID}&limit=20&offset=0&linked_partitioning=1&app_version=1705403008&app_locale=pl`;
+    switch (interaction.options.getSubcommand()) {
+      case "spotify":
+        const spotiValue = await interaction.options.getFocused();
 
-      const response = await fetch(url);
-      const json = await response.json();
+        break;
+      case "soundcloud":
+        const soundCloudValue = await interaction.options.getFocused();
+        const url = `https://api-v2.soundcloud.com/search/tracks?q=${soundCloudValue}&variant_ids=&facet=genre&user_id=303439-863403-472017-158497&client_id=${clientID}&limit=20&offset=0&linked_partitioning=1&app_version=1705403008&app_locale=pl`;
 
-      let data = [];
+        const response = await fetch(url);
+        const json = await response.json();
 
-      for (let i in json.collection) {
-        data.push({
-          name: json.collection[i].title,
-          value: String(json.collection[i].id),
-        });
-      }
+        let data = [];
 
-      console.log("Data", data);
+        for (let i in json.collection) {
+          data.push({
+            name: json.collection[i].title,
+            value: String(json.collection[i].id),
+          });
+        }
 
-      await interaction.respond(data);
+        console.log("Data", data);
+
+        await interaction.respond(data);
+        break;
     }
   },
 
