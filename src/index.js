@@ -17,6 +17,7 @@ import loadInteractions from "./handlers/interactionHandler.js";
 
 import Topgg from "@top-gg/sdk";
 import express from "express";
+import loadRouters from "./auth/app.js";
 
 const app = express();
 const webhook = new Topgg.Webhook(process.env.TOPGG_WEBHOOK_AUTH);
@@ -99,6 +100,15 @@ app.listen(2137, () =>
   console.log(chalk.bold(chalk.green("[TOPGG] Listening on port 2137"))),
 );
 
+loadRouters(client).then(() =>
+  console.log(
+    `${chalk.whiteBright(
+      chalk.underline(`[${new Date().toUTCString()}]`),
+    )} ${chalk.bold(chalk.red(`(APPs)`))} ${chalk.bold(
+      chalk.blue("[1]"),
+    )} ${chalk.bold(chalk.green(`Loaded routers`))}`,
+  ),
+);
 loadEvents(client).then(() =>
   console.log(
     `${chalk.whiteBright(
