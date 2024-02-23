@@ -5,34 +5,16 @@ export default {
 
   async execute(client, interaction) {
     const response = await fetch(
-      "https://www.reddit.com/r/cats.json?raw_json=1",
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
+      "https://api.thecatapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=1",
     );
-    // console.log("response", response)
     const json = await response.json();
-    const imagePosts = json.data.children.filter(
-      (post) =>
-        post.data.url.match(/\.(jpeg|jpg|gif|png)$/i) && post.data.preview,
-    );
 
-    const randomIndex = Math.floor(Math.random() * imagePosts.length);
-    const post = imagePosts[randomIndex].data;
-
-    console.log(post);
-
-    console.log(post.preview);
-    // console.log(post.preview.images[0].source.url)
-    console.log(post);
-
+    console.log("json", json[0].url)
     const embed = new EmbedBuilder()
-      .setTitle(`\`r/${post.subreddit}:\` ${post.title}`)
-      .setURL(post.url)
-      .setColor("#3498db");
-    embed.setImage(post.preview.images[0].source.url);
+      .setColor("Green")
+      .setImage(json[0].url)
+      .setFooter({ text: "Powered by thecatapi.com" });
+
     await interaction.reply({ embeds: [embed] });
   },
 };
