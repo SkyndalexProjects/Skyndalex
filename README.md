@@ -23,3 +23,9 @@ Simply run `node index.js`, after meet the requirements.
 - [Node.js](https://nodejs.org/en/)
 - [Lavalink](https://lavalink.dev/getting-started/index.html)
 - [PostgreSQL](https://www.postgresql.org/download/)
+
+## Useful links
+- [Website](https://skyndalex.xyz)
+- [Support Server](https://discord.gg/kKaZAsW5fh)
+- [Topgg](https://top.gg/bot/1059594156839809074)
+- [Documentation](https://docs.skyndalex.xyz)
