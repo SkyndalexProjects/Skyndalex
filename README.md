@@ -1,4 +1,4 @@
-# Skyndalex v1.2.6 - Open Source Discord Bot
+# Skyndalex v1.2.7 - Open Source Discord Bot
 ## Features
 - [x] Custombots
 - [x] Music
