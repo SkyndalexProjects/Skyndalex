@@ -1,14 +1,14 @@
+import { HfInference } from "@huggingface/inference";
 import {
+  ActionRowBuilder,
   AttachmentBuilder,
   ButtonBuilder,
   ButtonStyle,
   EmbedBuilder,
   SlashCommandBuilder,
-  ActionRowBuilder
 } from "discord.js";
-import { HfInference } from '@huggingface/inference'
 
-const hf = new HfInference(process.env.HF_TOKEN)
+const hf = new HfInference(process.env.HF_TOKEN);
 const imageQueue = new Map();
 
 export default {
@@ -68,12 +68,12 @@ export default {
 
         const response = await hf.textToImage({
           inputs: input,
-          model: 'stabilityai/stable-diffusion-2-1',
+          model: "stabilityai/stable-diffusion-2-1",
           parameters: {
-            negative_prompt: 'blurry',
+            negative_prompt: "blurry",
           },
           use_cache: false,
-          wait_for_model: true
+          wait_for_model: true,
         });
 
         if (response?.error) {
@@ -83,7 +83,10 @@ export default {
             .setColor("#e74c3c")
             .setDescription("❌ Error: " + response.error)
             .setFooter({ text: "Task ID: " + taskId });
-          await queueReply.edit({ embeds: [errorEmbed], components: [new ActionRowBuilder().addComponents(rerun)] });
+          await queueReply.edit({
+            embeds: [errorEmbed],
+            components: [new ActionRowBuilder().addComponents(rerun)],
+          });
           return;
         }
 
@@ -96,7 +99,10 @@ export default {
               "❌ Cannot load the image. Got `application/json` response, instead of `image` (HF Model is still loading). Please try again later or try another prompt",
             )
             .setFooter({ text: "Task ID: " + taskId });
-          await queueReply.edit({ embeds: [cannotLoad], components: [new ActionRowBuilder().addComponents(rerun)] });
+          await queueReply.edit({
+            embeds: [cannotLoad],
+            components: [new ActionRowBuilder().addComponents(rerun)],
+          });
           return;
         }
 

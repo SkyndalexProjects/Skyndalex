@@ -4,25 +4,21 @@ export default {
   data: new SlashCommandBuilder().setName("dog").setDescription("Random dog"),
 
   async execute(client, interaction) {
-    const response = await fetch("https://www.reddit.com/r/dog.json?limit=10000")
+    const response = await fetch(
+      "https://api.thedogapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=1", {
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.THEDOGAPI_KEY,
+        }
+      }
+    );
     const json = await response.json();
 
-    let post =
-      json.data.children[
-        Math.floor(Math.random() * json.data.children.length)
-      ].data;
-
+    console.log("json", json[0].url)
     const embed = new EmbedBuilder()
-      .setTitle(`\`r/${post.subreddit}:\` ${post.title}`)
-      .setURL(post.url)
-      .setColor("#3498db");
+      .setImage(json[0].url)
+      .setFooter({ text: "Powered by thedogapi.com" });
 
-    if (
-      post.url.endsWith(".jpg") ||
-      post.url.endsWith(".png") ||
-      post.url.endsWith(".jpeg")
-    )
-      embed.setImage(post.url);
     await interaction.reply({ embeds: [embed] });
   },
 };

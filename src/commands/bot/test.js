@@ -1,49 +1,15 @@
-import { ChartJSNodeCanvas } from "chartjs-node-canvas";
-import { AttachmentBuilder, SlashCommandBuilder } from "discord.js";
-import Gamedig from "gamedig";
+import { SlashCommandBuilder } from "discord.js";
+import fetch from "node-fetch";
 
 export default {
-  data: new SlashCommandBuilder()
-    .setName("test")
-    .setDescription("test command"),
+  data: new SlashCommandBuilder().setName("test").setDescription("test"),
 
   async execute(client, interaction) {
-    const state = await Gamedig.query({
-      type: "minecraft",
-      host: "mc.hypixel.net",
-    });
+    const value = "donald tusk";
+    const url = `https://www.tiktok.com/api/search/general/preview/?keyword=${value}`;
 
-    console.log(state);
-    const width = 400;
-    const height = 400;
-    const backgroundColor = "white";
-    const chartJSNodeCanvas = new ChartJSNodeCanvas({
-      width,
-      height,
-      backgroundColor,
-    });
-
-    const config = {
-      type: "bar",
-      title: "test",
-      data: {
-        datasets: [
-          {
-            data: [{ id: "Test", nested: { value: 1 } }],
-          },
-        ],
-      },
-      options: {
-        parsing: {
-          xAxisKey: "id",
-          yAxisKey: "nested.value",
-        },
-      },
-    };
-
-    const image = await chartJSNodeCanvas.renderToBuffer(config);
-    const attachment = new AttachmentBuilder(image, "test.png");
-
-    await interaction.reply({ files: [attachment] });
+    const res = await fetch(url);
+    const data = await res.json();
+    console.log(data);
   },
 };

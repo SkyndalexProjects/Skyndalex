@@ -1,29 +1,29 @@
+import { HfInference } from "@huggingface/inference";
 import {
   AttachmentBuilder,
   ButtonBuilder,
   ButtonStyle,
   EmbedBuilder,
 } from "discord.js";
-import { fetchData } from "../../../events/messageCreate.js";
-import { HfInference } from '@huggingface/inference'
 
-const hf = new HfInference(process.env.HF_TOKEN)
+const hf = new HfInference(process.env.HF_TOKEN);
 export default {
   customId: "rerun",
   type: "button",
 
   run: async (client, interaction) => {
     try {
-      console.log(interaction.message.embeds[0])
-      const prompt = interaction.message.embeds[0].description.split("Input: ")[1];
+      console.log(interaction.message.embeds[0]);
+      const prompt =
+        interaction.message.embeds[0].description.split("Input: ")[1];
       const response = await hf.textToImage({
         inputs: prompt,
-        model: 'stabilityai/stable-diffusion-2-1',
+        model: "stabilityai/stable-diffusion-2-1",
         parameters: {
-          negative_prompt: 'blurry',
+          negative_prompt: "blurry",
         },
         use_cache: false,
-        wait_for_model: true
+        wait_for_model: true,
       });
 
       const sentMessage = await interaction.reply(
