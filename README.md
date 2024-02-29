@@ -9,8 +9,10 @@
     - [x] Soundcloud support
     - [ ] YouTube support [In progress]
 - [x] Fun commands
+        - Random cats, dogs
 - [x] Music 24/7
-    - [x]  
+    - [x] radio.garden support
+    - [x] Automatic joining and leaving to channel support
 - [x] AI
     - [x] Generating images
 - [ ] OpenAI Support [In progress]
