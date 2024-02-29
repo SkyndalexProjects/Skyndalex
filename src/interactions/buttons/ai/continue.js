@@ -8,11 +8,23 @@ export default {
 
   run: async (client, interaction) => {
     const previousContent = interaction.message.content;
+    const isAuthor = interaction.message.interaction.user.id === interaction.user.id;
+
+    if (!isAuthor) {
+      return interaction.reply({ content: "this is not your button :/", ephemeral: true });
+    }
+
+    // console.log("isAuthor", isAuthor);
+    const userIdFromInteraction = interaction.user.id;
+
+    const isUserSameAsAuthor = userIdFromInteraction === interaction.message.author.id;
+    // console.log("isUserSameAsAuthor", isUserSameAsAuthor);
 
     const newContent = await hf.textGeneration({
       model: "google/gemma-7b-it",
       inputs: previousContent,
     });
+
 
     if (previousContent === newContent.generated_text) {
       const disabledButton = new ButtonBuilder()
@@ -22,10 +34,9 @@ export default {
         .setDisabled(true);
       const updatedActionRow = new ActionRowBuilder().addComponents(disabledButton);
 
-
       return interaction.update({ components: [updatedActionRow] });
     }
-    return interaction.update({ content: newContent.generated_text })
 
+    return interaction.update({ content: newContent.generated_text });
   },
 };
