@@ -74,6 +74,11 @@ export default {
             .setDescription("Radio station/City name")
             .setAutocomplete(true),
         ),
+    )
+    .addSubcommand((sub) =>
+      sub
+        .setName("view")
+        .setDescription("View settings")
     ),
 
   async autocomplete(interaction) {
@@ -107,49 +112,97 @@ export default {
     );
   },
   async execute(client, interaction) {
-    const options = interaction.options._hoistedOptions;
-    const updatedSettings = [];
+    if (interaction.options.getSubcommand() === "view") {
+      const settings = await client.prisma.settings.findFirst({
+        where: { guildId: interaction.guild.id },
+      });
 
-    const fieldMaps = {
-      "voice-logs-channel": "voiceLogsChannel",
-      "welcome-channel": "welcomeChannel",
-      "leave-channel": "leaveChannel",
-      "auto-role": "autoRole",
-      "radio-channel": "radioChannel",
-      radio: "radioEnabled",
-      station: "radioStation",
-      "ai-channel": "aiChannel",
-    };
-
-    for (const option of options) {
-      const { name: optionName, value: optionValue } = option;
-
-      const fieldToUpdate = fieldMaps[optionName];
-
-      if (fieldToUpdate) {
-        await client.prisma.settings.upsert({
-          where: { guildId: interaction.guild.id },
-          create: {
-            guildId: interaction.guild.id,
-            [fieldToUpdate]: optionValue,
+      const embed = new EmbedBuilder()
+        .setTitle("Current settings")
+        .addFields([
+          {
+            name: "Voice logs channel",
+            value: String(settings?.voiceLogsChannel || "Not set"),
           },
-          update: { [fieldToUpdate]: optionValue },
-        });
+          {
+            name: "Welcome channel",
+            value: String(settings?.welcomeChannel || "Not set"),
+          },
+          {
+            name: "Leave channel",
+            value: String(settings?.leaveChannel || "Not set"),
+          },
+          {
+            name: "Auto role",
+            value: String(settings?.autoRole || "Not set"),
+          },
+          {
+            name: "Radio channel",
+            value: String(settings?.radioChannel || "Not set"),
+          },
+          {
+            name: "Radio enabled",
+            value: String(settings?.radioEnabled || "Not set"),
+          },
+          {
+            name: "Radio station",
+            value: String(settings?.radioStation || "Not set"),
+          },
+          {
+            name: "AI channel",
+            value: String(settings?.aiChannel || "Not set"),
+          },
+        ])
+        .setColor("#0099ff")
+        .setTimestamp();
 
-        updatedSettings.push(`${fieldToUpdate} : : : \`${optionValue}\``);
+      await interaction.reply({ embeds: [embed] });
+    } else {
+      const options = interaction.options._hoistedOptions;
+      const updatedSettings = [];
+
+      const fieldMaps = {
+        "voice-logs-channel": "voiceLogsChannel",
+        "welcome-channel": "welcomeChannel",
+        "leave-channel": "leaveChannel",
+        "auto-role": "autoRole",
+        "radio-channel": "radioChannel",
+        "radio": "radioEnabled",
+        "station": "radioStation",
+        "ai-channel": "aiChannel",
+      };
+
+      for (const option of options) {
+        const { name: optionName, value: optionValue } = option;
+
+        const fieldToUpdate = fieldMaps[optionName];
+
+        if (fieldToUpdate) {
+          await client.prisma.settings.upsert({
+            where: { guildId: interaction.guild.id },
+            create: {
+              guildId: interaction.guild.id,
+              [fieldToUpdate]: optionValue,
+            },
+            update: { [fieldToUpdate]: optionValue },
+          });
+
+          updatedSettings.push(`${fieldToUpdate} : : : \`${optionValue}\``);
+        }
       }
+
+      const embed = new EmbedBuilder()
+        .setTitle("Updated settings")
+        .setDescription(
+          updatedSettings.length
+            ? updatedSettings.join("\n")
+            : "No settings updated, or something went wrong.",
+        )
+        .setColor("#0099ff")
+        .setTimestamp();
+
+      await interaction.reply({ embeds: [embed] });
+
     }
-
-    const embed = new EmbedBuilder()
-      .setTitle("Updated settings")
-      .setDescription(
-        updatedSettings.length
-          ? updatedSettings.join("\n")
-          : "No settings updated, or something went wrong.",
-      )
-      .setColor("#0099ff")
-      .setTimestamp();
-
-    await interaction.reply({ embeds: [embed] });
   },
 };
