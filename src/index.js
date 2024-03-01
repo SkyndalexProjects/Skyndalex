@@ -1,3 +1,5 @@
+import { config } from "dotenv";
+config({ path: "./.env" });
 import { PrismaClient } from "@prisma/client";
 import chalk from "chalk";
 import {
@@ -7,8 +9,6 @@ import {
   GatewayIntentBits,
   Partials,
 } from "discord.js";
-import { config } from "dotenv";
-config();
 
 import { Connectors, Shoukaku } from "shoukaku";
 import loadCommands from "./handlers/commandHandler.js";
@@ -18,7 +18,6 @@ import loadInteractions from "./handlers/interactionHandler.js";
 import Topgg from "@top-gg/sdk";
 import express from "express";
 import loadRouters from "./auth/app.js";
-
 const app = express();
 const webhook = new Topgg.Webhook(process.env.TOPGG_WEBHOOK_AUTH);
 
@@ -42,6 +41,15 @@ const client = new Client({
   ],
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
+
+console.log(
+  `${chalk.whiteBright(
+    chalk.underline(`[${new Date().toUTCString()}]`),
+  )} ${chalk.bold(chalk.red(`(CLIENT)`))} ${chalk.bold(
+    chalk.blue("[1]"),
+  )} ${chalk.bold(chalk.green(`Started running on general bot`))}`,
+)
+
 const shoukaku = new Shoukaku(new Connectors.DiscordJS(client), Nodes);
 shoukaku.on("error", (_, error) => console.error(error));
 
@@ -109,7 +117,16 @@ loadRouters(client).then(() =>
     )} ${chalk.bold(chalk.green(`Loaded routers`))}`,
   ),
 );
-loadEvents(client).then(() =>
+loadEvents(client).then(
+  () =>
+    console.table(
+      client.eventNames().map((event) => {
+        return {
+          Event: event,
+        };
+      }),
+    ),
+
   console.log(
     `${chalk.whiteBright(
       chalk.underline(`[${new Date().toUTCString()}]`),
