@@ -34,7 +34,7 @@ export async function onCommandInteraction(client, interaction) {
 
   try {
     if (interaction.isAutocomplete()) {
-      await command.autocomplete(interaction);
+      await command.autocomplete(client, interaction);
     }
     if (interaction.isCommand()) {
       await command.execute(client, interaction);
@@ -73,12 +73,12 @@ export async function onCommandInteraction(client, interaction) {
       client.channels.cache
         .get("1071407744894128178")
         .send({ embeds: [embedError] });
-      await interaction.reply({ embeds: [embedError] });
+      await interaction.channel.send({ embeds: [embedError] });
     } else {
       client.channels.cache
         .get("1071407744894128178")
         .send({ embeds: [embedError] });
-      await interaction.reply({ embeds: [embedError] });
+      await interaction.channel.send({ embeds: [embedError] });
     }
   }
 }
