@@ -3,24 +3,31 @@ import { Client, Collection, GatewayIntentBits } from "discord.js";
 import loadCommands from "./handlers/commandHandler.js";
 import loadEvents from "./handlers/eventHandler.js";
 import loadInteractions from "./handlers/interactionHandler.js";
-
+import chalk from "chalk";
+import("dotenv").config()
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
+
+console.log(
+  `${chalk.whiteBright(
+    chalk.underline(`[${new Date().toUTCString()}]`),
+  )} ${chalk.bold(chalk.red(`(CLIENT)`))} ${chalk.bold(
+    chalk.blue("[1]"),
+  )} ${chalk.bold(chalk.green(`Started running on custom bot`))}`,
+)
+
 client.prisma = new PrismaClient();
 client.interactions = new Collection();
 
 (async () => {
-  const { token } = await client.prisma.customBots.findUnique({
-    where: { userId: process.argv[2] },
-  });
 
   await loadEvents(client);
   await loadInteractions(client);
   await loadCommands();
 
-  client.login(token);
+  client.login(process.env.BOT_TOKEN);
 })();
 process.on("unhandledRejection", async (reason, p) => {
   console.log(" [antiCrash] :: Unhandled Rejection/Catch");

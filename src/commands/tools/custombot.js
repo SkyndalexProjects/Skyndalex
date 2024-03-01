@@ -19,11 +19,8 @@ export default {
       where: { userId: interaction.user.id },
     });
 
-    let embed;
-    let actionRow;
-
     if (!bot) {
-      embed = new EmbedBuilder()
+      const noBotEmbed = new EmbedBuilder()
         .setDescription(
           `It seems like you don't have custom bot yet, click the button below to create it`,
         )
@@ -34,20 +31,22 @@ export default {
         .setStyle(ButtonStyle.Primary)
         .setCustomId(`customBotCreateBtn-${interaction.user.id}`);
 
-      actionRow = new ActionRowBuilder().addComponents(createButton);
+      const createBotActionRow = new ActionRowBuilder().addComponents(createButton);
+
+      return interaction.reply({
+        embeds: [noBotEmbed],
+        components: [createBotActionRow],
+        ephemeral: true,
+      });
     } else {
       let botOnline = await find("name", `customBot ${interaction.user.id}`);
       botOnline = botOnline[0];
 
-      embed = new EmbedBuilder().setTitle("Manage your custom bot");
+      const embed = new EmbedBuilder().setTitle("Manage your custom bot");
 
       const powerState = new ButtonBuilder()
-        .setLabel(
-          client.user.id != process.env.CLIENT_ID
-            ? "Restart bot"
-            : `Turn bot ${botOnline ? "off" : "on"}`,
-        )
-        .setStyle(ButtonStyle[botOnline ? "Danger" : "Success"])
+        .setLabel(`${botOnline ? "Turn bot off" : "Turn bot on"}`)
+        .setStyle(ButtonStyle[botOnline ? ButtonStyle.Danger : ButtonStyle.Success])
         .setCustomId(`customBotPowerState-${interaction.user.id}`);
 
       const deployCommands = new ButtonBuilder()
@@ -55,16 +54,15 @@ export default {
         .setStyle(ButtonStyle.Primary)
         .setCustomId(`customBotDeploy-${interaction.user.id}`);
 
-      actionRow = new ActionRowBuilder().addComponents(
-        powerState,
-        deployCommands,
-      );
-    }
+      console.log(client.id !== process.env.CLIENT_ID)
 
-    return interaction.reply({
-      embeds: [embed],
-      components: [actionRow],
-      ephemeral: true,
-    });
+      const actionRow = new ActionRowBuilder().addComponents(powerState, deployCommands);
+
+      return interaction.reply({
+        embeds: [embed],
+        components: [actionRow],
+        ephemeral: true,
+      });
+    }
   },
 };
