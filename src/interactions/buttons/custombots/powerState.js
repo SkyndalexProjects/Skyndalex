@@ -1,13 +1,19 @@
 import { execSync, fork } from "child_process";
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
 import find from "find-process";
-import { parseURLToResultingURLRecord } from "jsdom/lib/jsdom/living/helpers/document-base-url.js";
 export default {
   customId: `customBotPowerState`,
   type: "button",
 
   run: async (client, interaction) => {
-    await interaction.deferReply({ ephemeral: true })
+    // TODO: rewrite to docker (future plans)
+    await interaction.deferUpdate({ ephemeral: true })
+    const embedPreparing = new EmbedBuilder()
+      .setTitle("<a:4704loadingicon:1183416396223352852> | Im preapring your custombot, please wait")
+      .setColor("Yellow")
+
+    await interaction.editReply({ embeds: [embedPreparing], ephemeral: true })
+
     const deploy = new ButtonBuilder()
       .setLabel("Deploy bot commands")
       .setStyle(ButtonStyle.Primary)
@@ -27,12 +33,11 @@ export default {
     const turnOffactionRow = new ActionRowBuilder().addComponents(powerStateOn, deploy);
 
     const bot = await find("name", `customBot ${interaction.user.id}`);
+    const turnBot = interaction.message.components[0].components[0]
 
     const { token, clientId } = await client.prisma.customBots.findUnique({
       where: { userId: interaction.user.id },
     });
-
-    await client.prisma.$executeRawUnsafe(`CREATE DATABASE customBot_${clientId};`).catch(() => null);
     const DBURL = `postgresql://postgres:${process.env.CUSTOMBOT_DB_PASSWORD}@localhost:5432/custombot_${clientId}?schema=public`
 
     execSync(
@@ -40,10 +45,14 @@ export default {
       { stdio: 'inherit' },
     );
 
+
     if (!bot) {
+      await client.prisma.$executeRawUnsafe(`CREATE DATABASE customBot_${clientId};`).catch(() => null);
+
       await fork("customBot", [interaction.user.id], {
         env: {
           BOT_TOKEN: token,
+          CUSTOMBOT_DB_PASSWORD: process.env.CUSTOMBOT_DB_PASSWORD,
           DATABASE_URL: DBURL,
           CLIENT_ID: process.env.CLIENT_ID,
           TOPGG_WEBHOOK_AUTH: process.env.TOPGG_WEBHOOK_AUTH,
@@ -57,22 +66,29 @@ export default {
           THEDOGAPI_KEY: process.env.THEDOGAPI_KEY,
           THECATAPI_KEY: process.env.THECATAPI_KEY,
         }
-      })
+      });
+
+      return await interaction.editReply({ components: [turnOnactionRow] }) && await interaction.deleteReply()
     } else {
-      await client.prisma.$executeRawUnsafe(`CREATE DATABASE customBot_${clientId};`).catch(() => null)
-
-      const turnBot = interaction.message.components[0].components[0]
-
       if (turnBot.style === 4) { // DANGER
-        await interaction.message.deleteReply()
-        await interaction.update({ components: [turnOffactionRow] });
+        await interaction.editReply({ components: [turnOffactionRow]});
 
+        await interaction.editReply({ content: "<a:4704loadingicon:1183416396223352852> | Bot is turning off, please wait...", ephemeral: true })
         process.kill(bot[0].pid);
+        const embedOff = new EmbedBuilder()
+          .setTitle(`Custom bot \`${clientId}\` is now offline`)
+          .setColor("#ff0000")
+        await interaction.editReply({ content: "", embeds: [embedOff], ephemeral: true })
       } else {
+        // await client.prisma.$executeRawUnsafe(`CREATE DATABASE customBot_${clientId};`).catch(() => null)
+
+        await interaction.editReply({ content: "<a:4704loadingicon:1183416396223352852> | Bot is turning on, please wait...", ephemeral: true })
+
         await fork("customBot", [interaction.user.id], {
           env: {
             BOT_TOKEN: token,
-            DATABASE_URL: process.env.CUSTOMBOT_DATABASE_URL,
+            CUSTOMBOT_DB_PASSWORD: process.env.CUSTOMBOT_DB_PASSWORD,
+            DATABASE_URL: DBURL,
             CLIENT_ID: process.env.CLIENT_ID,
             TOPGG_WEBHOOK_AUTH: process.env.TOPGG_WEBHOOK_AUTH,
             HF_TOKEN: process.env.HF_TOKEN,
@@ -86,8 +102,14 @@ export default {
             THECATAPI_KEY: process.env.THECATAPI_KEY,
           }
         })
-        await interaction.message.deleteReply()
-        await interaction.update({ components: [turnOnactionRow] })
+
+        const embedLogged = new EmbedBuilder()
+          .setTitle(`Custom bot \`${clientId}\` is now online`)
+          .setColor("#00ff00")
+
+        await interaction.editReply({ content: "", embeds: [embedLogged], ephemeral: true })
+
+        await interaction.editReply({ components: [turnOnactionRow] })
       }
     }
     },
