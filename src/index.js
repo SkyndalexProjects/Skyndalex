@@ -1,5 +1,3 @@
-import { config } from "dotenv";
-config({ path: "./.env" });
 import { PrismaClient } from "@prisma/client";
 import chalk from "chalk";
 import {
