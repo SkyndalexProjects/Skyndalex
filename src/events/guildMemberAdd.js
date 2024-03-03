@@ -26,15 +26,5 @@ export default async function guildMemberAdd(client, member) {
     await client.channels.cache
       .get(getSettings.welcomeChannel)
       .send({ embeds: [welcomeEmbed] });
-  } else {
-    if (getSettings?.leaveChannel) {
-      const embed = new EmbedBuilder()
-        .setColor("Red")
-        .setDescription(`**${member.user.username}** left the server`);
-
-      await client.channels.cache
-        .get(getSettings.leaveChannel)
-        .send({ embeds: [embed] });
-    }
   }
 }

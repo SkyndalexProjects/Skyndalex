@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 
-export default async function guildMemberAdd(client, member) {
+export default async function guildMemberRemove(client, member) {
   const getSettings = await client.prisma.settings.findUnique({
     where: {
       guildId: member.guild.id,
