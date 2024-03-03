@@ -73,7 +73,7 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-.env
+src/.env
 .env.development.local
 .env.test.local
 .env.production.local
@@ -133,6 +133,7 @@ dist
 
 .idea
 src/configdeprecated.json
-.env
+src/.env
 .npmrc
 src/config.json
+src/commands/bot/test.js

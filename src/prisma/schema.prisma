@@ -20,11 +20,12 @@ model settings {
 }
 
 model customBots {
-  userId   String  @unique
-  clientId String  @unique
-  token    String? @unique
+  userId   String
+  clientId String
+  token    String
+  id       Int    @default(autoincrement())
 
-  @@id([userId, clientId])
+  @@id([id, clientId])
 }
 
 model economy {
