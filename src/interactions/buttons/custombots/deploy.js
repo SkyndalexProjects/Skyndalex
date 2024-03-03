@@ -6,20 +6,30 @@ export default {
   type: "button",
 
   run: async (client, interaction) => {
-    const bot = await client.prisma.customBots.findUnique({
-      where: { userId: interaction.user.id },
+    const clientId = interaction.customId.split("-")[1];
+    const getToken = await client.prisma.customBots.findMany({
+      where: {
+        userId: interaction.user.id,
+        clientId: clientId,
+      },
     });
-    const rest = new REST({ version: "10" }).setToken(bot.token);
+
+    const token = getToken[0].token
+
+    console.log("token", token)
+    const rest = new REST({ version: "10" }).setToken(token);
 
     try {
       await interaction.deferReply({ ephemeral: true });
 
+      const cmds = commands.map((cmd) => cmd.data.toJSON());
+
       await interaction.editReply({
-        content: `Started refreshing ${commands.length} application (/) commands.`,
+        content: `Started refreshing ${cmds.length} application (/) commands.`,
       });
 
-      const data = await rest.put(Routes.applicationCommands(bot.clientId), {
-        body: commands.map((cmd) => cmd.data.toJSON()),
+      const data = await rest.put(Routes.applicationCommands(clientId), {
+        body: cmds,
       });
 
       await interaction.editReply({

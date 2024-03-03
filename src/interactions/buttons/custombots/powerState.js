@@ -1,5 +1,12 @@
 import { execSync, fork } from "child_process";
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle, Embed,
+  EmbedBuilder,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder
+} from "discord.js";
 import find from "find-process";
 export default {
   customId: `customBotPowerState`,
@@ -7,49 +14,87 @@ export default {
 
   run: async (client, interaction) => {
     // TODO: rewrite to docker (future plans)
+
+    const selectedClientId = interaction.customId.split("-")[1]
+
+    const getBot = client.users.cache.get(selectedClientId);
+    if (!getBot) client.users.cache.fetch(selectedClientId);
+
+    const clientId = interaction.customId.split("-")[1]
+
     await interaction.deferUpdate({ ephemeral: true })
     const embedPreparing = new EmbedBuilder()
-      .setTitle("<a:4704loadingicon:1183416396223352852> | Im preapring your custombot, please wait")
+      .setTitle(`Manage your custombot`)
+      .setDescription(
+        `Current bot: **${getBot.username}**\nCurrent bot status: <a:4704loadingicon:1183416396223352852> | **Preparing**`
+      )
       .setColor("Yellow")
-
-    await interaction.editReply({ embeds: [embedPreparing], ephemeral: true })
+    await interaction.editReply({ content: "", embeds: [embedPreparing], ephemeral: true })
 
     const deploy = new ButtonBuilder()
       .setLabel("Deploy bot commands")
       .setStyle(ButtonStyle.Primary)
-      .setCustomId(`customBotDeploy-${interaction.user.id}`);
+      .setCustomId(`customBotDeploy-${selectedClientId}`);
 
     const powerStateOff = new ButtonBuilder()
       .setLabel("Turn bot off")
       .setStyle(ButtonStyle.Danger)
-      .setCustomId(`customBotPowerState-${interaction.user.id}`);
+      .setCustomId(`customBotPowerState-${selectedClientId}`);
 
     const powerStateOn = new ButtonBuilder()
       .setLabel("Turn bot on")
       .setStyle(ButtonStyle.Success)
-      .setCustomId(`customBotPowerState-${interaction.user.id}`);
+      .setCustomId(`customBotPowerState-${selectedClientId}`);
+
+    const select = new StringSelectMenuBuilder()
+      .setCustomId('customBotSelect')
+      .setPlaceholder('Choose a custombot!');
+
+    const selectRow = new ActionRowBuilder().addComponents(select);
+
+    const findUserBots = await client.prisma.customBots.findMany({
+      where: {
+        userId: interaction.user.id,
+      },
+    });
+    findUserBots.forEach(bot => {
+      const getBot = client.users.cache.get(bot.clientId);
+      if (!getBot) client.users.cache.fetch(bot.clientId);
+
+      select.addOptions(
+        new StringSelectMenuOptionBuilder()
+          .setLabel(`Custom bot: ${getBot.username}`)
+          .setValue(bot.clientId)
+      );
+    });
 
     const turnOnactionRow = new ActionRowBuilder().addComponents(powerStateOff, deploy);
     const turnOffactionRow = new ActionRowBuilder().addComponents(powerStateOn, deploy);
 
-    const bot = await find("name", `customBot ${interaction.user.id}`);
+    const bot = await find("name", `customBot ${selectedClientId}`);
     const turnBot = interaction.message.components[0].components[0]
 
-    const { token, clientId } = await client.prisma.customBots.findUnique({
-      where: { userId: interaction.user.id },
+
+    const getToken = await client.prisma.customBots.findMany({
+      where: {
+        userId: interaction.user.id,
+        clientId: clientId,
+      },
     });
+
+    const token = getToken[0]?.token
+
     const DBURL = `postgresql://postgres:${process.env.CUSTOMBOT_DB_PASSWORD}@localhost:5432/custombot_${clientId}?schema=public`
 
     execSync(
-      `SET DATABASE_URL=${DBURL} && npx prisma db push && npx prisma db pull && npx prisma migrate deploy --schema ./prisma/schema.prisma`,
+      `SET DATABASE_URL=${DBURL} && npx prisma db push`,
       { stdio: 'inherit' },
     );
-
 
     if (!bot) {
       await client.prisma.$executeRawUnsafe(`CREATE DATABASE customBot_${clientId};`).catch(() => null);
 
-      await fork("customBot", [interaction.user.id], {
+      await fork("customBot", [clientId], {
         env: {
           BOT_TOKEN: token,
           CUSTOMBOT_DB_PASSWORD: process.env.CUSTOMBOT_DB_PASSWORD,
@@ -73,18 +118,32 @@ export default {
       if (turnBot.style === 4) { // DANGER
         await interaction.editReply({ components: [turnOffactionRow]});
 
-        await interaction.editReply({ content: "<a:4704loadingicon:1183416396223352852> | Bot is turning off, please wait...", ephemeral: true })
+        const embedTurningOff = new EmbedBuilder()
+          .setTitle(`Manage your custombot`)
+          .setDescription(
+            `Current bot: **${getBot.username}**\nCurrent bot status: <a:4704loadingicon:1183416396223352852> | **Turning off**`
+          )
+          .setColor("DarkButNotBlack")
+        await interaction.editReply({ content: "", embeds: [embedTurningOff], ephemeral: true })
         process.kill(bot[0].pid);
+
         const embedOff = new EmbedBuilder()
-          .setTitle(`Custom bot \`${clientId}\` is now offline`)
-          .setColor("#ff0000")
+          .setTitle(`Manage your custombot`)
+          .setDescription(
+            `Current bot: **${getBot.username}**\nCurrent bot status: <:offline:1062072773406642226>  | **Offline** (Turned off)`
+          )
+          .setColor("Red")
         await interaction.editReply({ content: "", embeds: [embedOff], ephemeral: true })
       } else {
-        // await client.prisma.$executeRawUnsafe(`CREATE DATABASE customBot_${clientId};`).catch(() => null)
+        const embedTurningOn = new EmbedBuilder()
+          .setTitle(`Manage your custombot`)
+          .setDescription(
+            `Current bot: **${getBot.username}**\nCurrent bot status: <a:4704loadingicon:1183416396223352852> | **Turning on**`
+          )
+          .setColor("DarkButNotBlack")
+        await interaction.editReply({ embeds: [embedTurningOn], ephemeral: true })
 
-        await interaction.editReply({ content: "<a:4704loadingicon:1183416396223352852> | Bot is turning on, please wait...", ephemeral: true })
-
-        await fork("customBot", [interaction.user.id], {
+        await fork("customBot", [clientId], {
           env: {
             BOT_TOKEN: token,
             CUSTOMBOT_DB_PASSWORD: process.env.CUSTOMBOT_DB_PASSWORD,
@@ -104,12 +163,13 @@ export default {
         })
 
         const embedLogged = new EmbedBuilder()
-          .setTitle(`Custom bot \`${clientId}\` is now online`)
-          .setColor("#00ff00")
+          .setTitle(`Manage your custombot`)
+          .setDescription(
+            `Current bot: **${getBot.username}**\nCurrent bot status: <:online:1062072775583485973> | **Online**`
+          )
+          .setColor("Green");
 
-        await interaction.editReply({ content: "", embeds: [embedLogged], ephemeral: true })
-
-        await interaction.editReply({ components: [turnOnactionRow] })
+        await interaction.editReply({ content: "", embeds: [embedLogged], ephemeral: true, components: [turnOnactionRow, selectRow] })
       }
     }
     },

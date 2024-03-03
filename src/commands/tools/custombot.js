@@ -5,6 +5,8 @@ import {
   EmbedBuilder,
   PermissionFlagsBits,
   SlashCommandBuilder,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder
 } from "discord.js";
 import find from "find-process";
 
@@ -12,17 +14,30 @@ export default {
   data: new SlashCommandBuilder()
     .setName("custombot")
     .setDescription("Manage your custombot(s)")
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("create")
+        .setDescription("Create a custom bot")
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("manage")
+        .setDescription("Manage your custom bot")
+    )
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
   async execute(client, interaction) {
-    const bot = await client.prisma.customBots.findUnique({
-      where: { userId: interaction.user.id },
+    const findUserBots = await client.prisma.customBots.findMany({
+      where: {
+        userId: interaction.user.id,
+      },
     });
 
-    if (!bot) {
-      const noBotEmbed = new EmbedBuilder()
+    if (interaction.options.getSubcommand() === "create") {
+      const embed = new EmbedBuilder()
+        .setTitle("Create a custom bot")
         .setDescription(
-          `It seems like you don't have custom bot yet, click the button below to create it`,
+          `You can create a custom bot by clicking the button below.`
         )
         .setColor("DarkButNotBlack");
 
@@ -34,33 +49,55 @@ export default {
       const createBotActionRow = new ActionRowBuilder().addComponents(createButton);
 
       return interaction.reply({
-        embeds: [noBotEmbed],
+        embeds: [embed],
         components: [createBotActionRow],
         ephemeral: true,
       });
-    } else {
-      let botOnline = await find("name", `customBot ${interaction.user.id}`);
-      botOnline = botOnline[0];
+    } else if (interaction.options.getSubcommand("manage")) {
+      const select = new StringSelectMenuBuilder()
+        .setCustomId('customBotSelect')
+        .setPlaceholder('Choose a custombot!');
 
-      const embed = new EmbedBuilder().setTitle("Manage your custom bot");
+      findUserBots.forEach(bot => {
+        const getBot = client.users.cache.get(bot.clientId);
+        if (!getBot) client.users.cache.fetch(bot.clientId);
+
+        select.addOptions(
+          new StringSelectMenuOptionBuilder()
+            .setLabel(`Custom bot: ${getBot.username}`)
+            .setValue(bot.clientId)
+        );
+      });
+
+      const deploy = new ButtonBuilder()
+        .setLabel("Deploy bot commands")
+        .setStyle(ButtonStyle.Primary)
+        .setCustomId(`customBotDeploy-${findUserBots[0].clientId}`);
+
+      let botOnline = await find("name", `customBot ${findUserBots[0].clientId}`);
+      botOnline = botOnline[0];
 
       const powerState = new ButtonBuilder()
         .setLabel(`${botOnline ? "Turn bot off" : "Turn bot on"}`)
         .setStyle(ButtonStyle[botOnline ? ButtonStyle.Danger : ButtonStyle.Success])
-        .setCustomId(`customBotPowerState-${interaction.user.id}`);
+        .setCustomId(`customBotPowerState-${findUserBots[0].clientId}`);
 
-      const deployCommands = new ButtonBuilder()
-        .setLabel("Deploy bot commands")
-        .setStyle(ButtonStyle.Primary)
-        .setCustomId(`customBotDeploy-${interaction.user.id}`);
+      const row = new ActionRowBuilder().addComponents(select);
+      const row2 = new ActionRowBuilder().addComponents(deploy, powerState);
 
-      console.log(client.id !== process.env.CLIENT_ID)
+      const getBot = client.users.cache.get(findUserBots[0].clientId);
+      if (!getBot) client.users.cache.fetch(findUserBots[0].clientId);
 
-      const actionRow = new ActionRowBuilder().addComponents(powerState, deployCommands);
+      const embed = new EmbedBuilder()
+        .setTitle(`Manage your custom bot`)
+        .setDescription(
+          `Current bot: **${getBot.username}**`
+        )
+        .setColor("DarkButNotBlack");
 
       return interaction.reply({
         embeds: [embed],
-        components: [actionRow],
+        components: [row, row2],
         ephemeral: true,
       });
     }

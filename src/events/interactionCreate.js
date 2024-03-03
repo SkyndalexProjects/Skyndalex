@@ -42,12 +42,7 @@ export default async function interactionCreate(client, interaction) {
           )
           ?.first();
 
-        if (
-          interaction.customId.startsWith("next-") ||
-          interaction.customId.startsWith("previous-")
-        )
-          return;
-        if (!button)
+          if (!button)
           return (
             console.log(`Button with ${interaction.customId} was not found.`) ||
             interaction.reply({ embeds: [embedNotFound], ephemeral: true })
@@ -70,13 +65,9 @@ export default async function interactionCreate(client, interaction) {
       }
       break;
     case interaction.isStringSelectMenu(): {
-      const selectOption = client.interactions
-        .filter(
-          (x) =>
-            x.type === "string_select_menu_value" &&
-            interaction.values.includes(x.customId),
-        )
-        .first();
+      const selectOption = client.interactions.find(
+        (x) => x.type === "string_select_menu_value" && interaction.customId === x.customId,
+      )
 
       if (!selectOption)
         return console.log(
