@@ -1,10 +1,4 @@
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
-} from "discord.js";
-import { setCharset } from "express/lib/utils.js";
+import { EmbedBuilder } from "discord.js";
 export default {
   customId: "customBotCreateModal",
   type: "modal",
@@ -22,12 +16,14 @@ export default {
         userId: interaction.user.id,
         clientId: clientId,
         token: token,
-      }
+      },
     });
 
     const embed = new EmbedBuilder()
       .setTitle(`Custom bot created`)
-      .setDescription(`Your custom bot has been created.\nYou can manage it via **/custombot manage** command`)
+      .setDescription(
+        `Your custom bot has been created.\nYou can manage it via **/custombot manage** command`,
+      )
       .setColor("Green");
 
     return interaction.reply({

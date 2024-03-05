@@ -6,7 +6,7 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
   StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder
+  StringSelectMenuOptionBuilder,
 } from "discord.js";
 import find from "find-process";
 
@@ -15,29 +15,19 @@ export default {
     .setName("custombot")
     .setDescription("Manage your custombot(s)")
     .addSubcommand((subcommand) =>
-      subcommand
-        .setName("create")
-        .setDescription("Create a custom bot")
+      subcommand.setName("create").setDescription("Create a custom bot"),
     )
     .addSubcommand((subcommand) =>
-      subcommand
-        .setName("manage")
-        .setDescription("Manage your custom bot")
+      subcommand.setName("manage").setDescription("Manage your custom bot"),
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
   async execute(client, interaction) {
-    const findUserBots = await client.prisma.customBots.findMany({
-      where: {
-        userId: interaction.user.id,
-      },
-    });
-
     if (interaction.options.getSubcommand() === "create") {
       const embed = new EmbedBuilder()
         .setTitle("Create a custom bot")
         .setDescription(
-          `You can create a custom bot by clicking the button below.`
+          `You can create a custom bot by clicking the button below.`,
         )
         .setColor("DarkButNotBlack");
 
@@ -46,7 +36,9 @@ export default {
         .setStyle(ButtonStyle.Primary)
         .setCustomId(`customBotCreateBtn-${interaction.user.id}`);
 
-      const createBotActionRow = new ActionRowBuilder().addComponents(createButton);
+      const createBotActionRow = new ActionRowBuilder().addComponents(
+        createButton,
+      );
 
       return interaction.reply({
         embeds: [embed],
@@ -54,45 +46,55 @@ export default {
         ephemeral: true,
       });
     } else if (interaction.options.getSubcommand("manage")) {
-      const select = new StringSelectMenuBuilder()
-        .setCustomId('customBotSelect')
-        .setPlaceholder('Choose a custombot!');
+      const findUserBots = await client.prisma.customBots.findMany({
+        where: {
+          userId: interaction.user.id,
+        },
+      });
 
-      findUserBots.forEach(bot => {
-        const getBot = client.users.cache.get(bot.clientId);
-        if (!getBot) client.users.cache.fetch(bot.clientId);
+      console.log("findUserBots", findUserBots);
+      if (findUserBots.length === 0)
+        return interaction.reply({
+          content:
+            "It seems that you dont have any custombots in your account. Add some with `/custombot create` command.",
+          ephemeral: true,
+        });
+      const select = new StringSelectMenuBuilder()
+        .setCustomId("customBotSelect")
+        .setPlaceholder("Choose a custombot!");
+
+      for (const bot of findUserBots) {
+        const getBot = await client.users.fetch(bot.clientId).catch(() => null);
 
         select.addOptions(
           new StringSelectMenuOptionBuilder()
-            .setLabel(`Custom bot: ${getBot.username}`)
-            .setValue(bot.clientId)
+            .setLabel(`Custom bot: ${getBot?.username || "Unknown"}`)
+            .setValue(bot.clientId),
         );
-      });
-
-      const deploy = new ButtonBuilder()
-        .setLabel("Deploy bot commands")
-        .setStyle(ButtonStyle.Primary)
-        .setCustomId(`customBotDeploy-${findUserBots[0].clientId}`);
-
-      let botOnline = await find("name", `customBot ${findUserBots[0].clientId}`);
+      }
+      let botOnline = await find(
+        "name",
+        `customBot ${findUserBots[0]?.clientId}`,
+      );
       botOnline = botOnline[0];
 
       const powerState = new ButtonBuilder()
         .setLabel(`${botOnline ? "Turn bot off" : "Turn bot on"}`)
-        .setStyle(ButtonStyle[botOnline ? ButtonStyle.Danger : ButtonStyle.Success])
-        .setCustomId(`customBotPowerState-${findUserBots[0].clientId}`);
+        .setStyle(
+          ButtonStyle[botOnline ? ButtonStyle.Danger : ButtonStyle.Success],
+        )
+        .setCustomId(`customBotPowerState-${findUserBots[0]?.clientId}`);
 
       const row = new ActionRowBuilder().addComponents(select);
-      const row2 = new ActionRowBuilder().addComponents(deploy, powerState);
+      const row2 = new ActionRowBuilder().addComponents(powerState);
 
-      const getBot = client.users.cache.get(findUserBots[0].clientId);
-      if (!getBot) client.users.cache.fetch(findUserBots[0].clientId);
+      const getBot = await client.users
+        .fetch(findUserBots[0]?.clientId)
+        .catch(() => null);
 
       const embed = new EmbedBuilder()
         .setTitle(`Manage your custom bot`)
-        .setDescription(
-          `Current bot: **${getBot.username}**`
-        )
+        .setDescription(`Current bot: **${getBot?.username || "Unkown"}**`)
         .setColor("DarkButNotBlack");
 
       return interaction.reply({
