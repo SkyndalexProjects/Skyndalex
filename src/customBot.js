@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
+import chalk from "chalk";
 import { Client, Collection, GatewayIntentBits } from "discord.js";
 import loadCommands from "./handlers/commandHandler.js";
 import loadEvents from "./handlers/eventHandler.js";
 import loadInteractions from "./handlers/interactionHandler.js";
-import chalk from "chalk";
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
@@ -15,13 +15,12 @@ console.log(
   )} ${chalk.bold(chalk.red(`(CLIENT)`))} ${chalk.bold(
     chalk.blue("[1]"),
   )} ${chalk.bold(chalk.green(`Started running on custom bot`))}`,
-)
+);
 
 client.prisma = new PrismaClient();
 client.interactions = new Collection();
 
 (async () => {
-
   await loadEvents(client);
   await loadInteractions(client);
   await loadCommands();
