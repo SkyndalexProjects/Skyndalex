@@ -2,10 +2,10 @@ import { execSync, fork } from "child_process";
 import {
   ActionRowBuilder,
   ButtonBuilder,
-  ButtonStyle, Embed,
+  ButtonStyle,
   EmbedBuilder,
   StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder
+  StringSelectMenuOptionBuilder,
 } from "discord.js";
 import find from "find-process";
 export default {
@@ -13,28 +13,17 @@ export default {
   type: "button",
 
   run: async (client, interaction) => {
-    // TODO: rewrite to docker (future plans)
-
-    const selectedClientId = interaction.customId.split("-")[1]
-
-    const getBot = client.users.cache.get(selectedClientId);
-    if (!getBot) client.users.cache.fetch(selectedClientId);
-
-    const clientId = interaction.customId.split("-")[1]
-
-    await interaction.deferUpdate({ ephemeral: true })
-    const embedPreparing = new EmbedBuilder()
-      .setTitle(`Manage your custombot`)
+    const selectedClientId = interaction.customId.split("-")[1];
+    const embedInvalidBot = new EmbedBuilder()
+      .setTitle("Manage your custombot")
       .setDescription(
-        `Current bot: **${getBot.username}**\nCurrent bot status: <a:4704loadingicon:1183416396223352852> | **Preparing**`
+        `Current bot: **Unkown**\nCurrent bot status: <:offline:1062072773406642226> | **Invalid bot**`,
       )
-      .setColor("Yellow")
-    await interaction.editReply({ content: "", embeds: [embedPreparing], ephemeral: true })
+      .setColor("Red");
 
-    const deploy = new ButtonBuilder()
-      .setLabel("Deploy bot commands")
-      .setStyle(ButtonStyle.Primary)
-      .setCustomId(`customBotDeploy-${selectedClientId}`);
+    const select = new StringSelectMenuBuilder()
+      .setCustomId("customBotSelect")
+      .setPlaceholder("Choose a custombot!");
 
     const powerStateOff = new ButtonBuilder()
       .setLabel("Turn bot off")
@@ -46,9 +35,16 @@ export default {
       .setStyle(ButtonStyle.Success)
       .setCustomId(`customBotPowerState-${selectedClientId}`);
 
-    const select = new StringSelectMenuBuilder()
-      .setCustomId('customBotSelect')
-      .setPlaceholder('Choose a custombot!');
+    const disabledButton = new ButtonBuilder()
+      .setLabel("Turn bot on")
+      .setStyle(ButtonStyle.Success)
+      .setDisabled(true)
+      .setCustomId("a co to robi");
+
+    const turnOnactionRow = new ActionRowBuilder().addComponents(powerStateOff);
+    const turnOffactionRow = new ActionRowBuilder().addComponents(powerStateOn);
+
+    const disableAction = new ActionRowBuilder().addComponents(disabledButton);
 
     const selectRow = new ActionRowBuilder().addComponents(select);
 
@@ -57,23 +53,46 @@ export default {
         userId: interaction.user.id,
       },
     });
-    findUserBots.forEach(bot => {
-      const getBot = client.users.cache.get(bot.clientId);
-      if (!getBot) client.users.cache.fetch(bot.clientId);
+
+    for (const bot of findUserBots) {
+      const getBot = await client.users.fetch(bot.clientId).catch(() => null);
 
       select.addOptions(
         new StringSelectMenuOptionBuilder()
-          .setLabel(`Custom bot: ${getBot.username}`)
-          .setValue(bot.clientId)
+          .setLabel(`Custom bot: ${getBot?.username || "Unknown"}`)
+          .setValue(bot.clientId),
       );
+    }
+
+    await interaction.deferUpdate({ ephemeral: true });
+
+    const getBot = await client.users.fetch(selectedClientId).catch(() => null);
+    if (!getBot)
+      return interaction.editReply({
+        embeds: [embedInvalidBot],
+        components: [selectRow, disableAction],
+      });
+
+    const clientId = interaction.customId.split("-")[1];
+
+    const embedPreparing = new EmbedBuilder()
+      .setTitle(`Manage your custombot`)
+      .setDescription(
+        `Current bot: **${
+          getBot?.username || "Unkown"
+        }**\nCurrent bot status: <a:4704loadingicon:1183416396223352852> | **Preparing**`,
+      )
+      .setColor("Yellow");
+
+    await interaction.editReply({
+      content: "",
+      embeds: [embedPreparing],
+      components: [selectRow, disableAction],
+      ephemeral: true,
     });
 
-    const turnOnactionRow = new ActionRowBuilder().addComponents(powerStateOff, deploy);
-    const turnOffactionRow = new ActionRowBuilder().addComponents(powerStateOn, deploy);
-
     const bot = await find("name", `customBot ${selectedClientId}`);
-    const turnBot = interaction.message.components[0].components[0]
-
+    const turnBot = interaction.message.components[0].components[0];
 
     const getToken = await client.prisma.customBots.findMany({
       where: {
@@ -82,17 +101,18 @@ export default {
       },
     });
 
-    const token = getToken[0]?.token
+    const token = getToken[0]?.token;
 
-    const DBURL = `postgresql://postgres:${process.env.CUSTOMBOT_DB_PASSWORD}@localhost:5432/custombot_${clientId}?schema=public`
+    const DBURL = `postgresql://postgres:${process.env.CUSTOMBOT_DB_PASSWORD}@localhost:5432/custombot_${clientId}?schema=public`;
 
-    execSync(
-      `SET DATABASE_URL=${DBURL} && npx prisma db push`,
-      { stdio: 'inherit' },
-    );
+    execSync(`SET DATABASE_URL=${DBURL} && npx prisma db push`, {
+      stdio: "inherit",
+    });
 
     if (!bot) {
-      await client.prisma.$executeRawUnsafe(`CREATE DATABASE customBot_${clientId};`).catch(() => null);
+      await client.prisma
+        .$executeRawUnsafe(`CREATE DATABASE customBot_${clientId};`)
+        .catch(() => null);
 
       await fork("customBot", [clientId], {
         env: {
@@ -110,67 +130,86 @@ export default {
           DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
           THEDOGAPI_KEY: process.env.THEDOGAPI_KEY,
           THECATAPI_KEY: process.env.THECATAPI_KEY,
-        }
+        },
       });
 
-      return await interaction.editReply({ components: [turnOnactionRow] }) && await interaction.deleteReply()
+      return (
+        (await interaction.editReply({ components: [turnOnactionRow] })) &&
+        (await interaction.deleteReply())
+      );
+    } else if (turnBot.style === 4) {
+      await interaction.editReply({ components: [turnOffactionRow] });
+
+      const embedTurningOff = new EmbedBuilder()
+        .setTitle(`Manage your custombot`)
+        .setDescription(
+          `Current bot: **${getBot.username}**\nCurrent bot status: <a:4704loadingicon:1183416396223352852> | **Turning off**`,
+        )
+        .setColor("DarkButNotBlack");
+      await interaction.editReply({
+        content: "",
+        embeds: [embedTurningOff],
+        ephemeral: true,
+      });
+
+      process.kill(bot[0].pid);
+
+      const embedOff = new EmbedBuilder()
+        .setTitle(`Manage your custombot`)
+        .setDescription(
+          `Current bot: **${getBot.username}**\nCurrent bot status: <:offline:1062072773406642226>  | **Offline** (Turned off)`,
+        )
+        .setColor("Red");
+      await interaction.editReply({
+        content: "",
+        embeds: [embedOff],
+        components: [turnOffactionRow, selectRow],
+        ephemeral: true,
+      });
     } else {
-      if (turnBot.style === 4) { // DANGER
-        await interaction.editReply({ components: [turnOffactionRow]});
+      const embedTurningOn = new EmbedBuilder()
+        .setTitle(`Manage your custombot`)
+        .setDescription(
+          `Current bot: **${getBot.username}**\nCurrent bot status: <a:4704loadingicon:1183416396223352852> | **Turning on**`,
+        )
+        .setColor("DarkButNotBlack");
+      await interaction.editReply({
+        embeds: [embedTurningOn],
+        ephemeral: true,
+      });
 
-        const embedTurningOff = new EmbedBuilder()
-          .setTitle(`Manage your custombot`)
-          .setDescription(
-            `Current bot: **${getBot.username}**\nCurrent bot status: <a:4704loadingicon:1183416396223352852> | **Turning off**`
-          )
-          .setColor("DarkButNotBlack")
-        await interaction.editReply({ content: "", embeds: [embedTurningOff], ephemeral: true })
-        process.kill(bot[0].pid);
+      await fork("customBot", [clientId], {
+        env: {
+          BOT_TOKEN: token,
+          CUSTOMBOT_DB_PASSWORD: process.env.CUSTOMBOT_DB_PASSWORD,
+          DATABASE_URL: DBURL,
+          CLIENT_ID: process.env.CLIENT_ID,
+          TOPGG_WEBHOOK_AUTH: process.env.TOPGG_WEBHOOK_AUTH,
+          HF_TOKEN: process.env.HF_TOKEN,
+          SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+          SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
+          SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
+          DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI,
+          DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+          DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
+          THEDOGAPI_KEY: process.env.THEDOGAPI_KEY,
+          THECATAPI_KEY: process.env.THECATAPI_KEY,
+        },
+      });
 
-        const embedOff = new EmbedBuilder()
-          .setTitle(`Manage your custombot`)
-          .setDescription(
-            `Current bot: **${getBot.username}**\nCurrent bot status: <:offline:1062072773406642226>  | **Offline** (Turned off)`
-          )
-          .setColor("Red")
-        await interaction.editReply({ content: "", embeds: [embedOff], ephemeral: true })
-      } else {
-        const embedTurningOn = new EmbedBuilder()
-          .setTitle(`Manage your custombot`)
-          .setDescription(
-            `Current bot: **${getBot.username}**\nCurrent bot status: <a:4704loadingicon:1183416396223352852> | **Turning on**`
-          )
-          .setColor("DarkButNotBlack")
-        await interaction.editReply({ embeds: [embedTurningOn], ephemeral: true })
+      const embedLogged = new EmbedBuilder()
+        .setTitle(`Manage your custombot`)
+        .setDescription(
+          `Current bot: **${getBot.username}**\nCurrent bot status: <:online:1062072775583485973> | **Online**`,
+        )
+        .setColor("Green");
 
-        await fork("customBot", [clientId], {
-          env: {
-            BOT_TOKEN: token,
-            CUSTOMBOT_DB_PASSWORD: process.env.CUSTOMBOT_DB_PASSWORD,
-            DATABASE_URL: DBURL,
-            CLIENT_ID: process.env.CLIENT_ID,
-            TOPGG_WEBHOOK_AUTH: process.env.TOPGG_WEBHOOK_AUTH,
-            HF_TOKEN: process.env.HF_TOKEN,
-            SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
-            SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
-            SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
-            DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI,
-            DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-            DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
-            THEDOGAPI_KEY: process.env.THEDOGAPI_KEY,
-            THECATAPI_KEY: process.env.THECATAPI_KEY,
-          }
-        })
-
-        const embedLogged = new EmbedBuilder()
-          .setTitle(`Manage your custombot`)
-          .setDescription(
-            `Current bot: **${getBot.username}**\nCurrent bot status: <:online:1062072775583485973> | **Online**`
-          )
-          .setColor("Green");
-
-        await interaction.editReply({ content: "", embeds: [embedLogged], ephemeral: true, components: [turnOnactionRow, selectRow] })
-      }
+      await interaction.editReply({
+        content: "",
+        embeds: [embedLogged],
+        ephemeral: true,
+        components: [turnOnactionRow, selectRow],
+      });
     }
-    },
+  },
 };
