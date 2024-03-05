@@ -1,30 +1,31 @@
-import { PermissionFlagsBits } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
 export default {
   customId: "deleteAttachment",
   type: "button",
 
   run: async (client, interaction) => {
-    const isAuthor = interaction.user.id === interaction.message.author.id;
-    const isAdmin = interaction.guild.members.cache
-      .get(interaction.user.id)
-      ?.permissions.has(PermissionFlagsBits.Administrator);
+    const isAuthor =
+      interaction.message.interaction.user.id === interaction.user.id;
 
-    if (!isAuthor && !isAdmin) {
-      await interaction.deferUpdate();
-      return interaction.followUp({
+    if (!isAuthor) {
+      return interaction.reply({
         content:
-          "You don't have permission to use this button. Only administrators and message authors can use this button.",
+          "You can delete only your attachments. If you are administrator, you can do it by Discord UI",
         ephemeral: true,
       });
     }
 
-    const message = interaction.message;
-    await interaction.deferUpdate();
+    const embed = new EmbedBuilder()
+      .setDescription(
+        `Attachments sucessfully deleted by ${interaction.user.username}`,
+      )
+      .setColor("Red");
 
-    await message.edit({
-      content: `Attachments deleted by ${interaction.user.username}`,
-      files: [],
+    await interaction.update({
+      embeds: [embed],
+      components: [],
+      attachments: [],
     });
   },
 };
