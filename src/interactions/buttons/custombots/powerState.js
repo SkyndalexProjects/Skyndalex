@@ -92,6 +92,7 @@ export default {
     });
 
     const bot = await find("name", `customBot ${selectedClientId}`);
+    console.log("process", bot)
     const turnBot = interaction.message.components[0].components[0];
 
     const getToken = await client.prisma.customBots.findMany({
@@ -109,7 +110,36 @@ export default {
       stdio: "inherit",
     });
 
-    if (!bot) {
+    if (turnBot.style === 4) {
+      await interaction.editReply({ components: [turnOffactionRow] });
+
+      const embedTurningOff = new EmbedBuilder()
+        .setTitle(`Manage your custombot`)
+        .setDescription(
+          `Current bot: **${getBot.username}**\nCurrent bot status: <a:4704loadingicon:1183416396223352852> | **Turning off**`,
+        )
+        .setColor("DarkButNotBlack");
+      await interaction.editReply({
+        content: "",
+        embeds: [embedTurningOff],
+        ephemeral: true,
+      });
+
+      const kill = process.kill(bot[0].pid);
+      console.log(kill)
+      const embedOff = new EmbedBuilder()
+        .setTitle(`Manage your custombot`)
+        .setDescription(
+          `Current bot: **${getBot.username}**\nCurrent bot status: <:offline:1062072773406642226>  | **Offline** (Turned off)`,
+        )
+        .setColor("Red");
+      await interaction.editReply({
+        content: "",
+        embeds: [embedOff],
+        components: [turnOffactionRow, selectRow],
+        ephemeral: true,
+      });
+    } else if (!bot) {
       await client.prisma
         .$executeRawUnsafe(`CREATE DATABASE customBot_${clientId};`)
         .catch(() => null);
@@ -137,35 +167,6 @@ export default {
         (await interaction.editReply({ components: [turnOnactionRow] })) &&
         (await interaction.deleteReply())
       );
-    } else if (turnBot.style === 4) {
-      await interaction.editReply({ components: [turnOffactionRow] });
-
-      const embedTurningOff = new EmbedBuilder()
-        .setTitle(`Manage your custombot`)
-        .setDescription(
-          `Current bot: **${getBot.username}**\nCurrent bot status: <a:4704loadingicon:1183416396223352852> | **Turning off**`,
-        )
-        .setColor("DarkButNotBlack");
-      await interaction.editReply({
-        content: "",
-        embeds: [embedTurningOff],
-        ephemeral: true,
-      });
-
-      process.kill(bot[0].pid);
-
-      const embedOff = new EmbedBuilder()
-        .setTitle(`Manage your custombot`)
-        .setDescription(
-          `Current bot: **${getBot.username}**\nCurrent bot status: <:offline:1062072773406642226>  | **Offline** (Turned off)`,
-        )
-        .setColor("Red");
-      await interaction.editReply({
-        content: "",
-        embeds: [embedOff],
-        components: [turnOffactionRow, selectRow],
-        ephemeral: true,
-      });
     } else {
       const embedTurningOn = new EmbedBuilder()
         .setTitle(`Manage your custombot`)
