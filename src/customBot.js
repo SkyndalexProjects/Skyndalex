@@ -12,7 +12,7 @@ const client = new Client({
 console.log(
   `${chalk.whiteBright(
     chalk.underline(`[${new Date().toUTCString()}]`),
-  )} ${chalk.bold(chalk.red(`(CLIENT)`))} ${chalk.bold(
+  )} ${chalk.bold(chalk.red(`(CLIENT - CUSTOMBOT)`))} ${chalk.bold(
     chalk.blue("[1]"),
   )} ${chalk.bold(chalk.green(`Started running on custom bot`))}`,
 );
@@ -24,8 +24,8 @@ client.interactions = new Collection();
   await loadEvents(client);
   await loadInteractions(client);
   await loadCommands();
-
-  client.login(process.env.BOT_TOKEN);
+  const login = client.login(process.env.BOT_TOKEN).catch(() => null);
+  if (!login) return;
 })();
 process.on("unhandledRejection", async (reason, p) => {
   console.log(" [antiCrash] :: Unhandled Rejection/Catch");

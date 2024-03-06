@@ -20,21 +20,16 @@ model settings {
 }
 
 model customBots {
-  userId   String
-  clientId String
-  token    String
-  id       Int    @default(autoincrement())
+  clientId               String
+  userId                 String?
+  token                  String?
+  customPresenceName     String?
+  customPresenceActivity String?
+  id                     Int     @default(autoincrement())
 
   @@id([id, clientId])
 }
-model customPresence {
-  id       Int     @default(autoincrement())
-  guildId  String
-  name   String
-  activity String
 
-  @@id([id, guildId])
-}
 model economy {
   guildId String
   uid     String

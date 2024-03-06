@@ -72,11 +72,20 @@ export default {
           .setStyle(TextInputStyle.Short)
           .setRequired(true)
 
+        const clientID = new TextInputBuilder()
+          .setCustomId("clientId")
+          .setPlaceholder("Client ID")
+          .setLabel("Client ID")
+          .setMinLength(1)
+          .setMaxLength(100)
+          .setStyle(TextInputStyle.Short)
+          .setRequired(true)
 
         const firstActionRow = new ActionRowBuilder().addComponents(activityType)
         const secondActionRow = new ActionRowBuilder().addComponents(name)
+        const thirdActionRow = new ActionRowBuilder().addComponents(clientID)
 
-        modal.addComponents(firstActionRow, secondActionRow)
+        modal.addComponents(firstActionRow, secondActionRow, thirdActionRow)
 
         await interaction.showModal(modal)
         break;

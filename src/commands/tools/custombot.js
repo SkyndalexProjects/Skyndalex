@@ -18,9 +18,11 @@ export default {
       subcommand.setName("create").setDescription("Create a custom bot"),
     )
     .addSubcommand((subcommand) =>
-      subcommand.setName("manage").setDescription("Manage your custom bot"),
+      subcommand.setName("delete").setDescription("Delete a custom bot"),
     )
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    .addSubcommand((subcommand) =>
+      subcommand.setName("manage").setDescription("Manage your custom bot"),
+    ),
 
   async execute(client, interaction) {
     if (interaction.options.getSubcommand() === "create") {
@@ -94,7 +96,7 @@ export default {
 
       const embed = new EmbedBuilder()
         .setTitle(`Manage your custom bot`)
-        .setDescription(`Current bot: **${getBot?.username || "Unkown"}**`)
+        .setDescription(`Current bot: **${getBot?.username || "Unkown"}** [ID: \`${findUserBots[0]?.id}\`]`)
         .setColor("DarkButNotBlack");
 
       return interaction.reply({
@@ -102,6 +104,39 @@ export default {
         components: [row, row2],
         ephemeral: true,
       });
+    } else if (interaction.options.getSubcommandGroup("list")) {
+      if (interaction.options.getSubcommand("bots")) {
+        console.log("is that even working?")
+        const findUserBots = await client.prisma.customBots.findMany({
+          where: {
+            userId: interaction.user.id,
+          },
+        });
+
+        if (findUserBots.length === 0)
+          return interaction.reply({
+            content:
+              "It seems that you dont have any custombots in your account. Add some with `/custombot create` command.",
+            ephemeral: true,
+          });
+
+        const embed = new EmbedBuilder()
+          .setTitle("Your custom bots")
+          .setColor("DarkButNotBlack");
+
+        for (const bot of findUserBots) {
+          const getBot = await client.users.fetch(bot.clientId).catch(() => null);
+
+          embed.setFields(
+            `Custom bot: ${getBot?.username || "Unknown"}`,
+            `ID: \`${bot.id}\``,
+          );
+        }
+
+        return interaction.reply({ embeds: [embed], ephemeral: true });
+      } else if (interaction.options.getSubcommand("presences")) {
+        await interaction.reply("soon:tm:")
+      }
     }
   },
 };
