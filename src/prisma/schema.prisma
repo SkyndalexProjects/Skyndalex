@@ -27,7 +27,14 @@ model customBots {
 
   @@id([id, clientId])
 }
+model customPresence {
+  id       Int     @default(autoincrement())
+  guildId  String
+  name   String
+  activity String
 
+  @@id([id, guildId])
+}
 model economy {
   guildId String
   uid     String
