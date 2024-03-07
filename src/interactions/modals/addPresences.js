@@ -4,39 +4,33 @@ import {
   ButtonStyle,
   EmbedBuilder,
   StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder
+  StringSelectMenuOptionBuilder,
 } from "discord.js";
 export default {
   customId: "customBotSettings",
   type: "modal",
 
   run: async (client, interaction) => {
-    const activity = interaction.fields.getTextInputValue(
-      "activity",
-    );
-    const name = interaction.fields.getTextInputValue(
-      "name",
-    );
+    const activity = interaction.fields.getTextInputValue("activity");
+    const name = interaction.fields.getTextInputValue("name");
 
-    const clientId = interaction.fields.getTextInputValue(
-      "clientId",
-    )
+    const clientId = interaction.fields.getTextInputValue("clientId");
 
     const getCustom = await client.prisma.customBots.findMany({
       where: {
         userId: interaction.user.id,
-        clientId: clientId
+        clientId: clientId,
       },
-    })
+    });
 
-    const custombot = getCustom[0]
+    const custombot = getCustom[0];
 
     await client.prisma.customBots.update({
       where: {
-        id_clientId :{
+        id_clientId: {
           id: custombot.id,
-          clientId: custombot.clientId
-        }
+          clientId: custombot.clientId,
+        },
       },
       data: {
         customPresenceActivity: activity,
@@ -72,7 +66,7 @@ export default {
           .setLabel("Custombot presences")
           .setValue("settings_custombot")
           .setDescription("Set custombot presences"),
-      )
+      );
 
     const viewSettings = new ButtonBuilder()
       .setLabel("View settings")
@@ -84,11 +78,15 @@ export default {
 
     const updatedSettings = new EmbedBuilder()
       .setTitle("Settings updated")
-      .setDescription(`Custombot presence updated to \`${name}\` with activity \`${activity}\` and clientId \`${clientId}\``)
+      .setDescription(
+        `Custombot presence updated to \`${name}\` with activity \`${activity}\` and clientId \`${clientId}\``,
+      )
       .setColor("Green")
       .setTimestamp();
 
-    await interaction.update({ embeds: [updatedSettings], components: [row, row2] })
-
+    await interaction.update({
+      embeds: [updatedSettings],
+      components: [row, row2],
+    });
   },
 };

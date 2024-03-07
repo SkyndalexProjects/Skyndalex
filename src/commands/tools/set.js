@@ -1,9 +1,13 @@
 import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   EmbedBuilder,
-  PermissionFlagsBits, ActionRowBuilder,
-  SlashCommandBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ButtonBuilder, ButtonStyle
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder,
 } from "discord.js";
-import fetch from "node-fetch";
 
 export default {
   data: new SlashCommandBuilder()
@@ -70,7 +74,7 @@ export default {
           .setLabel("Custombot presences")
           .setValue("settings_custombot")
           .setDescription("Set custombot presences"),
-      )
+      );
 
     const row = new ActionRowBuilder().addComponents(channelOptions);
 
@@ -87,6 +91,10 @@ export default {
       .setColor("Blurple")
       .setTimestamp();
 
-    await interaction.reply({ embeds: [embed], components: [row, row2], ephemeral: true });
+    await interaction.reply({
+      embeds: [embed],
+      components: [row, row2],
+      ephemeral: true,
+    });
   },
 };

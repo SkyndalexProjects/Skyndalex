@@ -1,12 +1,12 @@
 import {
   ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle, ChannelSelectMenuBuilder,
-  EmbedBuilder, ModalBuilder, RoleSelectMenuBuilder,
-  StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder, TextInputBuilder, TextInputStyle
+  ChannelSelectMenuBuilder,
+  EmbedBuilder,
+  ModalBuilder,
+  RoleSelectMenuBuilder,
+  TextInputBuilder,
+  TextInputStyle,
 } from "discord.js";
-import find from "find-process";
 export default {
   customId: "settingsSelect",
   type: "string_select_menu_value",
@@ -34,25 +34,40 @@ export default {
 
     switch (interaction.values[0]) {
       case "welcomeChannel":
-        console.log("ok")
-        await interaction.update({ components: [channel], embeds: [updatedEmbed]})
+        console.log("ok");
+        await interaction.update({
+          components: [channel],
+          embeds: [updatedEmbed],
+        });
         break;
       case "leaveChannel":
-        await interaction.update({ components: [channel], embeds: [updatedEmbed]})
+        await interaction.update({
+          components: [channel],
+          embeds: [updatedEmbed],
+        });
         break;
       case "autoRole":
-        await interaction.update({ components: [role], embeds: [updatedEmbed]})
+        await interaction.update({
+          components: [role],
+          embeds: [updatedEmbed],
+        });
         break;
       case "aiChannel":
-        await interaction.update({ components: [channel], embeds: [updatedEmbed]})
+        await interaction.update({
+          components: [channel],
+          embeds: [updatedEmbed],
+        });
         break;
       case "radioChannel":
-        await interaction.update({ components: [channel], embeds: [updatedEmbed]})
+        await interaction.update({
+          components: [channel],
+          embeds: [updatedEmbed],
+        });
         break;
       case "settings_custombot":
         const modal = new ModalBuilder()
           .setCustomId("customBotSettings")
-          .setTitle("Add presence")
+          .setTitle("Add presence");
 
         const activityType = new TextInputBuilder()
           .setCustomId("activity")
@@ -61,7 +76,7 @@ export default {
           .setMinLength(1)
           .setMaxLength(100)
           .setStyle(TextInputStyle.Short)
-          .setRequired(true)
+          .setRequired(true);
 
         const name = new TextInputBuilder()
           .setCustomId("name")
@@ -70,7 +85,7 @@ export default {
           .setMinLength(1)
           .setMaxLength(100)
           .setStyle(TextInputStyle.Short)
-          .setRequired(true)
+          .setRequired(true);
 
         const clientID = new TextInputBuilder()
           .setCustomId("clientId")
@@ -79,15 +94,17 @@ export default {
           .setMinLength(1)
           .setMaxLength(100)
           .setStyle(TextInputStyle.Short)
-          .setRequired(true)
+          .setRequired(true);
 
-        const firstActionRow = new ActionRowBuilder().addComponents(activityType)
-        const secondActionRow = new ActionRowBuilder().addComponents(name)
-        const thirdActionRow = new ActionRowBuilder().addComponents(clientID)
+        const firstActionRow = new ActionRowBuilder().addComponents(
+          activityType,
+        );
+        const secondActionRow = new ActionRowBuilder().addComponents(name);
+        const thirdActionRow = new ActionRowBuilder().addComponents(clientID);
 
-        modal.addComponents(firstActionRow, secondActionRow, thirdActionRow)
+        modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
 
-        await interaction.showModal(modal)
+        await interaction.showModal(modal);
         break;
     }
   },

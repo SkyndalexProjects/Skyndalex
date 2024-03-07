@@ -3,7 +3,6 @@ import {
   ButtonBuilder,
   ButtonStyle,
   EmbedBuilder,
-  PermissionFlagsBits,
   SlashCommandBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
@@ -96,7 +95,11 @@ export default {
 
       const embed = new EmbedBuilder()
         .setTitle(`Manage your custom bot`)
-        .setDescription(`Current bot: **${getBot?.username || "Unkown"}** [ID: \`${findUserBots[0]?.id}\`]`)
+        .setDescription(
+          `Current bot: **${getBot?.username || "Unkown"}** [ID: \`${
+            findUserBots[0]?.id
+          }\`]`,
+        )
         .setColor("DarkButNotBlack");
 
       return interaction.reply({
@@ -106,7 +109,7 @@ export default {
       });
     } else if (interaction.options.getSubcommandGroup("list")) {
       if (interaction.options.getSubcommand("bots")) {
-        console.log("is that even working?")
+        console.log("is that even working?");
         const findUserBots = await client.prisma.customBots.findMany({
           where: {
             userId: interaction.user.id,
@@ -125,7 +128,9 @@ export default {
           .setColor("DarkButNotBlack");
 
         for (const bot of findUserBots) {
-          const getBot = await client.users.fetch(bot.clientId).catch(() => null);
+          const getBot = await client.users
+            .fetch(bot.clientId)
+            .catch(() => null);
 
           embed.setFields(
             `Custom bot: ${getBot?.username || "Unknown"}`,
@@ -135,7 +140,7 @@ export default {
 
         return interaction.reply({ embeds: [embed], ephemeral: true });
       } else if (interaction.options.getSubcommand("presences")) {
-        await interaction.reply("soon:tm:")
+        await interaction.reply("soon:tm:");
       }
     }
   },

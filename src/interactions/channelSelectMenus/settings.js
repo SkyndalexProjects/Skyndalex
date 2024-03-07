@@ -1,19 +1,20 @@
 import {
   ActionRowBuilder,
   ButtonBuilder,
-  ButtonStyle, ChannelSelectMenuBuilder, Embed,
-  EmbedBuilder, RoleSelectMenuBuilder,
+  ButtonStyle,
+  EmbedBuilder,
   StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder
+  StringSelectMenuOptionBuilder,
 } from "discord.js";
-import find from "find-process";
 export default {
   customId: "settingsChannelelect",
   type: "channel_select_menu_value",
 
   run: async (client, interaction) => {
-    const selectedChannelId = interaction.values[0]
-    const selectedChannelType = interaction.message.embeds[0].data.description.split(": ")[1].replaceAll("\`", "")
+    const selectedChannelId = interaction.values[0];
+    const selectedChannelType = interaction.message.embeds[0].data.description
+      .split(": ")[1]
+      .replaceAll("`", "");
 
     const chooseChannelsAgain = new StringSelectMenuBuilder()
       .setCustomId("settingsSelect")
@@ -43,7 +44,7 @@ export default {
           .setLabel("Custombot presences")
           .setValue("settings_custombot")
           .setDescription("Set custombot presences"),
-      )
+      );
 
     const viewSettings = new ButtonBuilder()
       .setLabel("View settings")
@@ -64,14 +65,19 @@ export default {
         guildId: interaction.guild.id,
         [selectedChannelType]: selectedChannelId,
       },
-    })
-    console.log("update", update)
+    });
+    console.log("update", update);
     const updatedSettings = new EmbedBuilder()
       .setTitle("Settings updated")
-      .setDescription(`The ${selectedChannelType} channel has been set to <#${selectedChannelId}>`)
+      .setDescription(
+        `The ${selectedChannelType} channel has been set to <#${selectedChannelId}>`,
+      )
       .setColor("Green")
       .setTimestamp();
 
-    await interaction.update({ embeds: [updatedSettings], components: [row, row2] })
+    await interaction.update({
+      embeds: [updatedSettings],
+      components: [row, row2],
+    });
   },
 };

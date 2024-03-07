@@ -8,7 +8,6 @@ const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
-
 console.log(
   `${chalk.whiteBright(
     chalk.underline(`[${new Date().toUTCString()}]`),
@@ -20,13 +19,21 @@ console.log(
 client.prisma = new PrismaClient();
 client.interactions = new Collection();
 
-(async () => {
+process.on('message', async (message) => {
   await loadEvents(client);
   await loadInteractions(client);
   await loadCommands();
-  const login = client.login(process.env.BOT_TOKEN).catch(() => null);
+  const login = await client.login(process.env.BOT_TOKEN).catch(() => null);
   if (!login) return;
-})();
+
+  if (message.name === 'changePresence') {
+    console.log("message", message)
+    const setPresence = await client.user.setPresence({
+      activities: [{ name: message.presence }],
+    });
+    console.log("setPresence", setPresence);
+  }
+});
 process.on("unhandledRejection", async (reason, p) => {
   console.log(" [antiCrash] :: Unhandled Rejection/Catch");
   console.log(reason, p);
