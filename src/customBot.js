@@ -19,15 +19,15 @@ console.log(
 client.prisma = new PrismaClient();
 client.interactions = new Collection();
 
-process.on('message', async (message) => {
-  await loadEvents(client);
-  await loadInteractions(client);
-  await loadCommands();
-  const login = await client.login(process.env.BOT_TOKEN).catch(() => null);
-  if (!login) return;
+await loadEvents(client);
+await loadInteractions(client);
+await loadCommands();
+const login = await client.login(process.env.BOT_TOKEN).catch(() => null);
+if (!login) return;
 
-  if (message.name === 'changePresence') {
-    console.log("message", message)
+process.on("message", async (message) => {
+  if (message.name === "changePresence") {
+    console.log("message", message);
     const setPresence = await client.user.setPresence({
       activities: [{ name: message.presence }],
     });

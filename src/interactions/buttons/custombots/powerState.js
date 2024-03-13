@@ -92,7 +92,7 @@ export default {
     });
 
     const bot = await find("name", `customBot ${selectedClientId}`);
-    console.log("process", bot)
+    console.log("process", bot);
     const turnBot = interaction.message.components[0].components[0];
 
     const getToken = await client.prisma.customBots.findMany({
@@ -126,7 +126,7 @@ export default {
       });
 
       const kill = process.kill(bot[0].pid);
-      console.log(kill)
+      console.log(kill);
       const embedOff = new EmbedBuilder()
         .setTitle(`Manage your custombot`)
         .setDescription(

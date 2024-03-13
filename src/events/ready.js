@@ -2,7 +2,6 @@ import chalk from "chalk";
 import { execSync, fork } from "child_process";
 import { REST, Routes } from "discord.js";
 import { commands } from "../handlers/commandHandler.js";
-import find from "find-process";
 
 export default async function ready(client) {
   if (client.user.id === process.env.CLIENT_ID) {
@@ -54,7 +53,6 @@ export default async function ready(client) {
 
     const getAllCustombots = await client.prisma.customBots.findMany();
 
-
     for (const bot of getAllCustombots) {
       await client.prisma
         .$executeRawUnsafe(`CREATE DATABASE customBot_${bot.clientId};`)
@@ -85,7 +83,7 @@ export default async function ready(client) {
         },
       });
 
-      console.log("processInfo", processInfo)
+      console.log("processInfo", processInfo);
       const presences = await client.prisma.customBots.findMany({
         where: {
           clientId: bot.clientId,
@@ -94,7 +92,7 @@ export default async function ready(client) {
       if (presences.length < 1) return;
 
       const send = processInfo.send({
-        name: 'changePresence',
+        name: "changePresence",
         presence: presences[0].customPresenceName,
       });
       console.log("send", send);
@@ -110,6 +108,6 @@ export default async function ready(client) {
           body: cmds,
         })
         .catch(() => null);
-  }
+    }
   }
 }

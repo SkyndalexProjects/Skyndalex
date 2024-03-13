@@ -14,6 +14,9 @@ export default {
     .setName("set")
     .setDescription("Bot settings")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+   // TODO: add radio station settings (via button in /radio command)
+  // TODO: add radio enabled setting
+  // TODO: add possibility to set multiple presences on custombots
 
   // async autocomplete(interaction) {
   //   const focusedValue = interaction.options.getFocused();

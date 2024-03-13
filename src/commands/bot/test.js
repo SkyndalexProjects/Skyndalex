@@ -1,15 +1,14 @@
-import { SlashCommandBuilder } from "discord.js";
+import { EmbedBuilder, SlashCommandBuilder, ButtonBuilder, ActionRowBuilder } from "discord.js";
 import fetch from "node-fetch";
 
 export default {
   data: new SlashCommandBuilder().setName("test").setDescription("test"),
 
   async execute(client, interaction) {
-    const value = "donald tusk";
-    const url = `https://www.tiktok.com/api/search/general/preview/?keyword=${value}`;
+    // const update = await client.economyBalance.updateWallet(client, interaction, interaction.user, +1);
 
-    const res = await fetch(url);
-    const data = await res.json();
-    console.log(data);
+    console.log("działa")
+    const update = await client.economyBalance.updateWallet(interaction, interaction.user.id, 1);
+    console.log("update", update);
   },
 };
