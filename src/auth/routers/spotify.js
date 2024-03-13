@@ -70,7 +70,7 @@ spotifyRouter.get("/callback", async (req, res) => {
 
 spotifyRouter.get("/login", function (req, res) {
   let scope =
-    "playlist-read-private user-read-playback-position user-modify-playback-state user-read-playback-state streaming user-read-email user-read-private";
+    "playlist-read-private user-read-playback-position user-modify-playback-state user-read-playback-state streaming user-read-private";
 
   res.redirect(
     "https://accounts.spotify.com/authorize?" +

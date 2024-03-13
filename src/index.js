@@ -1,12 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import chalk from "chalk";
 import {
-  Collection,
   EmbedBuilder,
   GatewayIntentBits,
   Partials,
 } from "discord.js";
-import { Connectors, Shoukaku } from "shoukaku";
 import Base from "./classes/Client.js";
 import loadCommands from "./handlers/commandHandler.js";
 import loadEvents from "./handlers/eventHandler.js";
@@ -38,9 +36,6 @@ console.log(
     chalk.blue("[1]"),
   )} ${chalk.bold(chalk.green(`Started running on general bot`))}`,
 );
-
-client.interactions = new Collection();
-client.prisma = new PrismaClient();
 
 app.post(
   "/dblwebhook",

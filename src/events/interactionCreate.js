@@ -42,7 +42,7 @@ export default async function interactionCreate(client, interaction) {
           )
           ?.first();
 
-          if (!button)
+        if (!button)
           return (
             console.log(`Button with ${interaction.customId} was not found.`) ||
             interaction.reply({ embeds: [embedNotFound], ephemeral: true })
@@ -64,18 +64,47 @@ export default async function interactionCreate(client, interaction) {
         modal.run(client, interaction);
       }
       break;
-    case interaction.isStringSelectMenu(): {
-      const selectOption = client.interactions.find(
-        (x) => x.type === "string_select_menu_value" && interaction.customId === x.customId,
-      )
+    case interaction.isStringSelectMenu():
+      const stringSelectOption = client.interactions.find(
+        (x) =>
+          x.type === "string_select_menu_value" &&
+          interaction.customId === x.customId,
+      );
 
-      if (!selectOption)
+      if (!stringSelectOption)
         return console.log(
           `Select option ${interaction.customId} was not found.`,
         );
 
-      await selectOption.run(client, interaction);
+      await stringSelectOption.run(client, interaction);
       break;
-    }
+    case interaction.isChannelSelectMenu():
+      const channelSelectOption = client.interactions.find(
+        (x) =>
+          x.type === "channel_select_menu_value" &&
+          interaction.customId === x.customId,
+      );
+
+      if (!channelSelectOption)
+        return console.log(
+          `Select option ${interaction.customId} was not found.`,
+        );
+
+      await channelSelectOption.run(client, interaction);
+      break;
+    case interaction.isRoleSelectMenu():
+      const roleSelectOption = client.interactions.find(
+        (x) =>
+          x.type === "role_select_menu_value" &&
+          interaction.customId === x.customId,
+      );
+
+      if (!roleSelectOption)
+        return console.log(
+          `Select option ${interaction.customId} was not found.`,
+        );
+
+      await roleSelectOption.run(client, interaction);
+      break;
   }
 }
