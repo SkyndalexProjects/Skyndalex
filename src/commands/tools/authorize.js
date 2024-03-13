@@ -1,17 +1,11 @@
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
-  SlashCommandBuilder,
-} from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 
 export default {
   data: new SlashCommandBuilder()
     .setName("authorize")
     .setDescription("authorize yourself"),
   async execute(client, interaction) {
-    await interaction.reply("soon:tm:")
+    await interaction.reply("soon:tm:");
     // const embed = new EmbedBuilder()
     //   .setTitle("Authorize yourself")
     //   .setDescription(
