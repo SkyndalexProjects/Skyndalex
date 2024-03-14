@@ -1,6 +1,5 @@
 import { EmbedBuilder } from "discord.js";
 import createPlayer from "../../../functions/player.js";
-
 export default {
   customId: "play",
   type: "button",
@@ -10,8 +9,11 @@ export default {
 
     const sound_url =
       interaction.message.embeds[0]?.data?.description?.split("from ")[1] ||
-      interaction.message.embeds[0]?.data?.footer?.text;
+      interaction.message.embeds[0]?.data?.footer?.text ||
+      interaction.message.embeds[0]?.data?.url;
 
+    // console.log("interaction.message.embeds", interaction.message.embeds[0])
+    // console.log("sound_url", sound_url);
     const url = new URL(sound_url);
 
     const memberChannel = interaction.member.voice.channel;

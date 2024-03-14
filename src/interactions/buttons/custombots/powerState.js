@@ -92,8 +92,8 @@ export default {
     });
 
     const bot = await find("name", `customBot ${selectedClientId}`);
-    console.log("process", bot);
-    const turnBot = interaction.message.components[0].components[0];
+
+    console.log("is the bot online?", bot[0])
 
     const getToken = await client.prisma.customBots.findMany({
       where: {
@@ -104,13 +104,8 @@ export default {
 
     const token = getToken[0]?.token;
 
-    const DBURL = `postgresql://postgres:${process.env.CUSTOMBOT_DB_PASSWORD}@localhost:5432/custombot_${clientId}?schema=public`;
-
-    execSync(`SET DATABASE_URL=${DBURL} && npx prisma db push`, {
-      stdio: "inherit",
-    });
-
-    if (turnBot.style === 4) {
+    if (bot[0]?.pid) {
+      console.log("na czerwonym lol")
       await interaction.editReply({ components: [turnOffactionRow] });
 
       const embedTurningOff = new EmbedBuilder()
@@ -139,34 +134,6 @@ export default {
         components: [turnOffactionRow, selectRow],
         ephemeral: true,
       });
-    } else if (!bot) {
-      await client.prisma
-        .$executeRawUnsafe(`CREATE DATABASE customBot_${clientId};`)
-        .catch(() => null);
-
-      await fork("customBot", [clientId], {
-        env: {
-          BOT_TOKEN: token,
-          CUSTOMBOT_DB_PASSWORD: process.env.CUSTOMBOT_DB_PASSWORD,
-          DATABASE_URL: DBURL,
-          CLIENT_ID: process.env.CLIENT_ID,
-          TOPGG_WEBHOOK_AUTH: process.env.TOPGG_WEBHOOK_AUTH,
-          HF_TOKEN: process.env.HF_TOKEN,
-          SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
-          SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
-          SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
-          DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI,
-          DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-          DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
-          THEDOGAPI_KEY: process.env.THEDOGAPI_KEY,
-          THECATAPI_KEY: process.env.THECATAPI_KEY,
-        },
-      });
-
-      return (
-        (await interaction.editReply({ components: [turnOnactionRow] })) &&
-        (await interaction.deleteReply())
-      );
     } else {
       const embedTurningOn = new EmbedBuilder()
         .setTitle(`Manage your custombot`)
@@ -179,24 +146,7 @@ export default {
         ephemeral: true,
       });
 
-      await fork("customBot", [clientId], {
-        env: {
-          BOT_TOKEN: token,
-          CUSTOMBOT_DB_PASSWORD: process.env.CUSTOMBOT_DB_PASSWORD,
-          DATABASE_URL: DBURL,
-          CLIENT_ID: process.env.CLIENT_ID,
-          TOPGG_WEBHOOK_AUTH: process.env.TOPGG_WEBHOOK_AUTH,
-          HF_TOKEN: process.env.HF_TOKEN,
-          SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
-          SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
-          SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
-          DISCORD_REDIRECT_URI: process.env.DISCORD_REDIRECT_URI,
-          DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-          DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
-          THEDOGAPI_KEY: process.env.THEDOGAPI_KEY,
-          THECATAPI_KEY: process.env.THECATAPI_KEY,
-        },
-      });
+      await client.customBotManager.init(clientId, token);
 
       const embedLogged = new EmbedBuilder()
         .setTitle(`Manage your custombot`)

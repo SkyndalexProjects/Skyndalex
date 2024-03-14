@@ -4,6 +4,7 @@ import EconomyBalance from "./EconomyBalance.js";
 import GetRandomSentences from "./GetRandomSentences.js";
 import { Connectors, Shoukaku } from "shoukaku";
 import { PrismaClient } from "@prisma/client";
+import CustomBotManager from "./CustomBotManager.js";
 
 export default class Base extends Client {
   constructor(options) {
@@ -27,5 +28,6 @@ export default class Base extends Client {
     this.economyBalance = new EconomyBalance(this);
     this.sentences = new GetRandomSentences(this);
     this.cooldowns = new CooldownHandler(this);
+    this.customBotManager = new CustomBotManager(this);
   }
 }

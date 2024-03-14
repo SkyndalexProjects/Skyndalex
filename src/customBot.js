@@ -22,18 +22,17 @@ client.interactions = new Collection();
 await loadEvents(client);
 await loadInteractions(client);
 await loadCommands();
-const login = await client.login(process.env.BOT_TOKEN).catch(() => null);
-if (!login) return;
+await client.login(process.env.BOT_TOKEN).catch(() => null);
 
 process.on("message", async (message) => {
   if (message.name === "changePresence") {
     console.log("message", message);
-    const setPresence = await client.user.setPresence({
+    await client.user?.setPresence({
       activities: [{ name: message.presence }],
-    });
-    console.log("setPresence", setPresence);
+    })
   }
 });
+
 process.on("unhandledRejection", async (reason, p) => {
   console.log(" [antiCrash] :: Unhandled Rejection/Catch");
   console.log(reason, p);
