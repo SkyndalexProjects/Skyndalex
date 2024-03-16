@@ -4,19 +4,6 @@ import { commands } from "../handlers/commandHandler.js";
 
 export default async function ready(client) {
   if (client.user.id === process.env.CLIENT_ID) {
-    const presences = [
-      `Check out new 1.3.7 update! (/updates)`,
-      `Site https://skyndalex.xyz (soon)`,
-      `Docs: https://docs.skyndalex.xyz`,
-    ];
-
-    setInterval(() => {
-      const presence = presences[Math.floor(Math.random() * presences.length)];
-      client.user.setPresence({
-        activities: [{ name: presence }],
-      });
-    }, 5000);
-
     try {
       console.log(
         `${chalk.whiteBright(
@@ -49,6 +36,19 @@ export default async function ready(client) {
     } catch (e) {
       console.error(e);
     }
+
+    const presences = [
+      `Check out new 1.3.7 update! (/updates)`,
+      `Site https://skyndalex.xyz (soon)`,
+      `Docs: https://docs.skyndalex.xyz`,
+    ];
+
+    setInterval(() => {
+      const presence = presences[Math.floor(Math.random() * presences.length)];
+      client.user.setPresence({
+        activities: [{ name: presence }],
+      });
+    }, 5000);
 
     const getAllCustombots = await client.prisma.customBots.findMany();
 

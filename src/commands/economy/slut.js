@@ -1,6 +1,4 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-
-const cooldowns = new Map();
 export default {
   data: new SlashCommandBuilder().setName("slut").setDescription("Slut"),
 
@@ -8,10 +6,6 @@ export default {
     const money = Math.floor(Math.random() * (1000 + 1));
     const actions = ["Win", "Lose"];
     const action = actions[Math.floor(Math.random() * actions.length)];
-
-    const user = await client.prisma.economy.findFirst({
-      where: { uid: interaction.user.id },
-    });
 
     // TODO: add cooldown, set .catch() => null
 

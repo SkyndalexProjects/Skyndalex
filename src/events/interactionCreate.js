@@ -3,6 +3,7 @@ import { EmbedBuilder } from "discord.js";
 import { onCommandInteraction } from "../handlers/commandHandler.js";
 
 export default async function interactionCreate(client, interaction) {
+  console.log("dostaje", interaction)
   console.log(
     `${chalk.bold(
       chalk.underline(`[${new Date().toUTCString()}]`),
