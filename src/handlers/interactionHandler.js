@@ -10,22 +10,20 @@ export default async function loadInteractions(
   try {
     const files = await readdir(resolve(__dirname, path), {
       withFileTypes: true,
-    })
+    });
 
-    const filesMap = files.map(async (file) => {
+    for (const file of files) {
       if (file.isFile() && file.name.endsWith(".js")) {
         const { default: interaction } = await import(`${path}/${file.name}`);
+        // console.log(interaction);
 
-        const interactionName =
-          interaction.default?.name?.toLowerCase()?.replaceAll(" ", "_") ||
-          interaction.default?.customId;
-
-        client.interactions.set(interactionName, interaction.default);
+        const key = `${interaction.type}-${interaction.customId}`;
+        client.interactions.set(key, interaction);
       } else if (file.isDirectory()) {
         await loadInteractions(client, `${path}/${file.name}`);
       }
-    });
-  } catch(e) {
-    console.error(e)
+    }
+  } catch (e) {
+    console.error(e);
   }
 }

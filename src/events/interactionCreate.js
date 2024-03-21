@@ -3,7 +3,6 @@ import { EmbedBuilder } from "discord.js";
 import { onCommandInteraction } from "../handlers/commandHandler.js";
 
 export default async function interactionCreate(client, interaction) {
-  console.log("dostaje", interaction)
   console.log(
     `${chalk.bold(
       chalk.underline(`[${new Date().toUTCString()}]`),
@@ -14,9 +13,9 @@ export default async function interactionCreate(client, interaction) {
     )} [${chalk.bold(
       chalk.magenta(interaction.user.id),
     )}] | guild: ${chalk.blueBright("1058882286210261073")} [${chalk.blue(
-      interaction.guild.name,
-    )}] | channel: ${chalk.yellow(interaction.guild.id)} [#${chalk.yellowBright(
-      interaction.channel.name,
+      interaction.guild?.name || "No guild. DM",
+    )}] | channel: ${chalk.yellow(interaction.guild?.id || "No channel found (dm)")} [#${chalk.yellowBright(
+      interaction.channel?.name,
     )}]`,
   );
 
@@ -35,7 +34,7 @@ export default async function interactionCreate(client, interaction) {
 
   switch (true) {
     case interaction.isButton():
-      {
+     {
         const button = client?.interactions
           .filter(
             (x) =>
@@ -43,6 +42,7 @@ export default async function interactionCreate(client, interaction) {
           )
           ?.first();
 
+        console.log("button", button)
         if (!button)
           return (
             console.log(`Button with ${interaction.customId} was not found.`) ||
