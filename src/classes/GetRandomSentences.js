@@ -27,7 +27,7 @@ export default class GetRandomSentences {
           )
           .setColor("Red")
           .setTimestamp();
-        return interaction.reply({ embeds: [missingSentences] });
+        return interaction.reply({ embeds: [missingSentences] }).then(() => null);
       }
 
       const randomIndex = Math.floor(Math.random() * sentences.length);

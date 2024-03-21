@@ -1,6 +1,4 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-const cooldowns = new Map();
-
 export default {
   data: new SlashCommandBuilder().setName("work").setDescription("Work"),
 
@@ -13,8 +11,7 @@ export default {
       where: { uid: interaction.user.id },
     });
 
-    // TODO: make customizable cooldown settings
-    await client.cooldowns.set(interaction, 6000, interaction.user.id);
+    await client.cooldowns.set(interaction, 60000, interaction.user.id);
 
     if (action === "Win") {
       const win = await client.sentences.getRandomSentences(
@@ -22,6 +19,9 @@ export default {
         "win",
         money,
       );
+
+      if (!win) return;
+
       await client.economyBalance.updateWallet(
         interaction,
         interaction.user.id,
@@ -30,13 +30,15 @@ export default {
       const embedSuccess = new EmbedBuilder()
         .setDescription(`${win}`)
         .setColor("DarkGreen");
-      await interaction.reply({ embeds: [embedSuccess] }).catch(() => null);
+      await interaction?.reply({ embeds: [embedSuccess] });
     } else {
       const lose = await client.sentences.getRandomSentences(
         interaction,
         "lose",
         money,
       );
+
+      if (!lose) return;
 
       await client.economyBalance.updateWallet(
         interaction,
@@ -46,7 +48,7 @@ export default {
       const embedFail = new EmbedBuilder()
         .setDescription(`${lose}`)
         .setColor("DarkRed");
-      await interaction.reply({ embeds: [embedFail] }).catch(() => null);
+      await interaction?.reply({ embeds: [embedFail] });
     }
   },
 };

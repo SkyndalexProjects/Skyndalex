@@ -19,7 +19,9 @@ export default {
         "win",
         money,
       );
-      console.log("win", win);
+
+      if (!win) return;
+
       await client.economyBalance.updateWallet(
         interaction,
         interaction.user.id,
@@ -35,7 +37,8 @@ export default {
         "lose",
         money,
       );
-      console.log("lose", lose);
+
+      if (!lose) return;
 
       await client.economyBalance.updateWallet(
         interaction,
