@@ -11,17 +11,21 @@ import {
 const hf = new HfInference(process.env.HF_TOKEN);
 
 export default {
-  data: new SlashCommandBuilder()
-    .setName("gentext")
-    .setDescription("Generate text")
-    .addStringOption((option) =>
-      option
-        .setName("input")
-        .setDescription("Input for the AI")
-        .setMaxLength(2000)
-        .setMinLength(1)
-        .setRequired(true),
-    ),
+  data: {
+    ...new SlashCommandBuilder()
+      .setName("gentext")
+      .setDescription("Generate text")
+      .addStringOption((option) =>
+        option
+          .setName("input")
+          .setDescription("Input for the AI")
+          .setMaxLength(2000)
+          .setMinLength(1)
+          .setRequired(true),
+      ),
+    integration_types: [0, 1],
+    contexts: [0, 1, 2],
+  },
 
   async execute(client, interaction) {
     const prompt = interaction.options.getString("input");
@@ -72,18 +76,6 @@ export default {
 
         return interaction.editReply({ embeds: [embed2], files: [file] });
       }
-
-      const message = await interaction.editReply({
-        embeds: [embed],
-        components: [row],
-        allowedMentions: { parse: [] },
-      });
-
-      await message.startThread({
-        name: threadName,
-        autoArchiveDuration: 1440,
-        reason: "AI generated thread",
-      });
     } catch (e) {
       console.error(e);
       await interaction.editReply(

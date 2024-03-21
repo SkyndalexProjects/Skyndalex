@@ -1,7 +1,11 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import fetch from "node-fetch";
 export default {
-  data: new SlashCommandBuilder().setName("cat").setDescription("Random cat"),
+  data: {
+    ...new SlashCommandBuilder().setName("cat").setDescription("Random cat"),
+    integration_types: [0, 1],
+    contexts: [0, 1, 2],
+  },
 
   async execute(client, interaction) {
     const response = await fetch(

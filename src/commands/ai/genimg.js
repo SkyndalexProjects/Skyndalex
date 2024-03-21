@@ -11,20 +11,25 @@ const hf = new HfInference(process.env.HF_TOKEN);
 const imageQueue = new Map();
 
 export default {
-  data: new SlashCommandBuilder()
-    .setName("genimg")
-    .setDescription("Generate an image")
-    .addStringOption((option) =>
-      option
-        .setName("input")
-        .setDescription("Input for the AI")
-        .setRequired(true),
-    ),
+  data: {
+    ...new SlashCommandBuilder()
+      .setName("genimg")
+      .setDescription("Generate an image")
+      .addStringOption((option) =>
+        option
+          .setName("input")
+          .setDescription("Input for the AI")
+          .setRequired(true),
+
+      ),
+    integration_types: [0, 1],
+    contexts: [0, 1, 2],
+  },
 
   async execute(client, interaction) {
     const input = interaction.options.get("input").value;
     const queuePosition = imageQueue.size + 1;
-    const taskId = `${interaction.guild.id}-${
+    const taskId = `${interaction.guild?.id}-${
       interaction.user.id
     }-${Date.now()}`;
     const model = "stabilityai/stable-diffusion-2-1";
@@ -79,18 +84,14 @@ export default {
           newEmbed.setFooter({
             text: "WARNING! Watch out your prompts. The bot can generate NSFW image",
           });
+        const download = new ButtonBuilder()
+          .setURL("https://harnes-is-gay.com")
+          .setLabel("Download")
+          .setStyle(ButtonStyle.Link);
 
         const botMessage = await queueReply.edit({
           embeds: [newEmbed],
           files: [image],
-        });
-
-        const download = new ButtonBuilder()
-          .setURL(botMessage.attachments.first().url)
-          .setLabel("Download")
-          .setStyle(ButtonStyle.Link);
-
-        await botMessage.edit({
           components: [
             {
               type: 1,
