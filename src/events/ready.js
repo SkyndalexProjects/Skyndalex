@@ -17,7 +17,7 @@ export default async function ready(client) {
         )}`,
       );
 
-      const cmds = commands.map((cmd) => cmd.data.toJSON());
+      const cmds = commands.map((cmd) => cmd.data)
 
       const globalData = await client.rest.put(
         Routes.applicationCommands(client.user.id),

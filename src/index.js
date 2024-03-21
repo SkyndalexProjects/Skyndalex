@@ -34,7 +34,7 @@ console.log(
     chalk.underline(`[${new Date().toUTCString()}]`),
   )} ${chalk.bold(chalk.red(`(CLIENT)`))} ${chalk.bold(
     chalk.blue("[1]"),
-  )} ${chalk.bold(chalk.green(`Started running on general bot`))}`,
+  )} ${chalk.bold(chalk.green(`Starting running on general bot`))}`,
 );
 
 app.post(

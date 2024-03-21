@@ -7,6 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model guildCooldowns {
+  id           Int?    @default(autoincrement())
+  uid          String
+  guildId      String
+  commandName  String
+  endTimestamp String?
+
+  @@id([uid, guildId, commandName])
+}
+
 model settings {
   guildId          String  @id
   voiceLogsChannel String?
@@ -14,7 +24,7 @@ model settings {
   leaveChannel     String?
   autoRole         String?
   radioChannel     String?
-  radioEnabled     Boolean @default(false)
+  radioEnabled     Boolean @default(true)
   radioStation     String?
   aiChannel        String?
 }

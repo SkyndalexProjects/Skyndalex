@@ -37,7 +37,7 @@ export async function onCommandInteraction(client, interaction) {
       await command.autocomplete(client, interaction);
     }
     if (interaction.isCommand()) {
-      await command.execute(client, interaction);
+      await command.execute(client, interaction, );
     }
   } catch (error) {
     console.error(error);
