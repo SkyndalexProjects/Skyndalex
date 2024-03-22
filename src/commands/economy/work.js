@@ -1,7 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 export default {
   data: new SlashCommandBuilder().setName("work").setDescription("Work"),
-  // TODO: add cooldown property and refactor to events
+  cooldown: 60,
 
   async execute(client, interaction) {
     const money = Math.floor(Math.random() * (1000 + 1));
@@ -12,13 +12,6 @@ export default {
       where: { uid: interaction.user.id },
     });
 
-   const cooldown =  await client.cooldowns.set(interaction.commandName, interaction.guild.id, 6, interaction.user.id);
-
-   const embedCooldown = new EmbedBuilder()
-     .setDescription(`⏰ | You need to wait ${Math.ceil(cooldown)}s before using this command again.`)
-     .setColor("Yellow");
-
-   if (cooldown) return interaction.reply({ embeds: [embedCooldown], ephemeral: true })
 
     if (action === "Win") {
       const win = await client.sentences.getRandomSentences(

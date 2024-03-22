@@ -15,9 +15,7 @@ export default class CooldownHandler {
       const endTimestamp = Number(cooldowns[0]?.endTimestamp)
 
       if (cooldowns?.length > 0 && endTimestamp >= Date.now() ) {
-        const remaining = endTimestamp / 1000 - Date.now() / 1000
-        console.log("remaining", remaining)
-        return remaining
+        return endTimestamp / 1000 - Date.now() / 1000
       } else {
         await this.client.prisma.guildCooldowns.upsert({
           where: {

@@ -32,13 +32,31 @@ export async function onCommandInteraction(client, interaction) {
       ephemeral: true,
     });
 
+  if (command.cooldown) {
+    const cooldown = await client.cooldowns.set(interaction.commandName, interaction.guild.id, command.cooldown, interaction.user.id);
+    if (cooldown) {
+      console.log("cooldown", cooldown)
+      const futureDate = new Date();
+      futureDate.setSeconds(futureDate.getSeconds() + Math.floor(cooldown));
+
+      console.log("timestamp", futureDate.getTime())
+      const embedCooldown = new EmbedBuilder()
+        .setDescription(`⏰ | You need to wait <t:${Math.floor(futureDate.getTime() / 1000)}:R> before using this command again.`)
+        .setColor("Yellow");
+
+      return interaction.reply({ embeds: [embedCooldown], ephemeral: true })
+    }
+  }
+
+
   try {
     if (interaction.isAutocomplete()) {
       await command.autocomplete(client, interaction);
     }
     if (interaction.isCommand()) {
-      await command.execute(client, interaction, );
+      await command.execute(client, interaction);
     }
+
   } catch (error) {
     console.error(error);
 
