@@ -3,9 +3,7 @@ import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import path from "path"
 export default async function loadEvents(client) {
-  const __dirname = dirname(fileURLToPath(import.meta.url));
-  const files = (await readdir(path.join(__dirname, '../events')))
-
+  const files = await readdir(path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../events"));
 
   for (const file of files) {
     if (file.endsWith(".js")) {
