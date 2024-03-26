@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { config } from "dotenv";
+config()
 import chalk from "chalk";
 import {
   EmbedBuilder,
@@ -60,27 +61,6 @@ app.post(
       .setURL(`https://top.gg/bot/${client.user.id}`)
       .setTimestamp();
     client.channels.cache.get("1176945793631015074").send({ embeds: [embed] });
-
-    await client.prisma.economy.upsert({
-      where: {
-        uid_guildId: {
-          guildId: process.env.SUPPORT_SERVER_ID,
-          uid: vote.user,
-        },
-      },
-      create: {
-        guildId: interaction.guild.id,
-        uid: vote.user,
-        wallet: "200",
-      },
-      update: {
-        wallet: "200",
-      },
-    });
-
-    client.channels.cache
-      .get("1176945793631015074")
-      .send(`:tada: <@${vote.user}> just voted and got 200$!`);
   }),
 );
 
