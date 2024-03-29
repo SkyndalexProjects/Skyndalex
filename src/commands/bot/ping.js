@@ -1,20 +1,9 @@
-import { SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder } from 'discord.js';
 
-export default {
-  data: {
-    ...new SlashCommandBuilder()
-      .setName("ping")
-      .setDescription("Ping")
-      .setDMPermission(true),
-    integration_types: [0, 1],
-    contexts: [0, 1, 2],
-  },
-
-  async execute(client, interaction) {
-    console.log("chuj");
-
+export async function run(client, interaction) {
     await interaction.reply({
-      content: `Ping: \`${client.ws.ping}\``,
+        content: `Ping: \`${client.ws.ping}\``
     });
-  },
-};
+}
+
+export const data = new SlashCommandBuilder().setName('ping').setDescription('Replies with Pong!');
