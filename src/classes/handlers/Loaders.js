@@ -36,7 +36,9 @@ export class Loaders {
         for (const file of files) {
             const interactionTypes = await readdir(new URL(`${path}/${file}`, import.meta.url));
             for (const interactionFolders of interactionTypes) {
-                const interactionFile = await readdir(new URL(`${path}/${file}/${interactionFolders}`, import.meta.url));
+                const interactionFile = await readdir(
+                    new URL(`${path}/${file}/${interactionFolders}`, import.meta.url)
+                );
 
                 for (const interaction of interactionFile) {
                     const interactionData = await import(`${path}/${file}/${interactionFolders}/${interaction}`);

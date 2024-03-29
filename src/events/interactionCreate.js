@@ -39,6 +39,5 @@ export async function interactionCreate(client, interaction) {
                 await interaction.reply('Oops, there was an error while executing this interaction.');
             }
             break;
-
     }
 }
