@@ -22,7 +22,7 @@
 
 # Running
 
-Simply run `node index.js`, after meet the requirements.
+Simply run `npm run dev`, after meet the requirements.
 
 ## Requirements
 
