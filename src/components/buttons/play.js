@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import createPlayer from '../../../functions/player.js';
+import createPlayer from '../../functions/player.js';
 export async function run(client, interaction) {
     await interaction.deferReply();
 

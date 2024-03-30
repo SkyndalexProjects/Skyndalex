@@ -1,26 +1,14 @@
-import chalk from 'chalk';
 import { Routes } from 'discord.js';
 
 export async function ready(client) {
     if (client.user.id === process.env.CLIENT_ID) {
         try {
             const cmds = client.commands.map(command => command.data.toJSON());
-            console.log(
-                `${chalk.whiteBright(chalk.underline(`[${new Date().toUTCString()}]`))} ${chalk.bold(
-                    chalk.red(`(CLIENT)`)
-                )} ${chalk.bold(chalk.blue('[1]'))} ${chalk.bold(
-                    chalk.yellowBright(`Started refreshing application (/) commands. (${cmds.size})`)
-                )}`
-            );
+            client.logger.warn(`[READY] Starting refreshing global commands.`);
 
             const globalData = await client.rest.put(Routes.applicationCommands(client.user.id), { body: cmds });
-            console.log(
-                `${chalk.whiteBright(chalk.underline(`[${new Date().toUTCString()}]`))} ${chalk.bold(
-                    chalk.red(`(CLIENT)`)
-                )} ${chalk.bold(chalk.blue('[1]'))} ${chalk.bold(
-                    chalk.greenBright(`Successfully reloaded application (/) commands [${globalData.size}].`)
-                )}`
-            );
+
+            client.logger.success(`[READY] Successfully registered ${globalData.length} commands globally.`);
         } catch (e) {
             console.error(e);
         }

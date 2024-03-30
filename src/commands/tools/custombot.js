@@ -19,7 +19,7 @@ export async function run(client, interaction) {
         const createButton = new ButtonBuilder()
             .setLabel('Create custom bot')
             .setStyle(ButtonStyle.Primary)
-            .setCustomId(`customBotCreateBtn-${interaction.user.id}`);
+            .setCustomId(`createCustomBot-${interaction.user.id}`);
 
         const createBotActionRow = new ActionRowBuilder().addComponents(createButton);
 

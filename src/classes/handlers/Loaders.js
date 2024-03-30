@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import { Collection } from 'discord.js';
 import { readdir } from 'fs/promises';
 
@@ -16,6 +17,11 @@ export class Loaders {
                 commands.set(command.data.name, command);
             }
         }
+        console.log(
+            `[${chalk.whiteBright(chalk.underline(new Date().toUTCString()))}] ${chalk.greenBright(
+                '[HANDLERS]'
+            )} ${chalk.greenBright(chalk.bold(`Loaded ${commands.size} commands.`))}`
+        );
         return commands;
     }
     static async loadEvents(client, path) {
@@ -28,27 +34,44 @@ export class Loaders {
             client.on(name, (...events) => event[name](client, ...events));
         }
     }
-    static async loadInteractions(path) {
-        const interactions = new Collection();
+    static async loadComponents(path) {
+        const components = new Collection();
 
         const files = await readdir(new URL(path, import.meta.url));
 
         for (const file of files) {
-            const interactionTypes = await readdir(new URL(`${path}/${file}`, import.meta.url));
-            for (const interactionFolders of interactionTypes) {
-                const interactionFile = await readdir(
-                    new URL(`${path}/${file}/${interactionFolders}`, import.meta.url)
-                );
-
-                for (const interaction of interactionFile) {
-                    const interactionData = await import(`${path}/${file}/${interactionFolders}/${interaction}`);
-                    const customId = interaction.split('.')[0];
-                    if (!interactionData) return console.log(`Interaction ${interaction} does not have a run function`);
-
-                    interactions.set(customId, interactionData);
-                }
+            const component = await readdir(new URL(`${path}/${file}`, import.meta.url));
+            for (const comp of component) {
+                const componentFile = await import(`${path}/${file}/${comp}`);
+                const customId = comp.split('.')[0];
+                if (!componentFile) return console.log(`Component ${comp} does not have a run function`);
+                components.set(customId, componentFile);
             }
         }
-        return interactions;
+        console.log(
+            `[${chalk.whiteBright(chalk.underline(new Date().toUTCString()))}] ${chalk.greenBright(
+                '[HANDLERS]'
+            )} ${chalk.greenBright(chalk.bold(`Loaded ${components.size} components.`))}`
+        );
+
+        return components;
+    }
+    static async loadModals(path) {
+        const modals = new Collection();
+
+        const files = await readdir(new URL(path, import.meta.url));
+
+        for (const file of files) {
+            const modal = await import(`${path}/${file}`);
+            const customId = file.split('.')[0];
+            if (!modal) return console.log(`Modal ${file} does not have a run function`);
+            modals.set(customId, modal);
+        }
+        console.log(
+            `[${chalk.whiteBright(chalk.underline(new Date().toUTCString()))}] ${chalk.greenBright(
+                '[HANDLERS]'
+            )} ${chalk.greenBright(chalk.bold(`Loaded ${modals.size} modals.`))}`
+        );
+        return modals;
     }
 }

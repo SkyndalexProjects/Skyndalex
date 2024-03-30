@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 export async function run(client, interaction) {
     const customBotCreateModal = new ModalBuilder()
-        .setCustomId('customBotCreateModal')
+        .setCustomId('createCustomBotModal')
         .setTitle('Custombot configuration');
 
     const token = new TextInputBuilder()

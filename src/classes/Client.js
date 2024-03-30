@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import { Connectors, Shoukaku } from 'shoukaku';
+import { Logger } from './Logger.js';
 import { Loaders } from './handlers/Loaders.js';
+
 const Nodes = [
     {
         name: 'Localhost',
@@ -12,6 +14,7 @@ const Nodes = [
 
 export class SkyndalexClient extends Client {
     prisma = new PrismaClient({});
+    logger = new Logger();
     constructor() {
         super({
             intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
@@ -26,9 +29,10 @@ export class SkyndalexClient extends Client {
         this.shoukaku.on('error', (_, error) => console.error(error));
 
         this.commands = await Loaders.loadCommands('../../commands');
-        this.interactions = await Loaders.loadInteractions('../../interactions');
+        this.components = await Loaders.loadComponents('../../components');
+        this.modals = await Loaders.loadModals('../../modals');
 
-        await this.prisma.$connect();
+        const connect = await this.prisma.$connect();
         await this.login(process.env.BOT_TOKEN);
     }
 }
