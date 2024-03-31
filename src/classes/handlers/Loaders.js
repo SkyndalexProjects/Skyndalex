@@ -1,29 +1,38 @@
 import chalk from 'chalk';
 import { Collection } from 'discord.js';
 import { readdir } from 'fs/promises';
+import { readdirSync } from 'fs';
 
 export class Loaders {
     static async loadCommands(path) {
         const commands = new Collection();
 
-        const files = await readdir(new URL(path, import.meta.url));
+        const dir = await readdir(new URL(path, import.meta.url));
 
-        for (const commandCategory of files) {
-            const commandPath = await readdir(new URL(`${path}/${commandCategory}`, import.meta.url));
-            for (const file of commandPath) {
-                const command = await import(`${path}/${commandCategory}/${file}`);
-                if (!command.data?.name) return console.log(`Command ${file} does not have a name`);
+        for (const category of dir.filter((file) => !file.endsWith('.js'))) {
+            const files = await readdir(new URL(`${path}/${category}`, import.meta.url));
 
-                commands.set(command.data.name, command);
+            // Subcommand handling
+            for (const file of files.filter(file => !file.endsWith('.js'))) {
+                console.log("file", file)
+                const subCommands =  await Loaders.loadCommands(`${path}/${category}`);
+                (await subCommands).forEach((v, k) =>
+                  commands.set(`${file.split(".")[0]}/${k}`, v),
+                );
+            }
+
+            // Command handling
+            for (const file of files.filter(file => file.endsWith('.js'))) {
+                const command = await import(`${path}/${category}/${file}`);
+                const name = file.split('.')[0];
+                commands.set(name, command);
             }
         }
-        console.log(
-            `[${chalk.whiteBright(chalk.underline(new Date().toUTCString()))}] ${chalk.greenBright(
-                '[HANDLERS]'
-            )} ${chalk.greenBright(chalk.bold(`Loaded ${commands.size} commands.`))}`
-        );
+
         return commands;
     }
+
+
     static async loadEvents(client, path) {
         const files = await readdir(new URL(path, import.meta.url));
 

@@ -32,7 +32,7 @@ export class SkyndalexClient extends Client {
         this.components = await Loaders.loadComponents('../../components');
         this.modals = await Loaders.loadModals('../../modals');
 
-        const connect = await this.prisma.$connect();
+        await this.prisma.$connect();
         await this.login(process.env.BOT_TOKEN);
     }
 }

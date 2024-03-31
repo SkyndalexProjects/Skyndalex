@@ -3,12 +3,27 @@ import { Routes } from 'discord.js';
 export async function ready(client) {
     if (client.user.id === process.env.CLIENT_ID) {
         try {
-            const cmds = client.commands.map(command => command.data.toJSON());
-            client.logger.warn(`[READY] Starting refreshing global commands.`);
+            const parsedCommands = [];
 
-            const globalData = await client.rest.put(Routes.applicationCommands(client.user.id), { body: cmds });
+            client.commands.forEach(async (cmd, key) => {
+                if (key.includes("/")) {
+                    const [name, subcommand] = key.split("/");
+                    if (subcommand !== "index") return;
+                    const subcommands = client.commands.filter(
+                      (value, key) => key.startsWith(`${name}/`) && key !== `${name}/index`
+                    )
+                    const command = cmd.data;
+                    subcommands.forEach((subcmd) => {
+                        command.addSubcommand(subcmd.data);
+                    })
+                    parsedCommands.push(command);
+                } else {
+                    parsedCommands.push(cmd.data);
+                }
+            })
 
-            client.logger.success(`[READY] Successfully registered ${globalData.length} commands globally.`);
+            const globalData = await client.application.commands.set(parsedCommands);
+            client.logger.success(`[READY] Successfully registered ${globalData.size} commands globally.`);
         } catch (e) {
             console.error(e);
         }

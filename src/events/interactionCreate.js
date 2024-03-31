@@ -1,28 +1,19 @@
 import { EmbedBuilder, InteractionType } from 'discord.js';
 
 export async function interactionCreate(client, interaction) {
-    // console.log(
-    //     `${chalk.bold(chalk.underline(`[${new Date().toUTCString()}]`))} ${chalk.yellowBright(
-    //         '[USED INTERACTION]'
-    //     )} ${chalk.blue(chalk.bold('(201)'))} : user: ${chalk.bold(
-    //         chalk.magenta(interaction.user.username)
-    //     )} [${chalk.bold(chalk.magenta(interaction.user.id))}] | guild: ${chalk.blueBright(
-    //         '1058882286210261073'
-    //     )} [${chalk.blue(interaction.guild?.name || 'No guild. DM')}] | channel: ${chalk.yellow(
-    //         interaction.guild?.id || 'No channel found (dm)'
-    //     )} [#${chalk.yellowBright(interaction.channel?.name)}]`
-    // );
     switch (interaction.type) {
         case InteractionType.ApplicationCommand:
             if (!interaction.isChatInputCommand()) return;
-            const command = client.commands.get(interaction.commandName);
             client.logger.log(
-                `[USED APPLICATION COMMAND] (201) : commandName: ${interaction.commandName} | user: ${
-                    interaction.user.username
-                } [${interaction.user.id}] | guild: 1058882286210261073 [${
-                    interaction.guild?.name || 'No guild. DM'
-                }] | channel: ${interaction.guild?.id || 'No channel found (dm)'} [#${interaction.channel?.name}]`
+              `[USED APPLICATION COMMAND] (201) : commandName: ${interaction.commandName} | user: ${
+                interaction.user.username
+              } [${interaction.user.id}] | guild: 1058882286210261073 [${
+                interaction.guild?.name || 'No guild. DM'
+              }] | channel: ${interaction.guild?.id || 'No channel found (dm)'} [#${interaction.channel?.name}]`
             );
+
+            const subcommand = interaction.options.getSubcommand(false)
+            const command = client.commands.get(subcommand ? `${interaction.commandName}/${subcommand}` : interaction.commandName);
 
             if (!command) return interaction.reply("Ooops, this command doesn't exist.");
 
