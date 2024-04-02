@@ -18,15 +18,15 @@ model guildCooldowns {
 }
 
 model settings {
-  guildId          String  @id
-  voiceLogsChannel String?
-  welcomeChannel   String?
-  leaveChannel     String?
-  autoRole         String?
-  radioChannel     String?
-  radioEnabled     Boolean @default(true)
-  radioStation     String?
-  aiChannel        String?
+  guildId           String   @id
+  voiceLogsChannel  String?
+  welcomeChannel    String?
+  leaveChannel      String?
+  autoRole          String?
+  radioEnabled      Boolean? @default(true)
+  radioStation      String?
+  aiChannel         String?
+  radioChannelVoice String?
 }
 
 model customBots {

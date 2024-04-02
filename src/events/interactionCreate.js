@@ -14,14 +14,20 @@ export async function interactionCreate(client, interaction) {
 
             const subcommand = interaction.options.getSubcommand(false)
             const command = client.commands.get(subcommand ? `${interaction.commandName}/${subcommand}` : interaction.commandName);
-
-            if (!command) return interaction.reply("Ooops, this command doesn't exist.");
+            const wrongCommand = new EmbedBuilder()
+                .setDescription(`❌ | Unknown command. Command \`${interaction.commandName}\` doesnt exists anymore..`)
+                .setColor('Red');
+            if (!command) return interaction.reply({ embeds: [wrongCommand]});
 
             try {
                 await command.run(client, interaction);
             } catch (error) {
                 console.error(error);
-                await interaction.reply('Oops, there was an error while executing this command.');
+                const embedError = new EmbedBuilder()
+                  .setDescription(`**❌ | There was an error while executing this command. Please try again later.**\n\nError title: \`${error.name}\`\nError message: \`${error.message}\``)
+                  .setColor("Red")
+                  .setTimestamp()
+                await interaction.reply({ embeds: [embedError], ephemeral: true });
             }
             break;
         case InteractionType.MessageComponent:
@@ -38,7 +44,6 @@ export async function interactionCreate(client, interaction) {
                 .setColor('Red');
             client.logger.error(`Unknown component. CustomId ${interaction.customId} doesn't exist.`);
             const component = client.components.get(interaction.customId.split('-')[0]);
-            console.log('component', component);
             if (!component) return interaction.reply({ embeds: [componentNotFound], ephemeral: true });
 
             try {

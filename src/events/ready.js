@@ -5,22 +5,22 @@ export async function ready(client) {
         try {
             const parsedCommands = [];
 
-            client.commands.forEach(async (cmd, key) => {
+            for (const [key, cmd] of client.commands.entries()) {
                 if (key.includes("/")) {
                     const [name, subcommand] = key.split("/");
-                    if (subcommand !== "index") return;
+                    if (subcommand !== "index") continue;
                     const subcommands = client.commands.filter(
-                      (value, key) => key.startsWith(`${name}/`) && key !== `${name}/index`
-                    )
+                      (value, subKey) => subKey.startsWith(`${name}/`) && subKey !== `${name}/index`
+                    );
                     const command = cmd.data;
-                    subcommands.forEach((subcmd) => {
+                    for (const [subKey, subcmd] of subcommands.entries()) {
                         command.addSubcommand(subcmd.data);
-                    })
+                    }
                     parsedCommands.push(command);
                 } else {
                     parsedCommands.push(cmd.data);
                 }
-            })
+            }
 
             const globalData = await client.application.commands.set(parsedCommands);
             client.logger.success(`[READY] Successfully registered ${globalData.size} commands globally.`);

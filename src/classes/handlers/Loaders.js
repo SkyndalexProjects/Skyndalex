@@ -14,11 +14,13 @@ export class Loaders {
 
             // Subcommand handling
             for (const file of files.filter(file => !file.endsWith('.js'))) {
-                console.log("file", file)
-                const subCommands =  await Loaders.loadCommands(`${path}/${category}`);
-                (await subCommands).forEach((v, k) =>
-                  commands.set(`${file.split(".")[0]}/${k}`, v),
-                );
+
+                const subCommands =  await readdir(new URL(`${path}/${category}/${file}`, import.meta.url));
+
+                for (const v of subCommands) {
+                    const command = await import(`${path}/${category}/${file}/${v}`);
+                    commands.set(`${file.split(".")[0]}/${v.split(".")[0]}`, command)
+                }
             }
 
             // Command handling
@@ -29,6 +31,11 @@ export class Loaders {
             }
         }
 
+        console.log(
+          `[${chalk.whiteBright(chalk.underline( new Date().toUTCString()))}] ${chalk.greenBright('[HANDLERS]')} ${chalk.greenBright(
+            chalk.bold(`Loaded ${commands.size} commands.`)
+          )}`
+        );
         return commands;
     }
 
@@ -58,9 +65,9 @@ export class Loaders {
             }
         }
         console.log(
-            `[${chalk.whiteBright(chalk.underline(new Date().toUTCString()))}] ${chalk.greenBright(
-                '[HANDLERS]'
-            )} ${chalk.greenBright(chalk.bold(`Loaded ${components.size} components.`))}`
+          `[${chalk.whiteBright(chalk.underline(new Date().toUTCString()))}] ${chalk.greenBright(
+            '[HANDLERS]'
+          )} ${chalk.greenBright(chalk.bold(`Loaded ${components.size} components.`))}`
         );
 
         return components;
@@ -77,9 +84,9 @@ export class Loaders {
             modals.set(customId, modal);
         }
         console.log(
-            `[${chalk.whiteBright(chalk.underline(new Date().toUTCString()))}] ${chalk.greenBright(
-                '[HANDLERS]'
-            )} ${chalk.greenBright(chalk.bold(`Loaded ${modals.size} modals.`))}`
+          `[${chalk.whiteBright(chalk.underline(new Date().toUTCString()))}] ${chalk.greenBright(
+            '[HANDLERS]'
+          )} ${chalk.greenBright(chalk.bold(`Loaded ${modals.size} modals.`))}`
         );
         return modals;
     }
