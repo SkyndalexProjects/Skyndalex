@@ -8,7 +8,6 @@ import {
 } from 'discord.js';
 import find from 'find-process';
 export async function run(client, interaction) {
-    console.log('interaction', interaction.customId);
     const findUserBots = await client.prisma.customBots.findMany({
         where: {
             userId: interaction.user.id
