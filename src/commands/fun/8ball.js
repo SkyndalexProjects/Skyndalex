@@ -27,9 +27,13 @@ export async function run(client, interaction) {
 
 	await interaction.editReply({ embeds: [embed] });
 }
-export const data = new SlashCommandBuilder()
-	.setName("8ball")
-	.setDescription("Magic ball")
-	.addStringOption((option) =>
-		option.setName("question").setDescription("Question").setRequired(true),
-	);
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("8ball")
+		.setDescription("Magic ball")
+		.addStringOption((option) =>
+			option.setName("question").setDescription("Question").setRequired(true),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+}

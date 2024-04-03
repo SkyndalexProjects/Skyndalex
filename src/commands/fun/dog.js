@@ -20,6 +20,10 @@ export async function run(client, interaction) {
 
 	await interaction.reply({ embeds: [embed] });
 }
-export const data = new SlashCommandBuilder()
-	.setName("dog")
-	.setDescription("Random dog");
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("dog")
+		.setDescription("Dog image"),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+}

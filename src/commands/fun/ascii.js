@@ -13,9 +13,13 @@ export async function run(client, interaction) {
 	await interaction.editReply({ embeds: [embed] });
 }
 
-export const data = new SlashCommandBuilder()
-	.setName("ascii")
-	.setDescription("Ascii.")
-	.addStringOption((option) =>
-		option.setName("text").setDescription("Ascii text").setRequired(true),
-	);
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("ascii")
+		.setDescription("Ascii.")
+		.addStringOption((option) =>
+			option.setName("text").setDescription("Ascii text").setRequired(true),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+}

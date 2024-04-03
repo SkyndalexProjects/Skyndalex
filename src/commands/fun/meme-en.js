@@ -26,7 +26,11 @@ export async function run(client, interaction) {
 			await interaction.reply({ embeds: [embed] });
 		});
 }
-export const data = new SlashCommandBuilder()
-	.setName("meme-en")
-	.setDescription("Generate random english meme.")
-	.setNSFW(true);
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("meme-en")
+		.setDescription("Generate random english meme.")
+		.setNSFW(true),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+}

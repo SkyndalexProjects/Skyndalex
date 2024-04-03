@@ -13,7 +13,7 @@ const imageQueue = new Map();
 export async function run(client, interaction) {
 	const input = interaction.options.get("input").value;
 	const queuePosition = imageQueue.size + 1;
-	const taskId = `${interaction.guild?.id}-${
+	const taskId = `${
 		interaction.user.id
 	}-${Date.now()}`;
 	const model = "stabilityai/stable-diffusion-2-1";
@@ -70,7 +70,7 @@ export async function run(client, interaction) {
 					text: "Powered by Huggingface using Skyndalex bot",
 				});
 
-			if (!interaction.channel.nsfw)
+			if (!interaction?.channel?.nsfw)
 				newEmbed.setFooter({
 					text: "WARNING! Watch out your prompts. The bot can generate NSFW image",
 				});
@@ -93,7 +93,7 @@ export async function run(client, interaction) {
 			const secondMessage = new EmbedBuilder()
 				.setColor("#12ff00")
 				.setDescription("✅ Your image is ready!");
-			if (!interaction.channel.nsfw)
+			if (!interaction.channel?.nsfw)
 				newEmbed.setFooter({
 					text: "WARNING! Watch out your prompts. The AI model can generate NSFW image",
 				});
@@ -119,12 +119,16 @@ export async function run(client, interaction) {
 		await interaction.editReply({ embeds: [embedError] });
 	}
 }
-export const data = new SlashCommandBuilder()
-	.setName("genimg")
-	.setDescription("Generate an image")
-	.addStringOption((option) =>
-		option
-			.setName("input")
-			.setDescription("Input for the AI")
-			.setRequired(true),
-	);
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("genimg")
+		.setDescription("Generate an image")
+		.addStringOption((option) =>
+			option
+				.setName("input")
+				.setDescription("Input for the AI")
+				.setRequired(true),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+}

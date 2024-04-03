@@ -33,7 +33,7 @@ export async function interactionCreate(client, interaction) {
 				const getCooldownSettings =
 					await client.prisma.guildCooldownsSettings.findFirst({
 						where: {
-							guildId: interaction.guild.id,
+							guildId: interaction?.guild?.id,
 							command: interaction.commandName,
 						},
 					});
@@ -44,7 +44,6 @@ export async function interactionCreate(client, interaction) {
 						getCooldownSettings.cooldown,
 					);
 					if (cooldown) {
-						//
 						const futureDate = new Date();
 						futureDate.setSeconds(
 							futureDate.getSeconds() +

@@ -3,7 +3,8 @@ export async function run(client, interaction) {
 	const isAuthor =
 		interaction.message.interaction.user.id === interaction.user.id;
 
-	if (!isAuthor) {
+	const isOnDm= interaction.guild?.id
+	if (!isAuthor && isOnDm) {
 		return interaction.reply({
 			content:
 				"You can delete only your attachments. If you are administrator, you can do it by Discord UI",

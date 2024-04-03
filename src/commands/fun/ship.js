@@ -22,12 +22,16 @@ export async function run(client, interaction) {
 	await interaction.editReply({ embeds: [embed] });
 }
 
-export const data = new SlashCommandBuilder()
-	.setName("ship")
-	.setDescription("Ship.")
-	.addUserOption((option) =>
-		option.setName("user1").setDescription("User 1").setRequired(true),
-	)
-	.addUserOption((option) =>
-		option.setName("user2").setDescription("User 2").setRequired(true),
-	);
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("ship")
+		.setDescription("Ship.")
+		.addUserOption((option) =>
+			option.setName("user1").setDescription("User 1").setRequired(true),
+		)
+		.addUserOption((option) =>
+			option.setName("user2").setDescription("User 2").setRequired(true),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+}

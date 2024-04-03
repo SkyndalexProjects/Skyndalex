@@ -38,12 +38,16 @@ export async function run(client, interaction) {
 
 	await interaction.reply({ embeds: [embed] });
 }
-export const data = new SlashCommandBuilder()
-	.setName("game")
-	.setDescription("Search game server")
-	.addStringOption((option) =>
-		option.setName("game").setDescription("Game name").setRequired(true),
-	)
-	.addStringOption((option) =>
-		option.setName("server").setDescription("Server IP").setRequired(true),
-	);
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("game")
+		.setDescription("Search game server")
+		.addStringOption((option) =>
+			option.setName("game").setDescription("Game name").setRequired(true),
+		)
+		.addStringOption((option) =>
+			option.setName("server").setDescription("Server IP").setRequired(true),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+}

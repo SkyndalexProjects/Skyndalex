@@ -24,8 +24,11 @@ export async function ready(client) {
 				}
 			}
 
-			const globalData =
-				await client.application.commands.set(parsedCommands);
+			const globalData = await client.rest.put(
+				Routes.applicationCommands(client.user.id),
+				{ body: parsedCommands },
+			);
+
 			client.logger.success(
 				`[READY] Successfully registered ${globalData.size} commands globally.`,
 			);
