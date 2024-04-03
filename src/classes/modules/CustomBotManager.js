@@ -12,7 +12,7 @@ export class CustomBotManager {
 
 		const DBURL = `postgresql://postgres:${process.env.CUSTOMBOT_DB_PASSWORD}@localhost:5432/custombot_${clientId}?schema=public`;
 
-		execSync(`SET DATABASE_URL=${DBURL} && npx prisma db push`, {
+		execSync(`export DATABASE_URL=${DBURL} && npx prisma db push`, {
 			stdio: "inherit",
 		});
 
