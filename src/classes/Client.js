@@ -21,6 +21,7 @@ export class SkyndalexClient extends Client {
 				GatewayIntentBits.Guilds,
 				GatewayIntentBits.GuildMessages,
 				GatewayIntentBits.MessageContent,
+				GatewayIntentBits.GuildVoiceStates
 			],
 			partials: [Partials.Message],
 			allowedMentions: { repliedUser: false },

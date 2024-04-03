@@ -4,7 +4,6 @@ import { addCooldown } from "../functions/addCooldown.js";
 export async function interactionCreate(client, interaction) {
 	switch (interaction.type) {
 		case InteractionType.ApplicationCommand:
-			if (!interaction.isChatInputCommand()) return;
 			client.logger.log(
 				`[USED APPLICATION COMMAND] (201) : commandName: ${
 					interaction.commandName
@@ -63,7 +62,9 @@ export async function interactionCreate(client, interaction) {
 						});
 					}
 				}
-				await command.run(client, interaction);
+				if (interaction.isCommand()) {
+					await command.run(client, interaction);
+				}
 			} catch (error) {
 				console.error(error);
 				const embedError = new EmbedBuilder()
@@ -76,6 +77,37 @@ export async function interactionCreate(client, interaction) {
 					embeds: [embedError],
 					ephemeral: true,
 				});
+			}
+			break;
+		case InteractionType.ApplicationCommandAutocomplete:
+			client.logger.log(
+				`[USED APPLICATION COMMAND AUTOCOMPLETE] (201) : commandName: ${
+					interaction.commandName
+				} | user: ${interaction.user.username} [${
+					interaction.user.id
+				}] | guild: 1058882286210261073 [${
+					interaction.guild?.name || "No guild. DM"
+				}] | channel: ${
+					interaction.guild?.id || "No channel found (dm)"
+				} [#${interaction.channel?.name}]`,
+			);
+
+			if (interaction.isAutocomplete()) {
+				const subcommand = interaction.options.getSubcommand(false);
+				const command = client.commands.get(
+					subcommand
+						? `${interaction.commandName}/${subcommand}`
+						: interaction.commandName,
+				);
+				if (!command) return;
+				try {
+					await command.autocomplete(interaction);
+				} catch (error) {
+					console.error(error);
+					await interaction.respond(
+						"Oops, there was an error while executing this autocomplete.",
+					);
+				}
 			}
 			break;
 		case InteractionType.MessageComponent:

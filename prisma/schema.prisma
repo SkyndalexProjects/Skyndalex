@@ -66,7 +66,7 @@ model economySettings {
   action   String?
   cooldown Int?
 
-  @@id([id, guildId])
+ buy  @@id([id, guildId])
 }
 
 model shops {

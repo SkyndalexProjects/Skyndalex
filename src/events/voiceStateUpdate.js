@@ -2,6 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import fetch from "node-fetch";
 
 export async function voiceStateUpdate(client, oldState, newState) {
+	console.log("log")
 	const getSettings = await client.prisma.settings.findUnique({
 		where: {
 			guildId: newState.guild.id,
