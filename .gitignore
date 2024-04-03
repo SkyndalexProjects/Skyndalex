@@ -136,3 +136,4 @@ src/configdeprecated.json
 .env
 .npmrc
 src/config.json
+src/commands/bot/test.js

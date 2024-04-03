@@ -1,164 +1,134 @@
 import { HfInference } from "@huggingface/inference";
 import {
-  ActionRowBuilder,
-  AttachmentBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
-  SlashCommandBuilder,
+	AttachmentBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	EmbedBuilder,
+	SlashCommandBuilder,
 } from "discord.js";
 
 const hf = new HfInference(process.env.HF_TOKEN);
 const imageQueue = new Map();
 
-export default {
-  data: new SlashCommandBuilder()
-    .setName("genimg")
-    .setDescription("Generate an image")
-    .addStringOption((option) =>
-      option
-        .setName("input")
-        .setDescription("Input for the AI")
-        .setRequired(true),
-    ),
+export async function run(client, interaction) {
+	const input = interaction.options.get("input").value;
+	const queuePosition = imageQueue.size + 1;
+	const taskId = `${
+		interaction.user.id
+	}-${Date.now()}`;
+	const model = "stabilityai/stable-diffusion-2-1";
+	try {
+		const deleteAttachment = new ButtonBuilder()
+			.setCustomId("deleteAttachment")
+			.setLabel("Delete")
+			.setStyle(ButtonStyle.Danger);
 
-  async execute(client, interaction) {
-    try {
-      const input = interaction.options.get("input").value;
-      const queuePosition = imageQueue.size + 1;
-      const taskId = `${interaction.guild.id}-${
-        interaction.user.id
-      }-${Date.now()}`;
+		if (!imageQueue.has(taskId)) {
+			imageQueue.set(taskId, {
+				status: "queued",
+				position: queuePosition,
+				input: input,
+			});
 
-      const like = new ButtonBuilder()
-        .setCustomId("like")
-        .setLabel("👍")
-        .setStyle(ButtonStyle.Primary);
+			const queueMessage = new EmbedBuilder()
+				.setColor("#3498db")
+				.setDescription(
+					` <a:4704loadingicon:1183416396223352852> | Processing image\n\n**Position in queue:** \`${queuePosition}\`\n**Prompt:** \`${input}\``,
+				)
+				.setTimestamp()
+				.setFooter({
+					text: "Powered by Huggingface using Skyndalex bot",
+				});
 
-      const dislike = new ButtonBuilder()
-        .setCustomId("dislike")
-        .setLabel("👎")
-        .setStyle(ButtonStyle.Primary);
+			const queueReply = await interaction.reply({
+				embeds: [queueMessage],
+			});
 
-      const deleteAttachment = new ButtonBuilder()
-        .setCustomId("deleteAttachment")
-        .setLabel("Delete")
-        .setStyle(ButtonStyle.Danger);
+			const response = await hf.textToImage({
+				inputs: input,
+				model: model,
+				parameters: {
+					negative_prompt: "blurry",
+				},
+				use_cache: false,
+				wait_for_model: true,
+			});
 
-      const rerun = new ButtonBuilder()
-        .setCustomId("rerun")
-        .setLabel("Rerun")
-        .setStyle(ButtonStyle.Success);
+			const imageBuffer = await response.arrayBuffer();
+			const image = new AttachmentBuilder(
+				Buffer.from(imageBuffer),
+				"image.png",
+			);
 
-      if (!imageQueue.has(taskId)) {
-        imageQueue.set(taskId, {
-          status: "queued",
-          position: queuePosition,
-          input: input,
-        });
+			const newEmbed = new EmbedBuilder()
+				.setDescription(
+					`✅ Generated img "**${input}**" requested from input by **${interaction.user.username}**`,
+				)
+				.setColor("#12ff00")
+				.setTimestamp()
+				.setFooter({
+					text: "Powered by Huggingface using Skyndalex bot",
+				});
 
-        const queueMessage = new EmbedBuilder()
-          .setColor("#3498db")
-          .setDescription(
-            `⌛ Your image is in the queue at position ${queuePosition}.(input: **${input}**) Please wait...\n\n**Estimated time: 1 to 10 minutes.**`,
-          )
-          .setFooter({ text: "Task ID: " + taskId });
+			if (!interaction?.channel?.nsfw)
+				newEmbed.setFooter({
+					text: "WARNING! Watch out your prompts. The bot can generate NSFW image",
+				});
+			const download = new ButtonBuilder()
+				.setURL("https://harnes-is-gay.com")
+				.setLabel("Download")
+				.setStyle(ButtonStyle.Link);
 
-        const queueReply = await interaction.reply({ embeds: [queueMessage] });
+			const botMessage = await queueReply.edit({
+				embeds: [newEmbed],
+				files: [image],
+				components: [
+					{
+						type: 1,
+						components: [download, deleteAttachment],
+					},
+				],
+			});
 
-        const response = await hf.textToImage({
-          inputs: input,
-          model: "stabilityai/stable-diffusion-2-1",
-          parameters: {
-            negative_prompt: "blurry",
-          },
-          use_cache: false,
-          wait_for_model: true,
-        });
+			const secondMessage = new EmbedBuilder()
+				.setColor("#12ff00")
+				.setDescription("✅ Your image is ready!");
+			if (!interaction.channel?.nsfw)
+				newEmbed.setFooter({
+					text: "WARNING! Watch out your prompts. The AI model can generate NSFW image",
+				});
 
-        if (response?.error) {
-          imageQueue.delete(taskId);
+			await interaction.followUp({
+				content: `<@${interaction.user.id}>,`,
+				embeds: [secondMessage],
+			});
 
-          const errorEmbed = new EmbedBuilder()
-            .setColor("#e74c3c")
-            .setDescription("❌ Error: " + response.error)
-            .setFooter({ text: "Task ID: " + taskId });
-          await queueReply.edit({
-            embeds: [errorEmbed],
-            components: [new ActionRowBuilder().addComponents(rerun)],
-          });
-          return;
-        }
+			imageQueue.delete(taskId);
+		}
+	} catch (e) {
+		imageQueue.delete(taskId);
 
-        console.log(response);
-        if (response.type === "application/json") {
-          imageQueue.delete(taskId);
-          const cannotLoad = new EmbedBuilder()
-            .setColor("#e74c3c")
-            .setDescription(
-              "❌ Cannot load the image. Got `application/json` response, instead of `image` (HF Model is still loading). Please try again later or try another prompt",
-            )
-            .setFooter({ text: "Task ID: " + taskId });
-          await queueReply.edit({
-            embeds: [cannotLoad],
-            components: [new ActionRowBuilder().addComponents(rerun)],
-          });
-          return;
-        }
+		console.error(e);
+		const embedError = new EmbedBuilder()
+			.setTitle("An error occurred while generating image")
+			.setDescription(
+				`Model timed out or image is not available.\n\n**Model:** \`${model}\`\n**Prompt:** \`${input}\``,
+			)
+			.setColor("Red");
 
-        const imageBuffer = await response.arrayBuffer();
-        const image = new AttachmentBuilder(
-          Buffer.from(imageBuffer),
-          "image.png",
-        );
-
-        const newEmbed = new EmbedBuilder()
-          .setDescription(
-            `✅ Generated img "**${input}**" requested from input by **${interaction.user.username}**`,
-          )
-          .setColor("#12ff00");
-        if (interaction.channel.nsfw)
-          newEmbed.setFooter({
-            text: "WARNING! Watch out your prompts. The bot can generate NSFW image",
-          });
-
-        const botMessage = await queueReply.edit({
-          embeds: [newEmbed],
-          files: [image],
-        });
-
-        const download = new ButtonBuilder()
-          .setURL(botMessage.attachments.first().url)
-          .setLabel("Download")
-          .setStyle(ButtonStyle.Link);
-
-        await botMessage.edit({
-          components: [
-            {
-              type: 1,
-              components: [download, like, dislike, deleteAttachment],
-            },
-          ],
-        });
-
-        const secondMessage = new EmbedBuilder()
-          .setColor("#12ff00")
-          .setDescription("✅ Your image is ready!");
-        if (!interaction.channel.nsfw)
-          newEmbed.setFooter({
-            text: "WARNING! Watch out your prompts. The AI model can generate NSFW image",
-          });
-
-        await interaction.followUp({
-          content: `<@${interaction.user.id}>,`,
-          embeds: [secondMessage],
-        });
-
-        imageQueue.set(taskId, { status: "completed" });
-        imageQueue.delete(taskId);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  },
-};
+		await interaction.editReply({ embeds: [embedError] });
+	}
+}
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("genimg")
+		.setDescription("Generate an image")
+		.addStringOption((option) =>
+			option
+				.setName("input")
+				.setDescription("Input for the AI")
+				.setRequired(true),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+}

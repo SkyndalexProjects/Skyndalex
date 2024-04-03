@@ -1,90 +1,179 @@
-import chalk from "chalk";
-import { EmbedBuilder } from "discord.js";
-import { onCommandInteraction } from "../handlers/commandHandler.js";
+import { EmbedBuilder, InteractionType } from "discord.js";
+import { addCooldown } from "../functions/addCooldown.js";
 
-export default async function interactionCreate(client, interaction) {
-  console.log(
-    `${chalk.bold(
-      chalk.underline(`[${new Date().toUTCString()}]`),
-    )} ${chalk.yellowBright("[USED INTERACTION]")} ${chalk.blue(
-      chalk.bold("(201)"),
-    )} : user: ${chalk.bold(
-      chalk.magenta(interaction.user.username),
-    )} [${chalk.bold(
-      chalk.magenta(interaction.user.id),
-    )}] | guild: ${chalk.blueBright("1058882286210261073")} [${chalk.blue(
-      interaction.guild.name,
-    )}] | channel: ${chalk.yellow(interaction.guild.id)} [#${chalk.yellowBright(
-      interaction.channel.name,
-    )}]`,
-  );
+export async function interactionCreate(client, interaction) {
+	switch (interaction.type) {
+		case InteractionType.ApplicationCommand:
+			client.logger.log(
+				`[USED APPLICATION COMMAND] (201) : commandName: ${
+					interaction.commandName
+				} | user: ${interaction.user.username} [${
+					interaction.user.id
+				}] | guild: 1058882286210261073 [${
+					interaction.guild?.name || "No guild. DM"
+				}] | channel: ${
+					interaction.guild?.id || "No channel found (dm)"
+				} [#${interaction.channel?.name}]`,
+			);
 
-  if (interaction.isCommand() || interaction.isAutocomplete())
-    return await onCommandInteraction(client, interaction);
+			const subcommand = interaction.options.getSubcommand(false);
+			const command = client.commands.get(
+				subcommand
+					? `${interaction.commandName}/${subcommand}`
+					: interaction.commandName,
+			);
+			const wrongCommand = new EmbedBuilder()
+				.setDescription(
+					`❌ | Unknown command. Command \`${interaction.commandName}\` doesnt exists anymore..`,
+				)
+				.setColor("Red");
+			if (!command) return interaction.reply({ embeds: [wrongCommand] });
+			try {
+				const getCooldownSettings =
+					await client.prisma.guildCooldownsSettings.findFirst({
+						where: {
+							guildId: interaction?.guild?.id,
+							command: interaction.commandName,
+						},
+					});
+				if (getCooldownSettings) {
+					const cooldown = await addCooldown(
+						client,
+						interaction,
+						getCooldownSettings.cooldown,
+					);
+					if (cooldown) {
+						const futureDate = new Date();
+						futureDate.setSeconds(
+							futureDate.getSeconds() +
+								Math.floor(Number(cooldown)),
+						);
 
-  const embedNotFound = new EmbedBuilder()
-    .setTitle("Not found")
-    .setDescription(
-      "```❌ | This interaction was not found. Probably this function is refactored, or deleted. Please show this error on the support.```",
-    )
-    .addFields([
-      { name: "Custom ID", value: `\`\`\`${interaction.customId}\`\`\`` },
-    ])
-    .setColor("Red");
+						const embedCooldown = new EmbedBuilder()
+							.setDescription(
+								`❌ | You are on cooldown. Please wait <t:${Math.floor(
+									futureDate.getTime() / 1000,
+								)}:R> seconds before using this command again.`,
+							)
+							.setColor("Red");
+						return await interaction.reply({
+							embeds: [embedCooldown],
+							ephemeral: true,
+						});
+					}
+				}
+				if (interaction.isCommand()) {
+					await command.run(client, interaction);
+				}
+			} catch (error) {
+				console.error(error);
+				const embedError = new EmbedBuilder()
+					.setDescription(
+						`**❌ | There was an error while executing this command. Please try again later.**\n\nError title: \`${error.name}\`\nError message: \`${error.message}\``,
+					)
+					.setColor("Red")
+					.setTimestamp();
+				await interaction.reply({
+					embeds: [embedError],
+					ephemeral: true,
+				});
+			}
+			break;
+		case InteractionType.ApplicationCommandAutocomplete:
+			client.logger.log(
+				`[USED APPLICATION COMMAND AUTOCOMPLETE] (201) : commandName: ${
+					interaction.commandName
+				} | user: ${interaction.user.username} [${
+					interaction.user.id
+				}] | guild: 1058882286210261073 [${
+					interaction.guild?.name || "No guild. DM"
+				}] | channel: ${
+					interaction.guild?.id || "No channel found (dm)"
+				} [#${interaction.channel?.name}]`,
+			);
 
-  switch (true) {
-    case interaction.isButton():
-      {
-        const button = client?.interactions
-          .filter(
-            (x) =>
-              x.type === "button" && interaction.customId?.includes(x.customId),
-          )
-          ?.first();
+			if (interaction.isAutocomplete()) {
+				const subcommand = interaction.options.getSubcommand(false);
+				const command = client.commands.get(
+					subcommand
+						? `${interaction.commandName}/${subcommand}`
+						: interaction.commandName,
+				);
+				if (!command) return;
+				try {
+					await command.autocomplete(interaction);
+				} catch (error) {
+					console.error(error);
+					await interaction.respond(
+						"Oops, there was an error while executing this autocomplete.",
+					);
+				}
+			}
+			break;
+		case InteractionType.MessageComponent:
+			client.logger.log(
+				`[USED MESSAGE COMPONENT] (201) : componentName: ${
+					interaction.customId
+				} | user: ${interaction.user.username} [${
+					interaction.user.id
+				}] | guild: 1058882286210261073 [${
+					interaction.guild?.name || "No guild. DM"
+				}] | channel: ${
+					interaction.guild?.id || "No channel found (dm)"
+				} [#${interaction.channel?.name}]`,
+			);
 
-        if (
-          interaction.customId.startsWith("next-") ||
-          interaction.customId.startsWith("previous-")
-        )
-          return;
-        if (!button)
-          return (
-            console.log(`Button with ${interaction.customId} was not found.`) ||
-            interaction.reply({ embeds: [embedNotFound], ephemeral: true })
-          );
-        button.run(client, interaction);
-      }
-      break;
-    case interaction.isModalSubmit():
-      {
-        const modal = client.interactions.find(
-          (x) => x.type === "modal" && interaction.customId === x.customId,
-        );
-        if (!modal)
-          return (
-            console.log(`Modal with ${interaction.customId} was not found.`) ||
-            interaction.reply({ embeds: [embedNotFound] })
-          );
+			const componentNotFound = new EmbedBuilder()
+				.setDescription(
+					`❌ | Unknown component. CustomId \`${interaction.customId}\` doesn't exist.`,
+				)
+				.setColor("Red");
+			client.logger.error(
+				`Unknown component. CustomId ${interaction.customId} doesn't exist.`,
+			);
+			const component = client.components.get(
+				interaction.customId.split("-")[0],
+			);
+			if (!component)
+				return interaction.reply({
+					embeds: [componentNotFound],
+					ephemeral: true,
+				});
 
-        modal.run(client, interaction);
-      }
-      break;
-    case interaction.isStringSelectMenu(): {
-      const selectOption = client.interactions
-        .filter(
-          (x) =>
-            x.type === "string_select_menu_value" &&
-            interaction.values.includes(x.customId),
-        )
-        .first();
+			try {
+				await component.run(client, interaction);
+			} catch (error) {
+				console.error(error);
+				await interaction.reply(
+					"Oops, there was an error while executing this interaction.",
+				);
+			}
+			break;
+		case InteractionType.ModalSubmit: {
+			client.logger.log(
+				`[USED MODAL SUBMIT] (201) : modalSubmitName: ${
+					interaction.customId
+				} | user: ${interaction.user.username} [${
+					interaction.user.id
+				}] | guild: 1058882286210261073 [${
+					interaction.guild?.name || "No guild. DM"
+				}] | channel: ${
+					interaction.guild?.id || "No channel found (dm)"
+				} [#${interaction.channel?.name}]`,
+			);
 
-      if (!selectOption)
-        return console.log(
-          `Select option ${interaction.customId} was not found.`,
-        );
+			const modal = client.modals.get(interaction.customId);
+			if (!modal)
+				return interaction.reply("Ooops, this modal doesn't exist.");
 
-      await selectOption.run(client, interaction);
-      break;
-    }
-  }
+			try {
+				await modal.run(client, interaction);
+			} catch (error) {
+				console.error(error);
+				await interaction.reply(
+					"Oops, there was an error while executing this modal.",
+				);
+			}
+		}
+	}
 }

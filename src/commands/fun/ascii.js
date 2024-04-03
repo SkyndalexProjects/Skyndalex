@@ -1,23 +1,25 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import figlet from "figlet";
-export default {
-  data: new SlashCommandBuilder()
-    .setName("ascii")
-    .setDescription("Ascii.")
-    .addStringOption((option) =>
-      option.setName("text").setDescription("Ascii text").setRequired(true),
-    ),
+export async function run(client, interaction) {
+	await interaction.deferReply();
 
-  async execute(client, interaction) {
-    await interaction.deferReply();
+	const text = interaction.options.getString("text");
 
-    const text = interaction.options.getString("text");
+	const ascii = await figlet(`${text}\n`);
 
-    const ascii = await figlet(`${text}\n`);
+	const embed = new EmbedBuilder()
+		.setDescription(`\`\`\`${ascii}\`\`\``)
+		.setColor("#0c6cfd");
+	await interaction.editReply({ embeds: [embed] });
+}
 
-    const embed = new EmbedBuilder()
-      .setDescription(`\`\`\`${ascii}\`\`\``)
-      .setColor("#0c6cfd");
-    await interaction.editReply({ embeds: [embed] });
-  },
-};
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("ascii")
+		.setDescription("Ascii.")
+		.addStringOption((option) =>
+			option.setName("text").setDescription("Ascii text").setRequired(true),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+}
