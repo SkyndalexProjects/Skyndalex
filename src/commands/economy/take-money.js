@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 
 export async function run(client, interaction) {
     const member = interaction.options.getUser('user') || interaction.user;
@@ -41,4 +41,5 @@ export const data = new SlashCommandBuilder()
     .setName('take-money')
     .setDescription('Take money from someone')
     .addIntegerOption(option => option.setName('amount').setDescription('Amount').setRequired(true))
-    .addUserOption(option => option.setName('user').setDescription('User'));
+    .addUserOption(option => option.setName('user').setDescription('User'))
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
