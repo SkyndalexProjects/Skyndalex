@@ -1,9 +1,10 @@
 import {
   ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   EmbedBuilder,
-  SlashCommandBuilder,
-  StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder
+  SlashCommandSubcommandBuilder,
+  StringSelectMenuBuilder, StringSelectMenuOptionBuilder
 } from "discord.js";
 
 export async function run(client, interaction) {
@@ -54,8 +55,4 @@ export async function run(client, interaction) {
   const row = new ActionRowBuilder().addComponents(select);
   return interaction.reply({ embeds: [settingsEmbed], components: [row], ephemeral: true });
 }
-
-
-export const data = new SlashCommandBuilder()
-  .setName('set')
-  .setDescription('Guild settings');
+export const data = new SlashCommandSubcommandBuilder().setName("config").setDescription("Set guild basic configuration")

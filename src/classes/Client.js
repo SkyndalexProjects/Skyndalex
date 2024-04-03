@@ -3,7 +3,6 @@ import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import { Connectors, Shoukaku } from 'shoukaku';
 import { Logger } from './Logger.js';
 import { Loaders } from './Loaders.js';
-
 const Nodes = [
     {
         name: 'Localhost',
@@ -31,7 +30,6 @@ export class SkyndalexClient extends Client {
         this.commands = await Loaders.loadCommands('../commands');
         this.components = await Loaders.loadComponents('../components');
         this.modals = await Loaders.loadModals('../modals');
-
         await this.prisma.$connect();
         await this.login(process.env.BOT_TOKEN);
     }

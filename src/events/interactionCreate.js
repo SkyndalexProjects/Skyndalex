@@ -1,4 +1,5 @@
 import { EmbedBuilder, InteractionType } from 'discord.js';
+import { addCooldown } from "../functions/addCooldown.js";
 
 export async function interactionCreate(client, interaction) {
     switch (interaction.type) {
@@ -18,8 +19,25 @@ export async function interactionCreate(client, interaction) {
                 .setDescription(`❌ | Unknown command. Command \`${interaction.commandName}\` doesnt exists anymore..`)
                 .setColor('Red');
             if (!command) return interaction.reply({ embeds: [wrongCommand]});
-
             try {
+                const getCooldownSettings = await client.prisma.guildCooldownsSettings.findFirst({
+                    where: {
+                        guildId: interaction.guild.id,
+                        command: interaction.commandName
+                    }
+                });
+                if (getCooldownSettings) {
+                    const cooldown = await addCooldown(client, interaction, getCooldownSettings.cooldown);
+                    if (cooldown) { //
+                        const futureDate = new Date();
+                        futureDate.setSeconds(futureDate.getSeconds() + Math.floor(Number(cooldown)));
+
+                        const embedCooldown = new EmbedBuilder()
+                            .setDescription(`❌ | You are on cooldown. Please wait <t:${Math.floor(futureDate.getTime() / 1000)}:R> seconds before using this command again.`)
+                            .setColor('Red');
+                        return await interaction.reply({ embeds: [embedCooldown], ephemeral: true });
+                    }
+                }
                 await command.run(client, interaction);
             } catch (error) {
                 console.error(error);
