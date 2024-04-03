@@ -19,6 +19,7 @@ export class CustomBotManager {
 		const processInfo = await fork("./src/customBot", [clientId], {
 			env: {
 				BOT_TOKEN: botToken,
+				CUSTOMS_LIMIT: 3,
 				CUSTOMBOT_DB_PASSWORD: process.env.CUSTOMBOT_DB_PASSWORD,
 				DATABASE_URL: DBURL,
 				CLIENT_ID: process.env.CLIENT_ID,
