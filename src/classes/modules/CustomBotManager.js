@@ -1,10 +1,10 @@
 import { execSync, fork } from "child_process";
 import { REST, Routes } from "discord.js";
-import { commands } from "../../handlers/commandHandler.js";
-export default class CustomBotManager {
+export class CustomBotManager {
 	constructor(client) {
 		this.client = client;
 	}
+
 	async init(clientId, botToken) {
 		await this.client.prisma
 			.$executeRawUnsafe(`CREATE DATABASE customBot_${clientId};`)
@@ -16,7 +16,7 @@ export default class CustomBotManager {
 			stdio: "inherit",
 		});
 
-		const processInfo = await fork("customBot", [clientId], {
+		const processInfo = await fork("./src/customBot", [clientId], {
 			env: {
 				BOT_TOKEN: botToken,
 				CUSTOMBOT_DB_PASSWORD: process.env.CUSTOMBOT_DB_PASSWORD,
@@ -47,15 +47,12 @@ export default class CustomBotManager {
 			presence: presences[0].customPresenceName,
 		});
 	}
-	async deployCommands(clientId, botToken) {
+	async deployCommands(commands, clientId, botToken) {
 		const rest = new REST({ version: "10" }).setToken(botToken);
 
-		const cmds = commands.map((cmd) => cmd.data.toJSON());
-
-		await rest
-			.put(Routes.applicationCommands(clientId), {
-				body: cmds,
-			})
-			.catch(() => null);
+		await rest.put(
+			Routes.applicationCommands(clientId),
+			{ body: commands },
+		);
 	}
 }

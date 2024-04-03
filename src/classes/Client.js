@@ -3,6 +3,7 @@ import { Client, GatewayIntentBits, Partials } from "discord.js";
 import { Connectors, Shoukaku } from "shoukaku";
 import { Logger } from "./Logger.js";
 import { Loaders } from "./Loaders.js";
+import { CustomBotManager } from "./modules/CustomBotManager.js";
 const Nodes = [
 	{
 		name: "Localhost",
@@ -34,7 +35,19 @@ export class SkyndalexClient extends Client {
 		this.commands = await Loaders.loadCommands("../commands");
 		this.components = await Loaders.loadComponents("../components");
 		this.modals = await Loaders.loadModals("../modals");
+		this.customBotManager = new CustomBotManager(this);
+
 		await this.prisma.$connect();
-		await this.login(process.env.BOT_TOKEN);
+		await this.login(process.env.BOT_TOKEN).catch(() => null);
+
+		process.on("message", async (message) => {
+			if (message.name === "changePresence") {
+				console.log("message", message);
+				await this.client?.user?.setPresence({
+					activities: [{ name: message.presence }],
+				});
+			}
+		});
+
 	}
 }

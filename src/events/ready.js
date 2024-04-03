@@ -1,9 +1,10 @@
 import { Routes } from "discord.js";
 
 export async function ready(client) {
+
+	const parsedCommands = [];
 	if (client.user.id === process.env.CLIENT_ID) {
 		try {
-			const parsedCommands = [];
 
 			for (const [key, cmd] of client.commands.entries()) {
 				if (key.includes("/")) {
@@ -55,6 +56,7 @@ export async function ready(client) {
 		for (const bot of getAllCustombots) {
 			await client.customBotManager.init(bot.clientId, bot.token);
 			await client.customBotManager.deployCommands(
+				parsedCommands,
 				bot.clientId,
 				bot.token,
 			);
