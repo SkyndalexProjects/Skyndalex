@@ -6,9 +6,10 @@ export async function run(client, interaction) {
   const memberChannel = interaction.member.voice.channel;
 
   if (!memberChannel) {
-    return await interaction.reply(
-      `Hey, ${interaction.user.tag}! You must be in a voice channel to use this command.`,
-    );
+    return await interaction.reply({
+      content: "❌ | You need to be in a voice channel to play a radio station!",
+      ephemeral: true,
+    })
   }
 
   const url = `https://radio.garden/api/ara/content/channel/${id}`;

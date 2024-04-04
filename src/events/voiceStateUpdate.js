@@ -2,7 +2,6 @@ import { EmbedBuilder } from "discord.js";
 import fetch from "node-fetch";
 
 export async function voiceStateUpdate(client, oldState, newState) {
-	console.log("log")
 	const getSettings = await client.prisma.settings.findUnique({
 		where: {
 			guildId: newState.guild.id,
@@ -26,9 +25,7 @@ export async function voiceStateUpdate(client, oldState, newState) {
 				color = `Blurple`;
 			}
 		} else if (oldState.serverMute !== newState.serverMute) {
-			const action = newState.serverMute
-				? "guild-muted"
-				: "guild-unmuted";
+			const action = newState.serverMute ? "guild-muted" : "guild-unmuted";
 			description = `**${newState.member.user.username}** was ${action} in \`${newState.channel.name}\``;
 			color = action === "guild-muted" ? `Red` : `Green`;
 		} else if (oldState.serverDeaf !== newState.serverDeaf) {
@@ -42,9 +39,7 @@ export async function voiceStateUpdate(client, oldState, newState) {
 			description = `**${newState.member.user.username}** was ${action} in \`${newState.channel.name}\``;
 			color = action === "self-muted" ? `Yellow` : `Green`;
 		} else if (oldState.selfDeaf !== newState.selfDeaf) {
-			const action = newState.selfDeaf
-				? "self-deafened"
-				: "self-undeafened";
+			const action = newState.selfDeaf ? "self-deafened" : "self-undeafened";
 			description = `**${newState.member.user.username}** was ${action} in \`${newState.channel.name}\``;
 			color = action === "self-deafened" ? `Red` : `Green`;
 		} else if (oldState.streaming !== newState.streaming) {
@@ -66,11 +61,11 @@ export async function voiceStateUpdate(client, oldState, newState) {
 
 	if (
 		getSettings?.radioEnabled &&
-		getSettings?.radioChannel &&
+		getSettings?.radioChannelVoice &&
 		newState.channel &&
-		newState.channel.id === getSettings.radioChannel
+		newState.channel.id === getSettings.radioChannelVoice
 	) {
-		const id = getSettings.radioStation.split("-")[1];
+		const id = getSettings.radioStation;
 		const url = `https://radio.garden/api/ara/content/channel/${id}`;
 		const resourceUrl = `https://radio.garden/api/ara/content/listen/${id}/channel.mp3`;
 
@@ -82,7 +77,7 @@ export async function voiceStateUpdate(client, oldState, newState) {
 		});
 
 		const json = await fetchStation.json();
-		if (json.error === "Not found") return;
+		if (json.error === "Not found") return client.logger.error("Radio station not found.", json);
 
 		const node = client.shoukaku.getNode();
 		if (!node) return;
@@ -96,10 +91,11 @@ export async function voiceStateUpdate(client, oldState, newState) {
 		if (!existingPlayer) {
 			const player = await node.joinChannel({
 				guildId: oldState.guild.id,
-				channelId: getSettings.radioChannel,
+				channelId: getSettings.radioChannelVoice,
 				shardId: 0,
 			});
 
+			console.log("player", player)
 			await player.playTrack({ track: metadata.track }).setVolume(0.5);
 		}
 	}
