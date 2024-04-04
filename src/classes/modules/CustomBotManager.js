@@ -12,9 +12,18 @@ export class CustomBotManager {
 
 		const DBURL = `postgresql://postgres:${process.env.CUSTOMBOT_DB_PASSWORD}@localhost:5432/custombot_${clientId}?schema=public`;
 
-		execSync(`export DATABASE_URL=${DBURL} && npx prisma db push`, {
-			stdio: "inherit",
-		});
+		switch (process.platform) {
+			case "win32":
+				execSync(`SET DATABASE_URL=${DBURL} && npx prisma db push`, {
+					stdio: "inherit",
+				});
+				break;
+				case "linux":
+					execSync(`export DATABASE_URL=${DBURL} && npx prisma db push`, {
+						stdio: "inherit",
+					});
+					break;
+		}
 
 		const processInfo = await fork("./src/customBot", [clientId], {
 			env: {
@@ -54,6 +63,6 @@ export class CustomBotManager {
 		await rest.put(
 			Routes.applicationCommands(clientId),
 			{ body: commands },
-		);
+		).catch(() => null);
 	}
 }

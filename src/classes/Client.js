@@ -41,6 +41,14 @@ export class SkyndalexClient extends Client {
 		await this.prisma.$connect();
 		await this.login(process.env.BOT_TOKEN).catch(() => null);
 
+		process.on('unhandledRejection', (error) => {
+			this.logger.error(error.stack);
+		});
+
+		process.on('exit', async () => {
+			await this.prisma.$disconnect();
+		});
+
 		process.on("message", async (message) => {
 			if (message.name === "changePresence") {
 				console.log("message", message);

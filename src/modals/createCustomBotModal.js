@@ -7,6 +7,9 @@ export async function run(client, interaction) {
 		"customBotCreateModalClientID",
 	);
 
+	if (clientId.length >= 19) return interaction.reply("The client ID is too long");
+	if (token.length >= 100) return interaction.reply("The token is too long");
+
 	await client.prisma.customBots.create({
 		data: {
 			userId: interaction.user.id,
