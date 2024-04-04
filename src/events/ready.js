@@ -59,7 +59,7 @@ export async function ready(client) {
 				parsedCommands,
 				bot.clientId,
 				bot.token,
-			);
+			)
 		}
 	}
 }
