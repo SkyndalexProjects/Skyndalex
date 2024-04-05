@@ -16,7 +16,6 @@ export async function run(client, interaction) {
 		},
 	});
 
-	console.log("findUserBots", findUserBots);
 	if (findUserBots.length === 0)
 		return interaction.reply({
 			content:
@@ -49,8 +48,12 @@ export async function run(client, interaction) {
 		)
 		.setCustomId(`customBotPowerState-${findUserBots[0]?.clientId}`);
 
+	const deleteCustom = new ButtonBuilder()
+		.setLabel("Delete")
+		.setStyle(ButtonStyle.Danger)
+		.setCustomId(`deleteCustomBot-${findUserBots[0]?.clientId}-${findUserBots[0]?.id}`);
 	const row = new ActionRowBuilder().addComponents(select);
-	const row2 = new ActionRowBuilder().addComponents(powerState);
+	const row2 = new ActionRowBuilder().addComponents(powerState, deleteCustom);
 
 	const getBot = await client.users
 		.fetch(findUserBots[0]?.clientId)
