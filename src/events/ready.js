@@ -38,7 +38,7 @@ export async function ready(client) {
 		}
 
 		const presences = [
-			`Check out new 1.3.7 update! (/updates)`,
+			`Check out new 1.4.2 update! (/updates)`,
 			`Site https://skyndalex.xyz (soon)`,
 			`Docs: https://docs.skyndalex.xyz`,
 		];

@@ -1,4 +1,4 @@
-# Skyndalex v2.0.0 - Open Source Discord Bot
+# Skyndalex v1.4.2- Open Source Discord Bot
 
 > Warning: The bot is currently in rewrite progress, most of the features are not working. For now.
 
