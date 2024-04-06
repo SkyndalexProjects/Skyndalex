@@ -13,9 +13,11 @@ export async function run(client, interaction) {
 		},
 	});
 	const countUserCustoms = getUserCustoms.length;
-	if (countUserCustoms >= process.env.CUSTOMS_LIMIT) return interaction.reply(`You have reached the limit of ${process.env.CUSTOMS_LIMIT} custom bots.`);
+	if (countUserCustoms >= process.env.CUSTOMS_LIMIT)
+		return interaction.reply(
+			`You have reached the limit of ${process.env.CUSTOMS_LIMIT} custom bots.`,
+		);
 
-	console.log("User customs", countUserCustoms);
 	const embed = new EmbedBuilder()
 		.setTitle("Create a custom bot")
 		.setDescription(

@@ -39,18 +39,18 @@ export async function run(client, interaction) {
 	if (previousContent === newContent.generated_text) {
 		return interaction.update({ components: [updatedActionRow] });
 	} else if (newContent.generated_text.length > 2000) {
-		const file = new AttachmentBuilder()
+		const file = new AttachmentBuilder();
 		const embedTooLong = new EmbedBuilder()
 			.setDescription(
 				"The generated text is too long to be displayed here.",
 			)
-			.setColor("Yellow")
+			.setColor("Yellow");
 
 		await interaction.update({ embeds: [embedTooLong], files: [file] });
 	} else {
 		const newEmbed = new EmbedBuilder()
 			.setDescription(newContent.generated_text)
-			.setColor("#00ff00")
+			.setColor("#00ff00");
 
 		if (interaction.message.embeds[0].data.color === 16705372) return;
 		if (!interaction.replied || interaction.deferred)

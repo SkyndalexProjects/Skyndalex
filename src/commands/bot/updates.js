@@ -11,7 +11,8 @@ export async function run(client, interaction) {
 		.filter((x) => x?.content?.length >= 1)
 		.map((x) => x);
 
-	if (!data) return interaction.reply("No data. The bot is not on support server");
+	if (!data)
+		return interaction.reply("No data. The bot is not on support server");
 	const embed = new EmbedBuilder()
 		.setTitle(`Page 1 of ${data.length + 1}`)
 		.setDescription(`${data[0].content}`);

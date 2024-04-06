@@ -9,7 +9,6 @@ export async function run(client, interaction) {
 	const user = await client.prisma.economy.findFirst({
 		where: { uid: member.id },
 	});
-	if (!user) return interaction.reply(`User not found`);
 
 	const settings = await client.prisma.economy.findFirst({
 		where: { guildId: interaction.guild.id },

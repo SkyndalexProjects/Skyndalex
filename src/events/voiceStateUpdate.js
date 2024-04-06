@@ -25,7 +25,9 @@ export async function voiceStateUpdate(client, oldState, newState) {
 				color = `Blurple`;
 			}
 		} else if (oldState.serverMute !== newState.serverMute) {
-			const action = newState.serverMute ? "guild-muted" : "guild-unmuted";
+			const action = newState.serverMute
+				? "guild-muted"
+				: "guild-unmuted";
 			description = `**${newState.member.user.username}** was ${action} in \`${newState.channel.name}\``;
 			color = action === "guild-muted" ? `Red` : `Green`;
 		} else if (oldState.serverDeaf !== newState.serverDeaf) {
@@ -39,7 +41,9 @@ export async function voiceStateUpdate(client, oldState, newState) {
 			description = `**${newState.member.user.username}** was ${action} in \`${newState.channel.name}\``;
 			color = action === "self-muted" ? `Yellow` : `Green`;
 		} else if (oldState.selfDeaf !== newState.selfDeaf) {
-			const action = newState.selfDeaf ? "self-deafened" : "self-undeafened";
+			const action = newState.selfDeaf
+				? "self-deafened"
+				: "self-undeafened";
 			description = `**${newState.member.user.username}** was ${action} in \`${newState.channel.name}\``;
 			color = action === "self-deafened" ? `Red` : `Green`;
 		} else if (oldState.streaming !== newState.streaming) {
@@ -77,7 +81,8 @@ export async function voiceStateUpdate(client, oldState, newState) {
 		});
 
 		const json = await fetchStation.json();
-		if (json.error === "Not found") return client.logger.error("Radio station not found.", json);
+		if (json.error === "Not found")
+			return client.logger.error("Radio station not found.", json);
 
 		const node = client.shoukaku.getNode();
 		if (!node) return;
@@ -95,7 +100,7 @@ export async function voiceStateUpdate(client, oldState, newState) {
 				shardId: 0,
 			});
 
-			console.log("player", player)
+			console.log("player", player);
 			await player.playTrack({ track: metadata.track }).setVolume(0.5);
 		}
 	}

@@ -2,17 +2,13 @@ import { EmbedBuilder, SlashCommandBuilder, version } from "discord.js";
 import os from "os";
 
 export async function run(client, interaction) {
-	const totalSeconds = client.uptime / 1000;
-	const days = Math.floor(totalSeconds / 86400);
-	const hours = Math.floor((totalSeconds % 86400) / 3600);
-	const minutes = Math.floor((totalSeconds % 3600) / 60);
-	const seconds = Math.floor(totalSeconds % 60);
+	const botUptimeTimestamp = `<t:${Math.round(
+		client.readyTimestamp / 1000,
+	)}:R>`;
 
-	const serverUptime = os.uptime();
-	const serverDays = Math.floor(serverUptime / 86400);
-	const serverHours = Math.floor((serverUptime % 86400) / 3600);
-	const serverMinutes = Math.floor((serverUptime % 3600) / 60);
-	const serverSeconds = Math.floor(serverUptime % 60);
+	const serverUptimeTimestamp = `<t:${Math.floor(
+		Math.floor(Date.now() / 1000 - os.uptime()),
+	)}:R>`;
 
 	const embed = new EmbedBuilder()
 		.setDescription(
@@ -33,7 +29,7 @@ export async function run(client, interaction) {
 			},
 			{
 				name: `🖥️ | Uptime`,
-				value: `**Bot:** ${days}d ${hours}h ${minutes}m ${seconds}s\n**OS:** ${serverDays}d ${serverHours}h ${serverMinutes}m ${serverSeconds}s`,
+				value: `**Bot:** ${botUptimeTimestamp}\n**OS:** ${serverUptimeTimestamp}`,
 				inline: true,
 			},
 			{

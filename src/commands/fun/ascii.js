@@ -18,8 +18,11 @@ export const data = {
 		.setName("ascii")
 		.setDescription("Ascii.")
 		.addStringOption((option) =>
-			option.setName("text").setDescription("Ascii text").setRequired(true),
+			option
+				.setName("text")
+				.setDescription("Ascii text")
+				.setRequired(true),
 		),
 	integration_types: [0, 1],
 	contexts: [0, 1, 2],
-}
+};

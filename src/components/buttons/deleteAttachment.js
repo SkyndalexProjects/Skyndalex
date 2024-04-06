@@ -3,7 +3,7 @@ export async function run(client, interaction) {
 	const isAuthor =
 		interaction.message.interaction.user.id === interaction.user.id;
 
-	const isOnDm= interaction.guild?.id
+	const isOnDm = interaction.guild?.id;
 	if (!isAuthor && isOnDm) {
 		return interaction.reply({
 			content:
