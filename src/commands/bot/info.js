@@ -3,16 +3,22 @@ import os from "os";
 
 export async function run(client, interaction) {
 	const totalSeconds = client.uptime / 1000;
-	const days = Math.floor(totalSeconds / 86400);
-	const hours = Math.floor((totalSeconds % 86400) / 3600);
-	const minutes = Math.floor((totalSeconds % 3600) / 60);
-	const seconds = Math.floor(totalSeconds % 60);
-
 	const serverUptime = os.uptime();
-	const serverDays = Math.floor(serverUptime / 86400);
-	const serverHours = Math.floor((serverUptime % 86400) / 3600);
-	const serverMinutes = Math.floor((serverUptime % 3600) / 60);
 	const serverSeconds = Math.floor(serverUptime % 60);
+
+	const futureDateBotUpt = new Date();
+	futureDateBotUpt.setSeconds(Math.floor(Number(totalSeconds)));
+
+	const futureDateServerUpt = new Date();
+	futureDateServerUpt.setSeconds(Math.floor(Number(serverSeconds)));
+
+	const botUptimeTimestamp =`<t:${Math.floor(
+		futureDateBotUpt.getTime() / 1000,
+	)}:R>`
+
+	const serverUptimeTimestamp =`<t:${Math.floor(
+		futureDateServerUpt.getTime() / 1000,
+	)}:R>`
 
 	const embed = new EmbedBuilder()
 		.setDescription(
@@ -33,7 +39,7 @@ export async function run(client, interaction) {
 			},
 			{
 				name: `🖥️ | Uptime`,
-				value: `**Bot:** ${days}d ${hours}h ${minutes}m ${seconds}s\n**OS:** ${serverDays}d ${serverHours}h ${serverMinutes}m ${serverSeconds}s`,
+				value: `**Bot:** ${botUptimeTimestamp}\n**OS:** ${serverUptimeTimestamp}`,
 				inline: true,
 			},
 			{
