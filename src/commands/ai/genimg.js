@@ -13,9 +13,7 @@ const imageQueue = new Map();
 export async function run(client, interaction) {
 	const input = interaction.options.get("input").value;
 	const queuePosition = imageQueue.size + 1;
-	const taskId = `${
-		interaction.user.id
-	}-${Date.now()}`;
+	const taskId = `${interaction.user.id}-${Date.now()}`;
 	const model = "stabilityai/stable-diffusion-2-1";
 	try {
 		const deleteAttachment = new ButtonBuilder()
@@ -131,4 +129,4 @@ export const data = {
 		),
 	integration_types: [0, 1],
 	contexts: [0, 1, 2],
-}
+};

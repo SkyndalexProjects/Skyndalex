@@ -35,7 +35,9 @@ export async function run(client, interaction) {
 	const deleteCustom = new ButtonBuilder()
 		.setLabel("Delete")
 		.setStyle(ButtonStyle.Danger)
-		.setCustomId(`deleteCustomBot-${findUserBots[0]?.clientId}-${findUserBots[0]?.id}`);
+		.setCustomId(
+			`deleteCustomBot-${findUserBots[0]?.clientId}-${findUserBots[0]?.id}`,
+		);
 
 	const select = new StringSelectMenuBuilder()
 		.setCustomId("customBotSelect")
@@ -54,8 +56,13 @@ export async function run(client, interaction) {
 	const row = new ActionRowBuilder().addComponents(select);
 	const row2 = new ActionRowBuilder().addComponents(powerState, deleteCustom);
 
-	await interaction.update({ embeds: [embed], components: [row, row2] }).catch((e) => {
-		console.error(e)
-		return interaction.update({ content: "Something went wrong during updating this message.", embeds: [] })
-	});
+	await interaction
+		.update({ embeds: [embed], components: [row, row2] })
+		.catch((e) => {
+			console.error(e);
+			return interaction.update({
+				content: "Something went wrong during updating this message.",
+				embeds: [],
+			});
+		});
 }

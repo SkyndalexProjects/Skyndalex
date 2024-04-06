@@ -2,12 +2,13 @@ import { EmbedBuilder, SlashCommandBuilder, version } from "discord.js";
 import os from "os";
 
 export async function run(client, interaction) {
-	const botUptimeTimestamp =`<t:${Math.round(client.readyTimestamp / 1000)}:R>`
+	const botUptimeTimestamp = `<t:${Math.round(
+		client.readyTimestamp / 1000,
+	)}:R>`;
 
-
-	const serverUptimeTimestamp =`<t:${Math.floor(
+	const serverUptimeTimestamp = `<t:${Math.floor(
 		Math.floor(Date.now() / 1000 - os.uptime()),
-	)}:R>`
+	)}:R>`;
 
 	const embed = new EmbedBuilder()
 		.setDescription(

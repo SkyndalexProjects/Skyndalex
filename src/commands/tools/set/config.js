@@ -31,7 +31,7 @@ export async function run(client, interaction) {
 		settingsEmbed.setDescription("No settings found").setColor("Red");
 	} else {
 		settings = getCurrentSettings[0];
-		console.log("settings", settings)
+		console.log("settings", settings);
 		settingsEmbed.setColor("Green");
 	}
 

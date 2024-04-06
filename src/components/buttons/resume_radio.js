@@ -5,9 +5,10 @@ export async function run(client, interaction) {
 
 	if (!memberChannel) {
 		return await interaction.reply({
-			content: "❌ | You need to be in a voice channel to play a radio station!",
+			content:
+				"❌ | You need to be in a voice channel to play a radio station!",
 			ephemeral: true,
-		})
+		});
 	}
 
 	const radioResourceUrl = interaction.customId.split("-")[1];

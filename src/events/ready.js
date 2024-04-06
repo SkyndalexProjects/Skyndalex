@@ -1,11 +1,9 @@
 import { Routes } from "discord.js";
 
 export async function ready(client) {
-
 	const parsedCommands = [];
 	if (client.user.id === process.env.CLIENT_ID) {
 		try {
-
 			for (const [key, cmd] of client.commands.entries()) {
 				if (key.includes("/")) {
 					const [name, subcommand] = key.split("/");
@@ -59,7 +57,7 @@ export async function ready(client) {
 				parsedCommands,
 				bot.clientId,
 				bot.token,
-			)
+			);
 		}
 	}
 }

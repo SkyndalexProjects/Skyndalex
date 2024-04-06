@@ -21,7 +21,7 @@ export class SkyndalexClient extends Client {
 				GatewayIntentBits.Guilds,
 				GatewayIntentBits.GuildMessages,
 				GatewayIntentBits.MessageContent,
-				GatewayIntentBits.GuildVoiceStates
+				GatewayIntentBits.GuildVoiceStates,
 			],
 			partials: [Partials.Message],
 			allowedMentions: { repliedUser: false },
@@ -41,11 +41,11 @@ export class SkyndalexClient extends Client {
 		await this.prisma.$connect();
 		await this.login(process.env.BOT_TOKEN).catch(() => null);
 
-		process.on('unhandledRejection', (error) => {
+		process.on("unhandledRejection", (error) => {
 			this.logger.error(error.stack);
 		});
 
-		process.on('exit', async () => {
+		process.on("exit", async () => {
 			await this.prisma.$disconnect();
 		});
 
@@ -57,6 +57,5 @@ export class SkyndalexClient extends Client {
 				});
 			}
 		});
-
 	}
 }

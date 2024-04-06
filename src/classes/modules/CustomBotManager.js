@@ -7,19 +7,28 @@ export class CustomBotManager {
 
 	async init(clientId, botToken) {
 		try {
-			const result = await this.client.prisma.$executeRaw`CREATE DATABASE custombot_${clientId};`.catch(() => null);
+			const result = await this.client.prisma
+				.$executeRaw`CREATE DATABASE custombot_${clientId};`.catch(
+				() => null,
+			);
 			const DBURL = `postgresql://postgres:${process.env.CUSTOMBOT_DB_PASSWORD}@localhost:5432/custombot_${clientId}?schema=public`;
 
 			switch (process.platform) {
 				case "win32":
-					execSync(`SET DATABASE_URL=${DBURL} && npx prisma db push`, {
-						stdio: "inherit",
-					});
+					execSync(
+						`SET DATABASE_URL=${DBURL} && npx prisma db push`,
+						{
+							stdio: "inherit",
+						},
+					);
 					break;
 				case "linux":
-					execSync(`export DATABASE_URL=${DBURL} && npx prisma db push`, {
-						stdio: "inherit",
-					});
+					execSync(
+						`export DATABASE_URL=${DBURL} && npx prisma db push`,
+						{
+							stdio: "inherit",
+						},
+					);
 					break;
 			}
 
@@ -54,16 +63,15 @@ export class CustomBotManager {
 				name: "changePresence",
 				presence: presences[0].customPresenceName,
 			});
-		} catch(error) {
-			console.error(error)
+		} catch (error) {
+			console.error(error);
 		}
 	}
 	async deployCommands(commands, clientId, botToken) {
 		const rest = new REST({ version: "10" }).setToken(botToken);
 
-		await rest.put(
-			Routes.applicationCommands(clientId),
-			{ body: commands },
-		).catch(() => null);
+		await rest
+			.put(Routes.applicationCommands(clientId), { body: commands })
+			.catch(() => null);
 	}
 }

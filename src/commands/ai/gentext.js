@@ -35,7 +35,11 @@ export async function run(client, interaction) {
 
 		const generatedText = result.generated_text;
 
-		if (generatedText.length > 2000) return interaction.editReply({ content: "The generated text is too long to send",  embeds: [] });
+		if (generatedText.length > 2000)
+			return interaction.editReply({
+				content: "The generated text is too long to send",
+				embeds: [],
+			});
 
 		const embed = new EmbedBuilder()
 			.setDescription(generatedText)
@@ -65,4 +69,4 @@ export const data = {
 		),
 	integration_types: [0, 1],
 	contexts: [0, 1, 2],
-}
+};
