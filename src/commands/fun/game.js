@@ -2,13 +2,12 @@ import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import Gamedig from "gamedig";
 
 export async function run(client, interaction) {
+
+	try {
 	const data = await Gamedig.query({
 		type: interaction.options.getString("game"),
 		host: interaction.options.getString("server"),
-	});
-
-	// console.log("data", data)
-
+	})
 	const embed = new EmbedBuilder()
 		.setTitle(
 			`${data.name} : \`${data.raw.vanilla.connect}\` | Ping: ${data.raw.vanilla.ping}ms`,
@@ -37,6 +36,13 @@ export async function run(client, interaction) {
 	}
 
 	await interaction.reply({ embeds: [embed] });
+	} catch (e) {
+		// TODO: make autocomplete
+		const embedNoData = new EmbedBuilder()
+			.setDescription(`No data found. Check the server IP or game name\n[View games list](https://github.com/gamedig/node-gamedig/blob/HEAD/GAMES_LIST.md)`)
+			.setFooter({ text: `${e}` })
+		return interaction.reply({ embeds: [embedNoData], ephemeral: true });
+	}
 }
 export const data = {
 	...new SlashCommandBuilder()
