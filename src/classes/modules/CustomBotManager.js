@@ -7,7 +7,7 @@ export class CustomBotManager {
 
 	async init(clientId, botToken) {
 		try {
-			const result = await this.client.prisma.$executeRaw`CREATE DATABASE custombot_${clientId};`
+			const result = await this.client.prisma.$executeRaw`CREATE DATABASE custombot_${clientId};`.catch(() => null);
 			const DBURL = `postgresql://postgres:${process.env.CUSTOMBOT_DB_PASSWORD}@localhost:5432/custombot_${clientId}?schema=public`;
 
 			switch (process.platform) {
