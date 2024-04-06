@@ -22,6 +22,14 @@ export async function run(client, interaction) {
 				"It seems that you dont have any custombots in your account. Add some with `/custombot create` command.",
 			ephemeral: true,
 		});
+
+	// Get custombot client id via discord API
+
+	const fetchClientId = await fetch("https://discord.com/api/v9/users/@me", {
+		headers: {
+			Authorization: `Bot ${findUserBots[0]?.token}`,
+		}
+	})
 	const select = new StringSelectMenuBuilder()
 		.setCustomId("customBotSelect")
 		.setPlaceholder("Choose a custombot!");

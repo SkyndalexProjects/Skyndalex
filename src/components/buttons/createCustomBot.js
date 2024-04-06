@@ -14,19 +14,12 @@ export async function run(client, interaction) {
 		.setLabel("Bot token")
 		.setPlaceholder("Bot token")
 		.setStyle(TextInputStyle.Short)
-		.setRequired(true);
-
-	const clientID = new TextInputBuilder()
-		.setCustomId("customBotCreateModalClientID")
-		.setLabel("client ID")
-		.setPlaceholder("Bot client ID")
-		.setStyle(TextInputStyle.Short)
+		.setMaxLength(100)
 		.setRequired(true);
 
 	const firstActionRow = new ActionRowBuilder().addComponents(token);
-	const secondActionRow = new ActionRowBuilder().addComponents(clientID);
 
-	customBotCreateModal.addComponents(firstActionRow, secondActionRow);
+	customBotCreateModal.addComponents(firstActionRow);
 
 	await interaction.showModal(customBotCreateModal);
 }
