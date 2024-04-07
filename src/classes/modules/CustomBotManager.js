@@ -11,7 +11,7 @@ export class CustomBotManager {
 				.$executeRaw`CREATE DATABASE custombot_${clientId};`.catch(
 				() => null,
 			);
-			const DBURL = `postgresql://postgres:${process.env.CUSTOMBOT_DB_PASSWORD}@localhost:5432/custombot_${clientId}?schema=public`;
+			const DBURL = `postgresql://postgres:${encodeURIComponent(process.env.CUSTOMBOT_DB_PASSWORD)}@localhost:5432/custombot_${clientId}?schema=public`;
 
 			switch (process.platform) {
 				case "win32":
