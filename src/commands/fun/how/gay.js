@@ -9,8 +9,7 @@ export async function run(client, interaction) {
 	await interaction.deferReply();
 	const random = Math.floor(Math.random() * 100);
 
-	if (interaction.options.getUser("user") === interaction.user)
-		return interaction.reply("Noob");
+	if (interaction.options.getUser("user").id === interaction.user.id) return interaction.editReply("You are 100% gay");
 
 	const embed = new EmbedBuilder()
 		.setDescription(

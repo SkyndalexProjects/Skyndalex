@@ -1,52 +1,40 @@
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import Gamedig from "gamedig";
-
+import { GameDig, games } from "gamedig";
+import fetch from "node-fetch";
 export async function run(client, interaction) {
 	try {
-		const data = await Gamedig.query({
+		const data = await GameDig.query({
 			type: interaction.options.getString("game"),
 			host: interaction.options.getString("server"),
 		});
-		const embed = new EmbedBuilder()
+		if (!data) return interaction.reply("Server not found.");
+		let embed = new EmbedBuilder()
 			.setTitle(
 				`${data.name} : \`${data.raw.vanilla.connect}\` | Ping: ${data.raw.vanilla.ping}ms`,
 			)
 			.addFields(
 				{
 					name: "Map",
-					value: `${data.raw.vanilla.map || "None"}`,
-					inline: true,
+					value: `${data.map || "None"}`,
 				},
 				{
 					name: "Ping",
-					value: `${data.raw.vanilla.ping}`,
-					inline: true,
+					value: `${data.ping}`,
 				},
 				{
 					name: "Password protected?",
 					value: `${data.raw.vanilla.password}`,
-					inline: true,
 				},
+				{
+					name: "Players",
+					value: `${data.numplayers}/${data.maxplayers}`,
+				}
 			)
-			.setColor("Blurple");
-
-		if (data.players.length > 0) {
-			embed.addFields({
-				name: "Players",
-				value: `${data.players.length}/${data.maxplayers}`,
-				inline: true,
-			});
-		}
+			.setColor("Green");
 
 		await interaction.reply({ embeds: [embed] });
-	} catch (e) {
-		// TODO: make autocomplete
-		const embedNoData = new EmbedBuilder()
-			.setDescription(
-				`No data found. Check the server IP or game name\n[View games list](https://github.com/gamedig/node-gamedig/blob/HEAD/GAMES_LIST.md)`,
-			)
-			.setFooter({ text: `${e}` });
-		return interaction.reply({ embeds: [embedNoData], ephemeral: true });
+	} catch(e) {
+		return interaction.reply({ content: `**${interaction.options.getString("game")}** server not found, or another error. \`(${interaction.options.getString("server")}\`)`, ephemeral: true });
 	}
 }
 export const data = {
@@ -57,7 +45,8 @@ export const data = {
 			option
 				.setName("game")
 				.setDescription("Game name")
-				.setRequired(true),
+				.setRequired(true)
+				.setAutocomplete(true)
 		)
 		.addStringOption((option) =>
 			option
@@ -68,3 +57,9 @@ export const data = {
 	integration_types: [0, 1],
 	contexts: [0, 1, 2],
 };
+export async function autocomplete(interaction) {
+	const focusedValue = interaction.options.getFocused();
+	const filteredGames = Object.keys(games).filter((game) => game.startsWith(focusedValue));
+	const data = filteredGames.slice(0, 25).map((choice) => ({ name: choice, value: choice }));
+	await interaction.respond(data);
+}

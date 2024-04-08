@@ -4,7 +4,7 @@ import {
 	AttachmentBuilder,
 	ButtonBuilder,
 	ButtonStyle,
-	EmbedBuilder,
+	EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder
 } from "discord.js";
 
 const hf = new HfInference(process.env.HF_TOKEN);
@@ -13,6 +13,7 @@ export async function run(client, interaction) {
 	const id = interaction.customId.split("-")[2];
 
 	client.prisma.$executeRaw`DROP DATABASE custombot_${clientId};`;
+
 	await client.prisma.customBots.delete({
 		where: {
 			id_clientId: {
@@ -22,9 +23,15 @@ export async function run(client, interaction) {
 		},
 	});
 
+
+
+	const embed = new EmbedBuilder()
+		.setDescription(`☑️ | Custombot deleted`)
+		.setColor("Red")
+
 	return interaction.update({
-		content: "Custom bot deleted!",
-		embeds: [],
+		embeds: [embed],
 		ephemeral: true,
+		components: []
 	});
 }

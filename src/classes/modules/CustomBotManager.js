@@ -11,7 +11,7 @@ export class CustomBotManager {
 				.$executeRaw`CREATE DATABASE custombot_${clientId};`.catch(
 				() => null,
 			);
-			const DBURL = `postgresql://postgres:${process.env.CUSTOMBOT_DB_PASSWORD}@localhost:5432/custombot_${clientId}?schema=public`;
+			const DBURL = `postgresql://postgres:${encodeURIComponent(process.env.CUSTOMBOT_DB_PASSWORD)}@localhost:5432/custombot_${clientId}?schema=public`;
 
 			switch (process.platform) {
 				case "win32":
@@ -70,8 +70,11 @@ export class CustomBotManager {
 	async deployCommands(commands, clientId, botToken) {
 		const rest = new REST({ version: "10" }).setToken(botToken);
 
+		const filteredCommands = commands.filter((command) => !command.options.name === "create" || !command.options.name === "manage")
+
 		await rest
-			.put(Routes.applicationCommands(clientId), { body: commands })
+			.put(Routes.applicationCommands(clientId), { body: filteredCommands })
 			.catch(() => null);
 	}
+
 }
