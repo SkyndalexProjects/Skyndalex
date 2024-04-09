@@ -28,13 +28,20 @@ export async function run(client, interaction) {
 				{
 					name: "Players",
 					value: `${data.numplayers}/${data.maxplayers}`,
-				}
+				},
 			)
 			.setColor("Green");
 
 		await interaction.reply({ embeds: [embed] });
-	} catch(e) {
-		return interaction.reply({ content: `**${interaction.options.getString("game")}** server not found, or another error. \`(${interaction.options.getString("server")}\`)`, ephemeral: true });
+	} catch (e) {
+		return interaction.reply({
+			content: `**${interaction.options.getString(
+				"game",
+			)}** server not found, or another error. \`(${interaction.options.getString(
+				"server",
+			)}\`)`,
+			ephemeral: true,
+		});
 	}
 }
 export const data = {
@@ -46,7 +53,7 @@ export const data = {
 				.setName("game")
 				.setDescription("Game name")
 				.setRequired(true)
-				.setAutocomplete(true)
+				.setAutocomplete(true),
 		)
 		.addStringOption((option) =>
 			option
@@ -59,7 +66,11 @@ export const data = {
 };
 export async function autocomplete(interaction) {
 	const focusedValue = interaction.options.getFocused();
-	const filteredGames = Object.keys(games).filter((game) => game.startsWith(focusedValue));
-	const data = filteredGames.slice(0, 25).map((choice) => ({ name: choice, value: choice }));
+	const filteredGames = Object.keys(games).filter((game) =>
+		game.startsWith(focusedValue),
+	);
+	const data = filteredGames
+		.slice(0, 25)
+		.map((choice) => ({ name: choice, value: choice }));
 	await interaction.respond(data);
 }

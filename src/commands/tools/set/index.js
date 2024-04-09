@@ -1,11 +1,12 @@
 import {
 	ActionRowBuilder,
-	EmbedBuilder, PermissionFlagsBits,
+	EmbedBuilder,
+	PermissionFlagsBits,
 	SlashCommandBuilder,
 	StringSelectMenuBuilder,
-	StringSelectMenuOptionBuilder
+	StringSelectMenuOptionBuilder,
 } from "discord.js";
 export const data = new SlashCommandBuilder()
 	.setName("set")
 	.setDescription("Guild settings")
-	.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+	.setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
