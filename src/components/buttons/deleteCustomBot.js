@@ -4,8 +4,11 @@ import {
 	AttachmentBuilder,
 	ButtonBuilder,
 	ButtonStyle,
-	EmbedBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder
+	EmbedBuilder,
+	StringSelectMenuBuilder,
+	StringSelectMenuOptionBuilder,
 } from "discord.js";
+import find from "find-process";
 
 const hf = new HfInference(process.env.HF_TOKEN);
 export async function run(client, interaction) {
@@ -13,6 +16,9 @@ export async function run(client, interaction) {
 	const id = interaction.customId.split("-")[2];
 
 	client.prisma.$executeRaw`DROP DATABASE custombot_${clientId};`;
+
+	const bot = await find("name", `customBot ${clientId}`);
+	if (bot[0].pid) process.kill(bot[0].pid);
 
 	await client.prisma.customBots.delete({
 		where: {
@@ -23,15 +29,13 @@ export async function run(client, interaction) {
 		},
 	});
 
-
-
 	const embed = new EmbedBuilder()
 		.setDescription(`☑️ | Custombot deleted`)
-		.setColor("Red")
+		.setColor("Red");
 
 	return interaction.update({
 		embeds: [embed],
 		ephemeral: true,
-		components: []
+		components: [],
 	});
 }

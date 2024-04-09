@@ -23,8 +23,6 @@ export async function run(client, interaction) {
 			ephemeral: true,
 		});
 
-	// Get custombot client id via discord API
-
 	const fetchClientId = await fetch("https://discord.com/api/v9/users/@me", {
 		headers: {
 			Authorization: `Bot ${findUserBots[0]?.token}`,
@@ -62,8 +60,14 @@ export async function run(client, interaction) {
 		.setCustomId(
 			`deleteCustomBot-${findUserBots[0]?.clientId}-${findUserBots[0]?.id}`,
 		);
+
+	const deployCommands = new ButtonBuilder()
+		.setLabel("Deploy commands")
+		.setStyle(ButtonStyle.Primary)
+		.setCustomId(`deployCommands-${findUserBots[0]?.clientId}`);
+
 	const row = new ActionRowBuilder().addComponents(select);
-	const row2 = new ActionRowBuilder().addComponents(powerState, deleteCustom);
+	const row2 = new ActionRowBuilder().addComponents(powerState, deleteCustom, deployCommands);
 
 	const getBot = await client.users
 		.fetch(findUserBots[0]?.clientId)
@@ -80,7 +84,7 @@ export async function run(client, interaction) {
 
 	return interaction.reply({
 		embeds: [embed],
-		components: [row, row2],
+		components: [row2, row],
 		ephemeral: true,
 	});
 }
