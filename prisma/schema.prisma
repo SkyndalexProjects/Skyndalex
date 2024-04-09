@@ -26,6 +26,14 @@ model guildCooldownsSettings {
   @@id([guildId, command])
 }
 
+model globalCooldowns {
+  id              Int     @default(autoincrement())
+  uid             String
+  interactionName String
+  endTimestamp    String?
+  @@id([uid, interactionName])
+}
+
 model settings {
   guildId           String   @id
   voiceLogsChannel  String?

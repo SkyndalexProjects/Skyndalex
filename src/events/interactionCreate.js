@@ -38,6 +38,7 @@ export async function interactionCreate(client, interaction) {
 					});
 				if (getCooldownSettings) {
 					const cooldown = await addCooldown(
+						false,
 						client,
 						interaction,
 						getCooldownSettings.cooldown,
