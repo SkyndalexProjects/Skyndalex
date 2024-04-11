@@ -1,12 +1,21 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.6.4/schema.json",
   "organizeImports": {
-    "enabled": false
+    "enabled": true
   },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true
     }
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "tab",
+    "indentWidth": 4,
+    "lineWidth": 80,
+    "lineEnding": "lf",
+    "ignore": []
   }
 }

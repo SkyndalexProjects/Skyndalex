@@ -2,7 +2,7 @@ import { ActivityType, Client, GatewayIntentBits, Partials } from "discord.js";
 import { PrismaClient } from "@prisma/client";
 
 export class SkyndalexClient extends Client {
-	prisma = new PrismaClient()
+	prisma = new PrismaClient();
 	constructor() {
 		super({
 			intents: [
