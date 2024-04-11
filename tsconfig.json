@@ -1,11 +1,18 @@
 {
   "compilerOptions": {
+    "target": "es2021",
+    "lib": ["es2021"],
     "module": "esnext",
-    "outFile": "../../built/local/tsc.js",
-    "sourceMap": true,
+    "outDir": "dist",
+    "moduleResolution": "Node",
+    "baseUrl": "src",
+    "paths": {
+      "#*": ["*/index.ts"]
+    },
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.spec.ts"]
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true
+  }
 }

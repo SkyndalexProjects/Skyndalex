@@ -1,1 +1,2 @@
-console.log("dupa")
+import { SkyndalexClient } from "./classes/Client";
+new SkyndalexClient().init();
