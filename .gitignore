@@ -133,5 +133,5 @@ dist
 
 .idea
 src/configdeprecated.json
-.env
 .npmrc
+.env

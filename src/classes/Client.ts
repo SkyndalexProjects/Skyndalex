@@ -1,8 +1,10 @@
 import { ActivityType, Client, GatewayIntentBits, Partials } from "discord.js";
 import { PrismaClient } from "@prisma/client";
+import { Loaders } from "./Loaders";
 
 export class SkyndalexClient extends Client {
 	prisma = new PrismaClient();
+
 	constructor() {
 		super({
 			intents: [
@@ -11,7 +13,7 @@ export class SkyndalexClient extends Client {
 				GatewayIntentBits.MessageContent,
 			],
 			partials: [Partials.Message],
-			allowedMentions: { repliedUser: false },
+			allowedMentions: {repliedUser: false},
 			presence: {
 				activities: [
 					{
@@ -22,7 +24,11 @@ export class SkyndalexClient extends Client {
 			},
 		});
 	}
+
 	async init() {
-		console.log("test");
+		await Loaders.loadEvents(this, "./src/events");
+		this.commands = await Loaders.loadCommands("../commands");
+
+		await this.login(process.env.BOT_TOKEN)
 	}
 }
