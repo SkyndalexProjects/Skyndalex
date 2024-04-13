@@ -4,11 +4,11 @@ import {type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder} fro
 export async function run(client: SkyndalexClient, interaction: ChatInputCommandInteraction) {
     console.log("interaction locale", interaction.locale)
     const locales = {
-        pl: "Dupa!",
-        de: "Arsch!"
+        pl: "hej to działa",
+        de: "hey im working"
     }
     await interaction.reply(locales[interaction.locale])
 }
 export const data = new SlashCommandBuilder()
-    .setName("ping")
-    .setDescription("Replies with Pong!");
+    .setName("test")
+    .setDescription("test");
