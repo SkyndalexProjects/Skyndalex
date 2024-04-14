@@ -8,5 +8,6 @@ datasource db {
 }
 
 model test {
-  name String @id
+  id   Int    @id
+  dupa String
 }

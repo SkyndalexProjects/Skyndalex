@@ -1,9 +1,13 @@
 import { readdir } from "node:fs/promises";
-import { Collection } from "discord.js";
+import {ChatInputCommandInteraction, Collection, SlashCommandBuilder} from "discord.js";
 import type { SkyndalexClient } from "./Client";
 
+interface Command {
+    data: SlashCommandBuilder;
+    run: (client: SkyndalexClient, interaction: ChatInputCommandInteraction) => Promise<void>;
+}
 export class Loaders {
-    async loadCommands(path: string): Promise<Collection<any, any>> {
+    async loadCommands(path: string): Promise<Collection<string, Command>> {
         const commands = new Collection()
         const categories = await readdir(new URL(path, import.meta.url));
         for (const category of categories) {
