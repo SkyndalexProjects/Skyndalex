@@ -1,10 +1,21 @@
-import { ActivityType, Client, Collection, GatewayIntentBits, Partials } from "discord.js";
+import {
+	ActivityType,
+	ChatInputCommandInteraction,
+	Client,
+	Collection,
+	GatewayIntentBits,
+	Partials,
+	SlashCommandBuilder
+} from "discord.js";
 import { PrismaClient } from "@prisma/client";
 import { Loaders } from "./Loaders";
-
+interface Command {
+	data: SlashCommandBuilder;
+	run: (client: SkyndalexClient, interaction: ChatInputCommandInteraction) => Promise<void>;
+}
 export class SkyndalexClient extends Client {
 	prisma = new PrismaClient();
-	commands: Collection<string, any>;
+	commands: Collection<string, Command>;
 	loader = new Loaders();
 
 	constructor() {

@@ -8,7 +8,7 @@ interface Command {
 }
 export class Loaders {
     async loadCommands(path: string): Promise<Collection<string, Command>> {
-        const commands = new Collection()
+        const commands = new Collection<string, Command>();
         const categories = await readdir(new URL(path, import.meta.url));
         for (const category of categories) {
             const commandFiles = await readdir(new URL(`${path}/${category}`, import.meta.url));
