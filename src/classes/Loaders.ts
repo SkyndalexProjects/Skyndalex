@@ -1,10 +1,19 @@
 import { readdir } from "node:fs/promises";
-import {ChatInputCommandInteraction, Collection, SlashCommandBuilder} from "discord.js";
+import {
+    ChatInputCommandInteraction,
+    Collection,
+    MessageComponentInteraction,
+    SlashCommandBuilder
+} from "discord.js";
 import type { SkyndalexClient } from "./Client";
 
 interface Command {
     data: SlashCommandBuilder;
     run: (client: SkyndalexClient, interaction: ChatInputCommandInteraction) => Promise<void>;
+}
+interface Component {
+    customId: string;
+    run: (client: SkyndalexClient, interaction: MessageComponentInteraction) => Promise<void>;
 }
 export class Loaders {
     async loadCommands(path: string): Promise<Collection<string, Command>> {
@@ -28,5 +37,18 @@ export class Loaders {
             const name = file.split(".")[0];
             client.on(name, (...events) => event[name](client, ...events));
         }
+    }
+    async loadComponents(path: string): Promise<Collection<string, Component>> {
+        const components = new Collection<string, Component>();
+        const categories = await readdir(new URL(path, import.meta.url));
+        for (const category of categories) {
+            const componentFiles = await readdir(new URL(`${path}/${category}`, import.meta.url));
+            for (const component of componentFiles) {
+                const componentFile = await import(`${path}/${category}/${component}`);
+                const customId = component.split(".")[0];
+                components.set(customId, componentFile)
+            }
+        }
+        return components;
     }
 }

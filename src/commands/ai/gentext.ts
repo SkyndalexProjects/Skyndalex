@@ -1,5 +1,12 @@
 import { SkyndalexClient } from "../../classes/Client";
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import {
+    ButtonBuilder,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    SlashCommandBuilder,
+    ButtonStyle,
+    ActionRowBuilder
+} from 'discord.js';
 import { fetch } from "undici";
 export async function run(client: SkyndalexClient, interaction: ChatInputCommandInteraction) {
     interface HuggingFaceText {
@@ -24,10 +31,15 @@ export async function run(client: SkyndalexClient, interaction: ChatInputCommand
     })
     const json = await response.json() as HuggingFaceText[];
 
+    const button = new ButtonBuilder()
+        .setLabel("Continue")
+        .setStyle(ButtonStyle.Primary)
+        .setCustomId("continue")
+
     const embed = new EmbedBuilder()
         .setDescription(`${json[0].generated_text}`)
         .setColor("Blue")
-    return interaction.editReply({ embeds: [embed] })
+    return interaction.editReply({ embeds: [embed], components: [new ActionRowBuilder().addComponents(button)] })
 }
 
 export const data = new SlashCommandBuilder()

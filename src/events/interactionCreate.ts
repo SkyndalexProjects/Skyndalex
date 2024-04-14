@@ -9,5 +9,10 @@ export async function interactionCreate(client: SkyndalexClient, interaction: In
             await command.run(client, interaction)
             break;
         }
+        case InteractionType.MessageComponent: {
+            const component = client.components.get(interaction.customId);
+            await component.run(client, interaction)
+            break;
+        }
     }
 }

@@ -3,7 +3,7 @@ import {
 	ChatInputCommandInteraction,
 	Client,
 	Collection,
-	GatewayIntentBits,
+	GatewayIntentBits, Interaction,
 	Partials,
 	SlashCommandBuilder
 } from "discord.js";
@@ -11,11 +11,17 @@ import { PrismaClient } from "@prisma/client";
 import { Loaders } from "./Loaders";
 interface Command {
 	data: SlashCommandBuilder;
-	run: (client: SkyndalexClient, interaction: ChatInputCommandInteraction) => Promise<void>;
+	run: (client: SkyndalexClient, interaction: Interaction) => Promise<void>;
+}
+interface Component {
+	data: Interaction;
+	run: (client: SkyndalexClient, interaction: Interaction) => Promise<void>;
 }
 export class SkyndalexClient extends Client {
 	prisma = new PrismaClient();
 	commands: Collection<string, Command>;
+	components: Collection<string, Component>;
+
 	loader = new Loaders();
 
 	constructor() {
@@ -41,6 +47,7 @@ export class SkyndalexClient extends Client {
 	async init() {
 		await this.loader.loadEvents(this, "../events");
 		this.commands = await this.loader.loadCommands("../commands");
+		this.components = await this.loader.loadComponents("../components");
 
 		await this.login(process.env.BOT_TOKEN)
 	}
