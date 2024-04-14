@@ -1,8 +1,8 @@
 import { SkyndalexClient } from "../../classes/Client";
-import {ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder} from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { fetch } from "undici";
 export async function run(client: SkyndalexClient, interaction: ChatInputCommandInteraction) {
-    interface HuggingFace {
+    interface HuggingFaceText {
         generated_text: string
     }
 
@@ -22,7 +22,7 @@ export async function run(client: SkyndalexClient, interaction: ChatInputCommand
         },
         body: JSON.stringify(data),
     })
-    const json = await response.json() as HuggingFace[];
+    const json = await response.json() as HuggingFaceText[];
 
     const embed = new EmbedBuilder()
         .setDescription(`${json[0].generated_text}`)
