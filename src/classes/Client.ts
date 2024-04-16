@@ -1,20 +1,26 @@
+import { readdir } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { PrismaClient } from "@prisma/client";
 import {
 	ActivityType,
 	ChatInputCommandInteraction,
 	Client,
-	Collection,
-	GatewayIntentBits, Interaction,
+	type Collection,
+	GatewayIntentBits,
+	type Interaction,
 	Partials,
-	SlashCommandBuilder
+	type SlashCommandBuilder,
 } from "discord.js";
-import { PrismaClient } from "@prisma/client";
+import i18next from "i18next";
+import Backend from "i18next-fs-backend";
 import { Loaders } from "./Loaders";
 interface Command {
 	data: SlashCommandBuilder;
 	run: (client: SkyndalexClient, interaction: Interaction) => Promise<void>;
 }
 interface Component {
-	data: Interaction;
+	customId: string;
 	run: (client: SkyndalexClient, interaction: Interaction) => Promise<void>;
 }
 export class SkyndalexClient extends Client {
@@ -23,6 +29,7 @@ export class SkyndalexClient extends Client {
 	components: Collection<string, Component>;
 
 	loader = new Loaders();
+	i18n = i18next;
 
 	constructor() {
 		super({
@@ -32,7 +39,7 @@ export class SkyndalexClient extends Client {
 				GatewayIntentBits.MessageContent,
 			],
 			partials: [Partials.Message],
-			allowedMentions: {repliedUser: false},
+			allowedMentions: { repliedUser: false },
 			presence: {
 				activities: [
 					{
@@ -45,10 +52,21 @@ export class SkyndalexClient extends Client {
 	}
 
 	async init() {
+		const __dirname = dirname(fileURLToPath(import.meta.url));
+		await this.i18n.use(Backend).init({
+			fallbackLng: "en-US",
+			ns: ["responses", "commands"],
+			defaultNS: "responses",
+			preload: ["en-US", "pl"],
+			backend: {
+				loadPath: join(__dirname, "/../../i18n/{{lng}}/{{ns}}.json"),
+			},
+		});
+
 		await this.loader.loadEvents(this, "../events");
 		this.commands = await this.loader.loadCommands("../commands");
 		this.components = await this.loader.loadComponents("../components");
 
-		await this.login(process.env.BOT_TOKEN)
+		await this.login(process.env.BOT_TOKEN);
 	}
 }

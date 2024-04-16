@@ -1,14 +1,18 @@
+import {
+	type ChatInputCommandInteraction,
+	EmbedBuilder,
+	SlashCommandBuilder,
+} from "discord.js";
 import type { SkyndalexClient } from "../../classes/Client";
-import {type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder} from 'discord.js';
-
-export async function run(client: SkyndalexClient, interaction: ChatInputCommandInteraction) {
-    console.log("interaction locale", interaction.locale)
-    const locales = {
-        pl: "hej to działa",
-        de: "hey im working"
-    }
-    await interaction.reply(locales[interaction.locale])
+export async function run(
+	client: SkyndalexClient,
+	interaction: ChatInputCommandInteraction,
+) {
+	const embed = new EmbedBuilder().setDescription(
+		client.i18n.t("TEST", { lng: interaction.locale }),
+	);
+	return interaction.reply({ embeds: [embed] });
 }
 export const data = new SlashCommandBuilder()
-    .setName("test")
-    .setDescription("test");
+	.setName("test")
+	.setDescription("test");

@@ -1,0 +1,5 @@
+{
+  "TEST": "This is a test!",
+  "IMG_GENERATED": "Generated img {{prompt}} requested from input by {{author}}",
+  "IMG_GENERATED_NSFW_WARNING": "UWAGA! Uważaj na to, co wpisujesz. Zawartość obrazka może być nieodpowiednia dla niektórych użytkowników."
+}
