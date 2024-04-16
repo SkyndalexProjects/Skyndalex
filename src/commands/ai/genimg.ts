@@ -38,8 +38,18 @@ export async function run(
 	);
 
 	const embed = new EmbedBuilder()
-		.setDescription(client.i18n.t("IMG_GENERATED", { lng: interaction.locale, prompt, author: interaction.user.username }))
-		.setFooter({ text: client.i18n.t("IMG_GENERATED_NSFW_WARNING", { lng: interaction.locale })})
+		.setDescription(
+			client.i18n.t("IMG_GENERATED", {
+				lng: interaction.locale,
+				prompt,
+				author: interaction.user.username,
+			}),
+		)
+		.setFooter({
+			text: client.i18n.t("IMG_GENERATED_NSFW_WARNING", {
+				lng: interaction.locale,
+			}),
+		})
 		.setColor("Blue");
 	return interaction.editReply({ embeds: [embed], files: [image] });
 }
