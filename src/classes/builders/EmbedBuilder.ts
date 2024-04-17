@@ -1,21 +1,27 @@
-import { SkyndalexClient } from "../Client";
-import { BaseBuilder } from '../builders/bases/BaseBuilder';
-import { EmbedBuilder as UnlocalizedBuilder, type LocalizationMap } from 'discord.js';
-
-export class EmbedBuilder extends BaseBuilder<UnlocalizedBuilder> {
-    constructor(client: SkyndalexClient, locale: keyof LocalizationMap) {
-        super('responses');
-        this.builder = new UnlocalizedBuilder();
-        this.locale = locale;
-        this.client = client;
-    }
-
-    setDescription(description: string, args: Record<string, any> = {}): this {
-        this.builder.setDescription(args.raw ? description : this.getOne(description, this.locale, args));
-        return this;
-    }
-
-    toJSON() {
-        return this.builder.toJSON();
-    }
+import { type LocalizationMap, EmbedBuilder as embedBuilder } from "discord.js";
+import * as process from "process";
+import type { SkyndalexClient } from "../Client";
+export class EmbedBuilder extends embedBuilder {
+	locale: string;
+	constructor(
+		private readonly client: SkyndalexClient,
+		locale: keyof LocalizationMap,
+	) {
+		super();
+		this.locale = locale;
+		this.setTimestamp();
+	}
+	setDescription(description: string, args = {}): this {
+		super.setDescription(
+			this.client.i18n.t(description, { lng: this.locale, ...args }),
+		);
+		return this;
+	}
+	setFooter(text: string, textArgs = {}, iconUrl?: string): this {
+		super.setFooter(
+			this.client.i18n.t(text, { lng: this.locale, ...textArgs }),
+			iconUrl,
+		);
+		return this;
+	}
 }

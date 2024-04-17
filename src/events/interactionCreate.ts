@@ -8,7 +8,7 @@ export async function interactionCreate(
 ) {
 	const embedCommandNotFound = new EmbedBuilder()
 		.setDescription(
-			client.i18n.t("WRONG_COMMAND_ERROR", {
+			client.i18n.t("COMMAND_FAILED", {
 				lng: interaction.locale,
 				commandName: interaction.commandName,
 			}),
@@ -17,7 +17,7 @@ export async function interactionCreate(
 
 	const embedComponentNotFound = new EmbedBuilder()
 		.setDescription(
-			client.i18n.t("WRONG_COMPONENT_ERROR", {
+			client.i18n.t("COMPONENT_FAILED", {
 				lng: interaction.locale,
 				componentId: interaction.customId,
 			}),
@@ -39,7 +39,7 @@ export async function interactionCreate(
 				console.error(e);
 				const embedError = new EmbedBuilder()
 					.setDescription(
-						client.i18n.t("COMMAND_INTERACTION_ERROR", {
+						client.i18n.t("COMMAND_FAILED", {
 							lng: interaction.locale,
 						}),
 					)
@@ -62,7 +62,7 @@ export async function interactionCreate(
 				console.error(e);
 				const embedError = new EmbedBuilder()
 					.setDescription(
-						client.i18n.t("COMPONENT_INTERACTION_ERROR", {
+						client.i18n.t("COMPONENT_FAILED", {
 							lng: interaction.locale,
 						}),
 					)
