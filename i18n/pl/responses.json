@@ -3,5 +3,6 @@
   "IMG_GENERATED": "Obrazek {{ prompt }} został wygenerowany pomyślnie przez {{ author }}!",
   "IMG_GENERATED_NSFW_WARNING": "UWAGA! Uważaj na to, co wpisujesz. Zawartość obrazka może być nieodpowiednia dla niektórych użytkowników.",
   "WRONG_COMMAND_ERROR": "Komenda `{{commandName}}` nie istnieje. Spróbuj ponownie.",
-  "WRONG_COMPONENT_ERROR": "Komponent `{{componentId}}` nie istnieje. Spróbuj ponownie."
+  "WRONG_COMPONENT_ERROR": "Komponent `{{componentId}}` nie istnieje. Spróbuj ponownie.",
+  "COMMAND_INTERACTION_ERROR": "Wystąpił błąd podczas interakcji z komendą `{{commandName}}`. Spróbuj ponownie."
 }

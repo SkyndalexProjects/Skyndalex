@@ -3,5 +3,6 @@
   "IMG_GENERATED": "Generated img {{prompt}} requested from input by {{author}}",
   "IMG_GENERATED_NSFW_WARNING": "WARNING! Watch out your prompts. The model can generate NSFW image",
   "WRONG_COMMAND_ERROR": "Command `{{commandName}}` does not exist. Try again.",
-  "WRONG_COMPONENT_ERROR": "Component `{{componentId}}` does not exist. Try again."
+  "WRONG_COMPONENT_ERROR": "Component `{{componentId}}` does not exist. Try again.",
+  "COMMAND_INTERACTION_ERROR": "something went wrong while executing the command"
 }

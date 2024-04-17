@@ -1,17 +1,15 @@
-import {
-	type ChatInputCommandInteraction,
-	EmbedBuilder,
-	SlashCommandBuilder,
-} from "discord.js";
+import { EmbedBuilder } from "../../classes/builders/EmbedBuilder";
 import type { SkyndalexClient } from "../../classes/Client";
+import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
+
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	const embed = new EmbedBuilder().setDescription(
-		client.i18n.t("TEST", { lng: interaction.locale }),
-	);
-	return interaction.reply({ embeds: [embed] });
+	const embed = new EmbedBuilder(client, interaction.locale)
+		.setDescription("TEST")
+
+	await interaction.reply({ embeds: [embed] });
 }
 export const data = new SlashCommandBuilder()
 	.setName("test")
