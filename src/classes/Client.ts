@@ -4,25 +4,27 @@ import { fileURLToPath } from "node:url";
 import { PrismaClient } from "@prisma/client";
 import {
 	ActivityType,
-	ChatInputCommandInteraction,
 	Client,
 	type Collection,
 	GatewayIntentBits,
 	type Interaction,
 	Partials,
 	type SlashCommandBuilder,
+	type MessageComponentInteraction,
+	type ChatInputCommandInteraction,
 } from "discord.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
 import { Loaders } from "./Loaders";
 interface Command {
 	data: SlashCommandBuilder;
-	run: (client: SkyndalexClient, interaction: Interaction) => Promise<void>;
+	run: (client: SkyndalexClient, interaction: ChatInputCommandInteraction) => Promise<void>;
 }
 interface Component {
 	customId: string;
-	run: (client: SkyndalexClient, interaction: Interaction) => Promise<void>;
+	run: (client: SkyndalexClient, interaction: MessageComponentInteraction) => Promise<void>;
 }
+
 export class SkyndalexClient extends Client {
 	prisma = new PrismaClient();
 	commands: Collection<string, Command>;

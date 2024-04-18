@@ -1,11 +1,11 @@
 import {
 	AttachmentBuilder,
 	type ChatInputCommandInteraction,
-	EmbedBuilder,
 	SlashCommandBuilder,
 } from "discord.js";
 import { fetch } from "undici";
 import type { SkyndalexClient } from "../../classes/Client";
+import { EmbedBuilder } from "../../classes/builders/EmbedBuilder";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
@@ -34,10 +34,10 @@ export async function run(
 		(await response.arrayBuffer()) as HuggingFaceImage["generatedImage"];
 	const image = new AttachmentBuilder(
 		Buffer.from(imageBuffer),
-		"skyndalex_generated_img.png",
+		{ name: "skyndalex_generated_img.png" }
 	);
 
-	const embed = new EmbedBuilder()
+	const embed = new EmbedBuilder(client, interaction.locale)
 		.setDescription(
 			client.i18n.t("IMG_GENERATED", {
 				lng: interaction.locale,
@@ -46,9 +46,7 @@ export async function run(
 			}),
 		)
 		.setFooter({
-			text: client.i18n.t("IMG_GENERATED_NSFW_WARNING", {
-				lng: interaction.locale,
-			}),
+			text: "IMG_GENERATED_NSFW_WARNING"
 		})
 		.setColor("Blue");
 	return interaction.editReply({ embeds: [embed], files: [image] });

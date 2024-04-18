@@ -1,11 +1,10 @@
-import { type LocalizationMap, EmbedBuilder as embedBuilder } from "discord.js";
-import * as process from "process";
+import { EmbedBuilder as embedBuilder, EmbedFooterOptions } from "discord.js";
 import type { SkyndalexClient } from "../Client";
 export class EmbedBuilder extends embedBuilder {
 	locale: string;
 	constructor(
 		private readonly client: SkyndalexClient,
-		locale: keyof LocalizationMap,
+		locale: string,
 	) {
 		super();
 		this.locale = locale;
@@ -17,11 +16,18 @@ export class EmbedBuilder extends embedBuilder {
 		);
 		return this;
 	}
-	setFooter(text: string, textArgs = {}, iconUrl?: string): this {
-		super.setFooter(
-			this.client.i18n.t(text, { lng: this.locale, ...textArgs }),
-			iconUrl,
-		);
-		return this;
+
+	setFooter({
+		text,
+		textArgs,
+		iconURL,
+	}: { text: string; textArgs?: Record<string, string>; iconURL?: string }): this {
+		return super.setFooter({
+			text: this.client.i18n.t(text, {
+				lng: this.locale,
+				...textArgs,
+			}) as string,
+			iconURL,
+		});
 	}
 }
