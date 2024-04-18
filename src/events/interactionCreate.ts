@@ -6,26 +6,17 @@ export async function interactionCreate(
 	client: SkyndalexClient,
 	interaction: Interaction,
 ) {
-	const embedCommandNotFound = new EmbedBuilder()
-		.setDescription(
-			client.i18n.t("COMMAND_FAILED", {
-				lng: interaction.locale,
-				commandName: interaction.commandName,
-			}),
-		)
-		.setColor("Red");
-
-	const embedComponentNotFound = new EmbedBuilder()
-		.setDescription(
-			client.i18n.t("COMPONENT_FAILED", {
-				lng: interaction.locale,
-				componentId: interaction.customId,
-			}),
-		)
-		.setColor("Red");
-
 	switch (interaction.type) {
 		case InteractionType.ApplicationCommand: {
+			const embedCommandNotFound = new EmbedBuilder()
+				.setDescription(
+					client.i18n.t("COMMAND_FAILED", {
+						lng: interaction.locale,
+						commandName: interaction.commandName,
+					}),
+				)
+				.setColor("Red");
+
 			const command = client.commands.get(interaction.commandName);
 			if (!command)
 				return interaction.reply({
@@ -44,11 +35,23 @@ export async function interactionCreate(
 						}),
 					)
 					.setColor("Red");
-				interaction.reply({ embeds: [embedError], ephemeral: true });
+				await interaction.reply({
+					embeds: [embedError],
+					ephemeral: true,
+				});
 			}
 			break;
 		}
 		case InteractionType.MessageComponent: {
+			const embedComponentNotFound = new EmbedBuilder()
+				.setDescription(
+					client.i18n.t("COMPONENT_FAILED", {
+						lng: interaction.locale,
+						componentId: interaction.customId,
+					}),
+				)
+				.setColor("Red");
+
 			const component = client.components.get(interaction.customId);
 			if (!component)
 				return interaction.reply({
@@ -67,7 +70,10 @@ export async function interactionCreate(
 						}),
 					)
 					.setColor("Red");
-				interaction.reply({ embeds: [embedError], ephemeral: true });
+				await interaction.reply({
+					embeds: [embedError],
+					ephemeral: true,
+				});
 			}
 			break;
 		}

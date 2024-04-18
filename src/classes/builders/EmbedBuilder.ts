@@ -1,4 +1,4 @@
-import { EmbedBuilder as embedBuilder, EmbedFooterOptions } from "discord.js";
+import { EmbedBuilder as embedBuilder } from "discord.js";
 import type { SkyndalexClient } from "../Client";
 export class EmbedBuilder extends embedBuilder {
 	locale: string;
@@ -21,7 +21,11 @@ export class EmbedBuilder extends embedBuilder {
 		text,
 		textArgs,
 		iconURL,
-	}: { text: string; textArgs?: Record<string, string>; iconURL?: string }): this {
+	}: {
+		text: string;
+		textArgs?: Record<string, string>;
+		iconURL?: string;
+	}): this {
 		return super.setFooter({
 			text: this.client.i18n.t(text, {
 				lng: this.locale,

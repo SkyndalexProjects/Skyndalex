@@ -32,10 +32,9 @@ export async function run(
 	);
 	const imageBuffer =
 		(await response.arrayBuffer()) as HuggingFaceImage["generatedImage"];
-	const image = new AttachmentBuilder(
-		Buffer.from(imageBuffer),
-		{ name: "skyndalex_generated_img.png" }
-	);
+	const image = new AttachmentBuilder(Buffer.from(imageBuffer), {
+		name: "skyndalex_generated_img.png",
+	});
 
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setDescription(
@@ -46,7 +45,7 @@ export async function run(
 			}),
 		)
 		.setFooter({
-			text: "IMG_GENERATED_NSFW_WARNING"
+			text: "IMG_GENERATED_NSFW_WARNING",
 		})
 		.setColor("Blue");
 	return interaction.editReply({ embeds: [embed], files: [image] });
