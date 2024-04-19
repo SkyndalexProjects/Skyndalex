@@ -5,5 +5,9 @@ export async function ready(client: SkyndalexClient) {
 		client.commands.map((command) => command.data.toJSON()),
 	);
 
-	client.logger.log(`Ready in ${((performance.now() - client.createdAt) / 1000).toFixed(2)}s`);
+	client.logger.success(
+		`Ready in ${((performance.now() - client.createdAt) / 1000).toFixed(
+			2,
+		)}s`,
+	);
 }

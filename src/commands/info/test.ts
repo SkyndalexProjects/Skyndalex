@@ -3,13 +3,12 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "../../classes/Client";
-import { EmbedBuilder } from "../../classes/builders/EmbedBuilder";
 
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	client.logger.error("DUPA")
+	client.logger.error("DUPA");
 
 	// const embed = new EmbedBuilder(client, interaction.locale)
 	// 	.setDescription(

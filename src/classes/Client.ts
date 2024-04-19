@@ -10,14 +10,23 @@ import {
 } from "discord.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
+import { Connectors, Shoukaku } from "shoukaku";
 import type { Command, Component } from "../types/structures";
 import { Loaders } from "./Loaders";
 import { Logger } from "./Logger";
+const Nodes: { name: string; auth: string; url: string }[] = [
+	{
+		name: "Localhost",
+		url: "127.0.0.1:6969",
+		auth: process.env.LAVALINK_AUTH,
+	},
+];
 
 export class SkyndalexClient extends Client {
 	prisma = new PrismaClient();
 	logger = new Logger();
 	createdAt = performance.now();
+	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 
 	commands: Collection<string, Command>;
 	components: Collection<string, Component>;
@@ -46,6 +55,11 @@ export class SkyndalexClient extends Client {
 	}
 
 	async init() {
+		this.shoukaku.on("error", (_, error) => console.log(error));
+		this.shoukaku.on("ready", (_, error) =>
+			this.logger.success("Lavalink is ready!"),
+		);
+
 		const __dirname = dirname(fileURLToPath(import.meta.url));
 		await this.i18n.use(Backend).init({
 			fallbackLng: "en-US",

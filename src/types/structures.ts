@@ -1,16 +1,13 @@
 import type {
-    ChatInputCommandInteraction, Interaction,
-    MessageComponentInteraction,
-    SlashCommandBuilder,
+	Interaction,
+	MessageComponentInteraction,
+	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "../classes/Client";
 
 export interface Command {
 	data: SlashCommandBuilder;
-	run: (
-        client: SkyndalexClient,
-        interaction: Interaction,
-    ) => Promise<void>;
+	run: (client: SkyndalexClient, interaction: Interaction) => Promise<void>;
 }
 export interface Component {
 	customId: string;
