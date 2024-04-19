@@ -1,26 +1,7 @@
 import { readdir } from "node:fs/promises";
-import {
-	type ChatInputCommandInteraction,
-	Collection,
-	type MessageComponentInteraction,
-	type SlashCommandBuilder,
-} from "discord.js";
+import { Collection } from "discord.js";
+import type { Command, Component } from "../types/structures";
 import type { SkyndalexClient } from "./Client";
-
-interface Command {
-	data: SlashCommandBuilder;
-	run: (
-		client: SkyndalexClient,
-		interaction: ChatInputCommandInteraction,
-	) => Promise<void>;
-}
-interface Component {
-	customId: string;
-	run: (
-		client: SkyndalexClient,
-		interaction: MessageComponentInteraction,
-	) => Promise<void>;
-}
 export class Loaders {
 	async loadCommands(path: string): Promise<Collection<string, Command>> {
 		const commands = new Collection<string, Command>();

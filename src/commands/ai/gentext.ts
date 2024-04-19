@@ -41,13 +41,15 @@ export async function run(
 		.setLabel("Continue")
 		.setStyle(ButtonStyle.Primary)
 		.setCustomId("continue");
+	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
 
 	const embed = new EmbedBuilder()
 		.setDescription(`${json[0].generated_text}`)
 		.setColor("Blue");
+
 	return interaction.editReply({
 		embeds: [embed],
-		components: [new ActionRowBuilder().addComponents(button)],
+		components: [row],
 	});
 }
 

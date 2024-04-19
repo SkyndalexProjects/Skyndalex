@@ -6,25 +6,12 @@ import {
 	Client,
 	type Collection,
 	GatewayIntentBits,
-	type Interaction,
-	type MessageComponentInteraction,
 	Partials,
-	type SlashCommandBuilder,
 } from "discord.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
+import type { Command, Component } from "../types/structures";
 import { Loaders } from "./Loaders";
-interface Command {
-	data: SlashCommandBuilder;
-	run: (client: SkyndalexClient, interaction: Interaction) => Promise<void>;
-}
-interface Component {
-	customId: string;
-	run: (
-		client: SkyndalexClient,
-		interaction: MessageComponentInteraction,
-	) => Promise<void>;
-}
 
 export class SkyndalexClient extends Client {
 	prisma = new PrismaClient();
