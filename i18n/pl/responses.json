@@ -3,5 +3,7 @@
   "IMG_GENERATED": "Obrazek {{ prompt }} został wygenerowany pomyślnie przez {{ author }}!",
   "IMG_GENERATED_NSFW_WARNING": "UWAGA! Uważaj na to, co wpisujesz. Zawartość obrazka może być nieodpowiednia dla niektórych użytkowników.",
   "COMPONENT_FAILED": "❌ Komponent `{{componentId}}` nie istnieje. Spróbuj ponownie.\n\n❗ Proszę dołączyć na [support](https://discord.gg/nEF9PPMsYx) i zgłosić błąd administracji bota",
-  "COMMAND_FAILED": "Wystąpił błąd podczas interakcji z komendą `{{commandName}}`. Spróbuj ponownie."
+  "COMMAND_FAILED": "Wystąpił błąd podczas interakcji z komendą `{{commandName}}`. Spróbuj ponownie.",
+  "RADIO_PLAYING": "Odtworzono stację radiową!",
+  "RADIO_PLAYING_DESC": "📻 | Aktualna stacja: **{{ radioStation }}**\n🌐 | Kraj: **{{ radioCountry }}**\n🗺️ | Miejscowość: **{{ radioPlace }}**"
 }

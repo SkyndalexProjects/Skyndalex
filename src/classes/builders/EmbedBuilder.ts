@@ -1,4 +1,4 @@
-import { EmbedBuilder as embedBuilder } from "discord.js";
+import { type ColorResolvable, EmbedBuilder as embedBuilder } from "discord.js";
 import type { SkyndalexClient } from "../Client";
 export class EmbedBuilder extends embedBuilder {
 	locale: string;
@@ -10,6 +10,12 @@ export class EmbedBuilder extends embedBuilder {
 		this.locale = locale;
 		this.setTimestamp();
 	}
+	setTitle(title: string, args = {}): this {
+		return super.setTitle(
+			this.client.i18n.t(title, { lng: this.locale, ...args }),
+		);
+	}
+
 	setDescription(description: string, args = {}): this {
 		super.setDescription(
 			this.client.i18n.t(description, { lng: this.locale, ...args }),
@@ -33,5 +39,8 @@ export class EmbedBuilder extends embedBuilder {
 			}) as string,
 			iconURL,
 		});
+	}
+	setColor(color: ColorResolvable): this {
+		return super.setColor(color);
 	}
 }

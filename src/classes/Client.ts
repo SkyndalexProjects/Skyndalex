@@ -40,6 +40,7 @@ export class SkyndalexClient extends Client {
 				GatewayIntentBits.Guilds,
 				GatewayIntentBits.GuildMessages,
 				GatewayIntentBits.MessageContent,
+				GatewayIntentBits.GuildVoiceStates,
 			],
 			partials: [Partials.Message],
 			allowedMentions: { repliedUser: false },
@@ -74,6 +75,7 @@ export class SkyndalexClient extends Client {
 		await this.loader.loadEvents(this, "../events");
 		this.commands = await this.loader.loadCommands("../commands");
 		this.components = await this.loader.loadComponents("../components");
+
 		await this.login(process.env.BOT_TOKEN);
 	}
 }

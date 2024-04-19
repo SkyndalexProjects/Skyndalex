@@ -32,6 +32,7 @@ export async function interactionCreate(
 					.setDescription(
 						client.i18n.t("COMMAND_FAILED", {
 							lng: interaction.locale,
+							commandName: interaction.commandName,
 						}),
 					)
 					.setColor("Red");
@@ -77,5 +78,17 @@ export async function interactionCreate(
 			}
 			break;
 		}
+		case InteractionType.ApplicationCommandAutocomplete:
+			if (interaction.isAutocomplete()) {
+				const command = client.commands.get(interaction.commandName);
+
+				if (!command) return;
+				try {
+					await command.autocomplete(interaction);
+				} catch (error) {
+					console.error(error);
+				}
+			}
+			break;
 	}
 }
