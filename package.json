@@ -18,11 +18,13 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@discordjs/voice": "^0.16.1",
     "@prisma/client": "^5.12.1",
     "discord.js": "^14.14.1",
+    "ffmpeg-static": "^5.2.0",
     "i18next": "^23.11.2",
     "i18next-fs-backend": "^2.3.1",
     "picocolors": "^1.0.0",
-    "shoukaku": "^4.0.1"
+    "sodium": "^3.0.2"
   }
 }

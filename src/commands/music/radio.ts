@@ -1,4 +1,9 @@
 import {
+	createAudioPlayer,
+	createAudioResource,
+	joinVoiceChannel,
+} from "@discordjs/voice";
+import {
 	type AutocompleteInteraction,
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
@@ -12,61 +17,66 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction<"cached">,
 ) {
-	const station = interaction.options.getString("station");
-	const memberChannel = interaction.member.voice.channel;
+	try {
+		await interaction.deferReply();
+		const station = interaction.options.getString("station");
+		const memberChannel = interaction.member.voice.channel;
 
-	if (!memberChannel) {
-		return await interaction.reply({
-			content:
-				"❌ | You need to be in a voice channel to play a radio station!",
-			ephemeral: true,
+		if (!memberChannel) {
+			return await interaction.reply({
+				content:
+					"❌ | You need to be in a voice channel to play a radio station!",
+				ephemeral: true,
+			});
+		}
+
+		const url = `https://radio.garden/api/ara/content/channel/${station}`;
+
+		const response = await fetch(url, {
+			method: "GET",
+			headers: {
+				accept: "application/json",
+			},
 		});
-	}
+		const json = (await response.json()) as radioStationData;
 
-	const url = `https://radio.garden/api/ara/content/channel/${station}`;
-	const resourceUrl = `https://radio.garden/api/ara/content/listen/${station}/channel.mp3`;
+		if (json.error)
+			return interaction.editReply({
+				content: "❌ | Radio station not found!",
+			});
 
-	const response = await fetch(url, {
-		method: "GET",
-		headers: {
-			accept: "application/json",
-		},
-	});
-	const json = (await response.json()) as radioStationData;
-	if (json.error)
-		return interaction.reply({
-			content: "❌ | Radio station not found!",
-			ephemeral: true,
-		});
+		const id = json.data.url.split("/")[3];
+		const resourceUrl = `https://radio.garden/api/ara/content/listen/${id}/channel.mp3`;
 
-	// TODO: make RADIO_PLAYING_CHANGED, RADIO_PLAYING_DESC_CHANGED
-
-	const embed = new EmbedBuilder(client, interaction.locale)
-		.setTitle("RADIO_PLAYING")
-		.setDescription("RADIO_PLAYING_DESC", {
-			radioStation: json.data.title,
-			radioCountry: json.data.country.title,
-			radioPlace: json.data.place.title,
-		})
-		.setColor("Green");
-
-	if (client.shoukaku.players.size < 1) {
-		const player = await client.shoukaku.joinVoiceChannel({
-			guildId: interaction.guild.id,
+		const connection = joinVoiceChannel({
 			channelId: memberChannel.id,
-			shardId: 0,
+			guildId: memberChannel.guild.id,
+			adapterCreator: memberChannel.guild.voiceAdapterCreator,
 		});
 
-		const result = await player.node.rest.resolve(resourceUrl);
-		await player.playTrack({ track: result.data.encoded });
+		const player = createAudioPlayer();
+		connection.subscribe(player);
 
-		return interaction.reply({ embeds: [embed] });
-	} else {
-		const player = client.shoukaku.players.get(interaction.guild.id);
-		const result = await player.node.rest.resolve(resourceUrl);
-		await player.playTrack({ track: result.data.encoded });
+		const stream = await fetch(resourceUrl).then((res) => res.body);
+		const resource = createAudioResource(stream, { seek: 0, volume: 1 });
+		player.play(resource);
 
-		return interaction.reply({ embeds: [embed] });
+		player.on("stateChange", (oldState, newState) => {
+			if (newState.status === "playing") {
+				const embed = new EmbedBuilder(client, interaction.locale)
+					.setTitle("RADIO_PLAYING")
+					.setDescription("RADIO_PLAYING_DESC", {
+						radioStation: json.data.title,
+						radioCountry: json.data.country.title,
+						radioPlace: json.data.place.title,
+					})
+					.setColor("Green");
+
+				return interaction.editReply({ embeds: [embed] });
+			}
+		});
+	} catch (e) {
+		console.error(e);
 	}
 }
 
