@@ -17,7 +17,18 @@ export async function interactionCreate(
 				)
 				.setColor("Red");
 
-			const command = client.commands.get(interaction.commandName);
+			// TODO: add typing
+			const subcommand = interaction.options.getSubcommand(false);
+			const subcommandGroup =
+				interaction.options.getSubcommandGroup(false);
+
+			const command = client.commands.get(
+				subcommandGroup
+					? `${interaction.commandName}/${subcommandGroup}/${subcommand}`
+					: subcommand
+						? `${interaction.commandName}/${subcommand}`
+						: interaction.commandName,
+			);
 			if (!command)
 				return interaction.reply({
 					embeds: [embedCommandNotFound],

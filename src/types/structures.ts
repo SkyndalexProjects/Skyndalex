@@ -6,6 +6,7 @@ import type {
 import type { SkyndalexClient } from "../classes/Client";
 
 export interface Command {
+	startsWith: any;
 	data: SlashCommandBuilder;
 	run: (client: SkyndalexClient, interaction: Interaction) => Promise<void>;
 	autocomplete: (interaction: Interaction) => Promise<void>;

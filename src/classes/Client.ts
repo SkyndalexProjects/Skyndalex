@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import {
 	ActivityType,
 	Client,
-	type Collection,
+	Collection,
 	GatewayIntentBits,
 	Partials,
 } from "discord.js";
@@ -19,10 +19,10 @@ export class SkyndalexClient extends Client {
 	logger = new Logger();
 	createdAt = performance.now();
 
-	commands: Collection<string, Command>;
+	commands: Collection<string, Command> = new Collection<string, Command>();
 	components: Collection<string, Component>;
 
-	loader = new Loaders();
+	loader = new Loaders(this);
 	i18n = i18next;
 
 	constructor() {
@@ -59,7 +59,7 @@ export class SkyndalexClient extends Client {
 		});
 
 		await this.loader.loadEvents(this, "../events");
-		this.commands = await this.loader.loadCommands("../commands");
+		await this.loader.loadCommands("../commands");
 		this.components = await this.loader.loadComponents("../components");
 
 		await this.login(process.env.BOT_TOKEN);
