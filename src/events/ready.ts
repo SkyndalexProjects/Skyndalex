@@ -4,41 +4,59 @@ import type {
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
 export async function ready(client: SkyndalexClient) {
+	// TODO: rewrite this for a better quality, use recursion functions
 	const parsedCommands = [];
 
 	for (const [key, value] of client.commands) {
 		if (key.includes("/")) {
-			const [name, subGroup, subCommand] = key.split("/");
-			if (subCommand !== "index") continue;
-			const cmd = client.commands.find((cmd) => cmd.data.name === name);
+			if (!key.includes("index") || key.split("/").length > 2) continue;
+
+			const [commandName] = key.split("/");
 
 			const subcommands = client.commands.filter(
-				(value, subKey) =>
-					subKey.startsWith(`${name}/`) && subKey !== `${name}/index`,
+				(x, v) =>
+					v.startsWith(`${commandName}/`) && !v.includes("index"),
 			);
-			const command = cmd.data;
 
-			for (const [subKey, subValue] of subcommands) {
-				if (subKey.includes("index")) {
-					command.addSubcommandGroup(
-						subValue.data as unknown as SlashCommandSubcommandGroupBuilder,
+			const command = value.data;
+
+			for (const [key, value] of subcommands.entries()) {
+				if (key.split("/").length <= 2) {
+					command.addSubcommand(
+						value.data as unknown as SlashCommandSubcommandBuilder,
 					);
-					for (const [subSubKey, subSubValue] of subcommands) {
-						if (subSubKey.includes("index")) continue;
+				} else {
+					const groupName = key.split("/")[1];
 
-						subValue.data.addSubcommand(
-							subSubValue.data as unknown as SlashCommandSubcommandBuilder,
+					const groups = client.commands.filter(
+						(x, v) =>
+							v.startsWith(`${commandName}/${groupName}`) &&
+							!v.includes("index"),
+					);
+
+					const groupIndex = client.commands.get(
+						`${commandName}/${groupName}/index`,
+					);
+
+					if (!groupIndex) continue;
+
+					for (const [gk, gv] of groups.entries()) {
+						groupIndex?.data.addSubcommand(
+							gv.data as unknown as SlashCommandSubcommandBuilder,
 						);
 					}
+
+					command.addSubcommandGroup(
+						groupIndex.data as unknown as SlashCommandSubcommandGroupBuilder,
+					);
 				}
 			}
-			parsedCommands.push(command);
+			parsedCommands.push(command.toJSON());
 		} else {
-			if (!parsedCommands.includes(value.data)) {
-				parsedCommands.push(value.data);
-			}
+			parsedCommands.push(value.data.toJSON());
 		}
 	}
+
 	const globalData = await client.application.commands.set(parsedCommands);
 
 	client.logger.success(

@@ -29,6 +29,7 @@ export class Loaders {
 				);
 			} else {
 				const command = await import(`${path}/${dir}`);
+
 				this.client.commands.set(
 					prefix
 						? `${prefix}/${dir.split(".")[0]}`

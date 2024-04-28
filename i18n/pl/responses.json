@@ -5,5 +5,6 @@
   "COMPONENT_FAILED": "❌ Komponent `{{componentId}}` nie istnieje. Spróbuj ponownie.\n\n❗ Proszę dołączyć na [support](https://discord.gg/nEF9PPMsYx) i zgłosić błąd administracji bota",
   "COMMAND_FAILED": "Wystąpił błąd podczas interakcji z komendą `{{commandName}}`. Spróbuj ponownie.",
   "RADIO_PLAYING": "Odtworzono stację radiową!",
-  "RADIO_PLAYING_DESC": "📻 | Aktualna stacja: **{{ radioStation }}**\n🌐 | Kraj: **{{ radioCountry }}**\n🗺️ | Miejscowość: **{{ radioPlace }}**"
+  "RADIO_PLAYING_DESC": "💻 | Status: {{ radioState }}\n📻 | Wybrana stacja: **{{ radioStation }}**\n🌐 | Kraj: **{{ radioCountry }}**\n🗺️ | Miejscowość: **{{ radioPlace }}**",
+  "RADIO_PLAYING_FOOTER": "Strona: {{- radioWebsite}}"
 }

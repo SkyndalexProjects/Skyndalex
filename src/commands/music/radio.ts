@@ -40,6 +40,7 @@ export async function run(
 		});
 		const json = (await response.json()) as radioStationData;
 
+		console.log("json", json)
 		if (json.error)
 			return interaction.editReply({
 				content: "❌ | Radio station not found!",
@@ -62,18 +63,29 @@ export async function run(
 		player.play(resource);
 
 		player.on("stateChange", (oldState, newState) => {
-			if (newState.status === "playing") {
-				const embed = new EmbedBuilder(client, interaction.locale)
-					.setTitle("RADIO_PLAYING")
-					.setDescription("RADIO_PLAYING_DESC", {
-						radioStation: json.data.title,
-						radioCountry: json.data.country.title,
-						radioPlace: json.data.place.title,
-					})
-					.setColor("Green");
-
-				return interaction.editReply({ embeds: [embed] });
-			}
+			const state = newState.status;
+			const currentState = {
+				idle: "🟡 Idle",
+				stopped: "🔴 Stopped",
+				playing: "🟢 Playing",
+				paused: "🔵 Paused",
+				autopaused: "🟣 Autopaused",
+			};
+			const embed = new EmbedBuilder(client, interaction.locale)
+			.setTitle("RADIO_PLAYING")
+			.setDescription("RADIO_PLAYING_DESC", {
+				radioState: currentState[state] || state,
+				radioStation: json.data.title,
+				radioCountry: json.data.country.title,
+				radioPlace: json.data.place.title,
+			})
+			.setFooter({ 
+				text: "RADIO_PLAYING_FOOTER", 
+				textArgs: { radioWebsite: json.data.website }
+			})
+			.setColor("Green");
+		
+		return interaction.editReply({ embeds: [embed] });
 		});
 	} catch (e) {
 		console.error(e);
