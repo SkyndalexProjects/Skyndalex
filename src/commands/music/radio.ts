@@ -23,7 +23,7 @@ export async function run(
 		const memberChannel = interaction.member.voice.channel;
 
 		if (!memberChannel) {
-			return await interaction.reply({
+			return await interaction.editReply({
 				content:
 					"❌ | You need to be in a voice channel to play a radio station!",
 				ephemeral: true,
@@ -40,7 +40,7 @@ export async function run(
 		});
 		const json = (await response.json()) as radioStationData;
 
-		console.log("json", json)
+		// console.log("json", json);
 		if (json.error)
 			return interaction.editReply({
 				content: "❌ | Radio station not found!",
@@ -60,7 +60,7 @@ export async function run(
 
 		const stream = await fetch(resourceUrl).then((res) => res.body);
 		const resource = createAudioResource(stream, { seek: 0, volume: 1 });
-		player.play(resource);
+		player.play(resource)
 
 		player.on("stateChange", (oldState, newState) => {
 			const state = newState.status;
@@ -71,6 +71,7 @@ export async function run(
 				paused: "🔵 Paused",
 				autopaused: "🟣 Autopaused",
 			};
+
 			const embed = new EmbedBuilder(client, interaction.locale)
 			.setTitle("RADIO_PLAYING")
 			.setDescription("RADIO_PLAYING_DESC", {
@@ -79,13 +80,11 @@ export async function run(
 				radioCountry: json.data.country.title,
 				radioPlace: json.data.place.title,
 			})
-			.setFooter({ 
-				text: "RADIO_PLAYING_FOOTER", 
-				textArgs: { radioWebsite: json.data.website }
+			.setFooter({
+				text: "RADIO_PLAYING_FOOTER",
+				textArgs: { radioWebsite: json.data.website },
 			})
 			.setColor("Green");
-		
-		return interaction.editReply({ embeds: [embed] });
 		});
 	} catch (e) {
 		console.error(e);

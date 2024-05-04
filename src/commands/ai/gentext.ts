@@ -8,16 +8,13 @@ import {
 } from "discord.js";
 import { fetch } from "undici";
 import type { SkyndalexClient } from "../../classes/Client";
+import type { HuggingFaceText } from "../../types/structures";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	interface HuggingFaceText {
-		generated_text: string;
-	}
-
 	await interaction.deferReply();
-	const model = "mistralai/Mixtral-8x7B-Instruct-v0.1";
+	const model = "meta-llama/Meta-Llama-3-8B-Instruct";
 	const prompt = interaction.options.getString("prompt");
 
 	const data = {
@@ -41,6 +38,7 @@ export async function run(
 		.setLabel("Continue")
 		.setStyle(ButtonStyle.Primary)
 		.setCustomId("continue");
+
 	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
 
 	const embed = new EmbedBuilder()

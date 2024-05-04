@@ -49,3 +49,6 @@ export interface radioStationData {
 		country: { id: string; title: string };
 	};
 }
+export interface HuggingFaceText {
+	generated_text: string;
+}

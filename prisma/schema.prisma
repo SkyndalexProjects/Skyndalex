@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model test {
-  id   Int    @id
-  dupa String
+model settings {
+  settingId   Int    @id
+  voiceStatesChannel String
 }
