@@ -1,6 +1,5 @@
 import {
 	ActionRowBuilder,
-	ButtonBuilder,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
 	EmbedBuilder,
@@ -9,6 +8,7 @@ import {
 import { fetch } from "undici";
 import type { SkyndalexClient } from "../../classes/Client";
 import type { HuggingFaceText } from "../../types/structures";
+import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
@@ -34,8 +34,8 @@ export async function run(
 	);
 	const json = (await response.json()) as HuggingFaceText[];
 
-	const button = new ButtonBuilder()
-		.setLabel("Continue")
+	const button = new ButtonBuilder(client, interaction.locale)
+		.setLabel("BUTTON_CONTINUE")
 		.setStyle(ButtonStyle.Primary)
 		.setCustomId("continue");
 
