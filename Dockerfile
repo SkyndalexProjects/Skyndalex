@@ -1,5 +1,5 @@
-FROM --platform=$TARGETOS/$TARGETARCH node:20-bullseye-slim
-WORKDIR /src
+FROM node:20-alpine
+WORKDIR /usr/src/app
 COPY . .
 RUN npx prisma generate
 RUN npm install
