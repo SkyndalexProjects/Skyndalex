@@ -60,7 +60,7 @@ export async function run(
 
 		const stream = await fetch(resourceUrl).then((res) => res.body);
 		const resource = createAudioResource(stream, { seek: 0, volume: 1 });
-		player.play(resource)
+		player.play(resource);
 
 		player.on("stateChange", (oldState, newState) => {
 			const state = newState.status;
@@ -73,18 +73,20 @@ export async function run(
 			};
 
 			const embed = new EmbedBuilder(client, interaction.locale)
-			.setTitle("RADIO_PLAYING")
-			.setDescription("RADIO_PLAYING_DESC", {
-				radioState: currentState[state] || state,
-				radioStation: json.data.title,
-				radioCountry: json.data.country.title,
-				radioPlace: json.data.place.title,
-			})
-			.setFooter({
-				text: "RADIO_PLAYING_FOOTER",
-				textArgs: { radioWebsite: json.data.website },
-			})
-			.setColor("Green");
+				.setTitle("RADIO_PLAYING")
+				.setDescription("RADIO_PLAYING_DESC", {
+					radioState: currentState[state] || state,
+					radioStation: json.data.title,
+					radioCountry: json.data.country.title,
+					radioPlace: json.data.place.title,
+				})
+				.setFooter({
+					text: "RADIO_PLAYING_FOOTER",
+					textArgs: { radioWebsite: json.data.website },
+				})
+				.setColor("Green");
+
+			interaction.editReply({ embeds: [embed] });
 		});
 	} catch (e) {
 		console.error(e);

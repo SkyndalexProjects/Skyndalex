@@ -10,4 +10,5 @@ datasource db {
 model settings {
   settingId   Int    @id
   voiceStatesChannel String
+  radioChannel String
 }
