@@ -91,9 +91,19 @@ export async function interactionCreate(
 		}
 		case InteractionType.ApplicationCommandAutocomplete:
 			if (interaction.isAutocomplete()) {
-				const command = client.commands.get(interaction.commandName);
-
+				const subcommand = interaction.options.getSubcommand(false);
+				const subcommandGroup =
+					interaction.options.getSubcommandGroup(false);
+					
+				const command = client.commands.get(
+					subcommandGroup
+						? `${interaction.commandName}/${subcommandGroup}/${subcommand}`
+						: subcommand
+							? `${interaction.commandName}/${subcommand}`
+							: interaction.commandName,
+				);
 				if (!command) return;
+
 				try {
 					await command.autocomplete(interaction);
 				} catch (error) {
