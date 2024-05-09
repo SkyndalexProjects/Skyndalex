@@ -8,8 +8,19 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	return interaction.reply("test");
+	const amount = interaction.options.getInteger("amount");
+	await interaction.channel.bulkDelete(amount)
+
+	return interaction.reply(`Deleted \`${amount}\` messages`)
 }
 export const data = new SlashCommandBuilder()
 	.setName("clear")
-	.setDescription("this is clear");
+	.setDescription("this is clear")
+	.addIntegerOption((option) =>
+		option
+			.setName("amount")
+			.setDescription("Amount of messages to clear")
+			.setMinValue(1)
+			.setMaxValue(100)
+			.setRequired(true),
+	);
