@@ -94,7 +94,7 @@ export async function interactionCreate(
 				const subcommand = interaction.options.getSubcommand(false);
 				const subcommandGroup =
 					interaction.options.getSubcommandGroup(false);
-					
+
 				const command = client.commands.get(
 					subcommandGroup
 						? `${interaction.commandName}/${subcommandGroup}/${subcommand}`

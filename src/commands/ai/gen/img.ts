@@ -53,7 +53,7 @@ export async function run(
 export const data = new SlashCommandSubcommandBuilder()
 	.setName("img")
 	.setDescription("Generate image with AI")
-    .addStringOption((option) =>
+	.addStringOption((option) =>
 		option
 			.setName("prompt")
 			.setDescription("Prompt for the AI")

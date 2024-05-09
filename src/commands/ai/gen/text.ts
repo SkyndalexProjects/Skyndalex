@@ -3,7 +3,7 @@ import {
 	ButtonStyle,
 	type ChatInputCommandInteraction,
 	EmbedBuilder,
-    SlashCommandSubcommandBuilder,
+	SlashCommandSubcommandBuilder,
 } from "discord.js";
 import { fetch } from "undici";
 import type { SkyndalexClient } from "../../../classes/Client";
@@ -50,7 +50,6 @@ export async function run(
 		embeds: [embed],
 		components: [row],
 	});
-
 }
 export const data = new SlashCommandSubcommandBuilder()
 	.setName("text")

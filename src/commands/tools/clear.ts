@@ -9,9 +9,9 @@ export async function run(
 	interaction: ChatInputCommandInteraction,
 ) {
 	const amount = interaction.options.getInteger("amount");
-	await interaction.channel.bulkDelete(amount)
+	await interaction.channel.bulkDelete(amount);
 
-	return interaction.reply(`Deleted \`${amount}\` messages`)
+	return interaction.reply(`Deleted \`${amount}\` messages`);
 }
 export const data = new SlashCommandBuilder()
 	.setName("clear")
