@@ -1,11 +1,11 @@
 import {
 	AttachmentBuilder,
 	type ChatInputCommandInteraction,
-	SlashCommandBuilder,
+	SlashCommandSubcommandBuilder,
 } from "discord.js";
 import { fetch } from "undici";
-import type { SkyndalexClient } from "../../classes/Client";
-import { EmbedBuilder } from "../../classes/builders/EmbedBuilder";
+import type { SkyndalexClient } from "../../../classes/Client";
+import { EmbedBuilder } from "../../../classes/builders/EmbedBuilder";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
@@ -50,10 +50,10 @@ export async function run(
 		.setColor("Blue");
 	return interaction.editReply({ embeds: [embed], files: [image] });
 }
-export const data = new SlashCommandBuilder()
-	.setName("genimg")
-	.setDescription("Generate image")
-	.addStringOption((option) =>
+export const data = new SlashCommandSubcommandBuilder()
+	.setName("img")
+	.setDescription("Generate image with AI")
+    .addStringOption((option) =>
 		option
 			.setName("prompt")
 			.setDescription("Prompt for the AI")

@@ -3,12 +3,13 @@ import {
 	ButtonStyle,
 	type ChatInputCommandInteraction,
 	EmbedBuilder,
-	SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
 } from "discord.js";
 import { fetch } from "undici";
-import type { SkyndalexClient } from "../../classes/Client";
-import type { HuggingFaceText } from "../../types/structures";
+import type { SkyndalexClient } from "../../../classes/Client";
+import type { HuggingFaceText } from "../../../types/structures";
 import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
+
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
@@ -49,10 +50,10 @@ export async function run(
 		embeds: [embed],
 		components: [row],
 	});
-}
 
-export const data = new SlashCommandBuilder()
-	.setName("gentext")
+}
+export const data = new SlashCommandSubcommandBuilder()
+	.setName("text")
 	.setDescription("Generate text")
 	.addStringOption((option) =>
 		option
