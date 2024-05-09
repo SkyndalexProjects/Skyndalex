@@ -1,6 +1,7 @@
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
+	PermissionFlagsBits,
 } from "discord.js";
 import type { SkyndalexClient } from "../../../classes/Client";
 
@@ -12,4 +13,5 @@ export async function run(
 }
 export const data = new SlashCommandBuilder()
 	.setName("set")
-	.setDescription("Guild configuration");
+	.setDescription("Guild configuration")
+	.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)

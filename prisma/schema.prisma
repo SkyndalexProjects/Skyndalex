@@ -8,7 +8,9 @@ datasource db {
 }
 
 model settings {
-  settingId   Int    @id
-  voiceStatesChannel String
-  radioChannel String
+  guildId String @id
+  voiceStateUpdateChannel String?
+  radioStation String?
+  autoRadioChannel String?
+  radioId String?
 }

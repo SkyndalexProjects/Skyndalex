@@ -1,6 +1,7 @@
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
+	PermissionFlagsBits
 } from "discord.js";
 import type { SkyndalexClient } from "../../classes/Client";
 
@@ -16,6 +17,7 @@ export async function run(
 export const data = new SlashCommandBuilder()
 	.setName("clear")
 	.setDescription("this is clear")
+	.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 	.addIntegerOption((option) =>
 		option
 			.setName("amount")
