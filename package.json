@@ -23,6 +23,7 @@
     "@prisma/client": "^5.12.1",
     "discord.js": "^14.15.1",
     "ffmpeg-static": "^5.2.0",
+    "gamedig": "^5.0.0-beta.2",
     "i18next": "^23.11.2",
     "i18next-fs-backend": "^2.3.1",
     "libsodium-wrappers": "^0.7.13",

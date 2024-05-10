@@ -18,5 +18,7 @@
   "SET_TIMEOUT_TITLE": "Wyciszono użytkownika!",
   "SET_TIMEOUT_USER": "Użytkownik",
   "SET_TIMEOUT_REASON": "Powód",
-  "SET_TIMEOUT_DURATION": "Czas trwania"
+  "SET_TIMEOUT_DURATION": "Czas trwania",
+  "GAME_SERVER_NOT_FOUND": "Nie znaleziono serwera.",
+  "GAME_SERVER_FAILED": "Ups, coś poszło nie tak podczas wykonywania tej operacji."
 }

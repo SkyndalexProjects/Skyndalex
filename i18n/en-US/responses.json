@@ -18,5 +18,7 @@
   "SET_TIMEOUT_TITLE": "Muted user!",
   "SET_TIMEOUT_USER": "Member",
   "SET_TIMEOUT_REASON": "Reason",
-  "SET_TIMEOUT_DURATION": "Duration"
+  "SET_TIMEOUT_DURATION": "Duration",
+  "GAME_SERVER_NOT_FOUND": "Server not found",
+  "GAME_SERVER_FAILED": "Something went wrong."
 }
