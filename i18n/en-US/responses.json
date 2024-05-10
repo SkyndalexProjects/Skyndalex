@@ -5,7 +5,13 @@
   "BUTTON_CONTINUE": "Continue",
   "COMPONENT_FAILED": "❌ The component `{{componentId}}` does not exist. Please try again.\n\n❗ Please join the [support](https://discord.gg/nEF9PPMsYx) server and report the error to the bot administrators",
   "COMMAND_FAILED": "An error occurred while interacting with the `{{commandName}}` command. Please try again.",
-  "RADIO_PLAYING": "Radio playing!",
+  "RADIO_JOIN_VOICE_CHANNEL": "You must be in a voice channel to use this command.",
+  "RADIO_STATION_NOT_FOUND": "The radio station was not found. Please try again.",
+  "RADIO_STATE_IDLE": "Idle",
+  "RADIO_STATE_PAUSED": "Paused",
+  "RADIO_STATE_STOPPED": "Stopped",
+  "RADIO_STATE_AUTOPAUSED": "Auto-paused",
+  "RADIO_STATE_PLAYING": "Radio playing!",
   "RADIO_PLAYING_DESC": "💻 | Status: {{ radioState }}\n📻 | Choosed station: **{{ radioStation }}**\n🌐 | Country: **{{ radioCountry }}**\n🗺️ | City/Place: **{{ radioPlace }}**",
   "RADIO_PLAYING_FOOTER": "Website: {{- radioWebsite}}"
 }

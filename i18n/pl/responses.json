@@ -5,7 +5,13 @@
   "BUTTON_CONTINUE": "Kontynuuj",
   "COMPONENT_FAILED": "❌ Komponent `{{componentId}}` nie istnieje. Spróbuj ponownie.\n\n❗ Proszę dołączyć na [support](https://discord.gg/nEF9PPMsYx) i zgłosić błąd administracji bota",
   "COMMAND_FAILED": "Wystąpił błąd podczas interakcji z komendą `{{commandName}}`. Spróbuj ponownie.",
-  "RADIO_PLAYING": "Odtworzono stację radiową!",
+  "RADIO_JOIN_VOICE_CHANNEL": "Przykro mi, ale nie można uruchomić radia, ponieważ nie ma Cię na kanale głosowym.",
+  "RADIO_STATION_NOT_FOUND": "Nie znaleziono tej stacji radiowej.",
+  "RADIO_STATE_IDLE": "Coś poszło nie tak",
+  "RADIO_STATE_PAUSED": "Zatrzymano",
+  "RADIO_STATE_STOPPED": "Zatrzymano",
+  "RADIO_STATE_AUTOPAUSED": "Zatrzymano automatycznie",
+  "RADIO_STATE_PLAYING": "Trwa odtwarzanie",
   "RADIO_PLAYING_DESC": "💻 | Status: {{ radioState }}\n📻 | Wybrana stacja: **{{ radioStation }}**\n🌐 | Kraj: **{{ radioCountry }}**\n🗺️ | Miejscowość: **{{ radioPlace }}**",
   "RADIO_PLAYING_FOOTER": "Strona: {{- radioWebsite}}"
 }

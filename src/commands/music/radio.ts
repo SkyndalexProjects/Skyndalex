@@ -24,8 +24,9 @@ export async function run(
 
 		if (!memberChannel) {
 			return await interaction.editReply({
-				content:
-					"❌ | You need to be in a voice channel to play a radio station!",
+				content: `${client.i18n.t("RADIO_JOIN_VOICE_CHANNEL", {
+					lng: interaction.locale,
+				})}`,
 				ephemeral: true,
 			});
 		}
@@ -43,7 +44,9 @@ export async function run(
 		// console.log("json", json);
 		if (json.error)
 			return interaction.editReply({
-				content: "❌ | Radio station not found!",
+				content: client.i18n.t("RADIO_STATION_NOT_FOUND", {
+					lng: interaction.locale,
+				}),
 			});
 
 		const id = json.data.url.split("/")[3];
@@ -65,15 +68,25 @@ export async function run(
 		player.on("stateChange", (oldState, newState) => {
 			const state = newState.status;
 			const currentState = {
-				idle: "🟡 Idle",
-				stopped: "🔴 Stopped",
-				playing: "🟢 Playing",
-				paused: "🔵 Paused",
-				autopaused: "🟣 Autopaused",
+				idle: `🟡 ${client.i18n.t("RADIO_STATE_IDLE", {
+					lng: interaction.locale,
+				})}`,
+				stopped: `🔴 ${client.i18n.t("RADIO_STATE_STOPPED", {
+					lng: interaction.locale,
+				})}`,
+				playing: `🟢 ${client.i18n.t("RADIO_STATE_PLAYING", {
+					lng: interaction.locale,
+				})}`,
+				paused: `🔵 ${client.i18n.t("RADIO_STATE_PAUSED", {
+					lng: interaction.locale,
+				})}`,
+				autopaused: `🟣 ${client.i18n.t("RADIO_STATE_AUTOPAUSED", {
+					lng: interaction.locale,
+				})}`,
 			};
 
 			const embed = new EmbedBuilder(client, interaction.locale)
-				.setTitle("RADIO_PLAYING")
+				.setTitle("RADIO_STATE_PLAYING")
 				.setDescription("RADIO_PLAYING_DESC", {
 					radioState: currentState[state] || state,
 					radioStation: json.data.title,
