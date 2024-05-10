@@ -22,5 +22,6 @@
   "GAME_SERVER_NOT_FOUND": "Server not found",
   "GAME_SERVER_FAILED": "Something went wrong.",
   "DELETE_CASE_BUTTON": "Revoke",
-  "CASE_REVOKED": "Revoked."
+  "CASE_REVOKED": "Revoked.",
+  "MISSING_PERMISSIONS": "You don't have permissions for this!."
 }

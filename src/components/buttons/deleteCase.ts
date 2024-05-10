@@ -1,10 +1,12 @@
 import type { SkyndalexClient } from "classes/Client";
-import { ActionRowBuilder, ButtonStyle, type MessageComponentInteraction } from "discord.js";
+import { ActionRowBuilder, ButtonStyle, PermissionsBitField, type MessageComponentInteraction } from "discord.js";
 import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
 export async function run(
     client: SkyndalexClient,
     interaction: MessageComponentInteraction,
 ) {
+    if (!interaction.member.permissions.has([PermissionsBitField.Flags.ModerateMembers])) return interaction.reply({ content: "MISSING_PERMISSIONS", ephemeral: true });
+    
     const caseId = interaction.customId.split("-")[1];
     const memberId = interaction.customId.split("-")[2];
     const caseType = interaction.customId.split("-")[3];

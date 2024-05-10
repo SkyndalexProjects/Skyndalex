@@ -22,5 +22,6 @@
   "GAME_SERVER_NOT_FOUND": "Nie znaleziono serwera.",
   "GAME_SERVER_FAILED": "Ups, coś poszło nie tak podczas wykonywania tej operacji.",
   "DELETE_CASE_BUTTON": "Cofnij",
-  "CASE_REVOKED": "Cofnięto."
+  "CASE_REVOKED": "Cofnięto.",
+  "MISSING_PERMISSIONS": "Nie posiadasz permisji do przeprowadzenia tej operacji."
 }
