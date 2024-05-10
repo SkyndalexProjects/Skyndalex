@@ -23,5 +23,10 @@
   "GAME_SERVER_FAILED": "Something went wrong.",
   "DELETE_CASE_BUTTON": "Revoke",
   "CASE_REVOKED": "Revoked.",
-  "MISSING_PERMISSIONS": "You don't have permissions for this!."
+  "MISSING_PERMISSIONS": "You don't have permissions for this!.",
+  "ADD_WARN_TITLE": "New warn!",
+  "ADD_WARN_WARNED_USER": "Warned user",
+  "ADD_WARN_REASON": "Reason",
+  "WARN_YOURSELF_PROHBITED": "You can't warn yourself.",
+  "TIMEOUT_YOURSELF_PROHBITED": "You can't mute yourself."
 }

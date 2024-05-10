@@ -26,5 +26,7 @@
   "MISSING_PERMISSIONS": "Nie posiadasz permisji do przeprowadzenia tej operacji.",
   "ADD_WARN_TITLE": "Dodano ostrzeżenie!",
   "ADD_WARN_WARNED_USER": "Ostrzeżony użytkownik",
-  "ADD_WARN_REASON": "Powód"
+  "ADD_WARN_REASON": "Powód",
+  "WARN_YOURSELF_PROHBITED": "Nie możesz ostrzec samego siebie.",
+  "TIMEOUT_YOURSELF_PROHBITED": "Nie możesz wyciszyć samego siebie."
 }

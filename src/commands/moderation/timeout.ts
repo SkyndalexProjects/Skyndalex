@@ -17,7 +17,11 @@ export async function run(
     const time = interaction.options.getString("time");
     const reason = interaction.options.getString("reason");
 
-    console.log("member", member)
+    if (member.user.id === interaction.user.id) return interaction.reply({
+        content: client.i18n.t("TIMEOUT_YOURSELF_PROHBITED", { lng: interaction.locale }),
+        ephemeral: true
+    })
+
     const newCase = await client.prisma.cases.create({
         data: {
             guildId: interaction.guild.id,

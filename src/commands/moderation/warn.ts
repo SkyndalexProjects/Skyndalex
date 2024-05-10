@@ -4,6 +4,7 @@ import {
     PermissionFlagsBits,
     ButtonStyle,
     ActionRowBuilder,
+    InteractionResponse,
 } from "discord.js";
 import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
 import type { SkyndalexClient } from "../../classes/Client";
@@ -15,6 +16,10 @@ export async function run(
 	const member = interaction.options.getMember("user");
     const reason = interaction.options.getString("reason");
 
+    if (member.user.id === interaction.user.id) return interaction.reply({
+        content: client.i18n.t("WARN_YOURSELF_PROHBITED", { lng: interaction.locale }),
+        ephemeral: true
+    })
     const newCase = await client.prisma.cases.create({
         data: {
             guildId: interaction.guild.id,
