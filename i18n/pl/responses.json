@@ -29,5 +29,8 @@
   "ADD_WARN_REASON": "Powód",
   "WARN_YOURSELF_PROHBITED": "Nie możesz ostrzec samego siebie.",
   "TIMEOUT_YOURSELF_PROHBITED": "Nie możesz wyciszyć samego siebie.",
-  "DELETE_OWN_CASE_PROHIBITED": "Nie możesz tego zrobić."
+  "DELETE_OWN_CASE_PROHIBITED": "Nie możesz usunąć własnego ostrzeżenia bądź innego przypadku.",
+  "NO_REASON_PROVIDED": "Nie podano powodu.",
+  "TIMEOUT_FAILED": "Coś poszło nie tak podczas wyciszania użytkownika. Prawdopodobnie nie masz permisji lub podałeś źle argumenty."
+
 }
