@@ -14,4 +14,4 @@ export async function run(
 export const data = new SlashCommandBuilder()
 	.setName("set")
 	.setDescription("Guild configuration")
-	.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+	.setDefaultMemberPermissions(PermissionFlagsBits.Administrator);

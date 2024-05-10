@@ -1,7 +1,7 @@
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
-	PermissionFlagsBits
+	PermissionFlagsBits,
 } from "discord.js";
 import type { SkyndalexClient } from "../../classes/Client";
 

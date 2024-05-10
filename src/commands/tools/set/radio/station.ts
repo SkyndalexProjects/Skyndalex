@@ -12,7 +12,7 @@ export async function run(
 	interaction: ChatInputCommandInteraction,
 ) {
 	const id = interaction.options.getString("station");
-	const channel = interaction.options.getChannel("channel")
+	const channel = interaction.options.getChannel("channel");
 	console.log("id", id, "channel", channel);
 
 	const url = `https://radio.garden/api/ara/content/channel/${id}`;
@@ -29,7 +29,6 @@ export async function run(
 			content: "❌ | Radio station not found!",
 		});
 
-		
 	await client.prisma.settings.upsert({
 		where: {
 			guildId: interaction.guild.id,
