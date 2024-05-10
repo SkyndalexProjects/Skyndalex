@@ -8,7 +8,6 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	console.log("This is a ping");
 	await interaction.reply(`Ping: \`\`\`yaml\n${client.ws.ping}ms\`\`\``);
 }
 export const data = new SlashCommandBuilder()
