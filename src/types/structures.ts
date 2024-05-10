@@ -52,11 +52,11 @@ export interface HuggingFaceText {
 	generated_text: string;
 }
 export interface LocaleFieldOptions {
-    name?: string;
-    nameArgs?: Record<string, unknown>;
-    value?: string;
-    valueArgs?: Record<string, unknown>;
-    rawName?: string;
-    rawValue?: string;
-    inline?: boolean;
+	name?: string;
+	nameArgs?: Record<string, unknown>;
+	value?: string;
+	valueArgs?: Record<string, unknown>;
+	rawName?: string;
+	rawValue?: string;
+	inline?: boolean;
 }

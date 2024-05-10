@@ -13,12 +13,22 @@ export class EmbedBuilder extends embedBuilder {
 	}
 
 	mapField(field: LocaleFieldOptions) {
-        return {
-            name: field.rawName ?? this.client.i18n.t(field.name, { lng: this.locale, ...field.nameArgs }),
-            value: field.rawValue ?? this.client.i18n.t(field.value, { lng: this.locale, ...field.valueArgs }),
-            inline: field.inline
-        };
-    }
+		return {
+			name:
+				field.rawName ??
+				this.client.i18n.t(field.name, {
+					lng: this.locale,
+					...field.nameArgs,
+				}),
+			value:
+				field.rawValue ??
+				this.client.i18n.t(field.value, {
+					lng: this.locale,
+					...field.valueArgs,
+				}),
+			inline: field.inline,
+		};
+	}
 	setTitle(title: string, args = {}): this {
 		return super.setTitle(
 			this.client.i18n.t(title, { lng: this.locale, ...args }),
@@ -51,7 +61,7 @@ export class EmbedBuilder extends embedBuilder {
 	setColor(color: ColorResolvable): this {
 		return super.setColor(color);
 	}
-    addFields(fields: LocaleFieldOptions[]) {
-		return super.setFields(fields.map(field => this.mapField(field)));
+	addFields(fields: LocaleFieldOptions[]) {
+		return super.setFields(fields.map((field) => this.mapField(field)));
 	}
 }
