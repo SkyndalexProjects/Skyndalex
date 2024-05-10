@@ -2,7 +2,10 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
     PermissionFlagsBits,
+    ButtonStyle,
+    ActionRowBuilder,
 } from "discord.js";
+import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
 import type { SkyndalexClient } from "../../classes/Client";
 import { EmbedBuilder } from "classes/builders/EmbedBuilder";
 import ms from "ms"
@@ -30,6 +33,13 @@ export async function run(
     
     await member.timeout(convertedTime, reason)
 
+    const deleteButton = new ButtonBuilder(client, interaction.locale)
+        .setCustomId(`deleteCase-${newCase.id}-${member.user.id}-timeout`)
+        .setLabel("DELETE_CASE_BUTTON")
+        .setStyle(ButtonStyle.Danger)
+
+    const row = new ActionRowBuilder().addComponents(deleteButton)
+    
     const embed = new EmbedBuilder(client, interaction.locale)
     .setTitle("SET_TIMEOUT_TITLE")
     .setColor("Yellow")
@@ -48,7 +58,7 @@ export async function run(
         }
     ])
 
-    return await interaction.reply({ embeds: [embed] });
+    return await interaction.reply({ embeds: [embed], components: [row] });
 }
 export const data = new SlashCommandBuilder()
 	.setName("timeout")

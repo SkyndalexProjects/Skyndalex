@@ -54,7 +54,9 @@ export async function interactionCreate(
 				)
 				.setColor("Red");
 
-			const component = client.components.get(interaction.customId);
+			const component = client.components.get(
+				interaction.customId.split("-")[0],
+			);
 			if (!component)
 				return interaction.reply({
 					embeds: [embedComponentNotFound],

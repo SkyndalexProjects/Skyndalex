@@ -20,5 +20,7 @@
   "SET_TIMEOUT_REASON": "Reason",
   "SET_TIMEOUT_DURATION": "Duration",
   "GAME_SERVER_NOT_FOUND": "Server not found",
-  "GAME_SERVER_FAILED": "Something went wrong."
+  "GAME_SERVER_FAILED": "Something went wrong.",
+  "DELETE_CASE_BUTTON": "Revoke",
+  "CASE_REVOKED": "Revoked."
 }

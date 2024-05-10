@@ -20,5 +20,7 @@
   "SET_TIMEOUT_REASON": "Powód",
   "SET_TIMEOUT_DURATION": "Czas trwania",
   "GAME_SERVER_NOT_FOUND": "Nie znaleziono serwera.",
-  "GAME_SERVER_FAILED": "Ups, coś poszło nie tak podczas wykonywania tej operacji."
+  "GAME_SERVER_FAILED": "Ups, coś poszło nie tak podczas wykonywania tej operacji.",
+  "DELETE_CASE_BUTTON": "Cofnij",
+  "CASE_REVOKED": "Cofnięto."
 }
