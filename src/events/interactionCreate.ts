@@ -17,7 +17,6 @@ export async function interactionCreate(
 				)
 				.setColor("Red");
 
-			// TODO: add typing
 			const subcommand = interaction.options.getSubcommand(false);
 			const subcommandGroup =
 				interaction.options.getSubcommandGroup(false);
@@ -34,23 +33,14 @@ export async function interactionCreate(
 					embeds: [embedCommandNotFound],
 					ephemeral: true,
 				});
-
 			try {
 				await command.run(client, interaction);
 			} catch (e) {
-				console.error(e);
-				const embedError = new EmbedBuilder()
-					.setDescription(
-						client.i18n.t("COMMAND_FAILED", {
-							lng: interaction.locale,
-							commandName: interaction.commandName,
-						}),
-					)
-					.setColor("Red");
 				await interaction.reply({
-					embeds: [embedError],
+					embeds: [embedCommandNotFound],
 					ephemeral: true,
 				});
+				console.error(e);
 			}
 			break;
 		}
