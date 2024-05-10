@@ -28,5 +28,6 @@
   "ADD_WARN_WARNED_USER": "Ostrzeżony użytkownik",
   "ADD_WARN_REASON": "Powód",
   "WARN_YOURSELF_PROHBITED": "Nie możesz ostrzec samego siebie.",
-  "TIMEOUT_YOURSELF_PROHBITED": "Nie możesz wyciszyć samego siebie."
+  "TIMEOUT_YOURSELF_PROHBITED": "Nie możesz wyciszyć samego siebie.",
+  "DELETE_OWN_CASE_PROHIBITED": "Nie możesz tego zrobić."
 }

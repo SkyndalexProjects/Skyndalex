@@ -6,9 +6,9 @@ export async function run(
     interaction: MessageComponentInteraction,
 ) {
     if (!interaction.member.permissions.has([PermissionsBitField.Flags.ModerateMembers])) return interaction.reply({ content: "MISSING_PERMISSIONS", ephemeral: true });
-    
     const caseId = interaction.customId.split("-")[1];
     const memberId = interaction.customId.split("-")[2];
+    if (interaction.user.id === memberId) return interaction.reply({ content: client.i18n.t("DELETE_OWN_CASE_PROHIBITED", { lng: interaction.locale }), ephemeral: true })
     const caseType = interaction.customId.split("-")[3];
 
     await client.prisma.cases.delete({

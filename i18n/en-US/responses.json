@@ -28,5 +28,6 @@
   "ADD_WARN_WARNED_USER": "Warned user",
   "ADD_WARN_REASON": "Reason",
   "WARN_YOURSELF_PROHBITED": "You can't warn yourself.",
-  "TIMEOUT_YOURSELF_PROHBITED": "You can't mute yourself."
+  "TIMEOUT_YOURSELF_PROHBITED": "You can't mute yourself.",
+  "DELETE_OWN_CASE_PROHIBITED": "You can't remove your own case."
 }
