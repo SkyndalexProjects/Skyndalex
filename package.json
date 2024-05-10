@@ -19,8 +19,8 @@
   },
   "dependencies": {
     "@discordjs/voice": "^0.16.1",
+    "@napi-rs/canvas": "^0.1.52",
     "@prisma/client": "^5.12.1",
-    "canvas": "^2.11.2",
     "discord.js": "^14.15.1",
     "ffmpeg-static": "^5.2.0",
     "i18next": "^23.11.2",
