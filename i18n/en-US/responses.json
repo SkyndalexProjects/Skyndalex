@@ -13,5 +13,6 @@
   "RADIO_STATE_AUTOPAUSED": "Auto-paused",
   "RADIO_STATE_PLAYING": "Radio playing!",
   "RADIO_PLAYING_DESC": "💻 | Status: {{ radioState }}\n📻 | Choosed station: **{{ radioStation }}**\n🌐 | Country: **{{ radioCountry }}**\n🗺️ | City/Place: **{{ radioPlace }}**",
-  "RADIO_PLAYING_FOOTER": "Website: {{- radioWebsite}}"
+  "RADIO_PLAYING_FOOTER": "Website: {{- radioWebsite}}",
+  "HOW_GAY": "{{ user }} is {{ percent }}% gay"
 }

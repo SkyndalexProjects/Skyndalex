@@ -1,8 +1,8 @@
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
-	EmbedBuilder,
 } from "discord.js";
+import { EmbedBuilder } from "classes/builders/EmbedBuilder";
 import type { SkyndalexClient } from "../../../classes/Client";
 import { randomBytes } from "node:crypto";
 export async function run(
@@ -15,8 +15,11 @@ export async function run(
 
 	const user = interaction.options.getUser("who") || interaction.user;
 
-	const embed = new EmbedBuilder()
-		.setDescription(`${user.username} is ${randomValue}% gay`)
+	const embed = new EmbedBuilder(client, interaction.locale)
+		.setDescription("HOW_GAY", {
+			user: user.username,
+			percent: randomValue,
+		})
 		.setColor("Random")
 		.setTimestamp();
 
