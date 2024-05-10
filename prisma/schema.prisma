@@ -14,3 +14,13 @@ model settings {
   autoRadioChannel String?
   radioId String?
 }
+model cases {
+  id        Int @id @default(autoincrement())
+  guildId   String
+  userId    String
+  type      String?
+  reason    String?
+  date      DateTime @default(now())
+  moderator String
+  duration  String?
+}

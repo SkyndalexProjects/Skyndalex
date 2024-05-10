@@ -6,7 +6,6 @@ import type {
 import type { SkyndalexClient } from "../classes/Client";
 
 export interface Command {
-	startsWith: any;
 	data: SlashCommandBuilder;
 	run: (client: SkyndalexClient, interaction: Interaction) => Promise<void>;
 	autocomplete: (interaction: Interaction) => Promise<void>;
@@ -51,4 +50,13 @@ export interface radioStationData {
 }
 export interface HuggingFaceText {
 	generated_text: string;
+}
+export interface LocaleFieldOptions {
+    name?: string;
+    nameArgs?: Record<string, unknown>;
+    value?: string;
+    valueArgs?: Record<string, unknown>;
+    rawName?: string;
+    rawValue?: string;
+    inline?: boolean;
 }

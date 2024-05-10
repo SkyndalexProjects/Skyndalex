@@ -66,7 +66,7 @@ export const data = new SlashCommandSubcommandBuilder()
 			.setName("title")
 			.setDescription("Factorio advancement title")
 			.setRequired(true)
-			.setMaxLength(50)
+			.setMaxLength(30)
 			.setMinLength(1),
 	)
 	.addStringOption((option) =>

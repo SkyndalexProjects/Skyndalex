@@ -14,5 +14,9 @@
   "RADIO_STATE_PLAYING": "Radio playing!",
   "RADIO_PLAYING_DESC": "💻 | Status: {{ radioState }}\n📻 | Choosed station: **{{ radioStation }}**\n🌐 | Country: **{{ radioCountry }}**\n🗺️ | City/Place: **{{ radioPlace }}**",
   "RADIO_PLAYING_FOOTER": "Website: {{- radioWebsite}}",
-  "HOW_GAY": "{{ user }} is {{ percent }}% gay"
+  "HOW_GAY": "{{ user }} is {{ percent }}% gay",
+  "SET_TIMEOUT_TITLE": "Muted user!",
+  "SET_TIMEOUT_USER": "Member",
+  "SET_TIMEOUT_REASON": "Reason",
+  "SET_TIMEOUT_DURATION": "Duration"
 }

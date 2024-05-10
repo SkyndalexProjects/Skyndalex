@@ -14,5 +14,9 @@
   "RADIO_STATE_PLAYING": "Trwa odtwarzanie",
   "RADIO_PLAYING_DESC": "💻 | Status: {{ radioState }}\n📻 | Wybrana stacja: **{{ radioStation }}**\n🌐 | Kraj: **{{ radioCountry }}**\n🗺️ | Miejscowość: **{{ radioPlace }}**",
   "RADIO_PLAYING_FOOTER": "Strona: {{- radioWebsite}}",
-  "HOW_GAY": "{{ user }} jest gejem na {{ percent }}%"
+  "HOW_GAY": "{{ user }} jest gejem na {{ percent }}%",
+  "SET_TIMEOUT_TITLE": "Wyciszono użytkownika!",
+  "SET_TIMEOUT_USER": "Użytkownik",
+  "SET_TIMEOUT_REASON": "Powód",
+  "SET_TIMEOUT_DURATION": "Czas trwania"
 }

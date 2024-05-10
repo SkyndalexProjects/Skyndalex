@@ -1,5 +1,6 @@
 import { type ColorResolvable, EmbedBuilder as embedBuilder } from "discord.js";
 import type { SkyndalexClient } from "../Client";
+import type { LocaleFieldOptions } from "../../types/structures";
 export class EmbedBuilder extends embedBuilder {
 	locale: string;
 	constructor(
@@ -10,6 +11,14 @@ export class EmbedBuilder extends embedBuilder {
 		this.locale = locale;
 		this.setTimestamp();
 	}
+
+	mapField(field: LocaleFieldOptions) {
+        return {
+            name: field.rawName ?? this.client.i18n.t(field.name, { lng: this.locale, ...field.nameArgs }),
+            value: field.rawValue ?? this.client.i18n.t(field.value, { lng: this.locale, ...field.valueArgs }),
+            inline: field.inline
+        };
+    }
 	setTitle(title: string, args = {}): this {
 		return super.setTitle(
 			this.client.i18n.t(title, { lng: this.locale, ...args }),
@@ -22,7 +31,6 @@ export class EmbedBuilder extends embedBuilder {
 		);
 		return this;
 	}
-
 	setFooter({
 		text,
 		textArgs,
@@ -42,5 +50,8 @@ export class EmbedBuilder extends embedBuilder {
 	}
 	setColor(color: ColorResolvable): this {
 		return super.setColor(color);
+	}
+    addFields(fields: LocaleFieldOptions[]) {
+		return super.setFields(fields.map(field => this.mapField(field)));
 	}
 }
