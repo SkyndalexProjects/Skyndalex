@@ -28,11 +28,11 @@ export async function run(
 	ctx.textAlign = "left";
 
 	const maxWidth = 225;
-	const lineHeight = 22; 
+	const lineHeight = 22;
 
 	const lines = getLines(ctx, text, maxWidth);
 	let startY = 240;
-	
+
 	for (const line of lines) {
 		ctx.fillText(line, 110, startY);
 		startY += lineHeight;
@@ -47,7 +47,6 @@ export async function run(
 	});
 }
 
-
 export const data = new SlashCommandBuilder()
 	.setName("changemymind")
 	.setDescription('Generate image with "Change my mind" meme!')
@@ -57,5 +56,5 @@ export const data = new SlashCommandBuilder()
 			.setDescription("Text to put on the image")
 			.setRequired(true)
 			.setMaxLength(80)
-			.setMinLength(1)
+			.setMinLength(1),
 	);
