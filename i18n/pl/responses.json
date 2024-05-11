@@ -36,5 +36,10 @@
   "BANNED_USER": "Zbanowany użytkownik",
   "BAN_REASON": "Powód bana",
   "DELETED_MESSAGES": "Dni, z których zostaną usunięte wiadomości",
-  "BAN_FAILED": "Coś poszło nie tak podczas banowania użytkownika. Prawdopodobnie nie masz permisji lub podałeś źle argumenty."
+  "BAN_FAILED": "Coś poszło nie tak podczas banowania użytkownika. Prawdopodobnie nie masz permisji lub podałeś źle argumenty.",
+  "USER_INFO_TITLE": "Informacje o użytkowniku",
+  "USER_GLOBAL_NAME": "Nazwa globalna",
+  "USER_USERNAME": "Nazwa użytkownika",
+  "USER_JOINED_SERVER": "Dołączył na serwer",
+  "USER_JOINED_DISCORD": "Stworzył konto"
 }

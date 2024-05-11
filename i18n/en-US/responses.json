@@ -36,5 +36,10 @@
   "BANNED_USER": "User",
   "BAN_REASON": "Ban reason",
   "DELETED_MESSAGES": "Deleted messages",
-  "BAN_FAILED": "Something went wrong during ban."
+  "BAN_FAILED": "Something went wrong during ban.",
+  "USER_INFO_TITLE": "User info",
+  "USER_GLOBAL_NAME": "Global name",
+  "USER_USERNAME": "Username",
+  "USER_JOINED_SERVER": "Joined server",
+  "USER_JOINED_DISCORD": "Joined Discord"
 }
