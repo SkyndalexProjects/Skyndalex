@@ -8,33 +8,31 @@ import {
 } from "discord.js";
 export async function run(
 	client: SkyndalexClient,
-	interaction: MessageComponentInteraction,
+	interaction: MessageComponentInteraction<"cached">,
 ) {
+	const caseId = interaction.customId.split("-")[1];
+	const memberId = interaction.customId.split("-")[2];
+	const caseType = interaction.customId.split("-")[3];
+
 	if (
 		!interaction.member.permissions.has([
 			PermissionsBitField.Flags.ModerateMembers,
-		])
-	)
+		]) ||
+		interaction.user.id === memberId
+	) {
 		return interaction.reply({
-			content: "MISSING_PERMISSIONS",
+			content: !interaction.member.permissions.has([
+				PermissionsBitField.Flags.ModerateMembers,
+			])
+				? "MISSING_PERMISSIONS"
+				: client.i18n.t("DELETE_OWN_CASE_PROHIBITED", {
+						lng: interaction.locale,
+					}),
 			ephemeral: true,
 		});
-	const caseId = interaction.customId.split("-")[1];
-	const memberId = interaction.customId.split("-")[2];
-	if (interaction.user.id === memberId)
-		return interaction.reply({
-			content: client.i18n.t("DELETE_OWN_CASE_PROHIBITED", {
-				lng: interaction.locale,
-			}),
-			ephemeral: true,
-		});
-	const caseType = interaction.customId.split("-")[3];
+	}
 
-	await client.prisma.cases.delete({
-		where: {
-			id: Number.parseInt(caseId),
-		},
-	});
+	await client.cases.remove(caseId);
 
 	const disableButton = new ButtonBuilder(client, interaction.locale)
 		.setCustomId("disabled-button")

@@ -13,6 +13,7 @@ import Backend from "i18next-fs-backend";
 import type { Command, Component } from "../types/structures";
 import { Loaders } from "./Loaders";
 import { Logger } from "./Logger";
+import { CaseManagement } from "./modules/CasesManagement";
 
 export class SkyndalexClient extends Client {
 	prisma = new PrismaClient();
@@ -23,6 +24,8 @@ export class SkyndalexClient extends Client {
 	components: Collection<string, Component>;
 
 	loader = new Loaders(this);
+	cases = new CaseManagement(this);
+
 	i18n = i18next;
 
 	constructor() {
@@ -61,7 +64,6 @@ export class SkyndalexClient extends Client {
 		await this.loader.loadEvents(this, "../events");
 		await this.loader.loadCommands("../commands");
 		this.components = await this.loader.loadComponents("../components");
-
 		await this.login(process.env.BOT_TOKEN);
 	}
 }

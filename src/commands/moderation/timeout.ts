@@ -1,14 +1,14 @@
-import { EmbedBuilder } from "classes/builders/EmbedBuilder";
-import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
 import {
-	ActionRowBuilder,
-	ButtonStyle,
 	type ChatInputCommandInteraction,
-	PermissionFlagsBits,
 	SlashCommandBuilder,
+	PermissionFlagsBits,
+	ButtonStyle,
+	ActionRowBuilder,
 } from "discord.js";
-import ms from "ms";
+import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
 import type { SkyndalexClient } from "../../classes/Client";
+import { EmbedBuilder } from "classes/builders/EmbedBuilder";
+import ms from "ms";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction<"cached">,
@@ -26,16 +26,14 @@ export async function run(
 				ephemeral: true,
 			});
 
-		const newCase = await client.prisma.cases.create({
-			data: {
-				guildId: interaction.guild.id,
-				userId: member.user.id,
-				type: "timeout",
-				reason: reason,
-				moderator: interaction.user.id,
-				duration: time,
-			},
-		});
+		const newCase = await client.cases.add(
+			interaction.guild.id,
+			member.user.id,
+			"timeout",
+			reason,
+			interaction.user.id,
+			time,
+		);
 		const convertedTime = await ms(time);
 
 		await member.timeout(convertedTime, reason);

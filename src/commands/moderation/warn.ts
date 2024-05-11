@@ -22,15 +22,14 @@ export async function run(
 			}),
 			ephemeral: true,
 		});
-	const newCase = await client.prisma.cases.create({
-		data: {
-			guildId: interaction.guild.id,
-			userId: member.user.id,
-			type: "warn",
-			moderator: interaction.user.id,
-			reason: reason,
-		},
-	});
+
+	const newCase = await client.cases.add(
+		interaction.guild.id,
+		member.user.id,
+		"warn",
+		reason,
+		interaction.user.id,
+	);
 
 	const deleteButton = new ButtonBuilder(client, interaction.locale)
 		.setCustomId(`deleteCase-${newCase.id}-${member.user.id}-warn`)
@@ -57,19 +56,23 @@ export async function run(
 
 	return await interaction.reply({ embeds: [embed], components: [row] });
 }
-export const data = new SlashCommandBuilder()
-	.setName("warn")
-	.setDescription("Warn user")
-	.setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
-	.addUserOption((option) =>
-		option
-			.setName("user")
-			.setDescription("The user to warn.")
-			.setRequired(true),
-	)
-	.addStringOption((option) =>
-		option
-			.setName("reason")
-			.setDescription("The reason for the warn.")
-			.setRequired(false),
-	);
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("warn")
+		.setDescription("Warn user")
+		.setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
+		.addUserOption((option) =>
+			option
+				.setName("user")
+				.setDescription("The user to warn.")
+				.setRequired(true),
+		)
+		.addStringOption((option) =>
+			option
+				.setName("reason")
+				.setDescription("The reason for the warn.")
+				.setRequired(false),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+};

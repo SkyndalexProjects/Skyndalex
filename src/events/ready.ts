@@ -53,7 +53,7 @@ export async function ready(client: SkyndalexClient) {
 			}
 			parsedCommands.push(command.toJSON());
 		} else {
-			parsedCommands.push(value.data.toJSON());
+			parsedCommands.push(value.data);
 		}
 	}
 
