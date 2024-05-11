@@ -14,11 +14,12 @@ export async function run(
 	interaction: ChatInputCommandInteraction<"cached">,
 ) {
 	try {
-		const member = interaction.options.getMember("user");
+		const member = interaction.options.getUser("user");
+		console.log("member", member)
 		const reason = interaction.options.getString("reason");
         const messages = interaction.options.getString("delete-messages-time") || 0;
         
-		if (member.user.id === interaction.user.id)
+		if (member.id === interaction.user.id)
 			return interaction.reply({
 				content: client.i18n.t("BAN_YOURSELF_PROHBITED", {
 					lng: interaction.locale,
@@ -28,17 +29,20 @@ export async function run(
 
 		const newCase = await client.cases.add(
 			interaction.guild.id,
-			member.user.id,
+			member.id,
 			interaction.commandName,
 			reason,
 			interaction.user.id,
 		);
 		const messagesToDeleteSeconds = Math.floor(await ms(messages) / 1000);
 
-		await member.ban({ deleteMessageSeconds: messagesToDeleteSeconds, reason: reason });
+		await interaction.guild.members.ban(member.id, {
+			reason: reason,
+			deleteMessageSeconds: messagesToDeleteSeconds,	
+		});
 
 		const deleteButton = new ButtonBuilder(client, interaction.locale)
-			.setCustomId(`deleteCase-${newCase.id}-${member.user.id}-ban`)
+			.setCustomId(`deleteCase-${newCase.id}-${member.id}-ban`)
 			.setLabel("DELETE_CASE_BUTTON")
 			.setStyle(ButtonStyle.Danger);
 
@@ -60,7 +64,7 @@ export async function run(
 				},
 				{
 					name: "DELETED_MESSAGES",
-					value: messages,
+					value: messages.toString(),
 				},
 			]);
 

@@ -41,7 +41,7 @@ export async function run(
 		.setStyle(ButtonStyle.Secondary);
 
 	const row = new ActionRowBuilder().addComponents(disableButton);
-	const member = await interaction.guild.members.fetch(memberId);
+	const member = await client.users.fetch(memberId);
 
 	switch (caseType) {
 		case "timeout":

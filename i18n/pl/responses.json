@@ -35,5 +35,6 @@
   "BAN_TITLE": "`#{{caseId}}`: Zbanowano użytkownika",
   "BANNED_USER": "Zbanowany użytkownik",
   "BAN_REASON": "Powód bana",
-  "DELETED_MESSAGES": "Dni, z których zostaną usunięte wiadomości"
+  "DELETED_MESSAGES": "Dni, z których zostaną usunięte wiadomości",
+  "BAN_FAILED": "Coś poszło nie tak podczas banowania użytkownika. Prawdopodobnie nie masz permisji lub podałeś źle argumenty."
 }

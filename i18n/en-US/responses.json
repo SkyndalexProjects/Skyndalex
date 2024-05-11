@@ -35,5 +35,6 @@
   "BAN_TITLE": "`#{{caseId}}`: Banned user",
   "BANNED_USER": "User",
   "BAN_REASON": "Ban reason",
-  "DELETED_MESSAGES": "Deleted messages"
+  "DELETED_MESSAGES": "Deleted messages",
+  "BAN_FAILED": "Something went wrong during ban."
 }
