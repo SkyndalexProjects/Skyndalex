@@ -1,17 +1,17 @@
-import {
-	type ChatInputCommandInteraction,
-	SlashCommandBuilder,
-	PermissionFlagsBits,
-	ButtonStyle,
-	ActionRowBuilder,
-} from "discord.js";
-import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
-import type { SkyndalexClient } from "../../classes/Client";
 import { EmbedBuilder } from "classes/builders/EmbedBuilder";
+import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
+import {
+	ActionRowBuilder,
+	ButtonStyle,
+	type ChatInputCommandInteraction,
+	PermissionFlagsBits,
+	SlashCommandBuilder,
+} from "discord.js";
 import ms from "ms";
+import type { SkyndalexClient } from "../../classes/Client";
 export async function run(
 	client: SkyndalexClient,
-	interaction: ChatInputCommandInteraction,
+	interaction: ChatInputCommandInteraction<"cached">,
 ) {
 	try {
 		const member = interaction.options.getMember("user");
@@ -36,10 +36,10 @@ export async function run(
 				duration: time,
 			},
 		});
-		console.log(newCase);
 		const convertedTime = await ms(time);
 
 		await member.timeout(convertedTime, reason);
+
 		const deleteButton = new ButtonBuilder(client, interaction.locale)
 			.setCustomId(`deleteCase-${newCase.id}-${member.user.id}-timeout`)
 			.setLabel("DELETE_CASE_BUTTON")
@@ -48,7 +48,9 @@ export async function run(
 		const row = new ActionRowBuilder().addComponents(deleteButton);
 
 		const embed = new EmbedBuilder(client, interaction.locale)
-			.setTitle("SET_TIMEOUT_TITLE")
+			.setTitle("SET_TIMEOUT_TITLE", {
+				caseId: newCase.id,
+			})
 			.setColor("Yellow")
 			.addFields([
 				{
@@ -65,7 +67,7 @@ export async function run(
 				},
 			]);
 
-		return await interaction.reply({ embeds: [embed], components: [row] });
+		return interaction.reply({ embeds: [embed], components: [row] });
 	} catch (e) {
 		return interaction.reply({
 			content: client.i18n.t("TIMEOUT_FAILED", {

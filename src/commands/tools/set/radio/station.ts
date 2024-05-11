@@ -1,11 +1,11 @@
 import {
-	type ChatInputCommandInteraction,
-	SlashCommandSubcommandBuilder,
 	type AutocompleteInteraction,
 	ChannelType,
+	type ChatInputCommandInteraction,
+	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import type { radioStation } from "../../../../types/structures";
 import type { SkyndalexClient } from "../../../../classes/Client";
+import type { radioStation } from "../../../../types/structures";
 import type { radioStationData } from "../../../../types/structures";
 export async function run(
 	client: SkyndalexClient,

@@ -1,11 +1,11 @@
 import type { SkyndalexClient } from "classes/Client";
+import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
 import {
 	ActionRowBuilder,
 	ButtonStyle,
-	PermissionsBitField,
 	type MessageComponentInteraction,
+	PermissionsBitField,
 } from "discord.js";
-import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
 export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction,

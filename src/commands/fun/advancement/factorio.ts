@@ -1,12 +1,13 @@
+import { GlobalFonts, createCanvas, loadImage } from "@napi-rs/canvas";
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas";
-import type { SkyndalexClient } from "../../../classes/Client";
 import { getLines } from "utils/getLines";
+import type { SkyndalexClient } from "../../../classes/Client";
 
 const canvas = createCanvas(724, 219);
+
 const ctx = canvas.getContext("2d");
 
 export async function run(

@@ -1,8 +1,8 @@
-import type { SkyndalexClient } from "../classes/Client";
 import type {
-	SlashCommandSubcommandGroupBuilder,
 	SlashCommandSubcommandBuilder,
+	SlashCommandSubcommandGroupBuilder,
 } from "discord.js";
+import type { SkyndalexClient } from "../classes/Client";
 export async function ready(client: SkyndalexClient) {
 	// TODO: rewrite this for a better quality, use recursion functions
 	const parsedCommands = [];

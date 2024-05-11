@@ -1,10 +1,10 @@
 import type { SkyndalexClient } from "classes/Client";
 import {
+	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
-	type MessageComponentInteraction,
-	ActionRowBuilder,
 	EmbedBuilder,
+	type MessageComponentInteraction,
 } from "discord.js";
 import type { HuggingFaceText } from "../../types/structures";
 

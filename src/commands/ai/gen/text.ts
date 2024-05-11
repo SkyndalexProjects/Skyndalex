@@ -1,3 +1,4 @@
+import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
 import {
 	ActionRowBuilder,
 	ButtonStyle,
@@ -8,7 +9,6 @@ import {
 import { fetch } from "undici";
 import type { SkyndalexClient } from "../../../classes/Client";
 import type { HuggingFaceText } from "../../../types/structures";
-import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
 
 export async function run(
 	client: SkyndalexClient,

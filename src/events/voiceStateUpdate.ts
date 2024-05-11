@@ -1,4 +1,4 @@
-import { EmbedBuilder, type ColorResolvable } from "discord.js";
+import { type ColorResolvable, EmbedBuilder } from "discord.js";
 
 export async function voiceStateUpdate(client, oldState, newState) {
 	let description = "";
