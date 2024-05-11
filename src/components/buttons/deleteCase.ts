@@ -16,13 +16,13 @@ export async function run(
 
 	if (
 		!interaction.member.permissions.has([
-			PermissionsBitField.Flags.ModerateMembers,
+			PermissionsBitField.Flags.BanMembers,
 		]) ||
 		interaction.user.id === memberId
 	) {
 		return interaction.reply({
 			content: !interaction.member.permissions.has([
-				PermissionsBitField.Flags.ModerateMembers,
+				PermissionsBitField.Flags.BanMembers,
 			])
 				? "MISSING_PERMISSIONS"
 				: client.i18n.t("DELETE_OWN_CASE_PROHIBITED", {
