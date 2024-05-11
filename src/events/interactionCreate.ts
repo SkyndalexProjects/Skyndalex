@@ -4,7 +4,7 @@ import type { SkyndalexClient } from "../classes/Client";
 
 export async function interactionCreate(
 	client: SkyndalexClient,
-	interaction: Interaction,
+	interaction: Interaction<'cached'>,
 ) {
 	switch (interaction.type) {
 		case InteractionType.ApplicationCommand: {
