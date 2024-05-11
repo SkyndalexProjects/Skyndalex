@@ -30,7 +30,7 @@ export async function run(
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setTitle(String(data.name))
 			.setColor("Green")
-			.setFields([
+			.addFields([
 				{
 					name: "IP_ADDRESS",
 					value: String(data.connect),

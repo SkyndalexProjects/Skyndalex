@@ -66,6 +66,6 @@ export class EmbedBuilder extends embedBuilder {
 		return super.setColor(color);
 	}
 	addFields(fields: APIEmbedField[]) {
-		return super.setFields(fields.map((field) => this.mapField(field)));
+		return super.addFields(fields.map((field) => this.mapField(field)));
 	}
 }
