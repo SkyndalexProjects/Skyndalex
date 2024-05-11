@@ -20,7 +20,7 @@
   "SET_TIMEOUT_REASON": "Powód",
   "SET_TIMEOUT_DURATION": "Czas trwania",
   "GAME_SERVER_NOT_FOUND": "Nie znaleziono serwera.",
-  "GAME_SERVER_FAILED": "Ups, coś poszło nie tak podczas wykonywania tej operacji.",
+  "GAME_SERVER_FAILED": "Coś poszło nie tak podczas wyszukiwania serwera **{{ server }}** z gry **{{ game }}**. Upewnij się, że serwer jest dostępny lub poprawnie wpisany i spróbuj ponownie.",
   "DELETE_CASE_BUTTON": "Cofnij",
   "CASE_REVOKED": "Cofnięto.",
   "MISSING_PERMISSIONS": "Nie posiadasz permisji do przeprowadzenia tej operacji.",
@@ -47,5 +47,9 @@
   "SERVER_USER_COUNT": "Liczba użytkowników",
   "SERVER_EMOJIS": "Emotki",
   "SERVER_ROLES_LIST": "Role",
-  "SERVER_NO_DESCRIPTION": "Brak opisu"
+  "SERVER_NO_DESCRIPTION": "Brak opisu",
+  "IP_ADDRESS": "Adres IP",
+  "PLAYERS_COUNT": "Liczba graczy",
+  "GAME_MAP": "Mapa",
+  "GAME_PING": "Ping"
 }

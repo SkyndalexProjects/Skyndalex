@@ -11,15 +11,18 @@ export async function run(
 	interaction: ChatInputCommandInteraction,
 ) {
 	try {
+		await interaction.deferReply();
 		const game = interaction.options.getString("game");
 		const server = interaction.options.getString("server");
-
+		const port = server.split(":")[1];
+		
 		const data = await GameDig.query({
 			type: game,
 			host: server,
+			port: port,
 		});
 		if (!data)
-			return interaction.reply(
+			return interaction.editReply(
 				client.i18n.t("GAME_SERVER_NOT_FOUND", {
 					lng: interaction.locale,
 				}),
@@ -28,23 +31,33 @@ export async function run(
 			.setTitle(String(data.name))
 			.setColor("Green")
 			.setFields([
-				{ name: "IP", value: String(data.connect), inline: true },
 				{
-					name: "Players",
+					name: "IP_ADDRESS",
+					value: String(data.connect),
+					inline: true,
+				},
+				{
+					name: "PLAYERS_COUNT",
 					value: `${data.numplayers}/${data.maxplayers}`,
 					inline: true,
 				},
 				{
-					name: "Map",
+					name: "GAME_MAP",
 					value: String(data.map) || "None",
 					inline: true,
 				},
-				{ name: "Ping", value: String(data.ping), inline: true },
+				{ name: "GAME_PING", value: String(data.ping), inline: true },
 			]);
-		return interaction.reply({ embeds: [embed] });
+		return interaction.editReply({ embeds: [embed] });
 	} catch (e) {
-		return interaction.reply(
-			client.i18n.t("GAME_SERVER_FAILED", { lng: interaction.locale }),
+		console.error(e);
+
+		return interaction.editReply(
+			client.i18n.t("GAME_SERVER_FAILED", {
+				lng: interaction.locale,
+				server: interaction.options.getString("server"),
+				game: interaction.options.getString("game"),
+			}),
 		);
 	}
 }

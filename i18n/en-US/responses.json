@@ -47,6 +47,9 @@
   "SERVER_USER_COUNT": "User count",
   "SERVER_EMOJIS": "Emojis",
   "SERVER_ROLES_LIST": "Roles",
-  "SERVER_NO_DESCRIPTION": "No description"
-
+  "SERVER_NO_DESCRIPTION": "No description",
+  "IP_ADDRESS": "IP",
+  "PLAYERS_COUNT": "Players",
+  "GAME_MAP": "Map",
+  "GAME_PING": "Ping"
 }
