@@ -15,12 +15,12 @@ export async function run(
 ) {
 	try {
 		const member = interaction.options.getMember("user");
-		const time = interaction.options.getString("time");
 		const reason = interaction.options.getString("reason");
-
+        const messages = interaction.options.getString("delete-messages-time") || 0;
+        
 		if (member.user.id === interaction.user.id)
 			return interaction.reply({
-				content: client.i18n.t("TIMEOUT_YOURSELF_PROHBITED", {
+				content: client.i18n.t("BAN_YOURSELF_PROHBITED", {
 					lng: interaction.locale,
 				}),
 				ephemeral: true,
@@ -32,69 +32,67 @@ export async function run(
 			interaction.commandName,
 			reason,
 			interaction.user.id,
-			time,
 		);
-		const convertedTime = await ms(time);
+		const messagesToDeleteSeconds = Math.floor(await ms(messages) / 1000);
 
-		await member.timeout(convertedTime, reason);
+		await member.ban({ deleteMessageSeconds: messagesToDeleteSeconds, reason: reason });
 
 		const deleteButton = new ButtonBuilder(client, interaction.locale)
-			.setCustomId(`deleteCase-${newCase.id}-${member.user.id}-timeout`)
+			.setCustomId(`deleteCase-${newCase.id}-${member.user.id}-ban`)
 			.setLabel("DELETE_CASE_BUTTON")
 			.setStyle(ButtonStyle.Danger);
 
 		const row = new ActionRowBuilder().addComponents(deleteButton);
 
 		const embed = new EmbedBuilder(client, interaction.locale)
-			.setTitle("SET_TIMEOUT_TITLE", {
+			.setTitle("BAN_TITLE", {
 				caseId: newCase.id,
 			})
-			.setColor("Yellow")
+			.setColor("Red")
 			.addFields([
 				{
-					name: "SET_TIMEOUT_USER",
+					name: "BANNED_USER",
 					value: member.toString(),
 				},
 				{
-					name: "SET_TIMEOUT_REASON",
+					name: "BAN_REASON",
 					value: reason || "NO_REASON_PROVIDED",
 				},
 				{
-					name: "SET_TIMEOUT_DURATION",
-					value: time,
+					name: "DELETED_MESSAGES",
+					value: messages,
 				},
 			]);
 
 		return interaction.reply({ embeds: [embed], components: [row] });
 	} catch (e) {
+		console.error(e)
 		return interaction.reply({
-			content: client.i18n.t("TIMEOUT_FAILED", {
+			content: client.i18n.t("BAN_FAILED", {
 				lng: interaction.locale,
 			}),
 		});
 	}
 }
 export const data = new SlashCommandBuilder()
-	.setName("timeout")
-	.setDescription("Timeout a user for a certain amount of time.")
-	.setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
+	.setName("ban")
+	.setDescription("Ban user")
+	.setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
 	.addUserOption((option) =>
 		option
 			.setName("user")
-			.setDescription("The user to timeout.")
+			.setDescription("The user to ban.")
 			.setRequired(true),
 	)
-	.addStringOption((option) =>
+    .addStringOption((option) =>
 		option
-			.setName("time")
+			.setName("delete-messages-time")
 			.setDescription(
-				"The amount of time to timeout the user for. (e.g 1d, 5m, 5mo, 5y)",
+				"The amount of time to delete messages",
 			)
-			.setRequired(true),
 	)
 	.addStringOption((option) =>
 		option
 			.setName("reason")
-			.setDescription("The reason for the timeout.")
-			.setRequired(false),
+			.setDescription("The reason for the ban.")
 	);

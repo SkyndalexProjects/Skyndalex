@@ -41,10 +41,14 @@ export async function run(
 		.setStyle(ButtonStyle.Secondary);
 
 	const row = new ActionRowBuilder().addComponents(disableButton);
+	const member = await interaction.guild.members.fetch(memberId);
+
 	switch (caseType) {
 		case "timeout":
-			const member = await interaction.guild.members.fetch(memberId);
 			await member.timeout(null, "Revoked");
+			break;
+			case "ban":
+			await interaction.guild.members.unban(memberId);
 			break;
 	}
 	await interaction.update({ components: [row] });

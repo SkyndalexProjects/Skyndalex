@@ -26,7 +26,7 @@ export async function run(
 	const newCase = await client.cases.add(
 		interaction.guild.id,
 		member.user.id,
-		"warn",
+		interaction.commandName,
 		reason,
 		interaction.user.id,
 	);

@@ -31,5 +31,9 @@
   "TIMEOUT_YOURSELF_PROHBITED": "You can't mute yourself.",
   "DELETE_OWN_CASE_PROHIBITED": "You can't remove your own case.",
   "NO_REASON_PROVIDED": "No reason provided.",
-  "TIMEOUT_FAILED": "Something went wrong during timeout."
+  "TIMEOUT_FAILED": "Something went wrong during timeout.",
+  "BAN_TITLE": "`#{{caseId}}`: Banned user",
+  "BANNED_USER": "User",
+  "BAN_REASON": "Ban reason",
+  "DELETED_MESSAGES": "Deleted messages"
 }

@@ -31,6 +31,9 @@
   "TIMEOUT_YOURSELF_PROHBITED": "Nie możesz wyciszyć samego siebie.",
   "DELETE_OWN_CASE_PROHIBITED": "Nie możesz usunąć własnego ostrzeżenia bądź innego przypadku.",
   "NO_REASON_PROVIDED": "Nie podano powodu.",
-  "TIMEOUT_FAILED": "Coś poszło nie tak podczas wyciszania użytkownika. Prawdopodobnie nie masz permisji lub podałeś źle argumenty."
-
+  "TIMEOUT_FAILED": "Coś poszło nie tak podczas wyciszania użytkownika. Prawdopodobnie nie masz permisji lub podałeś źle argumenty.",
+  "BAN_TITLE": "`#{{caseId}}`: Zbanowano użytkownika",
+  "BANNED_USER": "Zbanowany użytkownik",
+  "BAN_REASON": "Powód bana",
+  "DELETED_MESSAGES": "Dni, z których zostaną usunięte wiadomości"
 }
