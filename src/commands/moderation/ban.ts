@@ -15,10 +15,11 @@ export async function run(
 ) {
 	try {
 		const member = interaction.options.getUser("user");
-		console.log("member", member)
+		console.log("member", member);
 		const reason = interaction.options.getString("reason");
-        const messages = interaction.options.getString("delete-messages-time") || 0;
-        
+		const messages =
+			interaction.options.getString("delete-messages-time") || 0;
+
 		if (member.id === interaction.user.id)
 			return interaction.reply({
 				content: client.i18n.t("BAN_YOURSELF_PROHBITED", {
@@ -34,11 +35,11 @@ export async function run(
 			reason,
 			interaction.user.id,
 		);
-		const messagesToDeleteSeconds = Math.floor(await ms(messages) / 1000);
+		const messagesToDeleteSeconds = Math.floor((await ms(messages)) / 1000);
 
 		await interaction.guild.members.ban(member.id, {
 			reason: reason,
-			deleteMessageSeconds: messagesToDeleteSeconds,	
+			deleteMessageSeconds: messagesToDeleteSeconds,
 		});
 
 		const deleteButton = new ButtonBuilder(client, interaction.locale)
@@ -70,7 +71,7 @@ export async function run(
 
 		return interaction.reply({ embeds: [embed], components: [row] });
 	} catch (e) {
-		console.error(e)
+		console.error(e);
 		return interaction.reply({
 			content: client.i18n.t("BAN_FAILED", {
 				lng: interaction.locale,
@@ -88,15 +89,11 @@ export const data = new SlashCommandBuilder()
 			.setDescription("The user to ban.")
 			.setRequired(true),
 	)
-    .addStringOption((option) =>
-		option
-			.setName("delete-messages-time")
-			.setDescription(
-				"The amount of time to delete messages",
-			)
-	)
 	.addStringOption((option) =>
 		option
-			.setName("reason")
-			.setDescription("The reason for the ban.")
+			.setName("delete-messages-time")
+			.setDescription("The amount of time to delete messages"),
+	)
+	.addStringOption((option) =>
+		option.setName("reason").setDescription("The reason for the ban."),
 	);

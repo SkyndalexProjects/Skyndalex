@@ -47,7 +47,7 @@ export async function run(
 		case "timeout":
 			await member.timeout(null, "Revoked");
 			break;
-			case "ban":
+		case "ban":
 			await interaction.guild.members.unban(memberId);
 			break;
 	}
