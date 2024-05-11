@@ -41,5 +41,12 @@
   "USER_GLOBAL_NAME": "Global name",
   "USER_USERNAME": "Username",
   "USER_JOINED_SERVER": "Joined server",
-  "USER_JOINED_DISCORD": "Joined Discord"
+  "USER_JOINED_DISCORD": "Joined Discord",
+  "SERVER_INFO_TITLE": "Server info",
+  "SERVER_NAME": "Server name",
+  "SERVER_USER_COUNT": "User count",
+  "SERVER_EMOJIS": "Emojis",
+  "SERVER_ROLES_LIST": "Roles",
+  "SERVER_NO_DESCRIPTION": "No description"
+
 }

@@ -41,5 +41,11 @@
   "USER_GLOBAL_NAME": "Nazwa globalna",
   "USER_USERNAME": "Nazwa użytkownika",
   "USER_JOINED_SERVER": "Dołączył na serwer",
-  "USER_JOINED_DISCORD": "Stworzył konto"
+  "USER_JOINED_DISCORD": "Stworzył konto",
+  "SERVER_INFO_TITLE": "Informacje o serwerze",
+  "SERVER_NAME": "Nazwa serwera",
+  "SERVER_USER_COUNT": "Liczba użytkowników",
+  "SERVER_EMOJIS": "Emotki",
+  "SERVER_ROLES_LIST": "Role",
+  "SERVER_NO_DESCRIPTION": "Brak opisu"
 }
