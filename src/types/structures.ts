@@ -48,6 +48,14 @@ export interface radioStationData {
 		country: { id: string; title: string };
 	};
 }
+export interface weatherData {
+	current_condition: {
+		FeelsLikeC: string,
+		temp_C: string
+		humidity: string,
+		windspeedKmph: string
+	}
+}
 export interface HuggingFaceText {
 	generated_text: string;
 }
