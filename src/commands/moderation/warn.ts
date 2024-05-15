@@ -12,10 +12,11 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction<"cached">,
 ) {
-	const member = interaction.options.getMember("user");
+	const user = interaction.options.getUser("user");
 	const reason = interaction.options.getString("reason");
 
-	if (member.user.id === interaction.user.id)
+	console.log("interaction", interaction);
+	if (user.id === interaction.user.id)
 		return interaction.reply({
 			content: client.i18n.t("WARN_YOURSELF_PROHBITED", {
 				lng: interaction.locale,
@@ -23,16 +24,19 @@ export async function run(
 			ephemeral: true,
 		});
 
+	const guildId = interaction.guild
+		? interaction.guild.id
+		: `DN:${interaction.channelId}`;
 	const newCase = await client.cases.add(
-		interaction.guild.id,
-		member.user.id,
+		guildId,
+		user.id,
 		interaction.commandName,
 		reason,
 		interaction.user.id,
 	);
 
 	const deleteButton = new ButtonBuilder(client, interaction.locale)
-		.setCustomId(`deleteCase-${newCase.id}-${member.user.id}-warn`)
+		.setCustomId(`deleteCase-${newCase.id}-${user.id}-warn`)
 		.setLabel("DELETE_CASE_BUTTON")
 		.setStyle(ButtonStyle.Danger);
 
@@ -46,7 +50,7 @@ export async function run(
 		.addFields([
 			{
 				name: "ADD_WARN_WARNED_USER",
-				value: member.toString(),
+				value: user.username.toString(),
 			},
 			{
 				name: "ADD_WARN_REASON",
