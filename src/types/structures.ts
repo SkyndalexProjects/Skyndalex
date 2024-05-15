@@ -50,11 +50,11 @@ export interface radioStationData {
 }
 export interface weatherData {
 	current_condition: {
-		FeelsLikeC: string,
-		temp_C: string
-		humidity: string,
-		windspeedKmph: string
-	}
+		FeelsLikeC: string;
+		temp_C: string;
+		humidity: string;
+		windspeedKmph: string;
+	};
 }
 export interface HuggingFaceText {
 	generated_text: string;

@@ -15,7 +15,7 @@ export async function run(
 		const game = interaction.options.getString("game");
 		const server = interaction.options.getString("server");
 		const port = server.split(":")[1];
-		
+
 		const data = await GameDig.query({
 			type: game,
 			host: server,
