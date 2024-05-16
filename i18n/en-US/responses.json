@@ -51,5 +51,10 @@
   "IP_ADDRESS": "IP",
   "PLAYERS_COUNT": "Players",
   "GAME_MAP": "Map",
-  "GAME_PING": "Ping"
+  "GAME_PING": "Ping",
+  "WEATHER_TITLE": "Weather in `{{ city }}`",
+  "WEATHER_TEMPERATURE": "Temperature",
+  "WEATHER_FEELS_LIKE": "Feels like",
+  "WEATHER_HUMIDITY": "Humidity",
+  "WEATHER_WIND_SPEED": "Wind"
 }
