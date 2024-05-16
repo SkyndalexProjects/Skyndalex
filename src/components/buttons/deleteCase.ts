@@ -37,7 +37,7 @@ export async function run(
 		}
 
 		if (interaction.user.id !== interaction?.message?.interaction?.user?.id)
-			return interaction.editReply({
+			return interaction.reply({
 				content: "You can't use this button!",
 				ephemeral: true,
 			});
