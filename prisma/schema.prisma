@@ -24,3 +24,13 @@ model cases {
   moderator String
   duration  String?
 }
+model economy {
+  guildId   String
+  userId    String
+  balance   String?
+  bank   String? 
+  wallet    String?
+  lastDaily DateTime?
+
+  @@id([guildId, userId])
+}
