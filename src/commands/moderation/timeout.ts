@@ -43,8 +43,6 @@ export async function run(
 			.setLabel("DELETE_CASE_BUTTON")
 			.setStyle(ButtonStyle.Danger);
 
-		const row = new ActionRowBuilder().addComponents(deleteButton);
-
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setTitle("SET_TIMEOUT_TITLE", {
 				caseId: newCase.id,
@@ -65,7 +63,14 @@ export async function run(
 				},
 			]);
 
-		return interaction.reply({ embeds: [embed], components: [row] });
+		return interaction.reply({
+			embeds: [embed],
+			components: [
+				new ActionRowBuilder<ButtonBuilder>({
+					components: [deleteButton],
+				}),
+			],
+		});
 	} catch (e) {
 		return interaction.reply({
 			content: client.i18n.t("TIMEOUT_FAILED", {

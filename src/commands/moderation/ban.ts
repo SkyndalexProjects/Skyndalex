@@ -47,8 +47,6 @@ export async function run(
 			.setLabel("DELETE_CASE_BUTTON")
 			.setStyle(ButtonStyle.Danger);
 
-		const row = new ActionRowBuilder().addComponents(deleteButton);
-
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setTitle("BAN_TITLE", {
 				caseId: newCase.id,
@@ -69,7 +67,14 @@ export async function run(
 				},
 			]);
 
-		return interaction.reply({ embeds: [embed], components: [row] });
+		return interaction.reply({
+			embeds: [embed],
+			components: [
+				new ActionRowBuilder<ButtonBuilder>({
+					components: [deleteButton],
+				}),
+			],
+		});
 	} catch (e) {
 		console.error(e);
 		return interaction.reply({

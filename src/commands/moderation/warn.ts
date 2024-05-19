@@ -58,7 +58,14 @@ export async function run(
 			},
 		]);
 
-	return await interaction.reply({ embeds: [embed], components: [row] });
+	return await interaction.reply({
+		embeds: [embed],
+		components: [
+			new ActionRowBuilder<ButtonBuilder>({
+				components: [deleteButton],
+			}),
+		],
+	});
 }
 export const data = {
 	...new SlashCommandBuilder()
