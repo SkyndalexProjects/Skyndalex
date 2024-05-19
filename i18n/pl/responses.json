@@ -57,5 +57,8 @@
   "WEATHER_TEMPERATURE": "Temperatura",
   "WEATHER_FEELS_LIKE": "Odczuwalna",
   "WEATHER_HUMIDITY": "Wilgotność",
-  "WEATHER_WIND_SPEED": "Wiatr"
+  "WEATHER_WIND_SPEED": "Wiatr",
+  "CONFIG_GUILD_SELECT_PLACEHOLDER": "Co mam ustawić?",
+  "CONFIG_GUILD_TITLE": "Konfiguracja serwera",
+  "CONFIG_NOT_SET": "Nie ustawiono"
 }
