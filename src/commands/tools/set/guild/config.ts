@@ -16,35 +16,53 @@ export async function run(
 		},
 	});
 
-	const fields = Object.keys(availableSettings[0]).map((key, index) => {
-		return {
-			name: key,
-			value:
-				Object.values(availableSettings[0])[index] ||
-				client.i18n.t("CONFIG_NOT_SET", { lng: interaction.locale }),
-			inline: true,
-		};
-	});
+	const fields = Object.keys(availableSettings[0])
+		.map((key, index) => {
+			const value = Object.values(availableSettings[0])[index];
+			return {
+				name: key,
+				value: value,
+				inline: true,
+			};
+		})
+		.filter((field) => field.value !== null);
 
 	const select = new StringSelectMenuBuilder(client, interaction.locale)
 		.setPlaceholder("CONFIG_GUILD_SELECT_PLACEHOLDER")
 		.setCustomId("config")
 		.addOptions(
-			Object.keys(availableSettings[0]).map((key) => {
-				return {
-					label: key,
-					value: key,
-				};
-			}),
+			Object.keys(availableSettings[0])
+				.map((key) => {
+					return {
+						label: key,
+						value: key,
+					};
+				})
+				.filter(
+					(option) =>
+						option.label !== "guildId" &&
+						!option.label.endsWith("Id"),
+				),
 		);
 
-	const row = new ActionRowBuilder().addComponents(select);
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CONFIG_GUILD_TITLE")
 		.setColor("Blurple")
-		.setFields(fields);
+		.setFields(
+			fields.map((field) => ({
+				...field,
+				value: field.value.toString(),
+			})),
+		);
 
-	return interaction.reply({ embeds: [embed], components: [row] });
+	return interaction.reply({
+		embeds: [embed],
+		components: [
+			new ActionRowBuilder<StringSelectMenuBuilder>({
+				components: [select],
+			}),
+		],
+	});
 }
 export const data = new SlashCommandSubcommandBuilder()
 	.setName("config")
