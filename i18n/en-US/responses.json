@@ -56,5 +56,8 @@
   "WEATHER_TEMPERATURE": "Temperature",
   "WEATHER_FEELS_LIKE": "Feels like",
   "WEATHER_HUMIDITY": "Humidity",
-  "WEATHER_WIND_SPEED": "Wind"
+  "WEATHER_WIND_SPEED": "Wind",
+  "CONFIG_GUILD_SELECT_PLACEHOLDER": "Select option",
+  "CONFIG_GUILD_TITLE": "Server settings",
+  "CONFIG_NOT_SET": "Not set"
 }
