@@ -13,6 +13,7 @@ model settings {
   radioStation String?
   autoRadioChannel String?
   radioId String?
+  antiPhishing Boolean?
 }
 model cases {
   id        Int @id @default(autoincrement())
