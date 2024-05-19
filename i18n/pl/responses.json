@@ -60,5 +60,9 @@
   "WEATHER_WIND_SPEED": "Wiatr",
   "CONFIG_GUILD_SELECT_PLACEHOLDER": "Co mam ustawić?",
   "CONFIG_GUILD_TITLE": "Konfiguracja serwera",
-  "CONFIG_NOT_SET": "Nie ustawiono"
+  "CONFIG_STATUS_DESCRIPTION": "Aktualnie ustawiasz opcję: `{{ value }}`",
+  "CONFIG_CHANGE_BUTTON": "Zmień",
+  "CONFIG_DISABLE_BUTTON": "Wyłącz/Usuń",
+  "CONFIG_GUILD_CHANNEL_SELECT_PLACEHOLDER": "Wybierz kanał",
+  "CONFIG_GUILD_DESCRIPTION": "Pomyślnie ustawiono opcję **{{ option }}** na wartość `{{ value }}`"
 }

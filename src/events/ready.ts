@@ -75,8 +75,10 @@ export async function ready(client: SkyndalexClient) {
 	client.logger.success(
 		`Ready in ${((performance.now() - client.createdAt) / 1000).toFixed(
 			2,
-		)}s (commands: ${client.commands.size}, guilds: ${
-			client.guilds.cache.size
-		}, users: ${client.users.cache.size}`,
+		)}s (commands: ${client.commands.size}, components: ${
+			client.components.size
+		}, guilds: ${client.guilds.cache.size}, users: ${
+			client.users.cache.size
+		})`,
 	);
 }
