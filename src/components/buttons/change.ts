@@ -1,6 +1,10 @@
 import type { SkyndalexClient } from "classes/Client";
 import { ChannelSelectMenuBuilder } from "classes/builders/components/ChannelSelectMenuBuilder";
-import { type MessageComponentInteraction, ActionRowBuilder } from "discord.js";
+import {
+	type MessageComponentInteraction,
+	ActionRowBuilder,
+	ChannelType,
+} from "discord.js";
 
 export async function run(
 	client: SkyndalexClient,
@@ -15,6 +19,12 @@ export async function run(
 		)
 			.setPlaceholder("CONFIG_GUILD_CHANNEL_SELECT_PLACEHOLDER")
 			.setCustomId(`configSelect-${value}`);
+
+		if (value.endsWith("VoiceChannel")) {
+			channelSelectMenu.setChannelTypes(ChannelType.GuildVoice);
+		} else {
+			channelSelectMenu.setChannelTypes(ChannelType.GuildText);
+		}
 
 		return interaction.update({
 			components: [

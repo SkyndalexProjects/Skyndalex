@@ -14,6 +14,7 @@ import type { Command, Component } from "../types/structures";
 import { Loaders } from "./Loaders";
 import { Logger } from "./Logger";
 import { CaseManagement } from "./modules/CasesManagement";
+import { RadioPlayer } from "./modules/RadioPlayer";
 
 export class SkyndalexClient extends Client {
 	prisma = new PrismaClient();
@@ -25,6 +26,7 @@ export class SkyndalexClient extends Client {
 
 	loader = new Loaders(this);
 	cases = new CaseManagement(this);
+	radio = new RadioPlayer(this);
 
 	i18n = i18next;
 

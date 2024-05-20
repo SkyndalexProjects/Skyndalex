@@ -11,7 +11,7 @@ model settings {
   guildId String @id
   voiceStateUpdateChannel String?
   radioStation String?
-  autoRadioChannel String?
+  autoRadioVoiceChannel String?
   radioId String?
   antiPhishing Boolean?
 }
