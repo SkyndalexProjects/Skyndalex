@@ -13,14 +13,16 @@ export async function run(
 	try {
 		await interaction.deferReply();
 		const game = interaction.options.getString("game");
-		const [server, port] = interaction.options.getString("server").split(":")
+		const [server, port] = interaction.options
+			.getString("server")
+			.split(":");
 
 		const data = await GameDig.query({
 			type: game,
 			host: server,
 			port: port,
 		});
-		console.log("data.connect", data.connect);
+		console.log("data", data);
 		if (!data)
 			return interaction.editReply(
 				client.i18n.t("GAME_SERVER_NOT_FOUND", {
@@ -52,8 +54,15 @@ export async function run(
 					inline: true,
 				},
 				{ name: "GAME_PING", value: String(data.ping), inline: true },
-				{ name: "GAME_VERSION", value: String(data.version) || "None", inline: true },
-				{ name: "PLAYERS_LIST", value: data.players.map((p) => p.name).join(", ") || "None"}
+				{
+					name: "GAME_VERSION",
+					value: String(data.version) || "None",
+					inline: true,
+				},
+				{
+					name: "PLAYERS_LIST",
+					value: data.players.map((p) => p.name).join(", ") || "None",
+				},
 			]);
 		return interaction.editReply({ embeds: [embed] });
 	} catch (e) {
