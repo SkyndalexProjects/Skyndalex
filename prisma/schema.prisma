@@ -28,9 +28,8 @@ model cases {
 model economy {
   guildId   String
   userId    String
-  balance   String?
   bank   String? 
-  wallet    String?
+  wallet    String? 
   lastDaily DateTime?
 
   @@id([guildId, userId])

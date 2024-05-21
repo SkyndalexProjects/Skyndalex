@@ -64,5 +64,16 @@
   "CONFIG_GUILD_TITLE": "Server settings",
   "CONFIG_NOT_SET": "Not set",
   "VOICE_CHANNEL_LEFT": "<:checkpassed:1071529475541565620> | I left channel!",
-  "VOICE_NOT_CONNECTED": "Bot is not connected to any voice channel."
+  "VOICE_NOT_CONNECTED": "Bot is not connected to any voice channel.",
+  "ECONOMY_WORK_TITLE": "Work",
+  "ECONOMY_SLUT_TITLE": "Slut",
+  "ECONOMY_CRIME_TITLE": "Crime",
+  "ECONOMY_WORK_DESCRIPTION": "You get {{ earned }} money. Your current balance is {{ balance }} money.",
+  "ECONOMY_BAL_TITLE": "Bal",
+  "ECONOMY_USER_NOT_FOUND": "Sorry, but i did not found **{{ user }}**. user. Try again",
+  "ECONOMY_BAL_WALLET": "In wallet",
+  "ECONOMY_BAL_BANK": "Bank",
+  "ECONOMY_BAL_TOTAL": "All",
+  "ECONOMY_SLUT_DESCRIPTION": "You get {{ earned }} money for something, your current balance is {{ balance }} money",
+  "ECONOMY_CRIME_DESCRIPTION": "You hacked skyndalex and you get {{ earned }} money, now you have {{ balance }} money in your bank."
 }

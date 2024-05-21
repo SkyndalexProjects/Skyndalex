@@ -69,5 +69,16 @@
   "CONFIG_GUILD_CHANNEL_SELECT_PLACEHOLDER": "Wybierz kanał",
   "CONFIG_GUILD_DESCRIPTION": "Pomyślnie ustawiono opcję **{{ option }}** na wartość `{{ value }}`",
   "VOICE_CHANNEL_LEFT": "<:checkpassed:1071529475541565620> | Opuszczono kanał głosowy",
-  "VOICE_NOT_CONNECTED": "Bot nie jest połączony z żadnym kanałem głosowym."
+  "VOICE_NOT_CONNECTED": "Bot nie jest połączony z żadnym kanałem głosowym.",
+  "ECONOMY_WORK_TITLE": "Praca",
+  "ECONOMY_SLUT_TITLE": "Sus...",
+  "ECONOMY_CRIME_TITLE": "Popełniono przestępstwo",
+  "ECONOMY_WORK_DESCRIPTION": "Udało Ci się zarobić {{ earned }} monet. Twój aktualny stan konta wynosi {{ balance }} monet",
+  "ECONOMY_BAL_TITLE": "Stan konta",
+  "ECONOMY_USER_NOT_FOUND": "Nie znaleziono użytkownika o nicku **{{ user }}**. Upewnij się, że poprawnie go oznaczyłeś.",
+  "ECONOMY_BAL_WALLET": "W portfelu",
+  "ECONOMY_BAL_BANK": "Zdepozytowano",
+  "ECONOMY_BAL_TOTAL": "Wszystko razem",
+  "ECONOMY_SLUT_DESCRIPTION": "Dostałeś od pewnej dziewczyny {{ earned }} monet, co spwodowało wzrost twojego konta do poziomu {{ balance }} monet.",
+  "ECONOMY_CRIME_DESCRIPTION": "Włamałeś się do VPSa skyndalexa, z czego udało ci się uzyskać {{ earned }} money. Twój aktualny stan konta wynosi {{ balance }} monet."
 }
