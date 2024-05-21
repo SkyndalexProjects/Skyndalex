@@ -62,5 +62,7 @@
   "WEATHER_WIND_SPEED": "Wind",
   "CONFIG_GUILD_SELECT_PLACEHOLDER": "Select option",
   "CONFIG_GUILD_TITLE": "Server settings",
-  "CONFIG_NOT_SET": "Not set"
+  "CONFIG_NOT_SET": "Not set",
+  "VOICE_CHANNEL_LEFT": "<:checkpassed:1071529475541565620> | I left channel!",
+  "VOICE_NOT_CONNECTED": "Bot is not connected to any voice channel."
 }
