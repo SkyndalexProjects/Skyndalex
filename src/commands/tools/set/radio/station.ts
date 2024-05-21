@@ -36,11 +36,11 @@ export async function run(
 		create: {
 			guildId: interaction.guild.id,
 			radioStation: id,
-			autoRadioChannel: channel.id,
+			autoRadioVoiceChannel: channel.id,
 		},
 		update: {
 			radioStation: id,
-			autoRadioChannel: channel.id,
+			autoRadioVoiceChannel: channel.id,
 		},
 	});
 
