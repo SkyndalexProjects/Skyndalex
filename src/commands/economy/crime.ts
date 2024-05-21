@@ -19,8 +19,8 @@ export async function run(
 	);
 
 	const embed = new EmbedBuilder(client, interaction.locale)
-		.setTitle("ECONOMY_WORK_TITLE")
-		.setDescription("ECONOMY_WORK_DESCRIPTION", {
+		.setTitle("ECONOMY_CRIME_TITLE")
+		.setDescription("ECONOMY_CRIME_DESCRIPTION", {
 			earned: randomValue,
 			balance: updateUser.wallet,
 		})
@@ -30,5 +30,5 @@ export async function run(
 }
 
 export const data = new SlashCommandBuilder()
-	.setName("work")
-	.setDescription("work");
+	.setName("crime")
+	.setDescription("Crime");
