@@ -23,26 +23,26 @@ export async function run(
 				ephemeral: true,
 			});
 		}
-        
-        const connection = getVoiceConnection(memberChannel.guild.id);
-        if (connection) {
-            connection.destroy() 
-        } else {
-            return interaction.editReply({
-                content: `${client.i18n.t("VOICE_NOT_CONNECTED", {
-                    lng: interaction.locale,
-                })}`,
-                ephemeral: true,
-            });
-        }
 
-        const embed = new EmbedBuilder(client, interaction.locale)
-        .setDescription("VOICE_CHANNEL_LEFT")
-        .setColor("DarkBlue")
+		const connection = getVoiceConnection(memberChannel.guild.id);
+		if (connection) {
+			connection.destroy();
+		} else {
+			return interaction.editReply({
+				content: `${client.i18n.t("VOICE_NOT_CONNECTED", {
+					lng: interaction.locale,
+				})}`,
+				ephemeral: true,
+			});
+		}
 
-        return await interaction.editReply({
-            embeds: [embed]
-        })
+		const embed = new EmbedBuilder(client, interaction.locale)
+			.setDescription("VOICE_CHANNEL_LEFT")
+			.setColor("DarkBlue");
+
+		return await interaction.editReply({
+			embeds: [embed],
+		});
 	} catch (e) {
 		console.error(e);
 	}
@@ -50,4 +50,4 @@ export async function run(
 
 export const data = new SlashCommandBuilder()
 	.setName("leave")
-	.setDescription("Leave voice channel")
+	.setDescription("Leave voice channel");
