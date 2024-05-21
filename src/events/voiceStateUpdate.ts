@@ -35,6 +35,8 @@ export async function voiceStateUpdate(client, oldState, newState) {
 
 			if (newState.channel.id === settings.autoRadioVoiceChannel) {
 				await client.radio.startRadio(client, newState.guild.id);
+			} else if (oldState.channel.members.size === 1) {
+				await client.radio.stopRadio(client, newState.guild.id);
 			}
 		}
 	} else {
@@ -62,8 +64,6 @@ export async function voiceStateUpdate(client, oldState, newState) {
 		embed.setDescription(description);
 		embed.setColor(color as ColorResolvable);
 
-		client.channels.cache
-			.get("1071407744894128178")
-			.send({ embeds: [embed] });
+		client.channels.cache.get(settings)?.send({ embeds: [embed] });
 	}
 }

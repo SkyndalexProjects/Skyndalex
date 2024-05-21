@@ -10,40 +10,45 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	// TODO: add more weather data
+	try {
+		const city = interaction.options.getString("city");
+		const weather = await fetch(`https://wttr.in/${city}?format=j1`);
+		console.log("weather", weather);
+		const data = (await weather.json()) as weatherData;
 
-	const city = interaction.options.getString("city");
-	const weather = await fetch(`https://wttr.in/${city}?format=j1`);
-	const data = (await weather.json()) as weatherData;
+		await interaction.deferReply();
 
-	const embed = new EmbedBuilder(client, interaction.locale)
-		.setTitle(`WEATHER_TITLE`, {
-			city: city,
-		})
-		.addFields([
-			{
-				name: "WEATHER_TEMPERATURE",
-				value: `${data.current_condition[0].temp_C}°C`,
-				inline: true,
-			},
-			{
-				name: "WEATHER_FEELS_LIKE",
-				value: `${data.current_condition[0].FeelsLikeC}°C`,
-				inline: true,
-			},
-			{
-				name: "WEATHER_HUMIDITY",
-				value: `${data.current_condition[0].humidity}%`,
-				inline: true,
-			},
-			{
-				name: "WEATHER_WIND_SPEED",
-				value: `${data.current_condition[0].windspeedKmph} km/h`,
-				inline: true,
-			},
-		]);
+		const embed = new EmbedBuilder(client, interaction.locale)
+			.setTitle("WEATHER_TITLE", {
+				city: city,
+			})
+			.addFields([
+				{
+					name: "WEATHER_TEMPERATURE",
+					value: `${data.current_condition[0].temp_C}°C`,
+					inline: true,
+				},
+				{
+					name: "WEATHER_FEELS_LIKE",
+					value: `${data.current_condition[0].FeelsLikeC}°C`,
+					inline: true,
+				},
+				{
+					name: "WEATHER_HUMIDITY",
+					value: `${data.current_condition[0].humidity}%`,
+					inline: true,
+				},
+				{
+					name: "WEATHER_WIND_SPEED",
+					value: `${data.current_condition[0].windspeedKmph} km/h`,
+					inline: true,
+				},
+			]);
 
-	return interaction.reply({ embeds: [embed] });
+		return interaction.editReply({ embeds: [embed] });
+	} catch (e) {
+		console.error(e);
+	}
 }
 export const data = new SlashCommandBuilder()
 	.setName("weather")
