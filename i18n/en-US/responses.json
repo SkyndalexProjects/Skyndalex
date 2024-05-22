@@ -70,10 +70,15 @@
   "ECONOMY_CRIME_TITLE": "Crime",
   "ECONOMY_WORK_DESCRIPTION": "You get {{ earned }} money. Your current balance is {{ balance }} money.",
   "ECONOMY_BAL_TITLE": "Bal",
-  "ECONOMY_USER_NOT_FOUND": "Sorry, but i did not found **{{ user }}**. user. Try again",
+  "ECONOMY_USER_NOT_FOUND": "Sorry, but i did not found **{{ user }}**. user.",
   "ECONOMY_BAL_WALLET": "In wallet",
   "ECONOMY_BAL_BANK": "Bank",
   "ECONOMY_BAL_TOTAL": "All",
   "ECONOMY_SLUT_DESCRIPTION": "You get {{ earned }} money for something, your current balance is {{ balance }} money",
-  "ECONOMY_CRIME_DESCRIPTION": "You hacked skyndalex and you get {{ earned }} money, now you have {{ balance }} money in your bank."
+  "ECONOMY_CRIME_DESCRIPTION": "You hacked skyndalex and you get {{ earned }} money, now you have {{ balance }} money in your bank.",
+  "ECONOMY_NOT_ENOUGH_MONEY": "Not enough money.",
+  "ECONOMY_DEP_TITLE": "Dep",
+  "ECONOMY_DEP_DESC": "Successfully deposited {{ amount }} money.",
+  "ECONOMY_WITH_TITLE": "With",
+  "ECONOMY_WITH_DESC": "Successfully withdrawal {{ amount }} money."
 }
