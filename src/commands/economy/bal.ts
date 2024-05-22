@@ -8,19 +8,18 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	const guildUser =
-		interaction.options.getUser("user")?.id || interaction.user.id;
+	const guildUser = interaction.options.getUser("user") || interaction.user;
 
 	const user = await client.prisma.economy.findFirst({
 		where: {
-			userId: guildUser,
+			userId: guildUser.id,
 		},
 	});
-
+	console.log("user", user);
 	if (!user) {
 		return interaction.reply(
 			client.i18n.t("ECONOMY_USER_NOT_FOUND", {
-				user: guildUser,
+				user: guildUser.username,
 			}),
 		);
 	}

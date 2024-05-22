@@ -9,6 +9,12 @@ export async function run(
 ) {
 	const user1 = interaction.options.getUser("who");
 	const user2 = interaction.options.getUser("to-who");
+
+	const response = await fetch(
+		"https://ainasepics-api.leainamo.repl.co/api/v2/get-resource?kiss",
+	);
+	const data = await response.text();
+	console.log("data", data);
 }
 
 export const data = new SlashCommandBuilder()
