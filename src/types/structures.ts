@@ -68,3 +68,6 @@ export interface LocaleFieldOptions {
 	rawValue?: string;
 	inline?: boolean;
 }
+export interface ainasepicsAPI {
+	url: string;
+}

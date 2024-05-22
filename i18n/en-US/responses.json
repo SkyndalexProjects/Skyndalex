@@ -80,5 +80,7 @@
   "ECONOMY_DEP_TITLE": "Dep",
   "ECONOMY_DEP_DESC": "Successfully deposited {{ amount }} money.",
   "ECONOMY_WITH_TITLE": "With",
-  "ECONOMY_WITH_DESC": "Successfully withdrawal {{ amount }} money."
+  "ECONOMY_WITH_DESC": "Successfully withdrawal {{ amount }} money.",
+  "FUN_SHIP_TITLE": "❤️ | Test",
+  "FUN_SHIP_DESCRIPTION": "**{{ user1 }}** and **{{ user2 }}** are {{ percentage }}% compatible!"
 }

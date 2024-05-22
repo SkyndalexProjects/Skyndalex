@@ -85,5 +85,7 @@
   "ECONOMY_DEP_TITLE": "Zdepozytowano",
   "ECONOMY_DEP_DESC": "Pomyślnie zdepozytowano {{ amount }} monet.",
   "ECONOMY_WITH_TITLE": "Wyciągnięto",
-  "ECONOMY_WITH_DESC": "Pomyślnie wyciągnięto {{ amount }} monet z banku."
+  "ECONOMY_WITH_DESC": "Pomyślnie wyciągnięto {{ amount }} monet z banku.",
+  "FUN_SHIP_TITLE": " ❤️| Test",
+  "FUN_SHIP_DESCRIPTION": "**{{ user1 }}** kocha się z **{{ user2 }}** na {{ percentage }}%!"
 }
