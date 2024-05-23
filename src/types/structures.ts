@@ -71,3 +71,6 @@ export interface LocaleFieldOptions {
 export interface ainasepicsAPI {
 	url: string;
 }
+export interface randomDog {
+	url: string;
+}
