@@ -10,28 +10,53 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	await interaction.deferReply();
 
-	const randomValue = randomBytes(1)[0] % 100;
+	let q = "";
+	let text = "";
 
 	const user1 = interaction.options.getUser("who");
 	const user2 = interaction.options.getUser("to-who");
+	const randomValue = randomBytes(1)[0] % 100;
 
 	const generateImage =
-		interaction.options.getBoolean("generate-image") ?? true;
+	interaction.options.getBoolean("generate-image") ?? true;
 
-	const embed = new EmbedBuilder(client, interaction.locale)
-		.setTitle("FUN_SHIP_TITLE")
-		.setDescription("FUN_SHIP_DESCRIPTION", {
+	if (randomValue < 20) { // 0-20%
+		q = "punch";
+		text = client.i18n.t("FUN_SHIP_PUNCH", {
+			lng: interaction.locale,
 			user1: user1.username,
 			user2: user2.username,
 			percentage: randomValue,
 		})
-		.setColor("DarkRed");
+	} else if (randomValue > 20 && randomValue < 50) { // 20-50%
+		q = "hug";
+		text = client.i18n.t("FUN_SHIP_HUG", {
+			lng: interaction.locale,
+			user1: user1.username,
+			user2: user2.username,
+			percentage: randomValue,
+		})
+	} else {
+		q = "kiss";
+		text = client.i18n.t("FUN_SHIP_KISS", { // 50-100%
+			lng: interaction.locale,
+			user1: user1.username,
+			user2: user2.username,
+			percentage: randomValue,
+		})
+	}
+
+	const embed = new EmbedBuilder(client, interaction.locale)
+	.setTitle("FUN_SHIP_TITLE")
+	.setDescription(text)
+	.setColor("DarkRed");
+	
+	await interaction.deferReply();
 
 	if (generateImage) {
 		const response = await fetch(
-			"https://ainasepics-api.onrender.com/api/v2/get-resource?name=kiss",
+			`https://ainasepics-api.onrender.com/api/v2/get-resource?name=${q}`,
 		);
 		const data = (await response.json()) as ainasepicsAPI;
 		embed.setImage(data.url);

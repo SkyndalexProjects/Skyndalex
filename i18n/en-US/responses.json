@@ -82,5 +82,7 @@
   "ECONOMY_WITH_TITLE": "With",
   "ECONOMY_WITH_DESC": "Successfully withdrawal {{ amount }} money.",
   "FUN_SHIP_TITLE": "❤️ | Test",
-  "FUN_SHIP_DESCRIPTION": "**{{ user1 }}** and **{{ user2 }}** are {{ percentage }}% compatible!"
+  "FUN_SHIP_PUNCH": "My data says that **{{ user1 }}** isn't really fond of **{{ user2 }}**. This is probably because the generator showed that their love level is only `{{ percentage }}`% :sob:",
+  "FUN_SHIP_HUG": "Wow, it's quite possible that **{{ user1 }}** and **{{ user2 }}** could be a great couple! Their love level is `{{ percentage }}`% :heart:",
+  "FUN_SHIP_KISS": "It's almost certain! **{{ user1 }}** and **{{ user2 }}** are an ideal couple! Their love level is `{{ percentage }}`% :heart_eyes:"  
 }

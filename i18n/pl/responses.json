@@ -87,5 +87,7 @@
   "ECONOMY_WITH_TITLE": "Wyciągnięto",
   "ECONOMY_WITH_DESC": "Pomyślnie wyciągnięto {{ amount }} monet z banku.",
   "FUN_SHIP_TITLE": " ❤️| Test",
-  "FUN_SHIP_DESCRIPTION": "**{{ user1 }}** kocha się z **{{ user2 }}** na {{ percentage }}%!"
+  "FUN_SHIP_PUNCH": "Moje dane mówią, że **{{ user1 }}** niezbyt się kocha z **{{ user2 }}**. Jest to spowodowane prawdopodobnie tym, że generator wykazał iż ich poziom miłości wynosi jedynie `{{ percentage }}`% :sob:",
+  "FUN_SHIP_HUG": "Wow, całkiem możliwe że **{{ user1 }}** oraz **{{ user2 }}** mogą być niezłą parą! Ich poziom miłości wynosi `{{ percentage }}`% :heart:",
+  "FUN_SHIP_KISS": "To już prawie pewne! **{{ user1 }}** oraz **{{ user2 }}** są idealną parą! Ich poziom miłości wynosi `{{ percentage }}`% :heart_eyes:"
 }
