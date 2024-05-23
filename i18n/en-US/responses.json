@@ -84,5 +84,8 @@
   "FUN_SHIP_TITLE": "❤️ | Test",
   "FUN_SHIP_PUNCH": "My data says that **{{ user1 }}** isn't really fond of **{{ user2 }}**. This is probably because the generator showed that their love level is only `{{ percentage }}`% :sob:",
   "FUN_SHIP_HUG": "Wow, it's quite possible that **{{ user1 }}** and **{{ user2 }}** could be a great couple! Their love level is `{{ percentage }}`% :heart:",
-  "FUN_SHIP_KISS": "It's almost certain! **{{ user1 }}** and **{{ user2 }}** are an ideal couple! Their love level is `{{ percentage }}`% :heart_eyes:"  
+  "FUN_SHIP_KISS": "It's almost certain! **{{ user1 }}** and **{{ user2 }}** are an ideal couple! Their love level is `{{ percentage }}`% :heart_eyes:", 
+  "FUN_DOG_TITLE": "🐶 | Dog",
+  "FUN_CAT_TITLE": "🐱 | Cat",
+  "FUN_CAT_NO_IMAGE": "No image found."
 }
