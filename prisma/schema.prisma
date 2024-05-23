@@ -14,6 +14,7 @@ model settings {
   autoRadioVoiceChannel String?
   radioId String?
   antiPhishing Boolean?
+  
 }
 model cases {
   id        Int @id @default(autoincrement())
