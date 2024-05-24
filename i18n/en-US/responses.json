@@ -87,5 +87,9 @@
   "FUN_SHIP_KISS": "It's almost certain! **{{ user1 }}** and **{{ user2 }}** are an ideal couple! Their love level is `{{ percentage }}`% :heart_eyes:", 
   "FUN_DOG_TITLE": "🐶 | Dog",
   "FUN_CAT_TITLE": "🐱 | Cat",
-  "FUN_CAT_NO_IMAGE": "No image found."
+  "FUN_CAT_NO_IMAGE": "No image found.",
+  "CUSTOM_BUTTON_ADD_SUCCESS": "Success",
+  "CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION": "Button **{{ name }}** has been added successfully with style `{{ button }}`",
+  "TICKETS_MENU_TITLE": "🎫 | Tickets menu",
+  "TICKETS_MENU_DESCRIPTION": "Choose one of the option below from button to send a ticket."
 }

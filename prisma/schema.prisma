@@ -13,8 +13,15 @@ model settings {
   radioStation String?
   autoRadioVoiceChannel String?
   radioId String?
-  antiPhishing Boolean?
-  
+  antiPhishing Boolean?  
+}
+model ticketButtons {
+  customId Int @default(autoincrement())
+  guildId String
+  label String
+  style String
+
+  @@id([guildId, customId])
 }
 model cases {
   id        Int @id @default(autoincrement())

@@ -9,17 +9,17 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-    await interaction.deferReply()
-    const response = await fetch("https://random.dog/woof.json");
-    const dog = await response.json() as randomDog
+	await interaction.deferReply();
+	const response = await fetch("https://random.dog/woof.json");
+	const dog = (await response.json()) as randomDog;
 
-    const embed = new EmbedBuilder(client, interaction.locale)
-    .setTitle("FUN_DOG_TITLE")
-    .setImage(dog.url)
-    .setColor("Random")
-    return interaction.editReply({ embeds: [embed] })
+	const embed = new EmbedBuilder(client, interaction.locale)
+		.setTitle("FUN_DOG_TITLE")
+		.setImage(dog.url)
+		.setColor("Random");
+	return interaction.editReply({ embeds: [embed] });
 }
 
 export const data = new SlashCommandBuilder()
 	.setName("dog")
-	.setDescription("Generate random dog")
+	.setDescription("Generate random dog");

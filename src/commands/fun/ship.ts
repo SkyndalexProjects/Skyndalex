@@ -10,7 +10,6 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-
 	let q = "";
 	let text = "";
 
@@ -19,39 +18,42 @@ export async function run(
 	const randomValue = randomBytes(1)[0] % 100;
 
 	const generateImage =
-	interaction.options.getBoolean("generate-image") ?? true;
+		interaction.options.getBoolean("generate-image") ?? true;
 
-	if (randomValue < 20) { // 0-20%
+	if (randomValue < 20) {
+		// 0-20%
 		q = "punch";
 		text = client.i18n.t("FUN_SHIP_PUNCH", {
 			lng: interaction.locale,
 			user1: user1.username,
 			user2: user2.username,
 			percentage: randomValue,
-		})
-	} else if (randomValue > 20 && randomValue < 50) { // 20-50%
+		});
+	} else if (randomValue > 20 && randomValue < 50) {
+		// 20-50%
 		q = "hug";
 		text = client.i18n.t("FUN_SHIP_HUG", {
 			lng: interaction.locale,
 			user1: user1.username,
 			user2: user2.username,
 			percentage: randomValue,
-		})
+		});
 	} else {
 		q = "kiss";
-		text = client.i18n.t("FUN_SHIP_KISS", { // 50-100%
+		text = client.i18n.t("FUN_SHIP_KISS", {
+			// 50-100%
 			lng: interaction.locale,
 			user1: user1.username,
 			user2: user2.username,
 			percentage: randomValue,
-		})
+		});
 	}
 
 	const embed = new EmbedBuilder(client, interaction.locale)
-	.setTitle("FUN_SHIP_TITLE")
-	.setDescription(text)
-	.setColor("DarkRed");
-	
+		.setTitle("FUN_SHIP_TITLE")
+		.setDescription(text)
+		.setColor("DarkRed");
+
 	await interaction.deferReply();
 
 	if (generateImage) {
