@@ -18,6 +18,14 @@ export async function run(
 		},
 	});
 
+	if (buttons.length <= 0)
+		return interaction.reply({
+			content: client.i18n.t("NO_CUSTOM_BUTTONS_FOUND", {
+				lng: interaction.locale,
+			}),
+			ephemeral: true,
+		});
+
 	const styles = {
 		PRIMARY: ButtonStyle.Primary,
 		SECONDARY: ButtonStyle.Secondary,
@@ -30,7 +38,7 @@ export async function run(
 		const buttonBuilder = new ButtonBuilder()
 			.setStyle(styles[button.style])
 			.setLabel(button.label)
-			.setCustomId(button.customId.toString());
+			.setCustomId(`ticketCategory-${button.customId.toString()}`);
 		actionRow.addComponents(buttonBuilder);
 	}
 	const embed = new EmbedBuilder(client, interaction.locale)
