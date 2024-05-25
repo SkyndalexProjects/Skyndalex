@@ -1,6 +1,7 @@
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
+	ChannelType,
 } from "discord.js";
 import type { SkyndalexClient } from "../../../../classes/Client";
 import { EmbedBuilder } from "classes/builders/EmbedBuilder";
@@ -11,11 +12,17 @@ export async function run(
 	const label = interaction.options.getString("label");
 	const style = interaction.options.getString("style");
 
+	const channel = await interaction.guild.channels.create({
+		name: label,
+		type: ChannelType.GuildCategory,
+	});
+
 	await client.prisma.ticketButtons.create({
 		data: {
 			label,
 			style,
 			guildId: interaction.guild.id,
+			discordChannelId: channel.id,
 		},
 	});
 
@@ -24,6 +31,7 @@ export async function run(
 		.setDescription("CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION", {
 			name: label,
 			button: style,
+			channel: channel,
 		})
 		.setColor("Green");
 

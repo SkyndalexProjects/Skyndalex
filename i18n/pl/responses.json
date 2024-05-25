@@ -94,7 +94,15 @@
   "FUN_CAT_TITLE": "🐱 | Kotek",
   "FUN_CAT_NO_IMAGE": "Nie udało się znaleźć obrazka kota. Spróbuj ponownie.",
   "CUSTOM_BUTTON_ADD_SUCCESS": "Dodano pomyślnie",
-  "CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION": "Pomyślnie dodano przycisk o nazwie **{{ name }}** (styl: `{{ button }}`)",
+  "CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION": "Pomyślnie dodano przycisk o nazwie **{{ name }}** (styl: `{{ button }}`)\nTickety będą tworzone w kategorii <#{{ channel }}>.",
   "TICKETS_MENU_TITLE": "🎫 | Menu zgłoszeń",
-  "TICKETS_MENU_DESCRIPTION": "Wybierz jedną z opcji poniżej, aby wysłać ticket do odpowiedniej kategorii"
+  "TICKETS_MENU_DESCRIPTION": "Wybierz jedną z opcji poniżej, aby wysłać ticket do odpowiedniej kategorii",
+  "NO_CUSTOM_BUTTONS_FOUND": "Wygląda na to, że na tym serwerze nie ma dostępnych żadnych kategorii ticketów. Jeśli jesteś administratorem, możesz je dodać przez komendę **/set tickets add-custom-button**",
+  "TICKET_CREATED": "Ticket został pomyślnie utworzony na <#{{ channel }}>.",
+  "TICKET_CREATED_TITLE": "🎫 | Witaj na tickecie!",
+  "TICKET_CREATED_DESCRIPTION": "Twój ticket został pomyślnie utworzony. Poczekaj na odpowiedź od administracji.\n# Informacje\n**Użytkownik**: {{ user }}\n**Kategoria**: {{ category }}\n**Status:** {{ state }}\n**ID:** {{ id }}",
+  "NO_TICKET_CHANNEL_ERROR": "Kanał, do którego próbujesz utworzyć ticket najwyraźniej nie jest kanałem który należy do jakiejkolwiek kategorii ticketów.",
+  "TICKET_ASSIGNED": "[AKTUALIZACJA]: Ticket został przypisany do użytkownika {{ user }} [<@{{ userId }}>] (TicketID: {{ ticketId }}).",
+  "CANNOT_ASSIGN_BOT": "Nie można przypisać bota do ticketu.",
+  "CANNOT_ASSIGN_SELF": "Nie możesz przypisać autora ticketa do jego własnego zgłoszenia"
 }

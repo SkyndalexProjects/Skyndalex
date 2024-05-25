@@ -89,7 +89,15 @@
   "FUN_CAT_TITLE": "🐱 | Cat",
   "FUN_CAT_NO_IMAGE": "No image found.",
   "CUSTOM_BUTTON_ADD_SUCCESS": "Success",
-  "CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION": "Button **{{ name }}** has been added successfully with style `{{ button }}`",
+  "CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION": "Button **{{ name }}** has been added successfully with style `{{ button }}`\nChannel: <#{{ channel }}>",
   "TICKETS_MENU_TITLE": "🎫 | Tickets menu",
-  "TICKETS_MENU_DESCRIPTION": "Choose one of the option below from button to send a ticket."
+  "TICKETS_MENU_DESCRIPTION": "Choose one of the option below from button to send a ticket.",
+  "NO_CUSTOM_BUTTONS_FOUND": "It looks like there is no tickets available in this server. If you are administrator, use **/set tickets add-custom-button**** command to add new ticket category.",
+  "TICKET_CREATED": "Ticket created at <#{{ channel }}>.",
+  "TICKET_CREATED_TITLE": "🎫 | Welcome on the ticket!",
+  "TICKET_CREATED_DESCRIPTION": "Your ticket have been created. Wait for administrators to response\n# Info\n**User**: {{ user }}\n**Category**: {{ category }}\n**State:** {{ state }}\n**ID:** {{ id }}",
+  "NO_TICKET_CHANNEL_ERROR": "This channel is not a ticket channel.",
+  "TICKET_ASSIGNED": "[UPDATE] Ticked assigned to **{{ user }}** [<@{{ userId }}>] (TicketID: {{ ticketId }}).",
+  "CANNOT_ASSIGN_BOT": "You can't assign a bot to a ticket.",
+  "CANNOT_ASSIGN_SELF": "You can't assign a ticket author to his own ticket."
 }
