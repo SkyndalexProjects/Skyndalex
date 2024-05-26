@@ -10,9 +10,6 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ModalSubmitInteraction,
 ) {
-	console.log("funkcjonuje");
-	console.log("interaction.customId: ", interaction.customId);
-
 	const fromCategory = interaction.customId.split("-")[1];
 	const getCategory = await client.prisma.ticketButtons.findFirst({
 		where: {
