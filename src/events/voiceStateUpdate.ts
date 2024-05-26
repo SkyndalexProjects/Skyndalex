@@ -16,7 +16,7 @@ export async function voiceStateUpdate(client, oldState, newState) {
 			description = `User ${newState.member.user.username} **joined channel** <#${newState.channel.id}> \`[${newState.channel.name}]\``;
 			color = "Green";
 
-			if (newState.channel.id === settings.autoRadioVoiceChannel) {
+			if (newState.channel.id === settings?.autoRadioVoiceChannel) {
 				await client.radio.startRadio(client, newState.guild.id);
 			}
 		} else if (oldState.channel && !newState.channel) {
@@ -24,7 +24,7 @@ export async function voiceStateUpdate(client, oldState, newState) {
 			color = "Green";
 
 			if (
-				oldState.channel.id === settings.autoRadioVoiceChannel &&
+				oldState.channel.id === settings?.autoRadioVoiceChannel &&
 				oldState.channel.members.size === 1
 			) {
 				await client.radio.stopRadio(client, newState.guild.id);
