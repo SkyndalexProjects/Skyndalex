@@ -26,6 +26,16 @@ model ticketButtons {
   @@id([guildId, customId])
 }
 
+model ticketModals {
+  customId         Int     @default(autoincrement())
+  guildId          String
+  label            String?
+  style            String?
+  placeholder      String?
+  required         Boolean?
+  categoryId       String?
+  @@id([guildId, customId])
+}
 model tickets {
   id             Int    // NOTE: Autoincrement will cause problems with correct ID assignment
   guildId        String

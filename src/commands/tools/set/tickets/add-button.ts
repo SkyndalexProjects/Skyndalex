@@ -38,7 +38,7 @@ export async function run(
 	return interaction.reply({ embeds: [embedSuccess] });
 }
 export const data = new SlashCommandSubcommandBuilder()
-	.setName("add-custom-button")
+	.setName("add-button")
 	.setDescription("Add custom button")
 	.addStringOption((option) =>
 		option

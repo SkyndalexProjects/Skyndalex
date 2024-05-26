@@ -104,5 +104,7 @@
   "NO_TICKET_CHANNEL_ERROR": "Kanał, do którego próbujesz utworzyć ticket najwyraźniej nie jest kanałem który należy do jakiejkolwiek kategorii ticketów.",
   "TICKET_ASSIGNED": "[AKTUALIZACJA]: Ticket został przypisany do użytkownika {{ user }} [<@{{ userId }}>] (TicketID: {{ ticketId }}).",
   "CANNOT_ASSIGN_BOT": "Nie można przypisać bota do ticketu.",
-  "CANNOT_ASSIGN_SELF": "Nie możesz przypisać autora ticketa do jego własnego zgłoszenia"
+  "CANNOT_ASSIGN_SELF": "Nie możesz przypisać autora ticketa do jego własnego zgłoszenia",
+  "CUSTOM_MODAL_ADDED": "Dodano informacje",
+  "CUSTOM_MODAL_ADDED_DESC": "Dodano informacje do formularza dla kategorii!\n\n**Input:** {{ inputLabel }}\n**Styl:** {{ inputStyle }}\n**Placeholder:** {{ inputPlaceholder }}\n**Wymagane?** {{ required }}"
 }

@@ -102,6 +102,6 @@ export async function interactionCreate(
 					console.error(error);
 				}
 			}
-			break;
+			break;				
 	}
 }
