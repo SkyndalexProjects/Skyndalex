@@ -15,7 +15,6 @@ export async function run(
 	interaction: MessageComponentInteraction,
 ) {
 	const value = interaction.customId.split("-")[1];
-
 	const getCategory = await client.prisma.ticketButtons.findFirst({
 		where: {
 			customId: Number.parseInt(value),
@@ -31,7 +30,7 @@ export async function run(
 
 	if (getModals.length >= 1) {
 		const modal = new ModalBuilder()
-			.setCustomId("ticketModal")
+			.setCustomId(`ticketModal-${getCategory.customId}`)
 			.setTitle("TICKET_CREATE_TITLE");
 
 		for (const option of getModals) {
@@ -41,7 +40,7 @@ export async function run(
 			};
 
 			const input = new TextInputBuilder()
-				.setCustomId(`${option.customId}`)
+				.setCustomId(`${option.customId}-${option.label}`)
 				.setLabel(option.label)
 				.setPlaceholder(option.placeholder)
 				.setRequired(option.required)
