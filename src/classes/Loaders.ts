@@ -1,7 +1,7 @@
 import { lstatSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { Collection } from "discord.js";
-import type { Command, Component } from "../types/structures";
+import type { Command, Component, Modal } from "../types/structures";
 import type { SkyndalexClient } from "./Client";
 export class Loaders {
 	constructor(private readonly client: SkyndalexClient) {
@@ -64,5 +64,15 @@ export class Loaders {
 			}
 		}
 		return components;
+	}
+	async loadModals(path: string): Promise<Collection<string, Modal>> {
+		const modals = new Collection<string, Modal>();
+		const modalFiles = await readdir(new URL(path, import.meta.url));
+		for (const modal of modalFiles) {
+			const modalFile = await import(`${path}/${modal}`);
+			const customId = modal.split(".")[0];
+			modals.set(customId, modalFile);
+		}
+		return modals;
 	}
 }

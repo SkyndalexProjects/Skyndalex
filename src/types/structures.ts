@@ -1,6 +1,7 @@
 import type {
 	Interaction,
 	MessageComponentInteraction,
+	ModalSubmitInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "../classes/Client";
@@ -15,6 +16,13 @@ export interface Component {
 	run: (
 		client: SkyndalexClient,
 		interaction: MessageComponentInteraction,
+	) => Promise<void>;
+}
+export interface Modal {
+	customId: string;
+	run: (
+		client: SkyndalexClient,
+		interaction: ModalSubmitInteraction,
 	) => Promise<void>;
 }
 export interface radioStation {

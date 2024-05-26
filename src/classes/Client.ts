@@ -10,7 +10,7 @@ import {
 } from "discord.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
-import type { Command, Component } from "../types/structures";
+import type { Command, Component, Modal } from "../types/structures";
 import { Loaders } from "./Loaders";
 import { Logger } from "./Logger";
 import { CaseManagement } from "./modules/CasesManagement";
@@ -23,7 +23,7 @@ export class SkyndalexClient extends Client {
 
 	commands: Collection<string, Command> = new Collection<string, Command>();
 	components: Collection<string, Component>;
-
+	modals: Collection<string, Modal>;
 	loader = new Loaders(this);
 	cases = new CaseManagement(this);
 	radio = new RadioPlayer(this);
@@ -66,6 +66,7 @@ export class SkyndalexClient extends Client {
 		await this.loader.loadEvents(this, "../events");
 		await this.loader.loadCommands("../commands");
 		this.components = await this.loader.loadComponents("../components");
+		this.modals = await this.loader.loadModals("../modals");
 		await this.login(process.env.BOT_TOKEN);
 	}
 }

@@ -45,6 +45,7 @@ export async function interactionCreate(
 			break;
 		}
 		case InteractionType.MessageComponent: {
+			console.log("działam");
 			const embedComponentNotFound = new EmbedBuilder()
 				.setDescription(
 					client.i18n.t("COMPONENT_FAILED", {
@@ -102,6 +103,42 @@ export async function interactionCreate(
 					console.error(error);
 				}
 			}
-			break;				
+			break;
+		case InteractionType.ModalSubmit: {
+			const embedModalNotFound = new EmbedBuilder()
+				.setDescription(
+					client.i18n.t("MODAL_FAILED", {
+						lng: interaction.locale,
+						modalId: interaction.customId,
+					}),
+				)
+				.setColor("Red");
+
+			const modal = client.modals.get(interaction.customId.split("-")[0]);
+			if (!modal)
+				return interaction.reply({
+					embeds: [embedModalNotFound],
+					ephemeral: true,
+				});
+
+			try {
+				await modal.run(client, interaction);
+			} catch (e) {
+				console.error(e);
+				const embedError = new EmbedBuilder()
+					.setDescription(
+						client.i18n.t("MODAL_FAILED", {
+							lng: interaction.locale,
+						}),
+					)
+					.setColor("Red");
+				await interaction.reply({
+					embeds: [embedError],
+					ephemeral: true,
+				});
+			}
+
+			break;
+		}
 	}
 }
