@@ -8,6 +8,7 @@ import type { SkyndalexClient } from "../classes/Client";
 
 export async function ready(client: SkyndalexClient) {
 	const parsedCommands = [];
+	const addedCommands = new Set();
 
 	for (const [key, value] of client.commands) {
 		if (key.includes("/")) {
@@ -22,12 +23,16 @@ export async function ready(client: SkyndalexClient) {
 
 			const command = value.data as SlashCommandBuilder;
 
-			for (const [key, value] of subcommands.entries()) {
+			for (const [key, subcommandValue] of subcommands.entries()) {
 				if (key.split("/").length <= 2) {
-					if (command instanceof SlashCommandBuilder) {
+					if (
+						command instanceof SlashCommandBuilder &&
+						!addedCommands.has(key)
+					) {
 						command.addSubcommand(
-							value.data as unknown as SlashCommandSubcommandBuilder,
+							subcommandValue.data as SlashCommandSubcommandBuilder,
 						);
+						addedCommands.add(key);
 					}
 				} else {
 					const groupName = key.split("/")[1];
@@ -48,22 +53,35 @@ export async function ready(client: SkyndalexClient) {
 						SlashCommandSubcommandGroupBuilder
 					) {
 						for (const [gk, gv] of groups.entries()) {
-							groupIndex.data.addSubcommand(
-								gv.data as unknown as SlashCommandSubcommandBuilder,
-							);
+							if (!addedCommands.has(gk)) {
+								groupIndex.data.addSubcommand(
+									gv.data as SlashCommandSubcommandBuilder,
+								);
+								addedCommands.add(gk);
+							}
 						}
 
-						if (command instanceof SlashCommandBuilder) {
+						if (
+							command instanceof SlashCommandBuilder &&
+							!addedCommands.has(`${commandName}/${groupName}`)
+						) {
 							command.addSubcommandGroup(
-								groupIndex.data as unknown as SlashCommandSubcommandGroupBuilder,
+								groupIndex.data as SlashCommandSubcommandGroupBuilder,
 							);
+							addedCommands.add(`${commandName}/${groupName}`);
 						}
 					}
 				}
 			}
-			parsedCommands.push(command);
+			if (!addedCommands.has(commandName)) {
+				parsedCommands.push(command);
+				addedCommands.add(commandName);
+			}
 		} else {
-			parsedCommands.push(value.data);
+			if (!addedCommands.has(key)) {
+				parsedCommands.push(value.data);
+				addedCommands.add(key);
+			}
 		}
 	}
 
