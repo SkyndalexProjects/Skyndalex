@@ -21,13 +21,13 @@ export async function run(
 				name: client.i18n.t("USER_GLOBAL_NAME", {
 					lng: interaction.locale,
 				}),
-				value: member.user.globalName,
+				value: member.user.globalName?.toString() || "None",
 			},
 			{
 				name: client.i18n.t("USER_USERNAME", {
 					lng: interaction.locale,
 				}),
-				value: member.user.username,
+				value: member.user.username.toString(),
 			},
 			{
 				name: client.i18n.t("USER_JOINED_SERVER", {
