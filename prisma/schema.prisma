@@ -22,7 +22,8 @@ model ticketButtons {
   label            String?
   style            String?
   discordChannelId String?
-
+  assignedToSelect String?
+  
   @@id([guildId, customId])
 }
 
@@ -34,6 +35,15 @@ model ticketModals {
   placeholder      String?
   required         Boolean?
   categoryId       String?
+  @@id([guildId, customId])
+}
+model ticketSelects {
+  customId         Int     @default(autoincrement())
+  guildId          String
+  label            String?
+  description      String?
+  discordChannelId String?
+  
   @@id([guildId, customId])
 }
 model tickets {
