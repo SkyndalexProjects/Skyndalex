@@ -17,7 +17,7 @@ export async function run(
 export const data = new SlashCommandBuilder()
 	.setName("clear")
 	.setDescription("this is clear")
-	.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+	.setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
 	.addIntegerOption((option) =>
 		option
 			.setName("amount")
