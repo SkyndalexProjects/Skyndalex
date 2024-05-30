@@ -1,9 +1,4 @@
 import {
-	createAudioPlayer,
-	createAudioResource,
-	joinVoiceChannel,
-} from "@discordjs/voice";
-import {
 	type AutocompleteInteraction,
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
@@ -27,7 +22,6 @@ export async function run(
 				content: `${client.i18n.t("RADIO_JOIN_VOICE_CHANNEL", {
 					lng: interaction.locale,
 				})}`,
-				ephemeral: true,
 			});
 		}
 
@@ -41,7 +35,6 @@ export async function run(
 		});
 		const json = (await response.json()) as radioStationData;
 
-		// console.log("json", json);
 		if (json.error)
 			return interaction.editReply({
 				content: client.i18n.t("RADIO_STATION_NOT_FOUND", {
@@ -52,54 +45,41 @@ export async function run(
 		const id = json.data.url.split("/")[3];
 		const resourceUrl = `https://radio.garden/api/ara/content/listen/${id}/channel.mp3`;
 
-		const connection = joinVoiceChannel({
+		const embed = new EmbedBuilder(client, interaction.locale)
+			.setDescription("RADIO_PLAYING_DESC", {
+				radioStation: json.data.title,
+				radioCountry: json.data.country.title,
+				radioPlace: json.data.place.title,
+			})
+			.setFooter({
+				text: "RADIO_PLAYING_FOOTER",
+				textArgs: { radioWebsite: json.data.website },
+			})
+			.setTimestamp();
+
+		if (client.shoukaku.connections.has(interaction.guild.id)) {
+			const player = client.shoukaku.players.get(interaction.guild.id);
+			const result = await player.node.rest.resolve(resourceUrl);
+			await player.playTrack({ track: result.data.encoded });
+
+			embed.setTitle("RADIO_CHANGED").setColor("Blue");
+			return interaction.editReply({
+				embeds: [embed],
+			});
+		}
+		const player = await client.shoukaku.joinVoiceChannel({
+			guildId: interaction.guild.id,
 			channelId: memberChannel.id,
-			guildId: memberChannel.guild.id,
-			adapterCreator: memberChannel.guild.voiceAdapterCreator,
+			shardId: 0,
 		});
 
-		const player = createAudioPlayer();
-		connection.subscribe(player);
+		const result = await player.node.rest.resolve(resourceUrl);
 
-		const stream = await fetch(resourceUrl).then((res) => res.body);
-		const resource = createAudioResource(stream, { seek: 0, volume: 1 });
-		player.play(resource);
+		await player.playTrack({ track: result.data.encoded });
 
-		player.on("stateChange", (oldState, newState) => {
-			const state = newState.status;
-			const currentState = {
-				idle: `🟡 ${client.i18n.t("RADIO_STATE_IDLE", {
-					lng: interaction.locale,
-				})}`,
-				stopped: `🔴 ${client.i18n.t("RADIO_STATE_STOPPED", {
-					lng: interaction.locale,
-				})}`,
-				playing: `🟢 ${client.i18n.t("RADIO_STATE_PLAYING", {
-					lng: interaction.locale,
-				})}`,
-				paused: `🔵 ${client.i18n.t("RADIO_STATE_PAUSED", {
-					lng: interaction.locale,
-				})}`,
-				autopaused: `🟣 ${client.i18n.t("RADIO_STATE_AUTOPAUSED", {
-					lng: interaction.locale,
-				})}`,
-			};
-
-			const embed = new EmbedBuilder(client, interaction.locale)
-				.setTitle("RADIO_STATE_PLAYING")
-				.setDescription("RADIO_PLAYING_DESC", {
-					radioState: currentState[state] || state,
-					radioStation: json.data.title,
-					radioCountry: json.data.country.title,
-					radioPlace: json.data.place.title,
-				})
-				.setFooter({
-					text: "RADIO_PLAYING_FOOTER",
-					textArgs: { radioWebsite: json.data.website },
-				})
-				.setColor("Green");
-
-			interaction.editReply({ embeds: [embed] });
+		embed.setTitle("RADIO_PLAYING").setColor("Gold")
+		return interaction.editReply({
+			embeds: [embed],
 		});
 	} catch (e) {
 		console.error(e);

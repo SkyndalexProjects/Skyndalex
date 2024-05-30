@@ -15,6 +15,15 @@ import { Loaders } from "./Loaders";
 import { Logger } from "./Logger";
 import { CaseManagement } from "./modules/CasesManagement";
 import { RadioPlayer } from "./modules/RadioPlayer";
+import { Connectors, Shoukaku } from "shoukaku";
+
+const Nodes = [
+	{
+		name: "Localhost",
+		url: "127.0.0.1:6969",
+		auth: "youshallnotpass",
+	},
+];
 
 export class SkyndalexClient extends Client {
 	prisma = new PrismaClient();
@@ -26,6 +35,7 @@ export class SkyndalexClient extends Client {
 	modals: Collection<string, Modal>;
 	loader = new Loaders(this);
 	cases = new CaseManagement(this);
+	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 	radio = new RadioPlayer(this);
 
 	i18n = i18next;
@@ -62,6 +72,9 @@ export class SkyndalexClient extends Client {
 				loadPath: join(__dirname, "/../../i18n/{{lng}}/{{ns}}.json"),
 			},
 		});
+
+		this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
+		this.shoukaku.on("error", (_, error) => console.error(error));
 
 		await this.loader.loadEvents(this, "../events");
 		await this.loader.loadCommands("../commands");
