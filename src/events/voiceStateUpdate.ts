@@ -17,16 +17,16 @@ export async function voiceStateUpdate(client, oldState, newState) {
 			color = "Green";
 
 			if (newState.channel.id === settings?.autoRadioVoiceChannel) {
-				await client.radio.startRadio(client, newState.guild.id);
+				if (client.shoukaku.connections.size <= 0) {
+					console.log("1");
+					await client.radio.startRadio(client, newState.guild.id);
+				}
 			}
 		} else if (oldState.channel && !newState.channel) {
 			description = `User ${newState.member.user.username} **left channel** <#${oldState.channel.id}> \`[${oldState.channel.name}]\``;
 			color = "Green";
 
-			if (
-				oldState.channel.id === settings?.autoRadioVoiceChannel &&
-				oldState.channel.members.size === 1
-			) {
+			if (oldState.channel.members.size === 1) {
 				await client.radio.stopRadio(client, newState.guild.id);
 			}
 		} else {
