@@ -7,89 +7,87 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model guildCooldowns {
-  id           Int?    @default(autoincrement())
-  uid          String
-  guildId      String
-  commandName  String
-  endTimestamp String?
-
-  @@id([uid, guildId, commandName])
-}
-
-model guildCooldownsSettings {
-  id       Int     @default(autoincrement())
-  guildId  String
-  command  String
-  cooldown String?
-
-  @@id([guildId, command])
-}
-
-model globalCooldowns {
-  id              Int     @default(autoincrement())
-  uid             String
-  interactionName String
-  endTimestamp    String?
-  @@id([uid, interactionName])
-}
-
 model settings {
-  guildId           String   @id
-  voiceLogsChannel  String?
-  welcomeChannel    String?
-  leaveChannel      String?
-  autoRole          String?
-  radioEnabled      Boolean? @default(true)
-  radioStation      String?
-  aiChannel         String?
-  radioChannelVoice String?
+  guildId                 String   @id
+  voiceStateUpdateChannel String?
+  radioStation            String?
+  autoRadioVoiceChannel   String?
+  radioId                 String?
+  antiPhishing            Boolean?
+}
+model users {
+  familyId  Int @default(autoincrement())
+  userId    String 
+  guildId   String
+  marriedTo String?
+  marriedAt DateTime?
+  lastWork  DateTime?
+  lastCrime DateTime?
+  lastDaily DateTime?
+  lastRob   DateTime?
+
+  @@id([userId, guildId])
+
 }
 
-model customBots {
-  clientId               String
-  userId                 String?
-  token                  String?
-  customPresenceName     String?
-  customPresenceActivity String?
-  id                     Int     @default(autoincrement())
+model ticketButtons {
+  customId         Int     @default(autoincrement())
+  guildId          String
+  label            String?
+  style            String?
+  discordChannelId String?
+  assignedToSelect String?
+  
+  @@id([guildId, customId])
+}
 
-  @@id([id, clientId])
+model ticketModals {
+  customId         Int     @default(autoincrement())
+  guildId          String
+  label            String?
+  style            String?
+  placeholder      String?
+  required         Boolean?
+  categoryId       String?
+  @@id([guildId, customId])
+}
+model ticketSelects {
+  customId         Int     @default(autoincrement())
+  guildId          String
+  label            String?
+  description      String?
+  discordChannelId String?
+  
+  @@id([guildId, customId])
+}
+model tickets {
+  id             Int    // NOTE: Autoincrement will cause problems with correct ID assignment
+  guildId        String
+  userId         String
+  ticketChannel  String?
+  ticketCategory String?
+  state          String?
+  assignedTo     String?
+
+  @@id([guildId, userId, id])
+}
+
+model cases {
+  id        Int      @id @default(autoincrement())
+  guildId   String
+  userId    String
+  type      String?
+  reason    String?
+  date      DateTime @default(now())
+  moderator String
+  duration  String?
 }
 
 model economy {
-  guildId String
-  uid     String
-  wallet  String?
-  bank    String?
+  guildId   String
+  userId    String
+  bank      String?
+  wallet    String?
 
-  @@id([uid, guildId])
-}
-
-model economySettings {
-  id       Int
-  guildId  String
-  sentence String?
-  type     String?
-  action   String?
-  cooldown Int?
-
-  @@id([id, guildId])
-}
-
-model shops {
-  id           Int
-  guildId      String
-  name         String
-  description  String
-  itemsBuyable Boolean
-
-  @@id([id, guildId])
-}
-
-model spotify {
-  accessToken  String?
-  expiresIn    Int?
-  refreshToken String?
-  uid          String  @id
+  @@id([guildId, userId])
 }
