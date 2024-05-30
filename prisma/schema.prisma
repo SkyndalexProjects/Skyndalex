@@ -15,6 +15,20 @@ model settings {
   radioId                 String?
   antiPhishing            Boolean?
 }
+model users {
+  familyId  Int @default(autoincrement())
+  userId    String 
+  guildId   String
+  marriedTo String?
+  marriedAt DateTime?
+  lastWork  DateTime?
+  lastCrime DateTime?
+  lastDaily DateTime?
+  lastRob   DateTime?
+
+  @@id([userId, guildId])
+
+}
 
 model ticketButtons {
   customId         Int     @default(autoincrement())
@@ -74,7 +88,6 @@ model economy {
   userId    String
   bank      String?
   wallet    String?
-  lastDaily DateTime?
 
   @@id([guildId, userId])
 }

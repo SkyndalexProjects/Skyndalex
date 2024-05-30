@@ -18,7 +18,7 @@ export async function run(
 	if (amountToWith > Number.parseInt(user?.bank || "0"))
 		return interaction.reply(client.i18n.t("ECONOMY_NOT_ENOUGH_MONEY"));
 
-	const updateUser = await client.prisma.economy.upsert({
+	await client.prisma.economy.upsert({
 		where: {
 			guildId_userId: {
 				guildId: interaction.guild.id,
