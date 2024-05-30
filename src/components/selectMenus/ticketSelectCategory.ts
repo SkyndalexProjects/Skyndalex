@@ -69,5 +69,5 @@ export async function run(
 
 	return interaction.update({
 		components: [buttonActionRow, selectActionRow],
-	})
+	});
 }

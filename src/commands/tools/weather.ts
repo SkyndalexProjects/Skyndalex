@@ -47,11 +47,12 @@ export async function run(
 
 		return interaction.editReply({ embeds: [embed] });
 	} catch (e) {
-		const embedCommandNotFound = new EmbedBuilder(client, interaction.locale)
-		.setDescription(
-			"COMMAND_FAILED"
+		const embedCommandNotFound = new EmbedBuilder(
+			client,
+			interaction.locale,
 		)
-		.setColor("Red");
+			.setDescription("COMMAND_FAILED")
+			.setColor("Red");
 
 		await interaction.editReply({ embeds: [embedCommandNotFound] });
 		console.error(e);
