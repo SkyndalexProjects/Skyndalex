@@ -3,8 +3,8 @@ import {
 	EmbedBuilder as embedBuilder,
 	type APIEmbedField,
 } from "discord.js";
-import type { LocaleFieldOptions } from "../../types/structures";
-import type { SkyndalexClient } from "../Client";
+import type { LocaleFieldOptions } from "../../types/structures.js";
+import type { SkyndalexClient } from "../Client.js";
 export class EmbedBuilder extends embedBuilder {
 	locale: string;
 	constructor(

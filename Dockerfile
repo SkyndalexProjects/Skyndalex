@@ -7,4 +7,7 @@ RUN npm install
 
 COPY . .
 
-CMD ["sh", "docker-entrypoint.sh"]
+RUN npx prisma generate
+RUN npm run build
+
+CMD ["npm", "start"]

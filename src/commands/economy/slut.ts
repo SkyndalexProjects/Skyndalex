@@ -4,7 +4,7 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "../../classes/Client";
+import type { SkyndalexClient } from "../../classes/Client.js";
 import { updateWallet } from "utils/updateWallet";
 export async function run(
 	client: SkyndalexClient,

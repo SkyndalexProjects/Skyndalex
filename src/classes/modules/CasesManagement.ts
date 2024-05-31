@@ -1,4 +1,4 @@
-import type { SkyndalexClient } from "../Client";
+import type { SkyndalexClient } from "../Client.js";
 export class CaseManagement {
 	constructor(private readonly client: SkyndalexClient) {
 		this.client = client;

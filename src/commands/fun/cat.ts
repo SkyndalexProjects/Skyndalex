@@ -2,8 +2,13 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "../../classes/Client";
+import type { SkyndalexClient } from "../../classes/Client.js";
 import { EmbedBuilder } from "classes/builders/EmbedBuilder";
+
+interface cat {
+	file: string;
+}
+
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
@@ -11,7 +16,7 @@ export async function run(
 	try {
 		await interaction.deferReply();
 		const response = await fetch("http://aws.random.cat/meow");
-		const cat = await response.json();
+		const cat = await response.json() as cat;
 
 		console.log("cat", cat);
 		const embed = new EmbedBuilder(client, interaction.locale)

@@ -50,7 +50,7 @@ export async function run(
 			.setLabel("CASE_REVOKED")
 			.setStyle(ButtonStyle.Secondary);
 
-		const row = new ActionRowBuilder().addComponents(disableButton);
+		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(disableButton);
 		const member = await interaction?.guild?.members?.fetch(memberId);
 
 		switch (caseType) {
@@ -69,7 +69,7 @@ export async function run(
 			.setDisabled(true)
 			.setLabel("ERROR_BUTTON_DELETE_CASE")
 			.setStyle(ButtonStyle.Secondary);
-		const row = new ActionRowBuilder().addComponents(buttonError);
+		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(buttonError);
 
 		await interaction.update({ components: [row] });
 	}

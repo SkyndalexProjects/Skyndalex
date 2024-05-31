@@ -5,7 +5,7 @@ import {
 	ChannelType,
 	type Channel,
 } from "discord.js";
-import type { SkyndalexClient } from "../../../../classes/Client";
+import type { SkyndalexClient } from "../../../../classes/Client.js";
 import { EmbedBuilder } from "classes/builders/EmbedBuilder";
 export async function run(
 	client: SkyndalexClient,

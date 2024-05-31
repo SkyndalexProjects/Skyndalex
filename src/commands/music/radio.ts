@@ -3,10 +3,10 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import { fetch } from "undici";
-import type { SkyndalexClient } from "../../classes/Client";
-import { EmbedBuilder } from "../../classes/builders/EmbedBuilder";
-import type { radioStation, radioStationData } from "../../types/structures";
+import type { SkyndalexClient } from "../../classes/Client.js";
+import { EmbedBuilder } from "../../classes/builders/EmbedBuilder.js";
+import type { radioStation, radioStationData } from "../../types/structures.js";
+import { TrackResult } from "shoukaku";
 
 export async function run(
 	client: SkyndalexClient,
@@ -59,7 +59,7 @@ export async function run(
 
 		if (client.shoukaku.connections.has(interaction.guild.id)) {
 			const player = client.shoukaku.players.get(interaction.guild.id);
-			const result = await player.node.rest.resolve(resourceUrl);
+			const result = await player.node.rest.resolve(resourceUrl) as TrackResult;
 			await player.playTrack({ track: result.data.encoded });
 
 			embed.setTitle("RADIO_CHANGED").setColor("Blue");
@@ -73,7 +73,7 @@ export async function run(
 			shardId: 0,
 		});
 
-		const result = await player.node.rest.resolve(resourceUrl);
+		const result = await player.node.rest.resolve(resourceUrl) as TrackResult;
 
 		await player.playTrack({ track: result.data.encoded });
 

@@ -6,9 +6,8 @@ import {
 	EmbedBuilder,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import { fetch } from "undici";
-import type { SkyndalexClient } from "../../../classes/Client";
-import type { HuggingFaceText } from "../../../types/structures";
+import type { SkyndalexClient } from "../../../classes/Client.js";
+import type { HuggingFaceText } from "../../../types/structures.js";
 
 export async function run(
 	client: SkyndalexClient,
