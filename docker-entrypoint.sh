@@ -6,7 +6,7 @@ if [ -f .env ]; then
   export $(cat .env | xargs)
 fi
 
-echo "Starting bot setup..."
+echo "Starting database setup..."
 
 npx prisma generate
 
