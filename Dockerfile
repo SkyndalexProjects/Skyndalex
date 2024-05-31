@@ -1,6 +1,12 @@
 FROM node:20-alpine
+
 WORKDIR /usr/src/app
-COPY . .
-RUN npx prisma generate
+
+COPY package*.json ./
 RUN npm install
-CMD ["npm", "run", "dev"]
+
+COPY . .
+
+RUN chmod +x docker-entrypoint.sh
+
+CMD ["sh", "docker-entrypoint.sh"]

@@ -19,9 +19,9 @@ import { Connectors, Shoukaku } from "shoukaku";
 
 const Nodes = [
 	{
-		name: "Localhost",
-		url: "127.0.0.1:6969",
-		auth: "youshallnotpass",
+		name: "Skyndalex:Lavalink",
+		url:  process.env.LAVALINK_URL,
+		auth: process.env.LAVALINK_AUTH,
 	},
 ];
 
