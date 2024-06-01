@@ -30,7 +30,7 @@ export async function ready(client: SkyndalexClient) {
 					) {
 						command.addSubcommand(
 							// @ts-expect-error
-							data,
+							subcommandValue.data,
 						);
 						addedCommands.add(key);
 					}
