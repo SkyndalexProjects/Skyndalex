@@ -1,8 +1,8 @@
 import { lstatSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { Collection } from "discord.js";
-import type { Command, Component, Modal } from "../types/structures";
-import type { SkyndalexClient } from "./Client";
+import type { Command, Component, Modal } from "../types/structures.js";
+import type { SkyndalexClient } from "./Client.js";
 export class Loaders {
 	constructor(private readonly client: SkyndalexClient) {
 		this.client = client;
@@ -28,6 +28,7 @@ export class Loaders {
 					prefix ? `${prefix}/${dir}` : dir,
 				);
 			} else {
+				if(!dir.endsWith('.ts') || !dir.endsWith('.js')) continue;
 				const command = await import(`${path}/${dir}`);
 
 				this.client.commands.set(
@@ -42,7 +43,7 @@ export class Loaders {
 	async loadEvents(client: SkyndalexClient, path: string) {
 		const files = await readdir(new URL(path, import.meta.url));
 		for (const file of files) {
-			if (file.split(".")[1] !== "ts" && !file.split(".")[2]) continue;
+			if (!file.endsWith('.js') || !file.endsWith('.ts')) continue;
 			const event = await import(`${path}/${file}`);
 			const name = file.split(".")[0];
 			client.on(name, (...events) => event[name](client, ...events));
@@ -56,6 +57,8 @@ export class Loaders {
 				new URL(`${path}/${category}`, import.meta.url),
 			);
 			for (const component of componentFiles) {
+				if(!component.endsWith('.ts') || !component.endsWith('.js')) continue;
+
 				const componentFile = await import(
 					`${path}/${category}/${component}`
 				);
@@ -69,6 +72,8 @@ export class Loaders {
 		const modals = new Collection<string, Modal>();
 		const modalFiles = await readdir(new URL(path, import.meta.url));
 		for (const modal of modalFiles) {
+			if(!modal.endsWith('.ts') || !modal.endsWith('.js')) continue;
+
 			const modalFile = await import(`${path}/${modal}`);
 			const customId = modal.split(".")[0];
 			modals.set(customId, modalFile);

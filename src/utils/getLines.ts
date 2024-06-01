@@ -1,10 +1,8 @@
 // This function is only temporary, it will be replaced by a better one in the future
-export interface TextMeasurementContext {
-	measureText(text: string): { width: number };
-}
+import { SKRSContext2D } from "@napi-rs/canvas";
 
 export function getLines(
-	ctx: TextMeasurementContext,
+	ctx: SKRSContext2D,
 	text: string,
 	maxWidth: number,
 ) {

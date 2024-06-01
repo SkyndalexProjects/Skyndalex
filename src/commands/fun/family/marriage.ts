@@ -4,7 +4,7 @@ import {
 	ButtonStyle,
 	ActionRowBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "../../../classes/Client";
+import type { SkyndalexClient } from "../../../classes/Client.js";
 import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
 import { EmbedBuilder } from "classes/builders/EmbedBuilder";
 export async function run(

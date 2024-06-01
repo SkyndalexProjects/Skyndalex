@@ -10,11 +10,11 @@ import {
 } from "discord.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
-import type { Command, Component, Modal } from "../types/structures";
-import { Loaders } from "./Loaders";
-import { Logger } from "./Logger";
-import { CaseManagement } from "./modules/CasesManagement";
-import { RadioPlayer } from "./modules/RadioPlayer";
+import type { Command, Component, Modal } from "../types/structures.js";
+import { Loaders } from "./Loaders.js";
+import { Logger } from "./Logger.js";
+import { CaseManagement } from "./modules/CasesManagement.js";
+import { RadioPlayer } from "./modules/RadioPlayer.js";
 import { Connectors, Shoukaku } from "shoukaku";
 
 const Nodes = [

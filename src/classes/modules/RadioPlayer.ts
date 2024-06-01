@@ -1,4 +1,4 @@
-import type { SkyndalexClient } from "../Client";
+import type { SkyndalexClient } from "../Client.js";
 export class RadioPlayer {
 	constructor(private readonly client: SkyndalexClient) {
 		this.client = client;

@@ -6,22 +6,22 @@ import {
 	EmbedBuilder,
 	type MessageComponentInteraction,
 } from "discord.js";
-import type { HuggingFaceText } from "../../types/structures";
+import type { HuggingFaceText } from "../../types/structures.js";
 
 export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction,
 ) {
 	try {
-		await interaction.deferUpdate();
-
-		const model = "meta-llama/Meta-Llama-3-8B-Instruct";
-
 		if (interaction.user.id !== interaction?.message?.interaction?.user?.id)
-			return interaction.editReply({
+			return interaction.reply({
 				content: "You can't use this button!",
 				ephemeral: true,
 			});
+
+		await interaction.deferUpdate();
+
+		const model = "meta-llama/Meta-Llama-3-8B-Instruct";
 
 		const message = interaction.message.embeds[0].description;
 

@@ -1,10 +1,9 @@
 import {
 	SlashCommandBuilder,
-	type SlashCommandSubcommandBuilder,
 	SlashCommandSubcommandGroupBuilder,
 	Routes,
 } from "discord.js";
-import type { SkyndalexClient } from "../classes/Client";
+import type { SkyndalexClient } from "../classes/Client.js";
 
 export async function ready(client: SkyndalexClient) {
 	const parsedCommands = [];
@@ -30,7 +29,8 @@ export async function ready(client: SkyndalexClient) {
 						!addedCommands.has(key)
 					) {
 						command.addSubcommand(
-							subcommandValue.data as SlashCommandSubcommandBuilder,
+							// @ts-expect-error
+							data,
 						);
 						addedCommands.add(key);
 					}
@@ -55,7 +55,8 @@ export async function ready(client: SkyndalexClient) {
 						for (const [gk, gv] of groups.entries()) {
 							if (!addedCommands.has(gk)) {
 								groupIndex.data.addSubcommand(
-									gv.data as SlashCommandSubcommandBuilder,
+									// @ts-expect-error
+									gv.data,
 								);
 								addedCommands.add(gk);
 							}

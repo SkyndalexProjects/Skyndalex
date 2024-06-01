@@ -2,7 +2,7 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "../../classes/Client";
+import type { SkyndalexClient } from "../../classes/Client.js";
 import { randomBytes } from "node:crypto";
 import { EmbedBuilder } from "classes/builders/EmbedBuilder";
 import type { ainasepicsAPI } from "types/structures";

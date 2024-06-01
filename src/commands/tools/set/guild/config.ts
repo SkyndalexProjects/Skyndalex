@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 import { EmbedBuilder } from "classes/builders/EmbedBuilder";
 import { StringSelectMenuBuilder } from "classes/builders/components/StringSelectMenuBuilder";
-import type { SkyndalexClient } from "../../../../classes/Client";
+import type { SkyndalexClient } from "../../../../classes/Client.js";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,

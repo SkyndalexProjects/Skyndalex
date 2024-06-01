@@ -1,12 +1,18 @@
 services:
   bot:
     image: "skyndalex:bot"
-    env_file:
-      - .env
+    environment:
+      - BOT_TOKEN=DISCORD_BOT_TOKEN
+      - DATABASE_URL=postgresql://postgres:PASSWORD$@db:5432/DATABASE?schema=public
+      - HF_TOKEN=HUGGINGFACE_TOKEN
+      - LAVALINK_URL=lavalink:6969
+      - LAVALINK_AUTH=SecretP@ssword!
     links:
       - lavalink
+      - db
     depends_on:
       - lavalink
+      - db
   lavalink:
     image: ghcr.io/lavalink-devs/lavalink:4
     container_name: lavalink
@@ -14,26 +20,24 @@ services:
     environment:
       - _JAVA_OPTIONS=-Xmx6G
       - SERVER_PORT=6969
-      - LAVALINK_SERVER_PASSWORD=${LAVALINK_AUTH}
+      - LAVALINK_SERVER_PASSWORD=SecretP@ssword!
     volumes:
       - ./application.yml:/opt/Lavalink/application.yml
       - ./plugins/:/opt/Lavalink/plugins/
     expose:
       - 6969
-  db: 
+  db:
     container_name: postgres
     image: postgres
     restart: always
     shm_size: 128mb
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: PASSWORD$
       PGDATA: /data/postgres
       POSTGRES_DB: skyndalexbeta
     volumes:
      - type: tmpfs
        target: /dev/shm
        tmpfs:
-         size: 134217728  
-    ports:
-      - "5332:5432"
+         size: 134217728
