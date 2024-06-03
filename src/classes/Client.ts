@@ -81,5 +81,20 @@ export class SkyndalexClient extends Client {
 		this.components = await this.loader.loadComponents("../components");
 		this.modals = await this.loader.loadModals("../modals");
 		await this.login(process.env.BOT_TOKEN);
+
+		process.on("unhandledRejection", async (reason, p) => {
+			console.log(" [antiCrash] :: Unhandled Rejection/Catch");
+			console.log(reason, p);
+		  });
+		  
+		  process.on("uncaughtException", async (err, origin) => {
+			console.log(" [antiCrash] :: Uncaught Exception/Catch");
+			console.log(err, origin);
+		  });
+		  
+		  process.on("uncaughtExceptionMonitor", async (err, origin) => {
+			console.log(" [antiCrash] :: Uncaught Exception/Catch (MONITOR)");
+			console.log(err, origin);
+		  });	
 	}
 }
