@@ -3,8 +3,8 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "../../classes/Client.js";
-import { EmbedBuilder } from "classes/builders/EmbedBuilder";
-import type { weatherData } from "types/structures";
+import { EmbedBuilder } from "../../classes/builders/EmbedBuilder.js";
+import type { weatherData } from "../../types/structures";
 
 export async function run(
 	client: SkyndalexClient,

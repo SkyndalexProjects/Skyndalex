@@ -1,6 +1,6 @@
-import type { SkyndalexClient } from "classes/Client";
-import { EmbedBuilder } from "classes/builders/EmbedBuilder";
-import { ButtonBuilder } from "classes/builders/components/ButtonBuilder";
+import type { SkyndalexClient } from "../../classes/Client.js";
+import { EmbedBuilder } from "../../classes/builders/EmbedBuilder.js";
+import { ButtonBuilder } from "../../classes/builders/components/ButtonBuilder.js";
 import {
 	ButtonStyle,
 	type StringSelectMenuInteraction,

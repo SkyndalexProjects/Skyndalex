@@ -1,5 +1,5 @@
-import type { SkyndalexClient } from "classes/Client";
-import { EmbedBuilder } from "classes/builders/EmbedBuilder";
+import type { SkyndalexClient } from "../../classes/Client.js";
+import { EmbedBuilder } from "../../classes/builders/EmbedBuilder.js";
 import {
 	ActionRowBuilder,
 	ChannelType,

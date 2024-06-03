@@ -1,5 +1,4 @@
 import { EmbedBuilder, type Interaction } from "discord.js";
-import { InteractionType } from "discord.js";
 import type { SkyndalexClient } from "../classes/Client.js";
 
 export async function interactionCreate(

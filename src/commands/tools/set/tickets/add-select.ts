@@ -4,7 +4,7 @@ import {
 	ChannelType,
 } from "discord.js";
 import type { SkyndalexClient } from "../../../../classes/Client.js";
-import { EmbedBuilder } from "classes/builders/EmbedBuilder";
+import { EmbedBuilder } from "../../../../classes/builders/EmbedBuilder.js";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,

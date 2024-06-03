@@ -1,10 +1,10 @@
 import { createCanvas, loadImage } from "@napi-rs/canvas";
-import type { SkyndalexClient } from "classes/Client";
+import type { SkyndalexClient } from "../../classes/Client.js";
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import { getLines } from "utils/getLines";
+import { getLines } from "../../utils/getLines.js";
 const canvas = createCanvas(384, 385);
 const ctx = canvas.getContext("2d");
 

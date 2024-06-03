@@ -4,8 +4,8 @@ import {
 } from "discord.js";
 import type { SkyndalexClient } from "../../classes/Client.js";
 import { randomBytes } from "node:crypto";
-import { EmbedBuilder } from "classes/builders/EmbedBuilder";
-import type { ainasepicsAPI } from "types/structures";
+import { EmbedBuilder } from "../../classes/builders/EmbedBuilder.js";
+import type { ainasepicsAPI } from "../../types/structures";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,

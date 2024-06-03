@@ -1,4 +1,4 @@
-import { EmbedBuilder } from "classes/builders/EmbedBuilder";
+import { EmbedBuilder } from "../../classes/builders/EmbedBuilder.js";
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,

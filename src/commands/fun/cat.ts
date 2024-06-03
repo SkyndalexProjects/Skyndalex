@@ -3,7 +3,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "../../classes/Client.js";
-import { EmbedBuilder } from "classes/builders/EmbedBuilder";
+import { EmbedBuilder } from "../../classes/builders/EmbedBuilder.js";
 
 interface cat {
 	file: string;

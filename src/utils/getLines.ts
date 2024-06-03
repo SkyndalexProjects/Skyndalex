@@ -1,5 +1,5 @@
 // This function is only temporary, it will be replaced by a better one in the future
-import { SKRSContext2D } from "@napi-rs/canvas";
+import type { SKRSContext2D } from "@napi-rs/canvas";
 
 export function getLines(
 	ctx: SKRSContext2D,

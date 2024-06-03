@@ -21,7 +21,7 @@ const Nodes = [
 	{
 		name: "Localhost",
 		url:  process.env.LAVALINK_URL,
-		auth: process.env.LAVALINK_AUTH,
+		auth: process.env.LAVALINK_SERVER_PASSWORD,
 	},
 ];
 

@@ -1,4 +1,4 @@
-import type { SkyndalexClient } from "classes/Client";
+import type { SkyndalexClient } from "../../classes/Client.js";
 import {
 	ActionRowBuilder,
 	ButtonBuilder,

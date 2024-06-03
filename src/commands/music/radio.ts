@@ -5,8 +5,8 @@ import {
 } from "discord.js";
 import type { SkyndalexClient } from "../../classes/Client.js";
 import { EmbedBuilder } from "../../classes/builders/EmbedBuilder.js";
-import type { radioStation, radioStationData } from "../../types/structures.js";
-import { TrackResult } from "shoukaku";
+import type { radioStation, radioStationData } from "../../types/structures";
+import type { TrackResult } from "shoukaku";
 
 export async function run(
 	client: SkyndalexClient,

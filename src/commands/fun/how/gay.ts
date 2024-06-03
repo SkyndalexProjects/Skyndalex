@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { EmbedBuilder } from "classes/builders/EmbedBuilder";
+import { EmbedBuilder } from "../../../classes/builders/EmbedBuilder.js";
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
