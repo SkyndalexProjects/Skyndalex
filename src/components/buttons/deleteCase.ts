@@ -1,5 +1,5 @@
 import type { SkyndalexClient } from "../../classes/Client.js";
-import { ButtonBuilder } from "../../classes/builders/components/ButtonBuilder.js";
+import { ButtonBuilder } from "#builders";
 import {
 	ActionRowBuilder,
 	ButtonStyle,

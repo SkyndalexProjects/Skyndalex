@@ -1,5 +1,4 @@
-import { EmbedBuilder } from "../../classes/builders/EmbedBuilder.js";
-import { ButtonBuilder } from "../../classes/builders/components/ButtonBuilder.js";
+import { EmbedBuilder, ButtonBuilder} from "#builders";
 import {
 	ActionRowBuilder,
 	ButtonStyle,

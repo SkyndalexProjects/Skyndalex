@@ -1,4 +1,4 @@
-import { ButtonBuilder } from "../../../classes/builders/components/ButtonBuilder.js";
+import { ButtonBuilder } from "#builders";
 import {
 	ActionRowBuilder,
 	ButtonStyle,

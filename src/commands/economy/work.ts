@@ -1,11 +1,11 @@
 import { randomBytes } from "node:crypto";
-import { EmbedBuilder } from "../../classes/builders/EmbedBuilder.js";
+import { EmbedBuilder } from "#builders";
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "../../classes/Client.js";
-import { updateWallet } from "../../utils/updateWallet.js";
+import { updateWallet } from "#utils";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,

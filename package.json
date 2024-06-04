@@ -13,6 +13,12 @@
     "migrate:deploy": "prisma migrate deploy",
     "start": "npm run migrate:deploy && node dist/index.js"
   },
+  "imports": {
+    "#": "./dist/index.js",
+    "#builders": "./dist/classes/builders/index.js",
+    "#components": "./dist/classes/components/index.js",
+    "#utils": "./dist/utils/index.js"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {

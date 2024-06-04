@@ -4,7 +4,7 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import { getLines } from "../../utils/getLines.js";
+import { getLines } from "#utils";
 const canvas = createCanvas(384, 385);
 const ctx = canvas.getContext("2d");
 

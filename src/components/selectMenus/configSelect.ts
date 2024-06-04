@@ -1,7 +1,6 @@
 import type { SkyndalexClient } from "../../classes/Client.js";
 import { type StringSelectMenuInteraction, ActionRowBuilder } from "discord.js";
-import { EmbedBuilder } from "../../classes/builders/EmbedBuilder.js";
-import { StringSelectMenuBuilder } from "../../classes/builders/components/StringSelectMenuBuilder.js";
+import { StringSelectMenuBuilder, EmbedBuilder } from "#builders";
 export async function run(
 	client: SkyndalexClient,
 	interaction: StringSelectMenuInteraction,

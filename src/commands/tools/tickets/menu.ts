@@ -7,7 +7,7 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from "discord.js";
-import { EmbedBuilder } from "../../../classes/builders/EmbedBuilder.js";
+import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "../../../classes/Client.js";
 
 export async function run(
