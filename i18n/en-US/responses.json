@@ -99,5 +99,7 @@
   "NO_TICKET_CHANNEL_ERROR": "This channel is not a ticket channel.",
   "TICKET_ASSIGNED": "[UPDATE] Ticked assigned to **{{ user }}** [<@{{ userId }}>] (TicketID: {{ ticketId }}).",
   "CANNOT_ASSIGN_BOT": "You can't assign a bot to a ticket.",
-  "CANNOT_ASSIGN_SELF": "You can't assign a ticket author to his own ticket."
+  "CANNOT_ASSIGN_SELF": "You can't assign a ticket author to his own ticket.",
+  "SELECT_LIMIT_REACHED": "Limit reached!",
+  "SELECT_LIMIT_REACHED_DESC": "You can't create more than 25 selects in one row."
 }

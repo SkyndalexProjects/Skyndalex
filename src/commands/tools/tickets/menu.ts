@@ -58,6 +58,15 @@ export async function run(
 				.setValue(`select-${select.customId}`);
 		});
 
+		if (selectOptions.length >= 25) {
+			const embed = new EmbedBuilder(client, interaction.locale)
+				.setTitle("SELECT_LIMIT_REACHED")
+				.setDescription("SELECT_LIMIT_REACHED_DESC")
+				.setColor("Red")
+				.setTimestamp();
+
+			return interaction.reply({ embeds: [embed] });
+		}
 		const selectBuilder = new StringSelectMenuBuilder()
 			.setPlaceholder("Select an option")
 			.setCustomId("ticketSelectCategory")

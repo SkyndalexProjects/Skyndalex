@@ -112,5 +112,7 @@
   "MARRIED_TITLE": "💍 | Ślub",
   "MARRIED_DESC": "Gratulacje! {{ author }} i {{ user }} właśnie się poślubili! 🎉",
   "MARRY_NOT_YOU": "Ten przycisk nie dotyczy ciebie, tylko drugiego użytkownika z którym chcesz się poślubić.",
-  "MARRY_BOT": "Nie możesz poślubić bota."
+  "MARRY_BOT": "Nie możesz poślubić bota.",
+  "SELECT_LIMIT_REACHED": "Osiągnięto limit selectów.",
+  "SELECT_LIMIT_REACHED_DESC": "Osiągnięto limit selectów na tym serwerze. Jeśli chcesz dodać więcej, musisz usunąć niektóre z nich."
 }
