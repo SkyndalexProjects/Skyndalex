@@ -44,14 +44,18 @@ export async function run(
 	});
 }
 
-export const data = new SlashCommandBuilder()
-	.setName("changemymind")
-	.setDescription('Generate image with "Change my mind" meme!')
-	.addStringOption((option) =>
-		option
-			.setName("text")
-			.setDescription("Text to put on the image")
-			.setRequired(true)
-			.setMaxLength(80)
-			.setMinLength(1),
-	);
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("changemymind")
+		.setDescription('Generate image with "Change my mind" meme!')
+		.addStringOption((option) =>
+			option
+				.setName("text")
+				.setDescription("Text to put on the image")
+				.setRequired(true)
+				.setMaxLength(80)
+				.setMinLength(1),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+};

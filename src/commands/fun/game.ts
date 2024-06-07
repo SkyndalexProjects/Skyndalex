@@ -22,13 +22,13 @@ export async function run(
 			host: server,
 			port: Number(port),
 		});
-		console.log("data", data);
+
 		if (!data)
-			return interaction.editReply(
-				client.i18n.t("GAME_SERVER_NOT_FOUND", {
+			return interaction.editReply({
+				content: client.i18n.t("GAME_SERVER_NOT_FOUND", {
 					lng: interaction.locale,
 				}),
-			);
+			});
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setTitle(String(data.name))
 			.setColor("Green")
@@ -68,29 +68,33 @@ export async function run(
 	} catch (e) {
 		console.error(e);
 
-		return interaction.editReply(
-			client.i18n.t("GAME_SERVER_FAILED", {
+		return interaction.editReply({
+			content: client.i18n.t("GAME_SERVER_FAILED", {
 				lng: interaction.locale,
 				server: interaction.options.getString("server"),
 				game: interaction.options.getString("game"),
 			}),
-		);
+		});
 	}
 }
 
-export const data = new SlashCommandBuilder()
-	.setName("game")
-	.setDescription("Check status of your favourtie server in game!")
-	.addStringOption((option) =>
-		option
-			.setName("game")
-			.setDescription("Game")
-			.setAutocomplete(true)
-			.setRequired(true),
-	)
-	.addStringOption((option) =>
-		option.setName("server").setDescription("Server").setRequired(true),
-	);
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("game")
+		.setDescription("Check status of your favourtie server in game!")
+		.addStringOption((option) =>
+			option
+				.setName("game")
+				.setDescription("Game")
+				.setAutocomplete(true)
+				.setRequired(true),
+		)
+		.addStringOption((option) =>
+			option.setName("server").setDescription("Server").setRequired(true),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+};
 
 export async function autocomplete(interaction) {
 	const focusedValue = interaction.options.getFocused();

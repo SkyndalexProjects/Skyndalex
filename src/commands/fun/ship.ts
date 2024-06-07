@@ -67,24 +67,28 @@ export async function run(
 	return interaction.editReply({ embeds: [embed] });
 }
 
-export const data = new SlashCommandBuilder()
-	.setName("ship")
-	.setDescription("Ship two users!")
-	.addUserOption((option) =>
-		option
-			.setName("who")
-			.setDescription("First user to ship")
-			.setRequired(true),
-	)
-	.addUserOption((option) =>
-		option
-			.setName("to-who")
-			.setDescription("Second user to ship")
-			.setRequired(true),
-	)
-	.addBooleanOption((option) =>
-		option
-			.setName("generate-image")
-			.setDescription("Generate image from anime gallery?")
-			.setRequired(false),
-	);
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("ship")
+		.setDescription("Ship two users!")
+		.addUserOption((option) =>
+			option
+				.setName("who")
+				.setDescription("First user to ship")
+				.setRequired(true),
+		)
+		.addUserOption((option) =>
+			option
+				.setName("to-who")
+				.setDescription("Second user to ship")
+				.setRequired(true),
+		)
+		.addBooleanOption((option) =>
+			option
+				.setName("generate-image")
+				.setDescription("Generate image from anime gallery?")
+				.setRequired(false),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+};

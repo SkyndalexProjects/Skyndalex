@@ -20,6 +20,10 @@ export async function run(
 	return interaction.editReply({ embeds: [embed] });
 }
 
-export const data = new SlashCommandBuilder()
-	.setName("dog")
-	.setDescription("Generate random dog");
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("dog")
+		.setDescription("Generate random dog"),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+};
