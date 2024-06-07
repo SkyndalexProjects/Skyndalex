@@ -114,5 +114,7 @@
   "MARRY_NOT_YOU": "Ten przycisk nie dotyczy ciebie, tylko drugiego użytkownika z którym chcesz się poślubić.",
   "MARRY_BOT": "Nie możesz poślubić bota.",
   "SELECT_LIMIT_REACHED": "Osiągnięto limit selectów.",
-  "SELECT_LIMIT_REACHED_DESC": "Osiągnięto limit selectów na tym serwerze. Jeśli chcesz dodać więcej, musisz usunąć niektóre z nich."
+  "SELECT_LIMIT_REACHED_DESC": "Osiągnięto limit selectów na tym serwerze. Jeśli chcesz dodać więcej, musisz usunąć niektóre z nich.",
+  "8BALL_RESPONSE": "Odpowiedź",
+  "8BALL_RESPONSES": ["Tak", "Nie", "Wątpię", "Prawdopodobnie", "Nie mam pojęcia"]
 }
