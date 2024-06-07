@@ -1,2 +1,2 @@
-export * from './EmbedBuilder.js';
-export * from "#components"
+export * from "./EmbedBuilder.js";
+export * from "#components";

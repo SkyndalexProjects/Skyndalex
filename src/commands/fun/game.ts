@@ -20,7 +20,7 @@ export async function run(
 		const data = await GameDig.query({
 			type: game,
 			host: server,
-			port: Number(port)
+			port: Number(port),
 		});
 		console.log("data", data);
 		if (!data)

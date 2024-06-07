@@ -15,8 +15,6 @@ export async function run(
 	const style = interaction.options.getString("style");
 	const select = interaction.options.getString("assign-to-select");
 
-	console.log(select.split("-")[1]);
-
 	let channel: Channel;
 
 	if (!select) {
@@ -26,10 +24,10 @@ export async function run(
 		});
 	}
 
-	const getSelect = await client.prisma.ticketSelects.findFirst({
+	const getSelect = await client?.prisma?.ticketSelects?.findFirst({
 		where: {
 			guildId: interaction.guild.id,
-			customId: Number.parseInt(select.split("-")[1]),
+			customId: Number.parseInt(select?.split("-")[1]) || 0,
 		},
 	});
 

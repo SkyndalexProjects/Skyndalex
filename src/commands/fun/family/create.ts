@@ -7,7 +7,7 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	interaction.reply("nah")
+	interaction.reply("nah");
 }
 
 export const data = new SlashCommandSubcommandBuilder()
@@ -18,4 +18,4 @@ export const data = new SlashCommandSubcommandBuilder()
 			.setName("name")
 			.setDescription("The name of the family")
 			.setRequired(true),
-	)
+	);

@@ -59,7 +59,9 @@ export async function run(
 
 		if (client.shoukaku.connections.has(interaction.guild.id)) {
 			const player = client.shoukaku.players.get(interaction.guild.id);
-			const result = await player.node.rest.resolve(resourceUrl) as TrackResult;
+			const result = (await player.node.rest.resolve(
+				resourceUrl,
+			)) as TrackResult;
 			await player.playTrack({ track: result.data.encoded });
 
 			embed.setTitle("RADIO_CHANGED").setColor("Blue");
@@ -73,11 +75,13 @@ export async function run(
 			shardId: 0,
 		});
 
-		const result = await player.node.rest.resolve(resourceUrl) as TrackResult;
+		const result = (await player.node.rest.resolve(
+			resourceUrl,
+		)) as TrackResult;
 
 		await player.playTrack({ track: result.data.encoded });
 
-		embed.setTitle("RADIO_PLAYING").setColor("Gold")
+		embed.setTitle("RADIO_PLAYING").setColor("Gold");
 		return interaction.editReply({
 			embeds: [embed],
 		});

@@ -16,7 +16,7 @@ export async function run(
 	try {
 		await interaction.deferReply();
 		const response = await fetch("http://aws.random.cat/meow");
-		const cat = await response.json() as cat;
+		const cat = (await response.json()) as cat;
 
 		console.log("cat", cat);
 		const embed = new EmbedBuilder(client, interaction.locale)

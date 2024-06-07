@@ -20,7 +20,7 @@ import { Connectors, Shoukaku } from "shoukaku";
 const Nodes = [
 	{
 		name: "Localhost",
-		url:  process.env.LAVALINK_URL,
+		url: process.env.LAVALINK_URL,
 		auth: process.env.LAVALINK_SERVER_PASSWORD,
 	},
 ];
@@ -85,16 +85,16 @@ export class SkyndalexClient extends Client {
 		process.on("unhandledRejection", async (reason, p) => {
 			console.log(" [antiCrash] :: Unhandled Rejection/Catch");
 			console.log(reason, p);
-		  });
-		  
-		  process.on("uncaughtException", async (err, origin) => {
+		});
+
+		process.on("uncaughtException", async (err, origin) => {
 			console.log(" [antiCrash] :: Uncaught Exception/Catch");
 			console.log(err, origin);
-		  });
-		  
-		  process.on("uncaughtExceptionMonitor", async (err, origin) => {
+		});
+
+		process.on("uncaughtExceptionMonitor", async (err, origin) => {
 			console.log(" [antiCrash] :: Uncaught Exception/Catch (MONITOR)");
 			console.log(err, origin);
-		  });	
+		});
 	}
 }

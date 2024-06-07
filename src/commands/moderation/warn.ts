@@ -1,4 +1,4 @@
-import { EmbedBuilder, ButtonBuilder} from "#builders";
+import { EmbedBuilder, ButtonBuilder } from "#builders";
 import {
 	ActionRowBuilder,
 	ButtonStyle,

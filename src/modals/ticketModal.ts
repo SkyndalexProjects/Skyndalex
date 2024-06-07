@@ -59,8 +59,6 @@ export async function run(
 		},
 	});
 
-	console.log("interaction: ", interaction.message.components);
-
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("TICKET_CREATED_TITLE")
 		.setDescription("TICKET_CREATED_DESCRIPTION_FROM_MODAL", {

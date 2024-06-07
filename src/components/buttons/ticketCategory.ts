@@ -106,6 +106,7 @@ export async function run(
 			.setColor("Blue");
 
 		await channel.send({
+			content: `<@${interaction.user.id}>`,
 			embeds: [embed],
 		});
 

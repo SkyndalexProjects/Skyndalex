@@ -20,8 +20,30 @@ export async function run(
 		},
 	});
 
+	const buttons = await client.prisma.ticketButtons.findMany({
+		where: {
+			guildId: interaction.guild.id,
+			assignedToSelect: null,
+		},
+	});
+
+	const styles = {
+		PRIMARY: ButtonStyle.Primary,
+		SECONDARY: ButtonStyle.Secondary,
+		SUCCESS: ButtonStyle.Success,
+		DANGER: ButtonStyle.Danger,
+	};
+
 	const selectActionRow = new ActionRowBuilder<StringSelectMenuBuilder>();
 	const buttonActionRow = new ActionRowBuilder<ButtonBuilder>();
+
+	for (const button of buttons) {
+		const buttonBuilder = new ButtonBuilder()
+			.setStyle(styles[button.style])
+			.setLabel(button.label)
+			.setCustomId(`ticketCategory-${button.customId}`);
+		buttonActionRow.addComponents(buttonBuilder);
+	}
 
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("TICKETS_MENU_TITLE")
@@ -45,23 +67,9 @@ export async function run(
 
 		return interaction.reply({
 			embeds: [embed],
-			components: [selectActionRow],
+			components: [buttonActionRow, selectActionRow],
 		});
 	}
-
-	const styles = {
-		PRIMARY: ButtonStyle.Primary,
-		SECONDARY: ButtonStyle.Secondary,
-		SUCCESS: ButtonStyle.Success,
-		DANGER: ButtonStyle.Danger,
-	};
-
-	const buttons = await client.prisma.ticketButtons.findMany({
-		where: {
-			guildId: interaction.guild.id,
-			assignedToSelect: null,
-		},
-	});
 
 	if (buttons.length <= 0)
 		return interaction.reply({
@@ -69,14 +77,6 @@ export async function run(
 				lng: interaction.locale,
 			}),
 		});
-
-	for (const button of buttons) {
-		const buttonBuilder = new ButtonBuilder()
-			.setStyle(styles[button.style])
-			.setLabel(button.label)
-			.setCustomId(`ticketCategory-${button.customId}`);
-		buttonActionRow.addComponents(buttonBuilder);
-	}
 
 	return interaction.reply({
 		embeds: [embed],
