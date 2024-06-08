@@ -3,52 +3,81 @@ import {
 	ActionRowBuilder,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
-	EmbedBuilder,
 	SlashCommandSubcommandBuilder,
+	type AutocompleteInteraction
 } from "discord.js";
+import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "../../../classes/Client.js";
-import type { HuggingFaceText } from "../../../types/structures.js";
+import type { HuggingFaceSearchResult, HuggingFaceText } from "../../../types/structures.js";
 
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	await interaction.deferReply();
-	const model = "meta-llama/Meta-Llama-3-8B-Instruct";
-	const prompt = interaction.options.getString("prompt");
+	const defaultModel = "meta-llama/Meta-Llama-3-8B-Instruct";
+	const model = interaction?.options?.getString("model") || defaultModel;
 
-	const data = {
-		inputs: prompt,
-	};
-
-	const response = await fetch(
-		`https://api-inference.huggingface.co/models/${model}`,
-		{
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${process.env.HF_TOKEN}`,
+	if (model !== defaultModel) {
+		// @ts-ignore
+		if (!interaction.channel.nsfw) {
+			const embed = new EmbedBuilder(client, interaction.locale)
+				.setDescription("CUSTOM_MODELS_NSFW_WARNING")
+				.setColor("Red");
+			return interaction.reply({ embeds: [embed] });
+		}
+	}
+	try {
+		await interaction.deferReply();
+		console.log("model", model)
+		const prompt = interaction.options.getString("prompt");
+	
+		const data = {
+			inputs: prompt,
+		};
+	
+		const response = await fetch(
+			`https://api-inference.huggingface.co/models/${model}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${process.env.HF_TOKEN}`,
+				},
+				body: JSON.stringify(data),
 			},
-			body: JSON.stringify(data),
-		},
-	);
-	const json = (await response.json()) as HuggingFaceText[];
+		);
+		const json = (await response.json()) as HuggingFaceText[];
+	
+		const button = new ButtonBuilder(client, interaction.locale)
+			.setLabel("BUTTON_CONTINUE")
+			.setStyle(ButtonStyle.Primary)
+			.setCustomId("continue");
+	
+		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
+	
+		const embed = new EmbedBuilder(client, interaction.locale)
+			.setDescription(`${json[0].generated_text}`)
+			.setColor("Blue");
+	
+		return interaction.editReply({
+			embeds: [embed],
+			components: [row],
+		});
+	} catch (e) {
+		console.error(e)	
 
-	const button = new ButtonBuilder(client, interaction.locale)
-		.setLabel("BUTTON_CONTINUE")
-		.setStyle(ButtonStyle.Primary)
-		.setCustomId("continue");
+		const embedError = new EmbedBuilder(client, interaction.locale)
+			.setTitle("ERROR")
+			.setDescription("AI_GENERATION_ERROR", {
+				lng: interaction.locale,
+				model
+			})
+			.setColor("Red");
 
-	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
-
-	const embed = new EmbedBuilder()
-		.setDescription(`${json[0].generated_text}`)
-		.setColor("Blue");
-
-	return interaction.editReply({
-		embeds: [embed],
-		components: [row],
-	});
+		return interaction.editReply({
+			embeds: [embedError],
+		});
+	}
 }
 export const data = new SlashCommandSubcommandBuilder()
 	.setName("text")
@@ -58,4 +87,31 @@ export const data = new SlashCommandSubcommandBuilder()
 			.setName("prompt")
 			.setDescription("Prompt for the AI")
 			.setRequired(true),
-	);
+	)
+	.addStringOption((option) =>
+		option
+	.setName("model")
+	.setDescription("Model to use")
+	.setAutocomplete(true)
+)
+export async function autocomplete(interaction: AutocompleteInteraction) {
+	const focusedValue = interaction.options.getFocused(true).value;
+	const apiURL = `https://huggingface.co/api/models?search=${focusedValue}&filter=text-generation`;
+
+	const response = await fetch(apiURL, {
+		method: "GET",
+		headers: {
+			"Content-Type": "accept: application/json",
+		},
+	});
+	const json = (await response.json()) as HuggingFaceSearchResult[];
+
+	const choices = json
+	.slice(0, 25)
+	.map((model) => ({
+		name: model.modelId,
+		value: model.modelId,
+	}));
+
+	await interaction.respond(choices);
+}

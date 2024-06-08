@@ -116,5 +116,8 @@
   "SELECT_LIMIT_REACHED": "Osiągnięto limit selectów.",
   "SELECT_LIMIT_REACHED_DESC": "Osiągnięto limit selectów na tym serwerze. Jeśli chcesz dodać więcej, musisz usunąć niektóre z nich.",
   "8BALL_RESPONSE": "Odpowiedź",
-  "8BALL_RESPONSES": ["Tak", "Nie", "Wątpię", "Prawdopodobnie", "Nie mam pojęcia"]
+  "8BALL_RESPONSES": ["Tak", "Nie", "Wątpię", "Prawdopodobnie", "Nie mam pojęcia"],
+  "ERROR": "Błąd",
+  "AI_GENERATION_ERROR": "Wystąpił błąd podczas generowania treści za pomocą modelu `{{ model }}`. Spróbuj ponownie, wyszukaj inny bądź użyj domyślnego. Jeśli problem nadal występuje, sprawdź na oficjalnej stronie czy model jest dostępny w usłudze \"Interfaces API\"",
+  "CUSTOM_MODELS_NSFW_WARNING": "Nie możesz używać customowych modeli na kanałach, które nie są NSFW!"
 }

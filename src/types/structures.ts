@@ -82,3 +82,10 @@ export interface ainasepicsAPI {
 export interface randomDog {
 	url: string;
 }
+export interface HuggingFaceSearchResult {
+	id: string
+	modelId: string
+}
+export 	interface HuggingFaceImage {
+	generatedImage: ArrayBuffer;
+}

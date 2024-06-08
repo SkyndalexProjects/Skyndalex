@@ -103,5 +103,7 @@
   "SELECT_LIMIT_REACHED": "Limit reached!",
   "SELECT_LIMIT_REACHED_DESC": "You can't create more than 25 selects in one row.",
   "8BALL_RESPONSE": "Response",
-  "8BALL_RESPONSES": ["Yes", "No", "I doubt", "Probably", "I don't know"]
+  "8BALL_RESPONSES": ["Yes", "No", "I doubt", "Probably", "I don't know"],
+  "ERROR": "Error",
+  "AI_GENERATION_ERROR": "An error occurred while generating content using the `{{ model }}` model. Please try again, search for another model, or use the default one. If the problem persists, check the official website to see if the model is available in the \"Interfaces API\" service."
 }
