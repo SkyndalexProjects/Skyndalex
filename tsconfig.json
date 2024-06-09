@@ -7,10 +7,10 @@
     "moduleResolution": "Node",
     "baseUrl": "src",
     "paths": {
-      "#*": ["*/index.ts"],
-      "#builders": ["classes/builders/index.ts"],
-      "#components": ["classes/builders/components/index.ts"],
-      "#utils": ["utils/index.ts"]
+      "#*": ["*/index.js"],
+      "#builders": ["classes/builders/index.js"],
+      "#components": ["classes/builders/components/index.js"],
+      "#utils": ["utils/index.js"]
     },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

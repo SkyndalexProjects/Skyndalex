@@ -13,8 +13,8 @@ export async function updateWallet(
 	const updateUser = await client.prisma.economy.upsert({
 		where: {
 			guildId_userId: {
-				guildId: guildId,
-				userId: userId,
+				guildId, 
+				userId
 			},
 		},
 		create: {
@@ -23,7 +23,7 @@ export async function updateWallet(
 			wallet: amount.toString(),
 		},
 		update: {
-			wallet: (Number.parseInt(user?.wallet || "0") + amount).toString(),
+			wallet: (+(user?.wallet ?? 0) + amount).toString()
 		},
 	});
 
