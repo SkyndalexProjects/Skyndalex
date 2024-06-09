@@ -1,4 +1,4 @@
-import type { SkyndalexClient } from "../../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 import {
 	ActionRowBuilder,
 	type StringSelectMenuInteraction,

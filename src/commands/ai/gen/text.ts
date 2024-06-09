@@ -7,8 +7,8 @@ import {
 	type AutocompleteInteraction
 } from "discord.js";
 import { EmbedBuilder } from "#builders";
-import type { SkyndalexClient } from "../../../classes/Client.js";
-import type { HuggingFaceSearchResult, HuggingFaceText } from "../../../types/structures.js";
+import type { SkyndalexClient } from "#classes";
+import type { HuggingFaceSearchResult, HuggingFaceText } from "#types";
 
 export async function run(
 	client: SkyndalexClient,

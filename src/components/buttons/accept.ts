@@ -1,4 +1,4 @@
-import type { SkyndalexClient } from "../../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
 import type { MessageComponentInteraction } from "discord.js";
 

@@ -14,10 +14,11 @@
     "start": "npm run migrate:deploy && node dist/index.js"
   },
   "imports": {
-    "#": "./dist/index.js",
+    "#": "./dist/*/index.js",
     "#builders": "./dist/classes/builders/index.js",
     "#components": "./dist/classes/builders/components/index.js",
-    "#utils": "./dist/utils/index.js"
+    "#utils": "./dist/utils/index.js",
+    "#types": "./dist/types/index.js"
   },
   "author": "",
   "license": "ISC",

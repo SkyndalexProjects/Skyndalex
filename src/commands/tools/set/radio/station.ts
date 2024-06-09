@@ -5,8 +5,7 @@ import {
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "../../../../classes/Client.js";
-import type { radioStation } from "../../../../types/structures.js";
-import type { radioStationData } from "../../../../types/structures.js";
+import type { radioStationSearchQueryResult, radioStationData } from "#types";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
@@ -80,7 +79,7 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
 		},
 	});
 
-	const jsonResponse = (await response.json()) as radioStation;
+	const jsonResponse = (await response.json()) as radioStationSearchQueryResult;
 
 	const data = [];
 

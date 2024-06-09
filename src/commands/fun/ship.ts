@@ -2,10 +2,10 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "../../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 import { randomBytes } from "node:crypto";
 import { EmbedBuilder } from "#builders";
-import type { ainasepicsAPI } from "../../types/structures";
+import type { ainasepicsAPI } from "#types";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,

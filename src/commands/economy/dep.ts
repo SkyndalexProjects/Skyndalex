@@ -1,9 +1,9 @@
-import { EmbedBuilder } from "../../classes/builders/EmbedBuilder.js";
+import { EmbedBuilder } from "#builders";
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "../../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,

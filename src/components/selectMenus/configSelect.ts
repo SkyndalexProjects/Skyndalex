@@ -1,4 +1,4 @@
-import type { SkyndalexClient } from "../../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 import { type StringSelectMenuInteraction, ActionRowBuilder } from "discord.js";
 import { StringSelectMenuBuilder, EmbedBuilder } from "#builders";
 export async function run(
@@ -36,7 +36,7 @@ export async function run(
 				inline: true,
 			};
 		})
-		.filter((field) => field.value !== null);
+		.filter((field) => !!field.value);
 
 	const select = new StringSelectMenuBuilder(client, interaction.locale)
 		.setPlaceholder("CONFIG_GUILD_SELECT_PLACEHOLDER")

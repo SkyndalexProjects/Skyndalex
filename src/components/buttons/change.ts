@@ -1,4 +1,4 @@
-import type { SkyndalexClient } from "../../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 import { ChannelSelectMenuBuilder } from "#builders";
 import {
 	type MessageComponentInteraction,

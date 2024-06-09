@@ -4,7 +4,7 @@ import {
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
 import { getLines } from "#utils";
-import type { SkyndalexClient } from "../../../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 
 const canvas = createCanvas(724, 219);
 

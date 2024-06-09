@@ -3,7 +3,7 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "../../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
@@ -15,7 +15,7 @@ export async function run(
 			userId: guildUser.id,
 		},
 	});
-	console.log("user", user);
+
 	if (!user) {
 		return interaction.reply(
 			client.i18n.t("ECONOMY_USER_NOT_FOUND", {

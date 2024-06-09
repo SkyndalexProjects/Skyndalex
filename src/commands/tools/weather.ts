@@ -2,9 +2,9 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "../../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
-import type { weatherData } from "../../types/structures";
+import type { weatherData } from "#types";
 
 export async function run(
 	client: SkyndalexClient,

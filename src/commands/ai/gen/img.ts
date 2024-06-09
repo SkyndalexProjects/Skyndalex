@@ -4,9 +4,9 @@ import {
 	SlashCommandSubcommandBuilder,
 	type AutocompleteInteraction,
 } from "discord.js";
-import type { SkyndalexClient } from "../../../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
-import type { HuggingFaceImage, HuggingFaceSearchResult } from "../../../types/structures.js";
+import type { HuggingFaceImage, HuggingFaceSearchResult } from "#types";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,

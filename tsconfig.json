@@ -10,7 +10,8 @@
       "#*": ["*/index.js"],
       "#builders": ["classes/builders/index.js"],
       "#components": ["classes/builders/components/index.js"],
-      "#utils": ["utils/index.js"]
+      "#utils": ["utils/index.js"],
+      "#types": ["types/index.js"]
     },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

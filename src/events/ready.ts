@@ -3,7 +3,7 @@ import {
 	SlashCommandSubcommandGroupBuilder,
 	Routes,
 } from "discord.js";
-import type { SkyndalexClient } from "../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 
 export async function ready(client: SkyndalexClient) {
 	const parsedCommands = [];

@@ -1,4 +1,4 @@
-import type { SkyndalexClient } from "../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 
 export async function updateWallet(
 	client: SkyndalexClient,

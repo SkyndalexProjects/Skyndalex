@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "#builders";
-import type { SkyndalexClient } from "../../classes/Client.js";
+import type { SkyndalexClient } from "#classes";
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
