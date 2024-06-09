@@ -1,8 +1,8 @@
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
-	EmbedBuilder,
 } from "discord.js";
+import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "../../classes/Client.js";
 
 export async function run(
@@ -12,41 +12,33 @@ export async function run(
 	const user = interaction.options.getUser("user") || interaction.user;
 	const member = await interaction.guild.members.fetch(user.id);
 
-	// EmbedBuilder from our classes has problems with showing joined and created timestamps.
-
-	const embed = new EmbedBuilder()
-		.setTitle(client.i18n.t("USER_INFO_TITLE", { lng: interaction.locale }))
+	const embed = new EmbedBuilder(client, interaction.locale)
+		.setTitle("USER_INFO_TITLE")
 		.addFields([
 			{
-				name: client.i18n.t("USER_GLOBAL_NAME", {
-					lng: interaction.locale,
-				}),
-				value: member.user.globalName?.toString() || "None",
+				name: "USER_USERNAME",
+				value: user.username,
 			},
 			{
-				name: client.i18n.t("USER_USERNAME", {
-					lng: interaction.locale,
-				}),
-				value: member.user.username.toString(),
-			},
-			{
-				name: client.i18n.t("USER_JOINED_SERVER", {
-					lng: interaction.locale,
-				}),
-				value: `<t:${Math.floor(member.joinedTimestamp / 1000)}:R>`,
-			},
-			{
-				name: client.i18n.t("USER_JOINED_DISCORD", {
-					lng: interaction.locale,
-				}),
+				name: "USER_JOINED_DISCORD",
 				value: `<t:${Math.floor(
 					member.user.createdTimestamp / 1000,
 				)}:R>`,
 			},
+			{
+				name: "USER_JOINED_SERVER",
+				value: `<t:${Math.floor(member.joinedTimestamp / 1000)}:R>`,
+			},
+			{
+				name: "USER_ROLES",
+				value: member.roles.cache
+					.map((role) => role.toString())
+					.join(" "),
+			},
 		])
 		.setColor("Green")
-		.setTimestamp()
-		.setThumbnail(member.user.displayAvatarURL());
+		.setTimestamp();
+
 
 	return interaction.reply({ embeds: [embed] });
 }

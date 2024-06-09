@@ -86,6 +86,6 @@ export interface HuggingFaceSearchResult {
 	id: string
 	modelId: string
 }
-export 	interface HuggingFaceImage {
+export interface HuggingFaceImage {
 	generatedImage: ArrayBuffer;
 }

@@ -43,6 +43,7 @@
   "USER_INFO_TITLE": "User info",
   "USER_GLOBAL_NAME": "Global name",
   "USER_USERNAME": "Username",
+  "USER_ROLES": "Roles",
   "USER_JOINED_SERVER": "Joined server",
   "USER_JOINED_DISCORD": "Joined Discord",
   "SERVER_INFO_TITLE": "Server info",

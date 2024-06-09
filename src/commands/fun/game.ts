@@ -35,7 +35,7 @@ export async function run(
 			.addFields([
 				{
 					name: "IP_ADDRESS",
-					value: String(data.connect),
+					value: data.connect.toString().split(":")[0],
 					inline: true,
 				},
 				{
@@ -45,12 +45,7 @@ export async function run(
 				},
 				{
 					name: "GAME_MAP",
-					value: String(data.map) || "None",
-					inline: true,
-				},
-				{
-					name: "GAME_CONNECT",
-					value: String(data.connect),
+					value: data.map.toString() || "None",
 					inline: true,
 				},
 				{ name: "GAME_PING", value: String(data.ping), inline: true },

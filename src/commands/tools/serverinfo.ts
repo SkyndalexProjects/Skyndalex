@@ -1,8 +1,8 @@
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
-	EmbedBuilder,
 } from "discord.js";
+import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "../../classes/Client.js";
 
 export async function run(
@@ -11,11 +11,8 @@ export async function run(
 ) {
 	const guild = await client.guilds.cache.get(interaction.guild.id);
 
-	console.log("guild", guild);
-	const embed = new EmbedBuilder()
-		.setTitle(
-			client.i18n.t("SERVER_INFO_TITLE", { lng: interaction.locale }),
-		)
+	const embed = new EmbedBuilder(client, interaction.locale)
+		.setTitle("SERVER_INFO_TITLE")
 		.setDescription(
 			guild.description ||
 				client.i18n.t("SERVER_NO_DESCRIPTION", {
@@ -24,27 +21,21 @@ export async function run(
 		)
 		.addFields([
 			{
-				name: client.i18n.t("SERVER_NAME", { lng: interaction.locale }),
+				name: "SERVER_NAME",
 				value: guild.name,
 			},
 			{
-				name: client.i18n.t("SERVER_USER_COUNT", {
-					lng: interaction.locale,
-				}),
+				name: "SERVER_USER_COUNT",
 				value: guild.memberCount.toString(),
 			},
 			{
-				name: client.i18n.t("SERVER_EMOJIS", {
-					lng: interaction.locale,
-				}),
+				name: "SERVER_EMOJIS",
 				value: guild.emojis.cache
 					.map((emoji) => emoji.toString())
 					.join(" "),
 			},
 			{
-				name: client.i18n.t("SERVER_ROLES_LIST", {
-					lng: interaction.locale,
-				}),
+				name: "SERVER_ROLES_LIST",
 				value: guild.roles.cache
 					.map((role) => role.toString())
 					.join(" "),
@@ -52,7 +43,6 @@ export async function run(
 		])
 		.setColor("Green")
 		.setTimestamp();
-
 	return interaction.reply({ embeds: [embed] });
 }
 export const data = new SlashCommandBuilder()

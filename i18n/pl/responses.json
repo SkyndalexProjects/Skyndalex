@@ -40,6 +40,7 @@
   "USER_USERNAME": "Nazwa użytkownika",
   "USER_JOINED_SERVER": "Dołączył na serwer",
   "USER_JOINED_DISCORD": "Stworzył konto",
+  "USER_ROLES": "Role",
   "SERVER_INFO_TITLE": "Informacje o serwerze",
   "SERVER_NAME": "Nazwa serwera",
   "SERVER_USER_COUNT": "Liczba użytkowników",

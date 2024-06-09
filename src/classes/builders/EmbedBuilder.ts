@@ -15,8 +15,7 @@ export class EmbedBuilder extends embedBuilder {
 		this.locale = locale;
 		this.setTimestamp();
 	}
-
-	mapField(field: LocaleFieldOptions) {
+	protected mapField(field: LocaleFieldOptions) {
 		return {
 			name:
 				field.rawName ??
@@ -24,12 +23,7 @@ export class EmbedBuilder extends embedBuilder {
 					lng: this.locale,
 					...field.nameArgs,
 				}),
-			value:
-				field.rawValue ??
-				this.client.i18n.t(field.value, {
-					lng: this.locale,
-					...field.valueArgs,
-				}),
+			value: field.rawValue ?? field.value,
 			inline: field.inline,
 		};
 	}
