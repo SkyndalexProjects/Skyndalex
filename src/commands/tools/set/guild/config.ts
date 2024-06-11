@@ -49,10 +49,15 @@ export async function run(
 		.setTitle("CONFIG_GUILD_TITLE")
 		.setColor("Blurple")
 		.setFields(
-			fields.map((field) => ({
+			fields
+			.map((field) => ({
 				...field,
-				value: field.value.toString(),
-			})),
+				value: field.name.endsWith("Channel") ? `<#${field.value}>` : `\`${field.value}\``,
+			}))
+			.filter(
+				(field) =>
+					field.name !== "guildId" 
+			)
 		);
 
 	return interaction.reply({
@@ -62,6 +67,7 @@ export async function run(
 				components: [select],
 			}),
 		],
+		ephemeral: true,
 	});
 }
 export const data = new SlashCommandSubcommandBuilder()

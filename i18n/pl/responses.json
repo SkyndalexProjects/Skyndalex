@@ -65,6 +65,7 @@
   "CONFIG_CHANGE_BUTTON": "Zmień",
   "CONFIG_DISABLE_BUTTON": "Wyłącz/Usuń",
   "CONFIG_GUILD_CHANNEL_SELECT_PLACEHOLDER": "Wybierz kanał",
+  "CONFIG_GUILD_CHANNEL_SELECT_ERROR": "Ta opcja nie może być ustawiona. Może być jedynie usunięta. Sprawdź, czy jest dostępna do ustawienia w subkomendach komendy /set.",
   "CONFIG_GUILD_DESCRIPTION": "Pomyślnie ustawiono opcję **{{ option }}** na wartość `{{ value }}`",
   "VOICE_CHANNEL_LEFT": "<:checkpassed:1071529475541565620> | Opuszczono kanał głosowy",
   "VOICE_NOT_CONNECTED": "Bot nie jest połączony z żadnym kanałem głosowym.",
