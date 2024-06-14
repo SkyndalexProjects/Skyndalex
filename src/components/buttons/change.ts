@@ -35,5 +35,10 @@ export async function run(
 		});
 	}
 
-	return interaction.reply({ content: client.i18n.t("CONFIG_GUILD_CHANNEL_SELECT_ERROR", { lng: interaction.locale }), ephemeral: true })
+	return interaction.reply({
+		content: client.i18n.t("CONFIG_GUILD_CHANNEL_SELECT_ERROR", {
+			lng: interaction.locale,
+		}),
+		ephemeral: true,
+	});
 }

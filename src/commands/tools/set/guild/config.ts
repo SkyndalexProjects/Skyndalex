@@ -50,14 +50,13 @@ export async function run(
 		.setColor("Blurple")
 		.setFields(
 			fields
-			.map((field) => ({
-				...field,
-				value: field.name.endsWith("Channel") ? `<#${field.value}>` : `\`${field.value}\``,
-			}))
-			.filter(
-				(field) =>
-					field.name !== "guildId" 
-			)
+				.map((field) => ({
+					...field,
+					value: field.name.endsWith("Channel")
+						? `<#${field.value}>`
+						: `\`${field.value}\``,
+				}))
+				.filter((field) => field.name !== "guildId"),
 		);
 
 	return interaction.reply({

@@ -36,8 +36,8 @@ export interface randomDog {
 	url: string;
 }
 export interface HuggingFaceSearchResult {
-	id: string
-	modelId: string
+	id: string;
+	modelId: string;
 }
 export interface HuggingFaceImage {
 	generatedImage: ArrayBuffer;

@@ -39,7 +39,6 @@ export async function run(
 		.setColor("Green")
 		.setTimestamp();
 
-
 	return interaction.reply({ embeds: [embed] });
 }
 export const data = new SlashCommandBuilder()

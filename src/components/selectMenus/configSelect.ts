@@ -56,19 +56,18 @@ export async function run(
 				),
 		);
 
-		const embed = new EmbedBuilder(client, interaction.locale)
+	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CONFIG_GUILD_TITLE")
 		.setColor("Blurple")
 		.setFields(
 			fields
-			.map((field) => ({
-				...field,
-				value: field.name.endsWith("Channel") ? `<#${field.value}>` : `\`${field.value}\``,
-			}))
-			.filter(
-				(field) =>
-					field.name !== "guildId" 
-			)
+				.map((field) => ({
+					...field,
+					value: field.name.endsWith("Channel")
+						? `<#${field.value}>`
+						: `\`${field.value}\``,
+				}))
+				.filter((field) => field.name !== "guildId"),
 		);
 
 	return interaction.update({

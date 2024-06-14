@@ -79,7 +79,8 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
 		},
 	});
 
-	const jsonResponse = (await response.json()) as radioStationSearchQueryResult;
+	const jsonResponse =
+		(await response.json()) as radioStationSearchQueryResult;
 
 	const data = [];
 
