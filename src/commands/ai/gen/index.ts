@@ -4,7 +4,9 @@ export const data = {
 	...new SlashCommandBuilder()
 		.setName("gen")
 		.setDescription("Generate content with AI")
-        // Subcommands options are declared here for correct userapps implementation.
+        
+        // NOTE: Subcommands options are declared here for correct userapps implementation.
+
         .addSubcommand((subcommand) =>
             subcommand
             .setName("text")

@@ -6,12 +6,17 @@ import {
 import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
 import type { HuggingFaceImage, HuggingFaceSearchResult } from "#types";
+import { HfInference } from "@huggingface/inference";
+const hf = new HfInference(process.env.HF_TOKEN);
+
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
+	await interaction.deferReply();
+
 	const prompt = interaction.options.getString("prompt");
-	const defaultModel = "runwayml/stable-diffusion-v1-5";
+	const defaultModel = "stabilityai/stable-diffusion-2-1";
 	const model = interaction?.options?.getString("model") || defaultModel;
 
 	if (model !== defaultModel) {
@@ -23,26 +28,22 @@ export async function run(
 			return interaction.reply({ embeds: [embed] });
 		}
 	}
-	// Check if user prompted custom model)
-	await interaction.deferReply();
-	const response = await fetch(
-		`https://api-inference.huggingface.co/models/${model}`,
-		{
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${process.env.HF_TOKEN}`,
-			},
-			body: JSON.stringify({
-				inputs: prompt,
-			}),
+
+	const response = await hf.textToImage({
+		inputs: prompt,
+		model: model,
+		parameters: {
+			negative_prompt: "blurry",
 		},
-	);
+		use_cache: false,
+		wait_for_model: true,
+	});
+	
 	const imageBuffer =
 		(await response.arrayBuffer()) as HuggingFaceImage["generatedImage"];
-	const image = new AttachmentBuilder(Buffer.from(imageBuffer), {
-		name: "skyndalex_generated_img.png",
-	});
+		const image = new AttachmentBuilder(
+			Buffer.from(imageBuffer),
+		);
 
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setDescription(

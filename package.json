@@ -27,6 +27,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@huggingface/inference": "^2.7.0",
     "@napi-rs/canvas": "^0.1.52",
     "@prisma/client": "^5.14.0",
     "@types/gamedig": "^5.0.2",

@@ -47,7 +47,7 @@ model ticketModals {
   label            String?
   style            String?
   placeholder      String?
-  required         Boolean?
+  required         Boolean? @default(false)
   categoryId       String?
   @@id([guildId, customId])
 }
