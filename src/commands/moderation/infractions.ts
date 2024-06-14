@@ -10,6 +10,10 @@ export async function run(
 	interaction: ChatInputCommandInteraction<"cached">,
 ) {
 	const user = interaction.options.getUser("user");
+	if (user.bot) return interaction.reply({
+		content: client.i18n.t("INFRACTIONS_BOT_PROHIBITED", { lng: interaction.locale }),
+		ephemeral: true,
+	});
 
 	const select = new StringSelectMenuBuilder(client, interaction.locale)
 		.setPlaceholder("INFRACTIONS_SELECT_PLACEHOLDER")
