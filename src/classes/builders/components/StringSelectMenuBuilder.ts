@@ -14,4 +14,12 @@ export class StringSelectMenuBuilder extends stringSelectMenuBuilder {
 			this.client.i18n.t(label, { lng: this.locale }),
 		);
 	}
+	addOptions(options: { label: string; value: string }[]): this {
+		return super.addOptions(
+			options.map((option) => ({
+				label: this.client.i18n.t(option.label, { lng: this.locale }),
+				value: option.value,
+			})),
+		);
+	}
 }
