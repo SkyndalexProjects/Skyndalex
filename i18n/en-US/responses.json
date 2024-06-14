@@ -48,6 +48,7 @@
   "INFRACTIONS_EMBED_CHECKING_MENU_NO_INFRACTIONS": "This user has no infractions in this category.",
   "INFRACTIONS_EMBED_CHECKING_MENU_TITLE": "User Checking - Selected category: {{ category }}",
   "INFRACTIONS_EMBED_CHECKING_MENU_DESCRIPTION": "Successfully selected category: {{ category }}. Below you will find a list of user's infractions in this category.",
+  "INFRACTIONS_BOT_PROHIBITED": "You can't check the bot's infractions.",
   "BANNED_USER": "User",
   "BAN_REASON": "Ban reason",
   "DELETED_MESSAGES": "Deleted messages",
@@ -119,5 +120,9 @@
   "8BALL_RESPONSE": "Response",
   "8BALL_RESPONSES": ["Yes", "No", "I doubt", "Probably", "I don't know"],
   "ERROR": "Error",
-  "AI_GENERATION_ERROR": "An error occurred while generating content using the `{{ model }}` model. Please try again, search for another model, or use the default one. If the problem persists, check the official website to see if the model is available in the \"Interfaces API\" service."
+  "AI_GENERATION_ERROR": "An error occurred while generating content using the `{{ model }}` model. Please try again, search for another model, or use the default one. If the problem persists, check the official website to see if the model is available in the \"Interfaces API\" service.",
+  "BOT_INFO_DESCRIPTION": "You are currently using bot version: `{{ version }}`.\n# Bot Information.\n\nWelcome to Skyndalex! This is a multifunctional bot that has **basic economy, AI features, moderation, radio (including automatic!), basic tools**, and much more!\nThis is a hobbyist project owned by [SkyndalexProjects](https://github.com/SkyndalexProjects), a Polish production (:flag_pl:), one of the last representatives of Polish bots that is constantly supported, updated, and adapted to the latest Discord features. All of our projects are 100% open-source, and anyone can contribute to them.\n# Useful links:\n - [`Support`](https://discord.gg/SqPUr5R7YF)\n- [`Website`](https://skyndalex.com)\n- [`Documentation, guides`](https://docs.skyndalex.xyz)\n- [`Github`](https://github.com/SkyndalexProjects/Skyndalex)",
+  "BOT_INFO_CACHE_STATS": "Cache stats",
+  "BOT_INFO_PROCESS_STATS": "Process stats",
+  "BOT_INFO_LAVALINK_STATS": "Lavalink stats"
 }
