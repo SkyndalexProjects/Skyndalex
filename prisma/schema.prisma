@@ -78,7 +78,7 @@ model cases {
   userId    String
   type      String?
   reason    String?
-  date      DateTime @default(now())
+  date      BigInt?
   moderator String
   duration  String?
 }

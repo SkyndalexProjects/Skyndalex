@@ -12,6 +12,9 @@ export class CaseManagement {
 		moderatorId: string,
 		duration?: string,
 	) {
+		const warnDate = new Date();
+		const date = Date.parse(warnDate.toString())
+
 		const newCase = await this.client.prisma.cases.create({
 			data: {
 				guildId: guildId,
@@ -20,6 +23,7 @@ export class CaseManagement {
 				reason: reason,
 				moderator: moderatorId,
 				duration: duration,
+				date: date / 1000
 			},
 		});
 		return newCase;
