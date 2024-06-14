@@ -35,15 +35,14 @@ export async function run(
 		parameters: {
 			negative_prompt: "blurry",
 		},
-		use_cache: false,
-		wait_for_model: true,
+
+		// use_cache: false,
+		// wait_for_model: true,
 	});
-	
+
 	const imageBuffer =
 		(await response.arrayBuffer()) as HuggingFaceImage["generatedImage"];
-		const image = new AttachmentBuilder(
-			Buffer.from(imageBuffer),
-		);
+	const image = new AttachmentBuilder(Buffer.from(imageBuffer));
 
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setDescription(
