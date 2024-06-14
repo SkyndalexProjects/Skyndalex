@@ -1,7 +1,6 @@
 import {
 	AttachmentBuilder,
 	type ChatInputCommandInteraction,
-	SlashCommandSubcommandBuilder,
 	type AutocompleteInteraction,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
@@ -59,21 +58,6 @@ export async function run(
 		.setColor("Blue");
 	return interaction.editReply({ embeds: [embed], files: [image] });
 }
-export const data = new SlashCommandSubcommandBuilder()
-	.setName("img")
-	.setDescription("Generate image with AI")
-	.addStringOption((option) =>
-		option
-			.setName("prompt")
-			.setDescription("Prompt for the AI")
-			.setRequired(true),
-	)
-	.addStringOption((option) =>
-		option
-	.setName("model")
-	.setDescription("Model to use")
-	.setAutocomplete(true)
-)
 export async function autocomplete(interaction: AutocompleteInteraction) {
 	const focusedValue = interaction.options.getFocused(true).value;
 	const apiURL = `https://huggingface.co/api/models?search=${focusedValue}&filter=image-generation`;
@@ -86,9 +70,7 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
 	});
 	const json = (await response.json()) as HuggingFaceSearchResult[];
 
-	const choices = json
-	.slice(0, 25)
-	.map((model) => ({
+	const choices = json.slice(0, 25).map((model) => ({
 		name: model.modelId,
 		value: model.modelId,
 	}));

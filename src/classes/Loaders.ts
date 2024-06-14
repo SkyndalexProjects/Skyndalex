@@ -11,34 +11,41 @@ export class Loaders {
 		const commands = new Collection<string, Command>();
 		const dirs = await readdir(new URL(path, import.meta.url));
 
-		for (const dir of dirs) {
-			await this.loadCommandsAndSubcommands(`${path}/${dir}`);
-		}
+		await Promise.all(
+			dirs.map((dir) =>
+				this.loadCommandsAndSubcommands(`${path}/${dir}`),
+			),
+		);
+
 		return commands;
 	}
 	async loadCommandsAndSubcommands(path: string, prefix?: string) {
 		const dirs = await readdir(new URL(path, import.meta.url));
 
-		for (const dir of dirs) {
-			const lstat = lstatSync(new URL(`${path}/${dir}`, import.meta.url));
-
-			if (lstat.isDirectory()) {
-				await this.loadCommandsAndSubcommands(
-					`${path}/${dir}`,
-					prefix ? `${prefix}/${dir}` : dir,
+		await Promise.all(
+			dirs.map(async (dir) => {
+				const lstat = lstatSync(
+					new URL(`${path}/${dir}`, import.meta.url),
 				);
-			} else {
-				if (!dir.endsWith(".ts") && !dir.endsWith(".js")) continue;
-				const command = await import(`${path}/${dir}`);
 
-				this.client.commands.set(
-					prefix
-						? `${prefix}/${dir.split(".")[0]}`
-						: dir.split(".")[0],
-					command,
-				);
-			}
-		}
+				if (lstat.isDirectory()) {
+					await this.loadCommandsAndSubcommands(
+						`${path}/${dir}`,
+						prefix ? `${prefix}/${dir}` : dir,
+					);
+				} else {
+					if (!dir.endsWith(".ts") && !dir.endsWith(".js")) return;
+					const command = await import(`${path}/${dir}`);
+
+					this.client.commands.set(
+						prefix
+							? `${prefix}/${dir.split(".")[0]}`
+							: dir.split(".")[0],
+						command,
+					);
+				}
+			}),
+		);
 	}
 	async loadEvents(client: SkyndalexClient, path: string) {
 		const files = await readdir(new URL(path, import.meta.url));

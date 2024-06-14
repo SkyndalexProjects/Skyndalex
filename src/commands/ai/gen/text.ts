@@ -3,8 +3,7 @@ import {
 	ActionRowBuilder,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
-	SlashCommandSubcommandBuilder,
-	type AutocompleteInteraction
+	type AutocompleteInteraction,
 } from "discord.js";
 import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
@@ -28,13 +27,13 @@ export async function run(
 	}
 	try {
 		await interaction.deferReply();
-		console.log("model", model)
+		console.log("model", model);
 		const prompt = interaction.options.getString("prompt");
-	
+
 		const data = {
 			inputs: prompt,
 		};
-	
+
 		const response = await fetch(
 			`https://api-inference.huggingface.co/models/${model}`,
 			{
@@ -47,30 +46,30 @@ export async function run(
 			},
 		);
 		const json = (await response.json()) as HuggingFaceText[];
-	
+
 		const button = new ButtonBuilder(client, interaction.locale)
 			.setLabel("BUTTON_CONTINUE")
 			.setStyle(ButtonStyle.Primary)
 			.setCustomId("continue");
-	
+
 		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
-	
+
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setDescription(`${json[0].generated_text}`)
 			.setColor("Blue");
-	
+
 		return interaction.editReply({
 			embeds: [embed],
 			components: [row],
 		});
 	} catch (e) {
-		console.error(e)	
+		console.error(e);
 
 		const embedError = new EmbedBuilder(client, interaction.locale)
 			.setTitle("ERROR")
 			.setDescription("AI_GENERATION_ERROR", {
 				lng: interaction.locale,
-				model
+				model,
 			})
 			.setColor("Red");
 
@@ -79,21 +78,6 @@ export async function run(
 		});
 	}
 }
-export const data = new SlashCommandSubcommandBuilder()
-	.setName("text")
-	.setDescription("Generate text")
-	.addStringOption((option) =>
-		option
-			.setName("prompt")
-			.setDescription("Prompt for the AI")
-			.setRequired(true),
-	)
-	.addStringOption((option) =>
-		option
-	.setName("model")
-	.setDescription("Model to use")
-	.setAutocomplete(true)
-)
 export async function autocomplete(interaction: AutocompleteInteraction) {
 	const focusedValue = interaction.options.getFocused(true).value;
 	const apiURL = `https://huggingface.co/api/models?search=${focusedValue}&filter=text-generation`;
@@ -106,9 +90,7 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
 	});
 	const json = (await response.json()) as HuggingFaceSearchResult[];
 
-	const choices = json
-	.slice(0, 25)
-	.map((model) => ({
+	const choices = json.slice(0, 25).map((model) => ({
 		name: model.modelId,
 		value: model.modelId,
 	}));
