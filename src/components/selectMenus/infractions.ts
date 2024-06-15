@@ -35,15 +35,23 @@ export async function run(
 			text: "INFRACTIONS_EMBED_FOOTER",
 		});
 
-
-		embed.addFields([
-			{
-				name: "INFRACTIONS_EMBED_FIELD_TITLE_WHILE_CHECKING",
-				value: searchInfractions
-				.map((warn) => `• ${warn.reason ? warn.reason : client.i18n.t("NO_REASON_PROVIDED")} <t:${warn.date}:R> (<@${warn.moderator}>) ||\`[${warn.moderator}]\`||`)
+	embed.addFields([
+		{
+			name: "INFRACTIONS_EMBED_FIELD_TITLE_WHILE_CHECKING",
+			value: searchInfractions
+				.map(
+					(warn) =>
+						`• ${
+							warn.reason
+								? warn.reason
+								: client.i18n.t("NO_REASON_PROVIDED")
+						} <t:${warn.date}:R> (<@${warn.moderator}>) ||\`[${
+							warn.moderator
+						}]\`||`,
+				)
 				.join("\n"),
-			},
-		]);
+		},
+	]);
 	return interaction.update({
 		embeds: [embed],
 	});

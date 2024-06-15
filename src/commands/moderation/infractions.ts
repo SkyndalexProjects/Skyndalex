@@ -10,10 +10,13 @@ export async function run(
 	interaction: ChatInputCommandInteraction<"cached">,
 ) {
 	const user = interaction.options.getUser("user");
-	if (user.bot) return interaction.reply({
-		content: client.i18n.t("INFRACTIONS_BOT_PROHIBITED", { lng: interaction.locale }),
-		ephemeral: true,
-	});
+	if (user.bot)
+		return interaction.reply({
+			content: client.i18n.t("INFRACTIONS_BOT_PROHIBITED", {
+				lng: interaction.locale,
+			}),
+			ephemeral: true,
+		});
 
 	const select = new StringSelectMenuBuilder(client, interaction.locale)
 		.setPlaceholder("INFRACTIONS_SELECT_PLACEHOLDER")
@@ -45,7 +48,7 @@ export async function run(
 			text: "INFRACTIONS_EMBED_FOOTER",
 		});
 
-	const warns = await client.prisma.cases.findMany({
+	const infractions = await client.prisma.cases.findMany({
 		where: {
 			userId: user.id,
 			guildId: interaction.guild.id,
@@ -53,11 +56,13 @@ export async function run(
 		},
 	});
 
-	if (warns.length > 0) {
+	if (infractions.length > 0) {
 		embed.addFields([
 			{
 				name: "INFRACTIONS_EMBED_FIELD_TITLE",
-				value: warns.map((warn) => `• ${warn.reason} <t:${warn.date}:R> (<@${warn.moderator}>) ||\`[${warn.moderator}]\`||`).join("\n"),
+				value: infractions
+					.map(infraction =>`- ${infraction.active ? "<:checkpassed:1071529475541565620>" : "<:checkfailed:1071528354643181680>"} | ${infraction.reason} <t:${infraction.date}:R> (<@${infraction.moderator}>) ||\`[${infraction.moderator}]\`||`)
+					.join("\n"),
 			},
 		]);
 	}

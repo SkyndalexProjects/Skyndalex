@@ -81,6 +81,7 @@ model cases {
   date      BigInt?
   moderator String
   duration  String?
+  active    Boolean?
 }
 
 model economy {

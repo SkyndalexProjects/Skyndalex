@@ -13,7 +13,7 @@ export class CaseManagement {
 		duration?: string,
 	) {
 		const warnDate = new Date();
-		const date = Date.parse(warnDate.toString())
+		const date = Date.parse(warnDate.toString());
 
 		const newCase = await this.client.prisma.cases.create({
 			data: {
@@ -23,15 +23,19 @@ export class CaseManagement {
 				reason: reason,
 				moderator: moderatorId,
 				duration: duration,
-				date: date / 1000
+				date: date / 1000,
+				active: true,
 			},
 		});
 		return newCase;
 	}
 	async remove(caseId: string) {
-		await this.client.prisma.cases.delete({
+		await this.client.prisma.cases.update({
 			where: {
 				id: Number.parseInt(caseId),
+			},
+			data: {
+				active: false,
 			},
 		});
 	}
