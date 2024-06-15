@@ -50,6 +50,8 @@
   "INFRACTIONS_EMBED_CHECKING_MENU_TITLE": "User Checking - Selected category: {{ category }}",
   "INFRACTIONS_EMBED_CHECKING_MENU_DESCRIPTION": "Successfully selected category: {{ category }}. Below you will find a list of user's infractions in this category.",
   "INFRACTIONS_BOT_PROHIBITED": "You can't check the bot's infractions.",
+  "PAGINATION_EMBED_PREVIOUS": "Previous",
+  "PAGINATION_EMBED_NEXT": "Next",
   "BANNED_USER": "User",
   "BAN_REASON": "Ban reason",
   "DELETED_MESSAGES": "Deleted messages",

@@ -48,10 +48,13 @@ export async function run(
 				]),
 		);
 
+		const guildId =  interaction.guild
+		? interaction.guild.id
+		: `DN:${interaction.channelId}`;
 	const infractions = await client.prisma.cases.findMany({
 		where: {
 			userId: user.id,
-			guildId: interaction.guild.id,
+			guildId,
 			type: "warn",
 		},
 		orderBy: {
@@ -62,12 +65,9 @@ export async function run(
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("INFRACTIONS_EMBED_TITLE")
 		.setColor("Blurple")
-		.setDescription("INFRACTIONS_EMBED_DESCRIPTION", {
-			stats: infractions.length,
-			pages: Math.ceil(infractions.length / 3),
-		});
-
-	if (infractions.length > 0) {
+		.setDescription("INFRACTIONS_EMBED_DESCRIPTION")
+		.setFooter({ text: "INFRACTIONS_EMBED_FOOTER", textArgs: { user: user.username, pages: "0", currentPage: "0", stats: infractions.length.toString()} });
+		if (infractions.length > 0) {
 		embed.addFields([
 			{
 				name: "INFRACTIONS_EMBED_FIELD_TITLE",
@@ -101,7 +101,7 @@ export async function run(
 				.setCustomId(`infractionsList-${user.id}-page_1`)
 				.setLabel("PAGINATION_EMBED_NEXT")
 				.setStyle(ButtonStyle.Secondary)
-				.setDisabled(infractions.length <= 5),
+				.setDisabled(infractions.length <= 3),
 		);
 	await interaction.reply({
 		embeds: [embed],

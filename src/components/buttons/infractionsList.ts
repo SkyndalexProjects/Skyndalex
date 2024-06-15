@@ -24,10 +24,14 @@ export async function run(
 		const [id, userId, pageId, type] = interaction.customId.split("-");
 		const page = Number(pageId.split("_")[1]);
 
+		const guildId =  interaction.guild
+		? interaction.guild.id
+		: `DN:${interaction.channelId}`;
+
 		const infractions = await client.prisma.cases.findMany({
 			where: {
 				userId: userId,
-				guildId: interaction.guildId,
+				guildId,
 				type,
 			},
 			orderBy: {
@@ -40,19 +44,20 @@ export async function run(
 		const totalInfractions = await client.prisma.cases.count({
 			where: {
 				userId: userId,
-				guildId: interaction.guildId,
+				guildId,
 				type,
 			},
 		});
+
 		const totalPages = Math.ceil(totalInfractions / 3);
+		
+		console.log("totalPages", totalPages)
+		const user = await client.users.fetch(userId);
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setTitle("INFRACTIONS_EMBED_TITLE")
 			.setColor(interaction.message.embeds[0].color)
-			.setDescription("INFRACTIONS_EMBED_DESCRIPTION_PAGE_UPDATE", {
-				pages: totalPages,
-				currentPage: page + 1,
-				stats: totalInfractions,
-			});
+			.setDescription("INFRACTIONS_EMBED_DESCRIPTION")
+			.setFooter({ text: "INFRACTIONS_EMBED_FOOTER", textArgs: { user: user.username, pages: totalPages.toString(), currentPage: (page + 1).toString() } });
 
 		if (infractions.length > 0) {
 			embed.addFields([
@@ -86,7 +91,7 @@ export async function run(
 				.setCustomId(`infractionsList-${userId}-page_${page + 1}`)
 				.setLabel("PAGINATION_EMBED_NEXT")
 				.setStyle(ButtonStyle.Secondary)
-				.setDisabled((page + 1) * 5 >= totalInfractions),
+				.setDisabled((page + 1) * 3 >= totalInfractions),
 		]);
 
 		const select =

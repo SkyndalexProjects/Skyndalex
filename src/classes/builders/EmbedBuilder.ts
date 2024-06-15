@@ -13,7 +13,6 @@ export class EmbedBuilder extends embedBuilder {
 	) {
 		super();
 		this.locale = locale;
-		this.setTimestamp();
 	}
 	protected mapField(field: LocaleFieldOptions) {
 		return {
