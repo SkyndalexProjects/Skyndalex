@@ -8,7 +8,9 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	client.logger.error("DUPA");
+	return interaction.reply("Nothing is implemented here");
+
+	// client.logger.error("DUPA");
 
 	// const embed = new EmbedBuilder(client, interaction.locale)
 	// 	.setDescription(
