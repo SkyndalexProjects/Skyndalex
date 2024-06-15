@@ -81,7 +81,9 @@ export const data = {
 			option
 				.setName("reason")
 				.setDescription("The reason for the warn.")
-				.setRequired(false),
+				.setRequired(false)
+				.setMaxLength(230)
+				.setMinLength(1),
 		),
 	integration_types: [0, 1],
 	contexts: [0, 1, 2],

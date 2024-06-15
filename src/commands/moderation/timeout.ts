@@ -100,5 +100,7 @@ export const data = new SlashCommandBuilder()
 		option
 			.setName("reason")
 			.setDescription("The reason for the timeout.")
-			.setRequired(false),
+			.setRequired(false)
+			.setMaxLength(230)
+			.setMinLength(1),
 	);

@@ -48,10 +48,6 @@ export async function run(
 				]),
 		);
 
-	const embed = new EmbedBuilder(client, interaction.locale)
-		.setTitle("INFRACTIONS_EMBED_TITLE")
-		.setColor("Blurple")
-		.setDescription("INFRACTIONS_EMBED_DESCRIPTION");
 	const infractions = await client.prisma.cases.findMany({
 		where: {
 			userId: user.id,
@@ -63,12 +59,20 @@ export async function run(
 		},
 	});
 
+	const embed = new EmbedBuilder(client, interaction.locale)
+		.setTitle("INFRACTIONS_EMBED_TITLE")
+		.setColor("Blurple")
+		.setDescription("INFRACTIONS_EMBED_DESCRIPTION", {
+			stats: infractions.length,
+			pages: Math.ceil(infractions.length / 3),
+		});
+
 	if (infractions.length > 0) {
 		embed.addFields([
 			{
 				name: "INFRACTIONS_EMBED_FIELD_TITLE",
 				value: infractions
-					.slice(0, 5)
+					.slice(0, 3)
 					.map(
 						(infraction) =>
 							`- ${

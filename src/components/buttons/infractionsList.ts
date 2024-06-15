@@ -14,7 +14,6 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction<"cached">,
 ) {
-	console.log("customId", interaction.customId);
 	if (interaction.user.id !== interaction?.message?.interaction?.user?.id)
 		return interaction.reply({
 			content: "You can't use this button!",
@@ -34,8 +33,8 @@ export async function run(
 			orderBy: {
 				id: "desc",
 			},
-			take: 5,
-			skip: page * 5,
+			take: 3,
+			skip: page * 3,
 		});
 
 		const totalInfractions = await client.prisma.cases.count({
@@ -45,11 +44,15 @@ export async function run(
 				type,
 			},
 		});
-
+		const totalPages = Math.ceil(totalInfractions / 3);
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setTitle("INFRACTIONS_EMBED_TITLE")
 			.setColor(interaction.message.embeds[0].color)
-			.setDescription("INFRACTIONS_EMBED_DESCRIPTION");
+			.setDescription("INFRACTIONS_EMBED_DESCRIPTION_PAGE_UPDATE", {
+				pages: totalPages,
+				currentPage: page + 1,
+				stats: totalInfractions,
+			});
 
 		if (infractions.length > 0) {
 			embed.addFields([

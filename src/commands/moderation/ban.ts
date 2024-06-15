@@ -99,5 +99,9 @@ export const data = new SlashCommandBuilder()
 			.setDescription("The amount of time to delete messages"),
 	)
 	.addStringOption((option) =>
-		option.setName("reason").setDescription("The reason for the ban."),
+		option
+			.setName("reason")
+			.setDescription("The reason for the ban.")
+			.setMaxLength(230)
+			.setMinLength(1),
 	);

@@ -94,7 +94,7 @@ export async function run(
 			{
 				name: "INFRACTIONS_EMBED_FIELD_TITLE",
 				value: infractions
-					.slice(0, 5)
+					.slice(0, 3)
 					.map(
 						(infraction) =>
 							`- ${
