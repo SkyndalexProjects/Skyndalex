@@ -2,8 +2,13 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 	ActionRowBuilder,
+	ButtonStyle,
 } from "discord.js";
-import { EmbedBuilder, StringSelectMenuBuilder } from "#builders";
+import {
+	ButtonBuilder,
+	EmbedBuilder,
+	StringSelectMenuBuilder,
+} from "#builders";
 import type { SkyndalexClient } from "#classes";
 export async function run(
 	client: SkyndalexClient,
@@ -18,41 +23,43 @@ export async function run(
 			ephemeral: true,
 		});
 
-	const select = new StringSelectMenuBuilder(client, interaction.locale)
-		.setPlaceholder("INFRACTIONS_SELECT_PLACEHOLDER")
-		.setCustomId(`infractions-${user.id}`)
-		.addOptions([
-			{
-				label: "INFRACTIONS_SELECT_OPTION_WARNS",
-				value: "warn",
-			},
-			{
-				label: "INFRACTIONS_SELECT_OPTION_MUTES",
-				value: "timeout",
-			},
-			{
-				label: "INFRACTIONS_SELECT_OPTION_KICKS",
-				value: "kick",
-			},
-			{
-				label: "INFRACTIONS_SELECT_OPTION_BANS",
-				value: "ban",
-			},
-		]);
+	const select =
+		new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+			new StringSelectMenuBuilder(client, interaction.locale)
+				.setPlaceholder("INFRACTIONS_SELECT_PLACEHOLDER")
+				.setCustomId(`infractions-${user.id}`)
+				.addOptions([
+					{
+						label: "INFRACTIONS_SELECT_OPTION_WARNS",
+						value: "warn",
+					},
+					{
+						label: "INFRACTIONS_SELECT_OPTION_MUTES",
+						value: "timeout",
+					},
+					{
+						label: "INFRACTIONS_SELECT_OPTION_KICKS",
+						value: "kick",
+					},
+					{
+						label: "INFRACTIONS_SELECT_OPTION_BANS",
+						value: "ban",
+					},
+				]),
+		);
 
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("INFRACTIONS_EMBED_TITLE")
 		.setColor("Blurple")
-		.setDescription("INFRACTIONS_EMBED_DESCRIPTION")
-		.setFooter({
-			text: "INFRACTIONS_EMBED_FOOTER",
-		});
-
+		.setDescription("INFRACTIONS_EMBED_DESCRIPTION");
 	const infractions = await client.prisma.cases.findMany({
 		where: {
 			userId: user.id,
 			guildId: interaction.guild.id,
 			type: "warn",
+		},
+		orderBy: {
+			id: "desc",
 		},
 	});
 
@@ -61,19 +68,40 @@ export async function run(
 			{
 				name: "INFRACTIONS_EMBED_FIELD_TITLE",
 				value: infractions
-					.map(infraction =>`- ${infraction.active ? "<:checkpassed:1071529475541565620>" : "<:checkfailed:1071528354643181680>"} | ${infraction.reason} <t:${infraction.date}:R> (<@${infraction.moderator}>) ||\`[${infraction.moderator}]\`||`)
+					.slice(0, 5)
+					.map(
+						(infraction) =>
+							`- ${
+								infraction.active
+									? "<:checkpassed:1071529475541565620>"
+									: "<:checkfailed:1071528354643181680>"
+							} | ${infraction.reason} <t:${
+								infraction.date
+							}:R> (<@${infraction.moderator}>) ||\`[${
+								infraction.moderator
+							}]\`||`,
+					)
 					.join("\n"),
 			},
 		]);
 	}
 
+	const paginationButtons =
+		new ActionRowBuilder<ButtonBuilder>().addComponents(
+			new ButtonBuilder(client, interaction.locale)
+				.setCustomId(`infractionsList-${user.id}-page_0`)
+				.setLabel("PAGINATION_EMBED_PREVIOUS")
+				.setStyle(ButtonStyle.Secondary)
+				.setDisabled(true),
+			new ButtonBuilder(client, interaction.locale)
+				.setCustomId(`infractionsList-${user.id}-page_1`)
+				.setLabel("PAGINATION_EMBED_NEXT")
+				.setStyle(ButtonStyle.Secondary)
+				.setDisabled(infractions.length <= 5),
+		);
 	await interaction.reply({
 		embeds: [embed],
-		components: [
-			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-				select,
-			),
-		],
+		components: [paginationButtons, select],
 	});
 }
 export const data = {

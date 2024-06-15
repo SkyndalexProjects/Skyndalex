@@ -1,4 +1,5 @@
-import { EmbedBuilder, type Interaction } from "discord.js";
+import type { Interaction } from "discord.js";
+import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 
 export async function interactionCreate(
@@ -6,13 +7,14 @@ export async function interactionCreate(
 	interaction: Interaction<"cached">,
 ) {
 	if (interaction.isChatInputCommand()) {
-		const embedCommandNotFound = new EmbedBuilder()
-			.setDescription(
-				client.i18n.t("COMMAND_FAILED", {
-					lng: interaction.locale,
-					commandName: interaction.commandName,
-				}),
-			)
+		const embedCommandNotFound = new EmbedBuilder(
+			client,
+			interaction.locale,
+		)
+			.setDescription("COMMAND_FAILED", {
+				lng: interaction.locale,
+				commandName: interaction.commandName,
+			})
 			.setColor("Red");
 
 		const subcommand = interaction.options.getSubcommand(false);
@@ -43,13 +45,14 @@ export async function interactionCreate(
 
 	if (interaction.isMessageComponent()) {
 		console.log("działam");
-		const embedComponentNotFound = new EmbedBuilder()
-			.setDescription(
-				client.i18n.t("COMPONENT_FAILED", {
-					lng: interaction.locale,
-					componentId: interaction.customId,
-				}),
-			)
+		const embedComponentNotFound = new EmbedBuilder(
+			client,
+			interaction.locale,
+		)
+			.setDescription("COMPONENT_FAILED", {
+				lng: interaction.locale,
+				componentId: interaction.customId,
+			})
 			.setColor("Red");
 
 		const component = client.components.get(
@@ -65,12 +68,11 @@ export async function interactionCreate(
 			await component.run(client, interaction);
 		} catch (e) {
 			console.error(e);
-			const embedError = new EmbedBuilder()
-				.setDescription(
-					client.i18n.t("COMPONENT_FAILED", {
-						lng: interaction.locale,
-					}),
-				)
+			const embedError = new EmbedBuilder(client, interaction.locale)
+				.setDescription("COMPONENT_FAILED", {
+					lng: interaction.locale,
+					componentId: interaction.customId,
+				})
 				.setColor("Red");
 			await interaction.reply({
 				embeds: [embedError],
@@ -100,13 +102,11 @@ export async function interactionCreate(
 	}
 
 	if (interaction.isModalSubmit()) {
-		const embedModalNotFound = new EmbedBuilder()
-			.setDescription(
-				client.i18n.t("MODAL_FAILED", {
-					lng: interaction.locale,
-					modalId: interaction.customId,
-				}),
-			)
+		const embedModalNotFound = new EmbedBuilder(client, interaction.locale)
+			.setDescription("MODAL_FAILED", {
+				lng: interaction.locale,
+				modalId: interaction.customId,
+			})
 			.setColor("Red");
 
 		const modal = client.modals.get(interaction.customId.split("-")[0]);
@@ -120,12 +120,11 @@ export async function interactionCreate(
 			await modal.run(client, interaction);
 		} catch (e) {
 			console.error(e);
-			const embedError = new EmbedBuilder()
-				.setDescription(
-					client.i18n.t("MODAL_FAILED", {
-						lng: interaction.locale,
-					}),
-				)
+			const embedError = new EmbedBuilder(client, interaction.locale)
+				.setDescription("MODAL_FAILED", {
+					lng: interaction.locale,
+					modalId: interaction.customId,
+				})
 				.setColor("Red");
 			await interaction.reply({
 				embeds: [embedError],
