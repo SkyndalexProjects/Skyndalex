@@ -13,7 +13,7 @@ model settings {
   radioStation            String?
   autoRadioVoiceChannel   String?
   radioId                 String?
-  antiPhishing            Boolean?
+  // antiPhishing            Boolean?
 }
 model users {
   familyId  Int @default(autoincrement())
@@ -21,10 +21,10 @@ model users {
   guildId   String
   marriedTo String?
   marriedAt DateTime?
-  lastWork  DateTime?
-  lastCrime DateTime?
-  lastDaily DateTime?
-  lastRob   DateTime?
+  // lastWork  DateTime?
+  // lastCrime DateTime?
+  // lastDaily DateTime?
+  // lastRob   DateTime?
 
   @@id([userId, guildId])
 
@@ -91,4 +91,10 @@ model economy {
   wallet    String?
 
   @@id([guildId, userId])
+}
+model favourties {
+  id     Int      @id @default(autoincrement())
+  userId String
+  radioId String
+  radioName String
 }

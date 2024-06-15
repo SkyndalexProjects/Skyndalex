@@ -2,9 +2,11 @@ import {
 	type AutocompleteInteraction,
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
+	ActionRowBuilder,
+	ButtonStyle,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { EmbedBuilder } from "#builders";
+import { ButtonBuilder, EmbedBuilder } from "#builders";
 import type { radioStationSearchQueryResult, radioStationData } from "#types";
 import type { TrackResult } from "shoukaku";
 
@@ -45,6 +47,13 @@ export async function run(
 		const id = json.data.url.split("/")[3];
 		const resourceUrl = `https://radio.garden/api/ara/content/listen/${id}/channel.mp3`;
 
+		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+			new ButtonBuilder(client, interaction.locale)
+				.setStyle(ButtonStyle.Success)
+				.setLabel("RADIO_FAVORITE_ADD")
+				.setCustomId(`addFavorite-${id}`),
+		);
+
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setDescription("RADIO_PLAYING_DESC", {
 				radioStation: json.data.title,
@@ -67,6 +76,7 @@ export async function run(
 			embed.setTitle("RADIO_CHANGED").setColor("Blue");
 			return interaction.editReply({
 				embeds: [embed],
+				components: [row]
 			});
 		}
 		const player = await client.shoukaku.joinVoiceChannel({
@@ -84,6 +94,7 @@ export async function run(
 		embed.setTitle("RADIO_PLAYING").setColor("Gold");
 		return interaction.editReply({
 			embeds: [embed],
+			components: [row]
 		});
 	} catch (e) {
 		console.error(e);
