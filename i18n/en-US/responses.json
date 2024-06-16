@@ -12,6 +12,7 @@
   "RADIO_STATE_STOPPED": "Stopped",
   "RADIO_STATE_AUTOPAUSED": "Auto-paused",
   "RADIO_CHANGED": "Switched radio",
+  "RADIO_FAVOURTIE_DELETED": "Deleted from favourties",
   "RADIO_STATE_PLAYING": "Radio playing!",
   "RADIO_PLAYING_DESC": "📻 | Choosed station: **{{ radioStation }}**\n🌐 | Country: **{{ radioCountry }}**\n🗺️ | City/Place: **{{ radioPlace }}**",
   "RADIO_PLAYING_FOOTER": "Website: {{- radioWebsite}}",

@@ -6,6 +6,12 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction,
 ) {
+    if (interaction.user.id !== interaction?.message?.interaction?.user?.id)
+        return interaction.reply({
+            content: "You can't use this button!",
+            ephemeral: true,
+        });
+        
     try {
         const value = interaction.customId.split("-")[1];
         const name = interaction.message.embeds[0].description.split(":")[1].replaceAll("**", "").trim().split("\n")[0];
@@ -16,9 +22,26 @@ export async function run(
         })
 
         if (currentFavorites.some((fav) => fav.radioId === value)) {
-            return interaction.reply({ content: "You already have this radio added to your favourites", ephemeral: true })
+            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder(client, interaction.locale)
+                    .setStyle(ButtonStyle.Danger)
+                    .setLabel("RADIO_FAVOURTIE_DELETED")
+                    .setCustomId(`addFavorite-${value}`),
+            )
+
+            await client.prisma.favourties.delete({
+                where: {
+                    id: currentFavorites.find((fav) => fav.radioId === value).id,
+                    userId: interaction.user.id,
+                    radioId: value
+                }
+            })
+
+            return interaction.update({
+                components: [row],
+            })
         }
-        
+
         const add = await client.prisma.favourties.upsert({
             where: {
                 userId: interaction.user.id,
