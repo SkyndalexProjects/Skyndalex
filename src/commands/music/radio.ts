@@ -62,7 +62,7 @@ export async function run(
 			})
 			.setFooter({
 				text: "RADIO_PLAYING_FOOTER",
-				textArgs: { radioWebsite: json.data.website },
+				textArgs: { radioWebsite: decodeURIComponent(json.data.website) },
 			})
 			.setTimestamp();
 
@@ -74,6 +74,7 @@ export async function run(
 			await player.playTrack({ track: result.data.encoded });
 
 			embed.setTitle("RADIO_CHANGED").setColor("Blue");
+
 			return interaction.editReply({
 				embeds: [embed],
 				components: [row]
@@ -92,6 +93,7 @@ export async function run(
 		await player.playTrack({ track: result.data.encoded });
 
 		embed.setTitle("RADIO_PLAYING").setColor("Gold");
+
 		return interaction.editReply({
 			embeds: [embed],
 			components: [row]
