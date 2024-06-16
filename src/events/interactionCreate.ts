@@ -43,8 +43,7 @@ export async function interactionCreate(
 		}
 	}
 
-	if (interaction.isMessageComponent()) {
-		console.log("działam");
+	if (interaction.isMessageComponent()) {;
 		const embedComponentNotFound = new EmbedBuilder(
 			client,
 			interaction.locale,

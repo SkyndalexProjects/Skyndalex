@@ -35,7 +35,6 @@ export async function run(
 		parameters: {
 			negative_prompt: "blurry",
 		},
-
 		// use_cache: false,
 		// wait_for_model: true,
 	});

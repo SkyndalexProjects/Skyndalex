@@ -29,7 +29,7 @@ export async function run(
 	});
 
 	const channel = await interaction.guild.channels.create({
-		name: `${getCategory.label}-${lastTicketId?.id + 1 || 0}`,
+		name: `${interaction.user.username}-${lastTicketId?.id + 1 || 0}`,
 		type: ChannelType.GuildText,
 		parent: getCategory.discordChannelId,
 		permissionOverwrites: [
