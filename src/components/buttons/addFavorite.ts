@@ -9,7 +9,16 @@ export async function run(
     try {
         const value = interaction.customId.split("-")[1];
         const name = interaction.message.embeds[0].description.split(":")[1].replaceAll("**", "").trim().split("\n")[0];
+        const currentFavorites = await client.prisma.favourties.findMany({
+            where: {
+                userId: interaction.user.id
+            }
+        })
 
+        if (currentFavorites.some((fav) => fav.radioId === value)) {
+            return interaction.reply({ content: "You already have this radio added to your favourites", ephemeral: true })
+        }
+        
         const add = await client.prisma.favourties.upsert({
             where: {
                 userId: interaction.user.id,
