@@ -151,8 +151,8 @@
   "BOT_INFO_CACHE_STATS": "Statystyki cache",
   "BOT_INFO_PROCESS_STATS": "Statystyki procesu",
   "BOT_INFO_LAVALINK_STATS": "Statystyki Lavalink",
-  "GOODBYE_DESCRIPTION": "[-] Użytkownik {{ user }} wyszedł z serwera. Zostało nas {{ memberCount }}",
-  "WELCOME_DESCRIPTION": "[+] Użytkownik {{ user }} dołączył na serwer. Mamy teraz {{ memberCount }}",
+  "GOODBYE_DESCRIPTION": "[-] Użytkownik **{{ user }}** opuścił serwer. Teraz mamy `{{ memberCount }}` członków",
+  "WELCOME_DESCRIPTION": "[+] Użytkownik **{{ user }}** dołączył do serwera. Teraz mamy `{{ memberCount }}` członków",
   "NOT_YOUR_BUTTON": "To nie twój przycisk",
   "CANNOT_USE_BUTTON": "Nie możesz użyć tego przycisku."
 }
