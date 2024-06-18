@@ -2,9 +2,11 @@ import {
 	AttachmentBuilder,
 	type ChatInputCommandInteraction,
 	type AutocompleteInteraction,
+	ActionRowBuilder,
+	ButtonStyle,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { EmbedBuilder } from "#builders";
+import { ButtonBuilder, EmbedBuilder } from "#builders";
 import type { HuggingFaceImage, HuggingFaceSearchResult } from "#types";
 import { HfInference } from "@huggingface/inference";
 const hf = new HfInference(process.env.HF_TOKEN);
@@ -68,6 +70,13 @@ export async function run(
 			(await response.arrayBuffer()) as HuggingFaceImage["generatedImage"];
 		const image = new AttachmentBuilder(Buffer.from(imageBuffer));
 
+		const deleteAttachment =
+			new ActionRowBuilder<ButtonBuilder>().addComponents(
+				new ButtonBuilder(client, interaction.locale)
+					.setCustomId("deleteAttachment")
+					.setLabel("AI_DELETE_ATTACHMENT")
+					.setStyle(ButtonStyle.Danger),
+			);
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setDescription(
 				client.i18n.t("IMG_GENERATED", {
@@ -84,6 +93,7 @@ export async function run(
 		await interaction.editReply({
 			embeds: [embed],
 			files: [image],
+			components: [deleteAttachment],
 		});
 		await interaction.followUp({
 			content: client.i18n.t("IMAGE_READY", {
