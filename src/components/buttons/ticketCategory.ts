@@ -1,7 +1,8 @@
 import type { SkyndalexClient } from "#classes";
-import { EmbedBuilder } from "#builders";
+import { ButtonBuilder, EmbedBuilder } from "#builders";
 import {
 	ActionRowBuilder,
+	ButtonStyle,
 	ChannelType,
 	ModalBuilder,
 	PermissionFlagsBits,
@@ -84,16 +85,14 @@ export async function run(
 			],
 		});
 
-		const ticket = await client.prisma.tickets.create({
-			data: {
-				id: lastTicketId?.id + 1 || 0,
-				userId: interaction.user.id,
-				guildId: interaction.guild.id,
-				ticketChannel: channel.id,
-				ticketCategory: getCategory.discordChannelId,
-				state: "open",
-			},
-		});
+		const ticket = await client.tickets.create(
+			lastTicketId?.id + 1 || 0,
+			interaction.guild.id,
+			interaction.user.id,
+			channel.id,
+			getCategory.discordChannelId,
+			"open",
+		);
 
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setTitle("TICKET_CREATED_TITLE")
@@ -105,8 +104,22 @@ export async function run(
 			})
 			.setColor("Blue");
 
+		const actions = new ActionRowBuilder<ButtonBuilder>().addComponents(
+			new ButtonBuilder(client, interaction.locale)
+				.setCustomId(
+					`archiveTicket-${ticket.id}-${interaction.user.id}`,
+				)
+				.setLabel("CLOSE_TICKET")
+				.setStyle(ButtonStyle.Secondary),
+			new ButtonBuilder(client, interaction.locale)
+				.setCustomId(`closeTicket-${ticket.id}`)
+				.setLabel("DELETE_TICKET")
+				.setStyle(ButtonStyle.Secondary),
+		);
+
 		await channel.send({
 			content: `<@${interaction.user.id}>`,
+			components: [actions],
 			embeds: [embed],
 		});
 

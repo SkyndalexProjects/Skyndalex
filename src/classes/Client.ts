@@ -16,6 +16,7 @@ import { Logger } from "./Logger.js";
 import { CaseManagement } from "./modules/CasesManagement.js";
 import { RadioPlayer } from "./modules/RadioPlayer.js";
 import { Connectors, Shoukaku } from "shoukaku";
+import { TicketManagement } from "./modules/TicketManagement.js";
 
 const Nodes = [
 	{
@@ -35,6 +36,7 @@ export class SkyndalexClient extends Client {
 	modals: Collection<string, Modal>;
 	loader = new Loaders(this);
 	cases = new CaseManagement(this);
+	tickets = new TicketManagement(this);
 	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 	radio = new RadioPlayer(this);
 

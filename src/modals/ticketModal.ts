@@ -48,16 +48,14 @@ export async function run(
 		],
 	});
 
-	const ticket = await client.prisma.tickets.create({
-		data: {
-			id: lastTicketId?.id + 1 || 0,
-			userId: interaction.user.id,
-			guildId: interaction.guild.id,
-			ticketChannel: channel.id,
-			ticketCategory: getCategory.discordChannelId,
-			state: "open",
-		},
-	});
+	const ticket = await client.tickets.create(
+		lastTicketId?.id + 1 || 0,
+		interaction.guild.id,
+		interaction.user.id,
+		channel.id,
+		getCategory.discordChannelId,
+		"open",
+	);
 
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("TICKET_CREATED_TITLE")
