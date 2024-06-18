@@ -144,5 +144,7 @@
   "BOT_INFO_DESCRIPTION": "You are currently using bot version: `{{ version }}`.\n[`Add bot now`](https://discord.com/api/oauth2/authorize?client_id={{clientId}}&permissions=0&scope=bot%20applications.commands)\n# Bot Information.\n\nWelcome to Skyndalex! This is a multifunctional bot that has **basic economy, AI features, moderation, radio (including automatic!), basic tools**, and much more!\nThis is a hobbyist project owned by [SkyndalexProjects](https://github.com/SkyndalexProjects), a Polish production (:flag_pl:), one of the last representatives of Polish bots that is constantly supported, updated, and adapted to the latest Discord features. All of our projects are 100% open-source, and anyone can contribute to them.\n# Useful links:\n - [`Support`](https://discord.gg/SqPUr5R7YF)\n- [`Website`](https://skyndalex.com)\n- [`Documentation, guides`](https://docs.skyndalex.xyz)\n- [`Github`](https://github.com/SkyndalexProjects/Skyndalex)",
   "BOT_INFO_CACHE_STATS": "Cache stats",
   "BOT_INFO_PROCESS_STATS": "Process stats",
-  "BOT_INFO_LAVALINK_STATS": "Lavalink stats"
+  "BOT_INFO_LAVALINK_STATS": "Lavalink stats",
+  "GOODBYE_DESCRIPTION": "[-] User {{ user }} left the server. We now have {{ memberCount }} members",
+  "WELCOME_DESCRIPTION": "[+] User {{ user }} joined the server. We now have {{ memberCount }} members"
 }

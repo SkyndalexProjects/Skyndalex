@@ -150,5 +150,7 @@
   "BOT_INFO_DESCRIPTION": "Aktualnie używasz wersji bota: `{{ version }}`.\n[`Dodaj bota już teraz`](https://discord.com/api/oauth2/authorize?client_id={{clientId}}&permissions=0&scope=bot%20applications.commands)\n# Informacje o bocie.\n\nWitaj w Skyndalexie! Jest to bot wielofunkcyjny, który posiada **podstawową ekonomię, funkcje AI, moderację, radio (Również automatyczne!), podstawowe narzędzia** i wiele więcej!\nJest to projekt tworzony hobbyistycznie, nalerzący do organizacji [SkyndalexProjects](https://github.com/SkyndalexProjects) polskiej produkcji (:flag_pl:), jeden z ostatnich przedstawicieli polskich botów który jest stale wspierany, aktualizowany i dostosowywany pod najnowsze funkcje Discorda. Nasze wszystkie projekty są 100% open-source, i każdy może w nie ingerować.\n# Przydatne linki:\n - [`Support`](https://discord.gg/SqPUr5R7YF)\n- [`Strona`](https://skyndalex.com)\n- [`Dokumentacja, poradniki`](https://docs.skyndalex.xyz)\n- [`Github`](https://github.com/SkyndalexProjects/Skyndalex)",
   "BOT_INFO_CACHE_STATS": "Statystyki cache",
   "BOT_INFO_PROCESS_STATS": "Statystyki procesu",
-  "BOT_INFO_LAVALINK_STATS": "Statystyki Lavalink"
+  "BOT_INFO_LAVALINK_STATS": "Statystyki Lavalink",
+  "GOODBYE_DESCRIPTION": "[-] Użytkownik {{ user }} wyszedł z serwera. Zostało nas {{ memberCount }}",
+  "WELCOME_DESCRIPTION": "[+] Użytkownik {{ user }} dołączył na serwer. Mamy teraz {{ memberCount }}"
 }

@@ -12,22 +12,18 @@ export async function guildMemberAdd(
 		},
 	});
 
-	const welcomeEmbed = new EmbedBuilder(client, member.guild.preferredLocale)
+	const goodbyeEmbed = new EmbedBuilder(client, member.guild.preferredLocale)
 		.setColor("Green")
-		.setDescription("WELCOME_DESCRIPTION");
-
-	if (getSettings?.autoRole) {
-		const role = member.guild.roles.cache.get(getSettings.autoRole);
-		if (role) {
-			member.roles.add(role);
-		}
-	};
+		.setDescription("GOODBYE_DESCRIPTION", {
+            user: member.user.username,
+            memberCount: member.guild.memberCount,
+        });
 
 	const channel = member.guild.channels.cache.get(getSettings?.welcomeChannel);
 	if (channel) {
-		// @ts-expect-error
+        // @ts-expect-error
 		channel.send({
-			embeds: [welcomeEmbed],
+			embeds: [goodbyeEmbed],
 		});
 	}
 }
