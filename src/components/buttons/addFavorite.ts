@@ -12,7 +12,7 @@ export async function run(
 ) {
 	if (interaction.user.id !== interaction?.message?.interaction?.user?.id)
 		return interaction.reply({
-			content: "You can't use this button!",
+			content: client.i18n.t("NOT_YOUR_BUTTON"),
 			ephemeral: true,
 		});
 

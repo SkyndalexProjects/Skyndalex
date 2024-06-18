@@ -1,6 +1,6 @@
 import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder, ButtonBuilder } from "#builders";
-import { ActionRowBuilder, ButtonStyle,type MessageComponentInteraction } from "discord.js";
+import { ActionRowBuilder, ButtonStyle,type MessageComponentInteraction, PermissionFlagsBits } from "discord.js";
 
 export async function run(
 	client: SkyndalexClient,
@@ -8,7 +8,12 @@ export async function run(
 ) {
     const [ticketId, userId, ticketCategory] = interaction.customId.split("-").slice(1);
 
-    
+    if (interaction.user.id !== userId && !interaction.member?.permissions.has(PermissionFlagsBits.ManageChannels))
+        return interaction.reply({
+            content: client.i18n.t("CANNOT_USE_BUTTON"),
+            ephemeral: true,
+        });
+        
     const ticket = await client.tickets.reopen(
         interaction.guild.id,
         userId,
