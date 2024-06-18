@@ -9,6 +9,7 @@ export async function run(
 	interaction: ChatInputCommandInteraction,
 ) {
 	await interaction.reply(`Ping: \`\`\`yaml\n${client.ws.ping}ms\`\`\``);
+	
 }
 export const data = new SlashCommandBuilder()
 	.setName("ping")

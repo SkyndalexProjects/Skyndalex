@@ -27,19 +27,21 @@ export async function interactionCreate(
 					? `${interaction.commandName}/${subcommand}`
 					: interaction.commandName,
 		);
-		if (!command)
-			return interaction.reply({
-				embeds: [embedCommandNotFound],
-				ephemeral: true,
-			});
-		try {
-			await command.run(client, interaction);
-		} catch (e) {
+		if (!command) {
 			await interaction.reply({
 				embeds: [embedCommandNotFound],
 				ephemeral: true,
-			});
-			console.error(e);
+			}).catch(console.error);
+		} else {
+			try {
+				await command.run(client, interaction);
+			} catch (e) {
+				await interaction.reply({
+					embeds: [embedCommandNotFound],
+					ephemeral: true,
+				}).catch(console.error);
+				console.error(e);
+			}
 		}
 	}
 

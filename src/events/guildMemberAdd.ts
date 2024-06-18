@@ -8,13 +8,16 @@ export async function guildMemberAdd(
 ) {
 	const getSettings = await client.prisma.settings.findUnique({
 		where: {
-			guildId: client.user.id,
+			guildId: member.guild.id,
 		},
 	});
 
 	const welcomeEmbed = new EmbedBuilder(client, member.guild.preferredLocale)
 		.setColor("Green")
-		.setDescription("WELCOME_DESCRIPTION");
+		.setDescription("WELCOME_DESCRIPTION", {
+			user: member.user.username,
+			memberCount: member.guild.memberCount,
+		});
 
 	if (getSettings?.autoRole) {
 		const role = member.guild.roles.cache.get(getSettings.autoRole);
@@ -23,7 +26,7 @@ export async function guildMemberAdd(
 		}
 	};
 
-	const channel = member.guild.channels.cache.get(getSettings?.welcomeChannel);
+	const channel = member.guild.channels.cache.get(getSettings?.welcomeChannel); 
 	if (channel) {
 		// @ts-expect-error
 		channel.send({
