@@ -43,7 +43,7 @@ export async function interactionCreate(
 		}
 	}
 
-	if (interaction.isMessageComponent()) {;
+	if (interaction.isMessageComponent()) {
 		const embedComponentNotFound = new EmbedBuilder(
 			client,
 			interaction.locale,

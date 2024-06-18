@@ -62,7 +62,9 @@ export async function run(
 			})
 			.setFooter({
 				text: "RADIO_PLAYING_FOOTER",
-				textArgs: { radioWebsite: decodeURIComponent(json.data.website) },
+				textArgs: {
+					radioWebsite: decodeURIComponent(json.data.website),
+				},
 			})
 			.setTimestamp();
 
@@ -77,7 +79,7 @@ export async function run(
 
 			return interaction.editReply({
 				embeds: [embed],
-				components: [row]
+				components: [row],
 			});
 		}
 		const player = await client.shoukaku.joinVoiceChannel({
@@ -96,7 +98,7 @@ export async function run(
 
 		return interaction.editReply({
 			embeds: [embed],
-			components: [row]
+			components: [row],
 		});
 	} catch (e) {
 		console.error(e);

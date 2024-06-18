@@ -48,7 +48,7 @@ export async function run(
 				]),
 		);
 
-		const guildId =  interaction.guild
+	const guildId = interaction.guild
 		? interaction.guild.id
 		: `DN:${interaction.channelId}`;
 	const infractions = await client.prisma.cases.findMany({
@@ -66,8 +66,16 @@ export async function run(
 		.setTitle("INFRACTIONS_EMBED_TITLE")
 		.setColor("Blurple")
 		.setDescription("INFRACTIONS_EMBED_DESCRIPTION")
-		.setFooter({ text: "INFRACTIONS_EMBED_FOOTER", textArgs: { user: user.username, pages: "0", currentPage: "0", stats: infractions.length.toString()} });
-		if (infractions.length > 0) {
+		.setFooter({
+			text: "INFRACTIONS_EMBED_FOOTER",
+			textArgs: {
+				user: user.username,
+				pages: "0",
+				currentPage: "0",
+				stats: infractions.length.toString(),
+			},
+		});
+	if (infractions.length > 0) {
 		embed.addFields([
 			{
 				name: "INFRACTIONS_EMBED_FIELD_TITLE",

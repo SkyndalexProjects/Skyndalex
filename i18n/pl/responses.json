@@ -124,6 +124,8 @@
   "TICKET_CREATED_TITLE": "🎫 | Witaj na tickecie!",
   "TICKET_CREATED_DESCRIPTION": "Twój ticket został pomyślnie utworzony. Poczekaj na odpowiedź od administracji.\n# Informacje\n**Użytkownik**: {{ user }}\n**Kategoria**: {{ category }}\n**Status:** {{ state }}\n**ID:** {{ id }}",
   "TICKET_CREATED_DESCRIPTION_FROM_MODAL": "Twój ticket został pomyślnie utworzony. Poczekaj na odpowiedź od administracji.\n# Informacje\n**Użytkownik**: {{ user }}\n**Kategoria**: {{ category }}\n**Status:** {{ state }}\n**ID:** {{ id }}\n# Informacje od użytkownika",
+  "CLOSE_TICKET": "Zamknij ticket",
+  "DELETE_TICKET": "Usuń ticket",
   "NO_TICKET_CHANNEL_ERROR": "Kanał, do którego próbujesz utworzyć ticket najwyraźniej nie jest kanałem który należy do jakiejkolwiek kategorii ticketów.",
   "TICKET_ASSIGNED": "[AKTUALIZACJA]: Ticket został przypisany do użytkownika {{ user }} [<@{{ userId }}>] (TicketID: {{ ticketId }}).",
   "CANNOT_ASSIGN_BOT": "Nie można przypisać bota do ticketu.",
