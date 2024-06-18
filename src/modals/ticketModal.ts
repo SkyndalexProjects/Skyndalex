@@ -1,9 +1,11 @@
 import type { SkyndalexClient } from "#classes";
-import { EmbedBuilder } from "#builders";
+import { EmbedBuilder, ButtonBuilder } from "#builders";
 import {
 	PermissionFlagsBits,
 	type ModalSubmitInteraction,
 	ChannelType,
+	ActionRowBuilder,
+	ButtonStyle,
 } from "discord.js";
 
 export async function run(
@@ -76,8 +78,22 @@ export async function run(
 		]);
 	});
 
+	const actions = new ActionRowBuilder<ButtonBuilder>().addComponents(
+		new ButtonBuilder(client, interaction.locale)
+			.setCustomId(
+				`archiveTicket-${ticket.id}-${interaction.user.id}`,
+			)
+			.setLabel("CLOSE_TICKET")
+			.setStyle(ButtonStyle.Secondary),
+		new ButtonBuilder(client, interaction.locale)
+			.setCustomId(`deleteTicket-${ticket.id}-${interaction.user.id}`)
+			.setLabel("DELETE_TICKET")
+			.setStyle(ButtonStyle.Secondary),
+	);
+
 	await channel.send({
 		embeds: [embed],
+		components: [actions],
 	});
 
 	return interaction.reply({
