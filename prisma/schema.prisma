@@ -13,6 +13,8 @@ model settings {
   radioStation            String?
   autoRadioVoiceChannel   String?
   radioId                 String?
+  autoRole                String?
+  ticketArchiveCategory    String?
   // antiPhishing            Boolean?
 }
 model users {

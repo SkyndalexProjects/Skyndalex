@@ -1,5 +1,5 @@
 import type { SkyndalexClient } from "#classes";
-import { ChannelSelectMenuBuilder } from "#builders";
+import { ChannelSelectMenuBuilder, RoleSelectMenuBuilder } from "#builders";
 import {
 	type MessageComponentInteraction,
 	ActionRowBuilder,
@@ -30,6 +30,39 @@ export async function run(
 			components: [
 				new ActionRowBuilder<ChannelSelectMenuBuilder>({
 					components: [channelSelectMenu],
+				}),
+			],
+		});
+	}
+	if (value.endsWith("Role")) {
+		const roleSelectMenu = new RoleSelectMenuBuilder(
+			client,
+			interaction.locale,
+		)
+			.setPlaceholder("CONFIG_GUILD_ROLE_SELECT_PLACEHOLDER")
+			.setCustomId(`configSelect-${value}`);
+
+		return interaction.update({
+			components: [
+				new ActionRowBuilder<RoleSelectMenuBuilder>({
+					components: [roleSelectMenu],
+				}),
+			],
+		});
+	}
+	if (value.endsWith("Category")) {
+		const categorySelectMenu = new ChannelSelectMenuBuilder(
+			client,
+			interaction.locale,
+		)
+			.setPlaceholder("CONFIG_GUILD_CATEGORY_SELECT_PLACEHOLDER")
+			.setCustomId(`configSelect-${value}`)
+			.setChannelTypes(ChannelType.GuildCategory);
+
+		return interaction.update({
+			components: [
+				new ActionRowBuilder<ChannelSelectMenuBuilder>({
+					components: [categorySelectMenu],
 				}),
 			],
 		});
