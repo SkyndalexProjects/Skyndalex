@@ -80,9 +80,7 @@ export async function run(
 
 	const actions = new ActionRowBuilder<ButtonBuilder>().addComponents(
 		new ButtonBuilder(client, interaction.locale)
-			.setCustomId(
-				`archiveTicket-${ticket.id}-${interaction.user.id}`,
-			)
+			.setCustomId(`archiveTicket-${ticket.id}-${interaction.user.id}`)
 			.setLabel("CLOSE_TICKET")
 			.setStyle(ButtonStyle.Secondary),
 		new ButtonBuilder(client, interaction.locale)

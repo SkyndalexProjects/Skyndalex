@@ -45,31 +45,23 @@ export class TicketManagement {
 
 		return ticket;
 	}
-    async archive(
-        guildId: string,
-        userId: string,
-        ticketId: number,
-    ) {
-        const ticket = await this.client.prisma.tickets.update({
-            where: {
-                guildId_userId_id: {
-                    guildId,
-                    id: ticketId,
-                    userId,
-                },
-            },
-            data: {
-                state: "archived",
-            },
-        });
+	async archive(guildId: string, userId: string, ticketId: number) {
+		const ticket = await this.client.prisma.tickets.update({
+			where: {
+				guildId_userId_id: {
+					guildId,
+					id: ticketId,
+					userId,
+				},
+			},
+			data: {
+				state: "archived",
+			},
+		});
 
-        return ticket;
-    }
-	async reopen(
-		guildId: string,
-		userId: string,
-		ticketId: number,
-	) {
+		return ticket;
+	}
+	async reopen(guildId: string, userId: string, ticketId: number) {
 		const ticket = await this.client.prisma.tickets.update({
 			where: {
 				guildId_userId_id: {

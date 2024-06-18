@@ -24,9 +24,11 @@ export async function guildMemberAdd(
 		if (role) {
 			member.roles.add(role);
 		}
-	};
+	}
 
-	const channel = member.guild.channels.cache.get(getSettings?.welcomeChannel); 
+	const channel = member.guild.channels.cache.get(
+		getSettings?.welcomeChannel,
+	);
 	if (channel) {
 		// @ts-expect-error
 		channel.send({

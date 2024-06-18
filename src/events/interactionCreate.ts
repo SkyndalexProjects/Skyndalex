@@ -28,18 +28,22 @@ export async function interactionCreate(
 					: interaction.commandName,
 		);
 		if (!command) {
-			await interaction.reply({
-				embeds: [embedCommandNotFound],
-				ephemeral: true,
-			}).catch(console.error);
+			await interaction
+				.reply({
+					embeds: [embedCommandNotFound],
+					ephemeral: true,
+				})
+				.catch(console.error);
 		} else {
 			try {
 				await command.run(client, interaction);
 			} catch (e) {
-				await interaction.reply({
-					embeds: [embedCommandNotFound],
-					ephemeral: true,
-				}).catch(console.error);
+				await interaction
+					.reply({
+						embeds: [embedCommandNotFound],
+						ephemeral: true,
+					})
+					.catch(console.error);
 				console.error(e);
 			}
 		}

@@ -15,13 +15,15 @@ export async function guildMemberRemove(
 	const goodbyeEmbed = new EmbedBuilder(client, member.guild.preferredLocale)
 		.setColor("Red")
 		.setDescription("GOODBYE_DESCRIPTION", {
-            user: member.user.username,
-            memberCount: member.guild.memberCount,
-        });
+			user: member.user.username,
+			memberCount: member.guild.memberCount,
+		});
 
-	const channel = member.guild.channels.cache.get(getSettings?.goodbyeChannel);
+	const channel = member.guild.channels.cache.get(
+		getSettings?.goodbyeChannel,
+	);
 	if (channel) {
-        // @ts-expect-error
+		// @ts-expect-error
 		channel.send({
 			embeds: [goodbyeEmbed],
 		});
