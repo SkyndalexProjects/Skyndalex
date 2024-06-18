@@ -65,4 +65,24 @@ export class TicketManagement {
 
         return ticket;
     }
+	async reopen(
+		guildId: string,
+		userId: string,
+		ticketId: number,
+	) {
+		const ticket = await this.client.prisma.tickets.update({
+			where: {
+				guildId_userId_id: {
+					guildId,
+					id: ticketId,
+					userId,
+				},
+			},
+			data: {
+				state: "reopened",
+			},
+		});
+
+		return ticket;
+	}
 }

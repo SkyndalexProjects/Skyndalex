@@ -112,7 +112,7 @@ export async function run(
 				.setLabel("CLOSE_TICKET")
 				.setStyle(ButtonStyle.Secondary),
 			new ButtonBuilder(client, interaction.locale)
-				.setCustomId(`closeTicket-${ticket.id}`)
+				.setCustomId(`deleteTicket-${ticket.id}-${interaction.user.id}`)
 				.setLabel("DELETE_TICKET")
 				.setStyle(ButtonStyle.Secondary),
 		);
