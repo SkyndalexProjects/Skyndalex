@@ -23,10 +23,12 @@ export async function run(
 		.setPlaceholder("CONFIG_GUILD_SELECT_PLACEHOLDER")
 		.setCustomId("config")
 		.addOptions(
-			keys.map((key) => ({
+			keys
+			.map((key) => ({
 				label: key,
 				value: key,
-			})),
+			}))
+			.filter((option) => !option.value.endsWith("Id")),
 		);
 
 	const embed = new EmbedBuilder(client, interaction.locale)
