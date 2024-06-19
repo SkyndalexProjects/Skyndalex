@@ -17,8 +17,10 @@ export async function run(
 	const user2 = interaction.options.getUser("to-who");
 	const randomValue = randomBytes(1)[0] % 100;
 
+	if (user1.id === user2.id) return interaction.reply({ content: client.i18n.t("FUN_SHIP_SAME_USER", { lng: interaction.locale }), ephemeral: true });
+
 	const generateImage =
-		interaction.options.getBoolean("generate-image") ?? true;
+		interaction.options.getBoolean("generate-image") ?? false;
 
 	if (randomValue < 20) {
 		// 0-20%

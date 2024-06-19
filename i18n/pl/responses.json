@@ -112,6 +112,7 @@
   "FUN_SHIP_PUNCH": "Moje dane mówią, że **{{ user1 }}** niezbyt się kocha z **{{ user2 }}**. Jest to spowodowane prawdopodobnie tym, że generator wykazał iż ich poziom miłości wynosi jedynie `{{ percentage }}`% :sob:",
   "FUN_SHIP_HUG": "Wow, całkiem możliwe że **{{ user1 }}** oraz **{{ user2 }}** mogą być niezłą parą! Ich poziom miłości wynosi `{{ percentage }}`% :heart:",
   "FUN_SHIP_KISS": "To już prawie pewne! **{{ user1 }}** oraz **{{ user2 }}** są idealną parą! Ich poziom miłości wynosi `{{ percentage }}`% :heart_eyes:",
+  "FUN_SHIP_SAME_USER": "Nie możesz zrobić testu z tym samym użytkownikiem!",
   "FUN_DOG_TITLE": "🐶 | Piesek",
   "FUN_CAT_TITLE": "🐱 | Kotek",
   "FUN_CAT_NO_IMAGE": "Nie udało się znaleźć obrazka kota. Spróbuj ponownie.",
