@@ -17,7 +17,6 @@ import { CaseManagement } from "./modules/CasesManagement.js";
 import { RadioPlayer } from "./modules/RadioPlayer.js";
 import { Connectors, Shoukaku } from "shoukaku";
 import { TicketManagement } from "./modules/TicketManagement.js";
-
 const Nodes = [
 	{
 		name: "Localhost",
