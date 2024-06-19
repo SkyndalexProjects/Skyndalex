@@ -54,7 +54,7 @@ export class SkyndalexClient extends Client {
 			presence: {
 				activities: [
 					{
-						name: `Check out new ${process.env.npm_package_version} version!`,
+						name: `Version: ${process.env.npm_package_version} | discord.skyndalex.com `,
 						type: ActivityType.Playing,
 					},
 				],
