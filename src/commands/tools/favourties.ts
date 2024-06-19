@@ -72,6 +72,7 @@ export async function run(
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("RADIO_FAVOURTIES_TITLE")
 		.setDescription("RADIO_FAVOURTIES_DESCRIPTION")
+		.setFooter({ text: "SUPPORT_INVITE_FOOTER", iconURL: client.user.displayAvatarURL() })
 		.setColor("Blue")
 		.addFields([
 			{

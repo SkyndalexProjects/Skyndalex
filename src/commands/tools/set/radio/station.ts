@@ -53,7 +53,7 @@ export const data = new SlashCommandSubcommandBuilder()
 	.addStringOption((option) =>
 		option
 			.setName("station")
-			.setDescription("Station value")
+			.setDescription("Radio station. Search by place/country/name")
 			.setAutocomplete(true)
 			.setRequired(true),
 	)
@@ -69,7 +69,6 @@ export const data = new SlashCommandSubcommandBuilder()
 
 export async function autocomplete(interaction: AutocompleteInteraction) {
 	const focusedValue = interaction.options.getFocused(true).value;
-	console.log("focuesd value", focusedValue);
 	const url = `https://radio.garden/api/search?q=${focusedValue}`;
 
 	const response = await fetch(url, {

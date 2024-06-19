@@ -111,7 +111,7 @@ export const data = new SlashCommandBuilder()
 	.addStringOption((option) =>
 		option
 			.setName("station")
-			.setDescription("Radio station")
+			.setDescription("Radio station. Search by place/country/name")
 			.setAutocomplete(true)
 			.setRequired(true),
 	);
