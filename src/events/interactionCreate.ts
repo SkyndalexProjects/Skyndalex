@@ -15,7 +15,10 @@ export async function interactionCreate(
 				lng: interaction.locale,
 				commandName: interaction.commandName,
 			})
-			.setFooter({ text: "SUPPORT_INVITE_FOOTER", iconURL: client.user.displayAvatarURL() })
+			.setFooter({
+				text: "SUPPORT_INVITE_FOOTER",
+				iconURL: client.user.displayAvatarURL(),
+			})
 			.setColor("Red");
 
 		const subcommand = interaction.options.getSubcommand(false);
@@ -59,7 +62,10 @@ export async function interactionCreate(
 				lng: interaction.locale,
 				componentId: interaction.customId,
 			})
-			.setFooter({ text: "SUPPORT_INVITE_FOOTER", iconURL: client.user.displayAvatarURL() })
+			.setFooter({
+				text: "SUPPORT_INVITE_FOOTER",
+				iconURL: client.user.displayAvatarURL(),
+			})
 			.setColor("Red");
 
 		const component = client.components.get(
@@ -114,7 +120,10 @@ export async function interactionCreate(
 				lng: interaction.locale,
 				modalId: interaction.customId,
 			})
-			.setFooter({ text: "SUPPORT_INVITE_FOOTER", iconURL: client.user.displayAvatarURL() })
+			.setFooter({
+				text: "SUPPORT_INVITE_FOOTER",
+				iconURL: client.user.displayAvatarURL(),
+			})
 			.setColor("Red");
 
 		const modal = client.modals.get(interaction.customId.split("-")[0]);
@@ -133,7 +142,10 @@ export async function interactionCreate(
 					lng: interaction.locale,
 					modalId: interaction.customId,
 				})
-				.setFooter({ text: "SUPPORT_INVITE_FOOTER", iconURL: client.user.displayAvatarURL() })
+				.setFooter({
+					text: "SUPPORT_INVITE_FOOTER",
+					iconURL: client.user.displayAvatarURL(),
+				})
 				.setColor("Red");
 			await interaction.reply({
 				embeds: [embedError],

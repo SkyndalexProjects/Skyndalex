@@ -117,7 +117,7 @@
   "TICKETS_MENU_TITLE": "🎫 | Menu zgłoszeń",
   "TICKETS_MENU_DESCRIPTION": "Wybierz jedną z opcji poniżej, aby wysłać ticket do odpowiedniej kategorii",
   "SUPPORT_INVITE_FOOTER": "Jeśli coś poszło nie tak, dołącz na nasz serwer support i poinformuj administrację: /support",
-  "SUPPORT_INVITE": "➡️ Dołącz na nasz serwer support: [Kliknij tutaj](https://discord.skyndalex.com)",
+  "SUPPORT_INVITE": "➡️ Dołącz na nasz serwer support: [Kliknij tutaj](https://discord.gg/SVN6HXCKT3)",
   "BOT_INVITE": "➡️ Dodaj bota na swój serwer: [Kliknij tutaj](https://discord.com/api/oauth2/authorize?client_id={{clientId}}&permissions=8&scope=bot%20applications.commands)",
   "NO_CUSTOM_BUTTONS_FOUND": "Wygląda na to, że na tym serwerze nie ma dostępnych żadnych kategorii ticketów. Jeśli jesteś administratorem, możesz je dodać przez komendę **/set tickets add-custom-button**",
   "TICKET_CREATED": "Ticket został pomyślnie utworzony na <#{{ channel }}>.",

@@ -48,7 +48,10 @@ export async function run(
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("TICKETS_MENU_TITLE")
 		.setDescription("TICKETS_MENU_DESCRIPTION")
-		.setFooter({ text: "SUPPORT_INVITE_FOOTER", iconURL: client.user.displayAvatarURL() })
+		.setFooter({
+			text: "SUPPORT_INVITE_FOOTER",
+			iconURL: client.user.displayAvatarURL(),
+		})
 		.setColor("Blue");
 
 	if (selects.length > 0) {

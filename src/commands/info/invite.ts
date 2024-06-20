@@ -8,7 +8,12 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	return interaction.reply(client.i18n.t("BOT_INVITE", { lng: interaction.locale, clientId: client.user.id }));
+	return interaction.reply(
+		client.i18n.t("BOT_INVITE", {
+			lng: interaction.locale,
+			clientId: client.user.id,
+		}),
+	);
 }
 export const data = new SlashCommandBuilder()
 	.setName("invite")

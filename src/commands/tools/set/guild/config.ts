@@ -34,7 +34,10 @@ export async function run(
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CONFIG_GUILD_TITLE")
 		.setColor("Blurple")
-		.setFooter({ text: "SUPPORT_INVITE_FOOTER", iconURL: client.user.displayAvatarURL() })
+		.setFooter({
+			text: "SUPPORT_INVITE_FOOTER",
+			iconURL: client.user.displayAvatarURL(),
+		})
 		.setFields(
 			keys
 				.filter((key) => key !== "guildId")
