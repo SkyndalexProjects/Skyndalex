@@ -136,3 +136,4 @@ src/configdeprecated.json
 .npmrc
 .env
 db
+.project.inlang
