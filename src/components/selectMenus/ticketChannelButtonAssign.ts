@@ -32,15 +32,20 @@ export async function run(
 		.setColor("Blurple")
 		.setThumbnail(client.user.displayAvatarURL());
 
-	const components =
-		await client.manageComponents.createTicketCreationSelects(
-			client,
-			interaction.guildId,
-			interaction.locale,
-		);
+	const select = await client.manageComponents.createTicketCreationSelects(
+		client,
+		interaction.guildId,
+	);
+
+	console.log("selectMenus/ticketChannelButtonAssign.ts")
+	const button = await client.manageComponents.ticketButtonActionsMenu(
+		client,
+		interaction.locale,
+		"buttonCreation",
+	);
 
 	await interaction.update({
 		embeds: [embed],
-		components: [components.creationMenu, components.buttonMenu],
+		components: [select, button],
 	});
 }

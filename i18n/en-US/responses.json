@@ -114,11 +114,13 @@
   "FUN_CAT_NO_IMAGE": "No image found.",
   "CUSTOM_BUTTON_ADD_SUCCESS": "Success",
   "CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION": "Button **{{ name }}** has been added successfully with style `{{ button }}`\nChannel: <#{{ channel }}>",
+  
   "TICKETS_MENU_TITLE": "🎫 | Tickets menu",
   "TICKETS_MENU_DESCRIPTION": "Choose one of the option below from button to send a ticket.",
   "TICKETS_SETUP_TITLE": "🎫 | Tickets setup",
   "TICKETS_SETUP_DESCRIPTION": "Welcome to the ticket setup. ",
   "TICKET_SETUP_NO_CATEGORY": "Some values are incorrect or not provided.\n\n<:checkpassed:1071529475541565620> | Button name\n<:checkfailed:1071528354643181680> | Assigned category. Please assign category via select menu",
+  "TICKET_SETUP_NO_BUTTONS": "Some values are incorrect or not provided.\n\n<:checkpassed:1071529475541565620> | Select name\n<:checkfailed:1071528354643181680> | Assigned button(s). Please assign button(s) via select menu",
   "CONFIRM": "Confirm",
   "CANCEL": "Cancel",
   
@@ -141,9 +143,17 @@
   "CUSTOM_MODAL_ADDED_DESC": "Information has been added to the form for the category!\n\n**Input:** {{ inputLabel }}\n**Style:** {{ inputStyle }}\n**Placeholder:** {{ inputPlaceholder }}\n**Required?** {{ required }}",
   "ADD_TICKET_CUSTOM_BUTTON_MODAL": "Add custom button",
   "ADD_TICKET_CUSTOM_BUTTON_MODAL_NAME": "Button name",
+  "ADD_TICKET_CUSTOM_SELECT_MODAL": "Add custom select",
+  "ADD_TICKET_CUSTOM_SELECT_MODAL_NAME": "Select name",
+  
   "TICKETS_SETUP_STATUS": "You are currently setting **Button name** for custom button category setup.",
+  "TICKETS_SETUP_STATUS_SELECTS_BUTTONS_ASSIGNED": "You currently successfully **Assigned buttons** for custom select.",
+  "TICKETS_SETUP_STATUS_SELECTS_ASSIGNATION": "You are currently creating **Custom selects** for your tickets menu",
   "TICKETS_SETUP_CREATING_BUTTON_NAME": "Button name",
   "TICKETS_SETUP_CATEGORY_PLACEHOLDER": "Choose category",
+  "TICKETS_SETUP_ASSIGN_BUTTON_PLACEHOLDER": "Add buttons",
+  "TICKETS_SETUP_BUTTON_ASSIGNED": "Assigned button(s)",
+  
   "TICKETS_SETUP_CATEGORY_SET": "Assigned category",
   "TICKETS_SETUP_ASSIGN_MODAL_PLACEHOLDER": "Assign modal",
   "TICKETS_SETUP_ASSIGN_SELECT_PLACEHOLDER": "Assign select",

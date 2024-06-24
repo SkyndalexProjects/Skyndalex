@@ -11,13 +11,13 @@ export async function run(
 	interaction: MessageComponentInteraction,
 ) {
 	const modal = new ModalBuilder(client, interaction.locale)
-		.setCustomId("addTicketCustomButtonModal")
-		.setTitle("ADD_TICKET_CUSTOM_BUTTON_MODAL");
+		.setCustomId("addTicketCustomSelectModal")
+		.setTitle("ADD_TICKET_CUSTOM_SELECT_MODAL");
 
 	const name = new TextInputBuilder(client, interaction.locale)
-		.setCustomId("buttonName")
-		.setLabel("ADD_TICKET_CUSTOM_BUTTON_MODAL_NAME")
-		.setPlaceholder("ADD_TICKET_CUSTOM_BUTTON_MODAL_NAME")
+		.setCustomId("selectName")
+		.setLabel("ADD_TICKET_CUSTOM_SELECT_MODAL_NAME")
+		.setPlaceholder("ADD_TICKET_CUSTOM_SELECT_MODAL_NAME")
 		.setRequired(true)
 		.setStyle(TextInputStyle.Short);
 
