@@ -1,14 +1,15 @@
 import type { SkyndalexClient } from "#classes";
 import { ChannelType, ButtonStyle, ActionRowBuilder } from "discord.js";
-import {
-	ChannelSelectMenuBuilder,
-	ButtonBuilder,
-} from "#builders";
+import { ChannelSelectMenuBuilder, ButtonBuilder } from "#builders";
 export class ComponentsManager {
 	constructor(private readonly client: SkyndalexClient) {
 		this.client = client;
 	}
-	async ticketButtonActionsMenu(client: SkyndalexClient, locale: string, type: string) {
+	async ticketButtonActionsMenu(
+		client: SkyndalexClient,
+		locale: string,
+		type: string,
+	) {
 		const buttonMenu = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder(client, locale)
 				.setCustomId(`ticketConfirm-${type}`)
@@ -21,18 +22,14 @@ export class ComponentsManager {
 		);
 		return buttonMenu;
 	}
-	async createTicketCreationSelects(
-		client: SkyndalexClient,
-		locale: string,
-	) {
-		const creationMenu = new ActionRowBuilder<
-			ChannelSelectMenuBuilder
-		>().addComponents(
-			new ChannelSelectMenuBuilder(client, locale)
-				.setCustomId("ticketChannelButtonAssign")
-				.setPlaceholder("TICKETS_SETUP_CATEGORY_PLACEHOLDER")
-				.addChannelTypes(ChannelType.GuildCategory),
-		);
+	async createTicketCreationSelects(client: SkyndalexClient, locale: string) {
+		const creationMenu =
+			new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
+				new ChannelSelectMenuBuilder(client, locale)
+					.setCustomId("ticketChannelButtonAssign")
+					.setPlaceholder("TICKETS_SETUP_CATEGORY_PLACEHOLDER")
+					.addChannelTypes(ChannelType.GuildCategory),
+			);
 
 		return creationMenu;
 	}

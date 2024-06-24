@@ -12,7 +12,7 @@ export async function run(
 ) {
 	const id = interaction.options.getString("station");
 	const channel = interaction.options.getChannel("channel");
-	
+
 	const url = `https://radio.garden/api/ara/content/channel/${id}`;
 	const response = await fetch(url, {
 		method: "GET",

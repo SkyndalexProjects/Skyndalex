@@ -49,7 +49,7 @@ export async function run(
 	const button = await client.manageComponents.ticketButtonActionsMenu(
 		client,
 		interaction.locale,
-		"selectCreation"
+		"selectCreation",
 	);
 
 	// @ts-expect-error
