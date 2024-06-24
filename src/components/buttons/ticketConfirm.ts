@@ -1,6 +1,10 @@
 import type { SkyndalexClient } from "#classes";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
-import { type MessageComponentInteraction, ActionRowBuilder, ButtonStyle } from "discord.js";
+import {
+	type MessageComponentInteraction,
+	ActionRowBuilder,
+	ButtonStyle,
+} from "discord.js";
 
 export async function run(
 	client: SkyndalexClient,
@@ -40,17 +44,19 @@ export async function run(
 					(button) => button.label === embedFields[0].value,
 				)
 			) {
-				// Get custom button customId to delete
 				const customId = getButtons.find(
 					(button) => button.label === embedFields[0].value,
 				)?.customId;
 
-				const deleteComponent = new ActionRowBuilder<ButtonBuilder>().addComponents(
-					new ButtonBuilder(client, interaction.locale)
-						.setCustomId(`deleteTicketComponent-${embedFields[0].value}-${customId}`)
-						.setLabel("DELETE_TICKET")
-						.setStyle(ButtonStyle.Danger)
-				);
+				const deleteComponent =
+					new ActionRowBuilder<ButtonBuilder>().addComponents(
+						new ButtonBuilder(client, interaction.locale)
+							.setCustomId(
+								`deleteTicketComponent-${embedFields[0].value}-${customId}`,
+							)
+							.setLabel("DELETE_TICKET")
+							.setStyle(ButtonStyle.Danger),
+					);
 
 				return interaction.reply({
 					content: client.i18n.t("CUSTOM_BUTTON_ALREADY_EXISTS"),
