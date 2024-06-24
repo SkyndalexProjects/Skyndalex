@@ -1,6 +1,5 @@
 import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
-import { getSelects } from "#utils";
 import type { StringSelectMenuInteraction } from "discord.js";
 
 export async function run(
@@ -33,11 +32,13 @@ export async function run(
 		.setColor("Blurple")
 		.setThumbnail(client.user.displayAvatarURL());
 
-	const components = await getSelects(
-		client,
-		interaction.guildId,
-		interaction.locale,
-	);
+	const components =
+		await client.manageComponents.createTicketCreationSelects(
+			client,
+			interaction.guildId,
+			interaction.locale,
+		);
+
 	await interaction.update({
 		embeds: [embed],
 		components: [components.creationMenu, components.buttonMenu],

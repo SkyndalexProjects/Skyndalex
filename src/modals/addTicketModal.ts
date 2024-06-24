@@ -1,7 +1,6 @@
 import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
 import type { ModalSubmitInteraction } from "discord.js";
-import { getSelects } from "#utils";
 
 export async function run(
 	client: SkyndalexClient,
@@ -27,11 +26,12 @@ export async function run(
 		.setColor("Blurple")
 		.setThumbnail(client.user.displayAvatarURL());
 
-	const components = await getSelects(
-		client,
-		interaction.guildId,
-		interaction.locale,
-	);
+	const components =
+		await client.manageComponents.createTicketCreationSelects(
+			client,
+			interaction.guildId,
+			interaction.locale,
+		);
 
 	// @ts-expect-error
 	await interaction.update({

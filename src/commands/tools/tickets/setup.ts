@@ -1,30 +1,19 @@
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
-	ActionRowBuilder,
-	ButtonStyle,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { ButtonBuilder, EmbedBuilder } from "#builders";
+import { EmbedBuilder } from "#builders";
 
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	const buttonMenu = new ActionRowBuilder<ButtonBuilder>().addComponents(
-		new ButtonBuilder(client, interaction.locale)
-			.setCustomId("addTicketButton")
-			.setLabel("Button")
-			.setStyle(ButtonStyle.Primary),
-		new ButtonBuilder(client, interaction.locale)
-			.setCustomId("addTicketSelect")
-			.setLabel("Select")
-			.setStyle(ButtonStyle.Primary),
-		new ButtonBuilder(client, interaction.locale)
-			.setCustomId("ticketModal")
-			.setLabel("Modal")
-			.setStyle(ButtonStyle.Primary),
-	);
+	const buttonMenuComponents =
+		await client.manageComponents.createTicketCustomButtonCreationMenu(
+			client,
+			interaction.locale,
+		);
 
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("TICKETS_SETUP_TITLE")
@@ -39,7 +28,7 @@ export async function run(
 
 	await interaction.reply({
 		embeds: [embed],
-		components: [buttonMenu],
+		components: [buttonMenuComponents],
 		ephemeral: true,
 	});
 }

@@ -17,6 +17,7 @@ import { CaseManagement } from "./modules/CasesManagement.js";
 import { RadioPlayer } from "./modules/RadioPlayer.js";
 import { Connectors, Shoukaku } from "shoukaku";
 import { TicketManagement } from "./modules/TicketManagement.js";
+import { ComponentsManager } from "./ComponentsManager.js";
 const Nodes = [
 	{
 		name: "Localhost",
@@ -38,6 +39,7 @@ export class SkyndalexClient extends Client {
 	tickets = new TicketManagement(this);
 	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 	radio = new RadioPlayer(this);
+	manageComponents = new ComponentsManager(this);
 
 	i18n = i18next;
 
@@ -81,6 +83,7 @@ export class SkyndalexClient extends Client {
 		await this.loader.loadCommands("../commands");
 		this.components = await this.loader.loadComponents("../components");
 		this.modals = await this.loader.loadModals("../modals");
+
 		await this.login(process.env.BOT_TOKEN);
 
 		process.on("unhandledRejection", async (reason, p) => {
