@@ -18,7 +18,6 @@ export async function voiceStateUpdate(client, oldState, newState) {
 
 			if (newState.channel.id === settings?.autoRadioVoiceChannel) {
 				if (client.shoukaku.connections.size <= 0) {
-					console.log("1");
 					await client.radio.startRadio(client, newState.guild.id);
 				}
 			}

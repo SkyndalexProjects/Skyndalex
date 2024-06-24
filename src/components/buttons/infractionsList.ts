@@ -51,7 +51,6 @@ export async function run(
 
 		const totalPages = Math.ceil(totalInfractions / 3);
 
-		console.log("totalPages", totalPages);
 		const user = await client.users.fetch(userId);
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setTitle("INFRACTIONS_EMBED_TITLE")

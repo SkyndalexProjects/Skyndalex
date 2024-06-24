@@ -56,8 +56,6 @@ export async function run(
 				),
 		);
 
-		console.log("selectMenus/ticketSelectButtonAssign.ts")
-
 	const button = await client.manageComponents.ticketButtonActionsMenu(
 		client,
 		interaction.locale,

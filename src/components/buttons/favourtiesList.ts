@@ -35,7 +35,6 @@ export async function run(
 			skip: page * radiosPerPage,
 		});
 
-		console.log("fav", favourites);
 		const totalFavourites = await client.prisma.favourties.count({
 			where: {
 				userId: interaction.user.id,

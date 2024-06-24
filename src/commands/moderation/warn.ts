@@ -14,7 +14,6 @@ export async function run(
 	const user = interaction.options.getUser("user");
 	const reason = interaction.options.getString("reason");
 
-	console.log("interaction", interaction);
 	if (user.id === interaction.user.id)
 		return interaction.reply({
 			content: client.i18n.t("WARN_YOURSELF_PROHBITED", {

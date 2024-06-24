@@ -27,7 +27,6 @@ export async function run(
 	}
 	try {
 		await interaction.deferReply();
-		console.log("model", model);
 		const prompt = interaction.options.getString("prompt");
 
 		const data = {

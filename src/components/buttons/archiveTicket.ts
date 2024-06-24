@@ -58,8 +58,6 @@ export async function run(
 		},
 	});
 
-	console.log("settings", settings);
-
 	// @ts-expect-error
 	await interaction.channel?.setParent(settings?.ticketArchiveCategory);
 }

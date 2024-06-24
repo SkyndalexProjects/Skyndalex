@@ -14,7 +14,7 @@ export async function run(
 ) {
 	try {
 		const member = interaction.options.getUser("user");
-		console.log("member", member);
+
 		const reason = interaction.options.getString("reason");
 		const messages =
 			interaction.options.getString("delete-messages-time") || 0;

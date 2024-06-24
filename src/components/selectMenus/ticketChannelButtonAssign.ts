@@ -37,7 +37,6 @@ export async function run(
 		interaction.guildId,
 	);
 
-	console.log("selectMenus/ticketChannelButtonAssign.ts")
 	const button = await client.manageComponents.ticketButtonActionsMenu(
 		client,
 		interaction.locale,
