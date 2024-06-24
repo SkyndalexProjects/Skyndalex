@@ -1,6 +1,6 @@
 import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
-import type { MessageComponentInteraction } from "discord.js";
+import { type MessageComponentInteraction, ChannelType } from "discord.js";
 
 export async function run(
 	client: SkyndalexClient,
@@ -21,10 +21,45 @@ export async function run(
 					ephemeral: true,
 				});
 		
-			return interaction.reply({
-				content: `Button name: ${embedFields[0].value}\nCategory: ${embedFields[1].value}`,
-				ephemeral: true,
-			});
+				const discordChannelId = embedFields[1].value.split(" ")[1].replace(/[^\d]/g, "");
+				
+				const getButtons = await client.prisma.ticketButtons.findMany({
+					where: {
+						guildId: interaction.guild.id,
+						discordChannelId: discordChannelId
+					}
+				});
+
+				if (getButtons.some((button) => button.label === embedFields[0].value)) {
+					return interaction.reply({ content: client.i18n.t("CUSTOM_BUTTON_ALREADY_EXISTS"), ephemeral: true })
+				};
+
+				const name = embedFields[0].value;
+
+				const channel = await interaction.guild.channels.create({
+					name,
+					type: ChannelType.GuildCategory,
+				});
+				if (!channel) return interaction.reply({ content: client.i18n.t("CHANNEL_CREATION_FAILED"), ephemeral: true });
+				
+				await client.prisma.ticketButtons.create({
+					data: {
+						label: embedFields[0].value,
+						style: "PRIMARY", // TODO: Add custom button styles
+						guildId: interaction.guild.id,
+						discordChannelId: discordChannelId
+					},
+				});
+
+				const embedSuccess = new EmbedBuilder(client, interaction.locale)
+					.setTitle("CUSTOM_BUTTON_ADD_SUCCESS")
+					.setDescription("CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION", {
+						name: embedFields[0].value,
+						channel: discordChannelId,
+					})
+					.setColor("Green");
+
+					return interaction.reply({ embeds: [embedSuccess], ephemeral: true });
 		}
 	case "selectCreation": {
 		const embedSelectMissing = new EmbedBuilder(client, interaction.locale)

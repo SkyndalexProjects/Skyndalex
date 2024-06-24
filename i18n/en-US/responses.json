@@ -5,6 +5,7 @@
   "BUTTON_CONTINUE": "Continue",
   "COMPONENT_FAILED": "❌ The component `{{componentId}}` does not exist. Please try again.\n\n❗ Please join the [support](https://discord.gg/nEF9PPMsYx) server and report the error to the bot administrators",
   "COMMAND_FAILED": "An error occurred while interacting with the `{{commandName}}` command. Please try again.",
+  "CHANNEL_CREATION_FAILED": "An error occurred while creating the channel. Please try again.",
   "RADIO_JOIN_VOICE_CHANNEL": "You must be in a voice channel to use this command.",
   "RADIO_STATION_NOT_FOUND": "The radio station was not found. Please try again.",
   "RADIO_PLAYING": "Playing",
@@ -112,9 +113,10 @@
   "FUN_DOG_TITLE": "🐶 | Dog",
   "FUN_CAT_TITLE": "🐱 | Cat",
   "FUN_CAT_NO_IMAGE": "No image found.",
-  "CUSTOM_BUTTON_ADD_SUCCESS": "Success",
-  "CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION": "Button **{{ name }}** has been added successfully with style `{{ button }}`\nChannel: <#{{ channel }}>",
-  
+  "CUSTOM_BUTTON_ADD_SUCCESS": "Added button",
+  "CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION": "Button **{{ name }}** has been added successfully\nChannel: <#{{ channel }}>",
+  "CUSTOM_BUTTON_ALREADY_EXISTS": "Button with that label already exists!",
+
   "TICKETS_MENU_TITLE": "🎫 | Tickets menu",
   "TICKETS_MENU_DESCRIPTION": "Choose one of the option below from button to send a ticket.",
   "TICKETS_SETUP_TITLE": "🎫 | Tickets setup",
@@ -153,7 +155,7 @@
   "TICKETS_SETUP_CATEGORY_PLACEHOLDER": "Choose category",
   "TICKETS_SETUP_ASSIGN_BUTTON_PLACEHOLDER": "Add buttons",
   "TICKETS_SETUP_BUTTON_ASSIGNED": "Assigned button(s)",
-  
+
   "TICKETS_SETUP_CATEGORY_SET": "Assigned category",
   "TICKETS_SETUP_ASSIGN_MODAL_PLACEHOLDER": "Assign modal",
   "TICKETS_SETUP_ASSIGN_SELECT_PLACEHOLDER": "Assign select",
