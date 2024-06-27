@@ -26,7 +26,7 @@ export class ComponentsManager {
 		const creationMenu =
 			new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
 				new ChannelSelectMenuBuilder(client, locale)
-					.setCustomId("ticketChannelButtonAssign")
+					.setCustomId("ticketCategoryAssign")
 					.setPlaceholder("TICKETS_SETUP_CATEGORY_PLACEHOLDER")
 					.addChannelTypes(ChannelType.GuildCategory),
 			);

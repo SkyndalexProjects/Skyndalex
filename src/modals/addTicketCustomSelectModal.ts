@@ -32,7 +32,7 @@ export async function run(
 		},
 	});
 
-	const buttonAssignation =
+	const buttonsSelect =
 		new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 			new StringSelectMenuBuilder(client, interaction.locale)
 				.setCustomId("ticketSelectButtonAssign")
@@ -56,6 +56,6 @@ export async function run(
 
 	await interaction.update({
 		embeds: [embed],
-		components: [buttonAssignation, button],
+		components: [buttonsSelect, button],
 	});
 }

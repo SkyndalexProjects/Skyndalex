@@ -1,6 +1,14 @@
 import type { SkyndalexClient } from "#classes";
-import { EmbedBuilder, StringSelectMenuBuilder } from "#builders";
-import { type StringSelectMenuInteraction, ActionRowBuilder } from "discord.js";
+import {
+	EmbedBuilder,
+	StringSelectMenuBuilder,
+	ChannelSelectMenuBuilder,
+} from "#builders";
+import {
+	type StringSelectMenuInteraction,
+	ActionRowBuilder,
+	ChannelType,
+} from "discord.js";
 
 export async function run(
 	client: SkyndalexClient,
@@ -56,6 +64,15 @@ export async function run(
 				),
 		);
 
+	const category = new ActionRowBuilder<
+		StringSelectMenuBuilder | ChannelSelectMenuBuilder
+	>().addComponents(
+		new ChannelSelectMenuBuilder(client, interaction.locale)
+			.setCustomId("ticketCategoryAssign")
+			.setPlaceholder("TICKETS_SETUP_CATEGORY_PLACEHOLDER")
+			.addChannelTypes(ChannelType.GuildCategory),
+	);
+
 	const button = await client.manageComponents.ticketButtonActionsMenu(
 		client,
 		interaction.locale,
@@ -64,6 +81,6 @@ export async function run(
 
 	await interaction.update({
 		embeds: [embed],
-		components: [buttonAssignation, button],
+		components: [buttonAssignation, category, button],
 	});
 }

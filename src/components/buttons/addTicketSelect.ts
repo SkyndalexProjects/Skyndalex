@@ -10,6 +10,18 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction,
 ) {
+	const buttons = await client.prisma.ticketButtons.findMany({
+		where: {
+			guildId: interaction.guildId,
+		},
+	});
+
+	if (buttons.length <= 0)
+		return interaction.reply({
+			content: client.i18n.t("TICKETS_SETUP_NO_BUTTONS"),
+			ephemeral: true,
+		});
+
 	const modal = new ModalBuilder(client, interaction.locale)
 		.setCustomId("addTicketCustomSelectModal")
 		.setTitle("ADD_TICKET_CUSTOM_SELECT_MODAL");

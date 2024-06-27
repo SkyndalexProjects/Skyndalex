@@ -125,7 +125,7 @@
   "TICKET_SETUP_NO_BUTTONS": "Some values are incorrect or not provided.\n\n<:checkpassed:1071529475541565620> | Select name\n<:checkfailed:1071528354643181680> | Assigned button(s). Please assign button(s) via select menu",
   "CONFIRM": "Confirm",
   "CANCEL": "Cancel",
-  
+  "TICKETS_SETUP_NO_BUTTONS": "I can't find any buttons available in this server. To create a select menu, you need assign buttons to it. Add some buttons first",
   "SUPPORT_INVITE_FOOTER": "If something went wrong, join our support server and tell about this: /support",
   "SUPPORT_INVITE": "➡️ Join our support server: [Click here](https://discord.gg/SVN6HXCKT3)",
   "BOT_INVITE": "➡️ Add bot: [Click here](https://discord.com/api/oauth2/authorize?client_id={{clientId}}&permissions=8&scope=bot%20applications.commands)",

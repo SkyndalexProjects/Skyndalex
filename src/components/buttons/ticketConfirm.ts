@@ -95,11 +95,26 @@ export async function run(
 				.setDescription(client.i18n.t("TICKET_SETUP_NO_BUTTONS"))
 				.setColor("Red");
 
+			const discordChannelId = embedFields[2].value
+				.split(" ")[1]
+				.replace(/[^\d]/g, "");
+
+			const label = embedFields[0].value;
+			
 			if (!embedFields[1])
 				return interaction.reply({
 					embeds: [embedSelectMissing],
 					ephemeral: true,
 				});
+
+			await client.prisma.ticketSelects.create({
+				data: {
+					guildId: interaction.guild.id,
+					discordChannelId,
+					label,
+				},
+			});
+
 			return interaction.reply({
 				content: `Select name: ${embedFields[0].value}\nValues: ${embedFields[1].value}`,
 				ephemeral: true,
