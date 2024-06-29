@@ -153,10 +153,12 @@
   "TICKETS_SETUP_STATUS_SELECTS_ASSIGNATION": "You are currently creating **Custom selects** for your tickets menu",
   "TICKETS_SETUP_CREATING_BUTTON_NAME": "Button name",
   "TICKETS_SETUP_CATEGORY_PLACEHOLDER": "Choose category",
+  "TICKETS_SETUP_SELECT_PLACEHOLDER": "Assign select",
   "TICKETS_SETUP_ASSIGN_BUTTON_PLACEHOLDER": "Add buttons",
   "TICKETS_SETUP_BUTTON_ASSIGNED": "Assigned button(s)",
 
   "TICKETS_SETUP_CATEGORY_SET": "Assigned category",
+  "TICKETS_SETUP_SELECT_SET": "Assigned select",
   "TICKETS_SETUP_ASSIGN_MODAL_PLACEHOLDER": "Assign modal",
   "TICKETS_SETUP_ASSIGN_SELECT_PLACEHOLDER": "Assign select",
   "CANNOT_ASSIGN_BOT": "You can't assign a bot to a ticket.",

@@ -48,7 +48,6 @@ export class SkyndalexClient extends Client {
 			intents: [
 				GatewayIntentBits.Guilds,
 				GatewayIntentBits.GuildMessages,
-				GatewayIntentBits.MessageContent,
 				GatewayIntentBits.GuildVoiceStates,
 			],
 			partials: [Partials.Message],
