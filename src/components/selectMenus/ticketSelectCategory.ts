@@ -40,7 +40,6 @@ export async function run(
 		const selectOptions = selects.map((select) => {
 			return new StringSelectMenuOptionBuilder()
 				.setLabel(select.label.toString())
-				.setDescription(select.description.toString())
 				.setValue(`select-${select.customId}`);
 		});
 
