@@ -27,6 +27,7 @@ export async function run(
 		},
 	});
 
+	console.log("buttons", buttons)
 	const styles = {
 		PRIMARY: ButtonStyle.Primary,
 		SECONDARY: ButtonStyle.Secondary,

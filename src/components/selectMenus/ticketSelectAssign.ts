@@ -13,17 +13,17 @@ export async function run(
 		(field) => field.name === client.i18n.t("TICKETS_SETUP_SELECT_SET"),
 	);
 
-    if (existingField) {
-        existingField.value = value
-    } else {
-        embed.addFields([
-            {
-                name: client.i18n.t("TICKETS_SETUP_SELECT_SET"),
-                value,
-                inline: true,
-            },
-        ]);
-    }
+	if (existingField) {
+		existingField.value = value;
+	} else {
+		embed.addFields([
+			{
+				name: client.i18n.t("TICKETS_SETUP_SELECT_SET"),
+				value,
+				inline: true,
+			},
+		]);
+	}
 
 	await interaction.update({
 		embeds: [embed],

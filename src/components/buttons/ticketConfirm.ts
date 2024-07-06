@@ -22,24 +22,22 @@ export async function run(
 				.setDescription(client.i18n.t("TICKET_SETUP_NO_CATEGORY"))
 				.setColor("Red");
 
-			const discordChannelId = embedFields.find(
-				(field) => field.name === "Assigned category")?.value
-				.split(" ")[1]
+			const discordChannelId = embedFields
+				.find((field) => field.name === "Assigned category")
+				?.value.split(" ")[1]
 				.replace(/[^\d]/g, "");
 
-				if (!discordChannelId)
-					return interaction.reply({
-						embeds: [embedCategoryMissing],
-						ephemeral: true,
-					});
+			if (!discordChannelId)
+				return interaction.reply({
+					embeds: [embedCategoryMissing],
+					ephemeral: true,
+				});
 
+			const select = embedFields
+				.find((field) => field.name === "Assigned select")
+				?.value.split(":")[1]
+				.replace(/[^\d]/g, "");
 
-				const select = embedFields.find(
-					(field) => field.name === "Assigned select")?.value
-					.split(":")[1]
-					.replace(/[^\d]/g, "");
-
-				console.log("Select: ", select);
 			const getButtons = await client.prisma.ticketButtons.findMany({
 				where: {
 					guildId: interaction.guild.id,
@@ -73,13 +71,16 @@ export async function run(
 				});
 			}
 
+			let assignedToSelect = `ticketSelectCategory-${select}`;
+			if (!select) assignedToSelect = null;
+			
 			await client.prisma.ticketButtons.create({
 				data: {
 					label: embedFields[0].value,
 					style: "PRIMARY", // TODO: Add custom button styles
 					guildId: interaction.guild.id,
 					discordChannelId: discordChannelId,
-					assignedToSelect: `ticketSelectCategory-${select}`,
+					assignedToSelect,
 				},
 			});
 
@@ -109,7 +110,7 @@ export async function run(
 				.replace(/[^\d]/g, "");
 
 			const label = embedFields[0].value;
-			
+
 			if (!embedFields[1])
 				return interaction.reply({
 					embeds: [embedSelectMissing],

@@ -36,9 +36,8 @@ export async function run(
 		.setColor("Blurple")
 		.setThumbnail(client.user.displayAvatarURL());
 
-	await interaction.reply({
+	await interaction.update({
 		embeds: [embed],
 		components: [buttonMenu],
-		ephemeral: true,
 	});
 }
