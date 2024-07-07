@@ -34,5 +34,6 @@ export class RadioPlayer {
 	}
 	async stopRadio(client, guildId) {
 		await client.shoukaku.leaveVoiceChannel(guildId);
+		client.shoukaku.connections.delete(guildId);
 	}
 }

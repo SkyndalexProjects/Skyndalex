@@ -20,18 +20,8 @@ model settings {
   // antiPhishing            Boolean?
 }
 model users {
-  familyId  Int @default(autoincrement())
-  userId    String 
-  guildId   String
-  marriedTo String?
-  marriedAt DateTime?
-  // lastWork  DateTime?
-  // lastCrime DateTime?
-  // lastDaily DateTime?
-  // lastRob   DateTime?
-
-  @@id([userId, guildId])
-
+  type String @default("normal")
+  userId    String @id
 }
 
 model cases {
