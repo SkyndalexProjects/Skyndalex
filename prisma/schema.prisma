@@ -34,48 +34,6 @@ model users {
 
 }
 
-model ticketButtons {
-  customId         Int     @default(autoincrement())
-  guildId          String
-  label            String?
-  style            String?
-  discordChannelId String?
-  assignedToSelect String?
-  
-  @@id([guildId, customId])
-}
-
-model ticketModals {
-  customId         Int     @default(autoincrement())
-  guildId          String
-  label            String?
-  style            String?
-  placeholder      String?
-  required         Boolean? @default(false)
-  categoryId       String?
-  @@id([guildId, customId])
-}
-model ticketSelects {
-  customId         Int     @default(autoincrement())
-  guildId          String
-  label            String?
-  description      String?
-  discordChannelId String?
-  
-  @@id([guildId, customId])
-}
-model tickets {
-  id             Int    // NOTE: Autoincrement will cause problems with correct ID assignment
-  guildId        String
-  userId         String
-  ticketChannel  String?
-  ticketCategory String?
-  state          String?
-  assignedTo     String?
-
-  @@id([guildId, userId, id])
-}
-
 model cases {
   id        Int      @id @default(autoincrement())
   guildId   String
