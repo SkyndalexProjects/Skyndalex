@@ -27,7 +27,6 @@ export async function run(
 		},
 	});
 
-	console.log("buttons", buttons)
 	const styles = {
 		PRIMARY: ButtonStyle.Primary,
 		SECONDARY: ButtonStyle.Secondary,
@@ -80,7 +79,7 @@ export async function run(
 
 		return interaction.reply({
 			embeds: [embed],
-			components: [buttonActionRow, selectActionRow],
+			components: [selectActionRow],
 		});
 	}
 

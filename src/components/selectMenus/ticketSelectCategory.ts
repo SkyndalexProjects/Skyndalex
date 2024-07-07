@@ -13,6 +13,7 @@ export async function run(
 ) {
 	const option = interaction.values[0].split("-")[1];
 
+	console.log("option", option)
 	const buttonsFromSelect = await client.prisma.ticketButtons.findMany({
 		where: {
 			guildId: interaction.guild.id,

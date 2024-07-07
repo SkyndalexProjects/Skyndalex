@@ -22,7 +22,8 @@ export async function run(
 		new ButtonBuilder(client, interaction.locale)
 			.setCustomId("ticketModal")
 			.setLabel("Modal")
-			.setStyle(ButtonStyle.Primary),
+			.setStyle(ButtonStyle.Primary)
+			.setDisabled(true)
 	);
 
 	const embed = new EmbedBuilder(client, interaction.locale)
