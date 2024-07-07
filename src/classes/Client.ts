@@ -18,6 +18,7 @@ import { RadioPlayer } from "./modules/RadioPlayer.js";
 import { Connectors, Shoukaku } from "shoukaku";
 import { TicketManagement } from "./modules/TicketManagement.js";
 import { ComponentsManager } from "./ComponentsManager.js";
+// import { checkMissingTranslations } from "utils/checkMissingTranslations.js";
 const Nodes = [
 	{
 		name: "Localhost",
@@ -83,6 +84,7 @@ export class SkyndalexClient extends Client {
 		this.components = await this.loader.loadComponents("../components");
 		this.modals = await this.loader.loadModals("../modals");
 
+		// checkMissingTranslations();
 		await this.login(process.env.BOT_TOKEN);
 
 		process.on("unhandledRejection", async (reason, p) => {
