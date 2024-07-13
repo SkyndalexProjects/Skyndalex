@@ -23,7 +23,16 @@ model users {
   type String @default("normal")
   userId    String @id
 }
-
+model custombots {
+  id       Int      @default(autoincrement())
+  userId String
+  clientId String 
+  token String  
+  status String @default("offline")
+  activity String @default("Skyndalex v2.0 | discord.skyndalex.com")
+  
+  @@id([id, userId])
+}
 model cases {
   id        Int      @id @default(autoincrement())
   guildId   String

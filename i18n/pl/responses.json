@@ -132,5 +132,10 @@
   "BOT_INFO_LAVALINK_STATS": "Statystyki Lavalink",
   "GOODBYE_DESCRIPTION": "[-] Użytkownik **{{ user }}** opuścił serwer. Teraz mamy `{{ memberCount }}` członków",
   "WELCOME_DESCRIPTION": "[+] Użytkownik **{{ user }}** dołączył do serwera. Teraz mamy `{{ memberCount }}` członków",
-  "NOT_YOUR_BUTTON": "To nie twój przycisk"
+  "NOT_YOUR_BUTTON": "To nie twój przycisk",
+  "CUSTOM_BOT_MANAGE_TITLE": "Zarządzanie custombotami",
+  "CUSTOM_BOT_CURRENT_DESC": "Aktualnie zarządzasz botem: **{{ currentBot }}**\nStatus: **{{ status }}**\nID: **{{ botId }}**\nPresence: `{{ activity }}`",
+  "CUSTOM_BOT_SELECT_PLACEHOLDER": "Wybierz bota",
+  "CUSTOM_BOT_POWER_STATE_ON": "Włącz",
+  "CUSTOM_BOT_POWER_STATE_OFF": "Wyłącz"
 }

@@ -40,7 +40,6 @@ export async function voiceStateUpdate(client, oldState, newState) {
 		}
 	}
 
-
 	if (description) {
 		embed.setDescription(description);
 		embed.setColor(color as ColorResolvable);

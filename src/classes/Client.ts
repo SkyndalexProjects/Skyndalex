@@ -18,6 +18,7 @@ import { RadioPlayer } from "./modules/RadioPlayer.js";
 import { Connectors, Shoukaku } from "shoukaku";
 import { TicketManagement } from "./modules/TicketManagement.js";
 import { checkMissingTranslations } from "utils/checkMissingTranslations.js";
+import { CustomBotManagement } from "./modules/CustomBotManagement.js";
 const Nodes = [
 	{
 		name: "Localhost",
@@ -39,6 +40,7 @@ export class SkyndalexClient extends Client {
 	tickets = new TicketManagement(this);
 	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 	radio = new RadioPlayer(this);
+	custombots = new CustomBotManagement(this);
 
 	i18n = i18next;
 
