@@ -9,7 +9,6 @@ import {
     ActionRowBuilder,
     ButtonStyle,
 } from "discord.js";
-import { sanitizeSnowflake } from "#utils";
 
 export async function run(
 	client: SkyndalexClient,
@@ -25,7 +24,7 @@ export async function run(
 			},
 		},
 	});
-	const bot = await client.users.fetch(sanitizeSnowflake(custombot.clientId));
+	const bot = await client.users.fetch(custombot.clientId);
 
 	const embedRunning = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CUSTOM_BOT_MANAGE_TITLE")

@@ -5,7 +5,6 @@ import {
 	ButtonStyle,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { sanitizeSnowflake } from "#utils";
 import {
 	StringSelectMenuBuilder,
 	EmbedBuilder,
@@ -28,11 +27,9 @@ export async function run(
 		});
 	}
 
-	
 	const custombotsWithNames = await Promise.all(
 		custombots.map(async (custombot) => {
-			const sanitizedClientId = sanitizeSnowflake(custombot.clientId);
-			const bot = await client.users.fetch(sanitizedClientId);
+			const bot = await client.users.fetch(custombot.clientId);
 			return {
 				...custombot,
 				name: bot.username,

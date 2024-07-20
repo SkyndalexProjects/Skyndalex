@@ -7,10 +7,10 @@ export async function run(
 	interaction: ModalSubmitInteraction,
 ) {
 	const token = interaction.fields.getTextInputValue("token");
-	const activity = interaction.fields.getTextInputValue("activity");
-	const clientId = Buffer.from(token, "base64")
-		.toString("utf-8")
-		.split("�")[0];
+	const activity = interaction.fields.getTextInputValue("activity")
+	console.log("token", token)
+	const clientId = Buffer.from(token.split(".")[0], "base64")
+		.toString("utf-8");
 
 	if (!clientId) {
 		console.log("true");
