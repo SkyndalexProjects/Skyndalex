@@ -1,6 +1,7 @@
 # Running example
 
 ```
+npm install
 npm run build
 npm run dev
 ```
