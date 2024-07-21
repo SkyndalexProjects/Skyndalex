@@ -55,4 +55,14 @@ export class CustomBotManagement {
 				});
 		}
 	}
+	async findCustomBot(id: string, userId: string) {
+		return this.client.prisma.custombots.findUnique({
+			where: {
+				id_userId: {
+					id: Number.parseInt(id),
+					userId,
+				},
+			},
+		});
+	}
 }

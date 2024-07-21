@@ -16,14 +16,8 @@ export async function run(
 ) {
 	const custombotId = interaction.customId.split("-")[1];
 
-	const custombot = await client.prisma.custombots.findUnique({
-		where: {
-			id_userId: {
-				id: Number.parseInt(custombotId),
-				userId: interaction.user.id,
-			},
-		},
-	});
+	const custombot = await client.custombots.findCustomBot(custombotId, interaction.user.id);
+	
 	const bot = await client.users.fetch(custombot.clientId);
 
 	const embedRunning = new EmbedBuilder(client, interaction.locale)
@@ -97,7 +91,16 @@ export async function run(
             ],
         });
 
-		console.log(interaction.message.components[1]);
+		const buttonComponent = interaction?.message?.components[1].components[0];
+		console.log("buttonComponent", buttonComponent.data);
+
+		// @ts-expect-error
+
+		if (buttonComponent?.data?.style === ButtonStyle.Danger) {
+			await client.custombots.updatePowerState(custombot.id.toString(), interaction.user.id, "launching");
+			await customClient.destroy();
+			await client.custombots.updatePowerState(custombot.id.toString(), interaction.user.id, "offline");
+		}
 	} catch (e) {
 		console.error(e);
         await client.custombots.updatePowerState(
