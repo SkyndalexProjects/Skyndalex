@@ -2,7 +2,6 @@ import type { SkyndalexClient } from "#classes";
 import {
 	ButtonBuilder,
 	EmbedBuilder,
-	type StringSelectMenuBuilder,
 } from "#builders";
 import {
 	Client,
@@ -46,6 +45,15 @@ export async function run(
 		})
 		.setColor("Green");
 
+	const embedDestroyed = new EmbedBuilder(client, interaction.locale)
+		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
+		.setDescription("CUSTOM_BOT_CURRENT_DESC", {
+			currentBot: bot.username,
+			status: "offline",
+			botId: custombot.id,
+		})
+		.setColor("Red");
+
 	try {
 		if (!interaction.deferred && !interaction.replied) {
 			await interaction.deferUpdate();
@@ -86,10 +94,8 @@ export async function run(
 			"working",
 		);
 
-		
-		const actionRow: ActionRowBuilder<
-			ButtonBuilder | StringSelectMenuBuilder
-		> = ActionRowBuilder.from(interaction.message.components[1]);
+		// @ts-expect-error
+		const actionRow: ActionRowBuilder<ButtonBuilder> = ActionRowBuilder.from(interaction.message.components[1]);
 
 		actionRow.setComponents(
 			new ButtonBuilder(client, interaction.locale)
@@ -97,7 +103,7 @@ export async function run(
 				.setStyle(ButtonStyle.Danger)
 				.setCustomId(`customBotPowerState-${custombot.id}`),
 		);
-
+	
 		await interaction.editReply({
 			embeds: [embedOn],
 			components: [interaction.message.components[0], actionRow],
@@ -126,7 +132,12 @@ export async function run(
 					.setLabel("CUSTOM_BOT_POWER_STATE_ON")
 					.setStyle(ButtonStyle.Success)
 					.setCustomId(`customBotPowerState-${custombot.id}`),
-			);``
+			);
+
+			await interaction.editReply({
+				embeds: [embedDestroyed],
+				components: [interaction.message.components[0], actionRow],
+			});
 		}
 	} catch (e) {
 		console.error(e);
