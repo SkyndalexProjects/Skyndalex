@@ -75,7 +75,7 @@ export async function run(
 	return interaction.reply({
 		embeds: [embed],
 		components: [row, row2],
-		ephemeral: true
+		ephemeral: true,
 	});
 }
 

@@ -1,13 +1,17 @@
 import type { SkyndalexClient } from "#classes";
-import { ButtonBuilder, EmbedBuilder, type StringSelectMenuBuilder } from "#builders";
+import {
+	ButtonBuilder,
+	EmbedBuilder,
+	type StringSelectMenuBuilder,
+} from "#builders";
 import {
 	Client,
 	GatewayIntentBits,
 	Partials,
 	ActivityType,
 	type MessageComponentInteraction,
-    ActionRowBuilder,
-    ButtonStyle,
+	ActionRowBuilder,
+	ButtonStyle,
 } from "discord.js";
 
 export async function run(
@@ -16,8 +20,11 @@ export async function run(
 ) {
 	const custombotId = interaction.customId.split("-")[1];
 
-	const custombot = await client.custombots.findCustomBot(custombotId, interaction.user.id);
-	
+	const custombot = await client.custombots.findCustomBot(
+		custombotId,
+		interaction.user.id,
+	);
+
 	const bot = await client.users.fetch(custombot.clientId);
 
 	const embedRunning = new EmbedBuilder(client, interaction.locale)
@@ -40,18 +47,20 @@ export async function run(
 		.setColor("Green");
 
 	try {
-        if (!interaction.deferred && !interaction.replied) {
-            await interaction.deferUpdate();
-        }
+		if (!interaction.deferred && !interaction.replied) {
+			await interaction.deferUpdate();
+		}
 
-		await client.custombots.updatePowerState(custombot.id.toString(), interaction.user.id, "launching");
+		await client.custombots.updatePowerState(
+			custombot.id.toString(),
+			interaction.user.id,
+			"launching",
+		);
 
-        await interaction.editReply({
-            embeds: [embedRunning],
-            components: [
-                interaction.message.components[0],
-            ],
-        })
+		await interaction.editReply({
+			embeds: [embedRunning],
+			components: [interaction.message.components[0]],
+		});
 		const customClient = new Client({
 			intents: [
 				GatewayIntentBits.Guilds,
@@ -71,42 +80,60 @@ export async function run(
 		});
 
 		customClient.login(custombot.token);
-		await client.custombots.updatePowerState(custombot.id.toString(), interaction.user.id, "working");
+		await client.custombots.updatePowerState(
+			custombot.id.toString(),
+			interaction.user.id,
+			"working",
+		);
 
-		// @ts-expect-error
-		const actionRow: ActionRowBuilder<ButtonBuilder | StringSelectMenuBuilder> = ActionRowBuilder.from(interaction.message.components[1])
+		
+		const actionRow: ActionRowBuilder<
+			ButtonBuilder | StringSelectMenuBuilder
+		> = ActionRowBuilder.from(interaction.message.components[1]);
 
 		actionRow.setComponents(
-            new ButtonBuilder(client, interaction.locale)
-                .setLabel("CUSTOM_BOT_POWER_STATE_OFF")
-                .setStyle(ButtonStyle.Danger)
-                .setCustomId(`customBotPowerState-${custombot.id}`),
-        )
-		        
-        await interaction.editReply({
-            embeds: [embedOn],
-            components: [
-                interaction.message.components[0],
-                actionRow
-            ],
-        });
+			new ButtonBuilder(client, interaction.locale)
+				.setLabel("CUSTOM_BOT_POWER_STATE_OFF")
+				.setStyle(ButtonStyle.Danger)
+				.setCustomId(`customBotPowerState-${custombot.id}`),
+		);
 
-		const buttonComponent = interaction?.message?.components[1].components[0];
-		console.log("buttonComponent", buttonComponent.data);
+		await interaction.editReply({
+			embeds: [embedOn],
+			components: [interaction.message.components[0], actionRow],
+		});
+
+		const buttonComponent =
+			interaction?.message?.components[1].components[0];
 
 		// @ts-expect-error
 
 		if (buttonComponent?.data?.style === ButtonStyle.Danger) {
-			await client.custombots.updatePowerState(custombot.id.toString(), interaction.user.id, "launching");
+			await client.custombots.updatePowerState(
+				custombot.id.toString(),
+				interaction.user.id,
+				"launching",
+			);
 			await customClient.destroy();
-			await client.custombots.updatePowerState(custombot.id.toString(), interaction.user.id, "offline");
+			await client.custombots.updatePowerState(
+				custombot.id.toString(),
+				interaction.user.id,
+				"offline",
+			);
+
+			actionRow.setComponents(
+				new ButtonBuilder(client, interaction.locale)
+					.setLabel("CUSTOM_BOT_POWER_STATE_ON")
+					.setStyle(ButtonStyle.Success)
+					.setCustomId(`customBotPowerState-${custombot.id}`),
+			);``
 		}
 	} catch (e) {
 		console.error(e);
-        await client.custombots.updatePowerState(
-            custombot.id.toString(),
-            interaction.user.id,
-            "error",
-        );
+		await client.custombots.updatePowerState(
+			custombot.id.toString(),
+			interaction.user.id,
+			"error",
+		);
 	}
 }
