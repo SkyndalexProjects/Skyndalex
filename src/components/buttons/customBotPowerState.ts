@@ -1,8 +1,5 @@
-import type { SkyndalexClient } from "#classes";
-import {
-	ButtonBuilder,
-	EmbedBuilder,
-} from "#builders";
+import { SkyndalexClient } from "#classes";
+import { ButtonBuilder, EmbedBuilder } from "#builders";
 import {
 	Client,
 	GatewayIntentBits,
@@ -11,6 +8,8 @@ import {
 	type MessageComponentInteraction,
 	ActionRowBuilder,
 	ButtonStyle,
+	APIActionRowComponent,
+	APIButtonComponent,
 } from "discord.js";
 
 export async function run(
@@ -69,6 +68,7 @@ export async function run(
 			embeds: [embedRunning],
 			components: [interaction.message.components[0]],
 		});
+
 		const customClient = new Client({
 			intents: [
 				GatewayIntentBits.Guilds,
@@ -80,7 +80,7 @@ export async function run(
 			presence: {
 				activities: [
 					{
-						name: custombot?.activity,
+						name: custombot.activity,
 						type: ActivityType.Playing,
 					},
 				],
@@ -88,14 +88,19 @@ export async function run(
 		});
 
 		customClient.login(custombot.token);
+		
+		
 		await client.custombots.updatePowerState(
 			custombot.id.toString(),
 			interaction.user.id,
 			"working",
 		);
 
-		// @ts-expect-error
-		const actionRow: ActionRowBuilder<ButtonBuilder> = ActionRowBuilder.from(interaction.message.components[1]);
+		const actionRow: ActionRowBuilder<ButtonBuilder> =
+			ActionRowBuilder.from(
+				interaction.message
+					.components[1] as APIActionRowComponent<APIButtonComponent>,
+			);3
 
 		actionRow.setComponents(
 			new ButtonBuilder(client, interaction.locale)
@@ -103,7 +108,7 @@ export async function run(
 				.setStyle(ButtonStyle.Danger)
 				.setCustomId(`customBotPowerState-${custombot.id}`),
 		);
-	
+
 		await interaction.editReply({
 			embeds: [embedOn],
 			components: [interaction.message.components[0], actionRow],

@@ -1,6 +1,7 @@
 import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#classes/builders";
-import type { ModalSubmitInteraction } from "discord.js";
+import { parseCommands } from "#utils";
+import { REST, Routes, type ModalSubmitInteraction } from "discord.js";
 
 export async function run(
 	client: SkyndalexClient,
@@ -8,7 +9,7 @@ export async function run(
 ) {
 	const token = interaction.fields.getTextInputValue("token");
 	const activity = interaction.fields.getTextInputValue("activity");
-	console.log("token", token);
+
 	const clientId = Buffer.from(token.split(".")[0], "base64").toString(
 		"utf-8",
 	);
@@ -29,6 +30,12 @@ export async function run(
 			userId: interaction.user.id,
 			activity,
 		},
+	});
+
+	const commands = parseCommands(client);
+	const customRest = new REST().setToken(token);
+	customRest.put(Routes.applicationCommands(clientId), {
+		body: commands,
 	});
 
 	const embed = new EmbedBuilder(client, interaction.locale)
