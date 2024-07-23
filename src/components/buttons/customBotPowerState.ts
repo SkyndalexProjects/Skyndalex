@@ -25,47 +25,22 @@ export async function run(
 
 	const bot = await client.users.fetch(custombot.clientId);
 
-	const embedRunning = new EmbedBuilder(client, interaction.locale)
+	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
 		.setDescription("CUSTOM_BOT_CURRENT_DESC", {
 			currentBot: bot.username,
-			status: "running",
+			status: custombot.status,
 			botId: custombot.id,
 		})
 		.setColor("Yellow");
-
-	const embedOn = new EmbedBuilder(client, interaction.locale)
-		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
-		.setDescription("CUSTOM_BOT_CURRENT_DESC", {
-			currentBot: bot.username,
-			status: "working",
-			botId: custombot.id,
-			activity: custombot.activity,
-		})
-		.setColor("Green");
-
-	const embedDestroyed = new EmbedBuilder(client, interaction.locale)
-		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
-		.setDescription("CUSTOM_BOT_CURRENT_DESC", {
-			currentBot: bot.username,
-			status: "offline",
-			botId: custombot.id,
-		})
-		.setColor("Red");
 
 	try {
 		if (!interaction.deferred && !interaction.replied) {
 			await interaction.deferUpdate();
 		}
 
-		await client.custombots.updatePowerState(
-			custombot.id.toString(),
-			interaction.user.id,
-			"launching",
-		);
-
 		await interaction.editReply({
-			embeds: [embedRunning],
+			embeds: [embed],
 			components: [interaction.message.components[0]],
 		});
 
@@ -88,8 +63,7 @@ export async function run(
 		});
 
 		customClient.login(custombot.token);
-		
-		
+
 		await client.custombots.updatePowerState(
 			custombot.id.toString(),
 			interaction.user.id,
@@ -100,7 +74,7 @@ export async function run(
 			ActionRowBuilder.from(
 				interaction.message
 					.components[1] as APIActionRowComponent<APIButtonComponent>,
-			);3
+			);
 
 		actionRow.setComponents(
 			new ButtonBuilder(client, interaction.locale)
@@ -110,20 +84,18 @@ export async function run(
 		);
 
 		await interaction.editReply({
-			embeds: [embedOn],
+			embeds: [embed],
 			components: [interaction.message.components[0], actionRow],
 		});
 
-		const buttonComponent =
-			interaction?.message?.components[1].components[0];
-
-		// @ts-expect-error
+		const buttonComponent = interaction?.message?.components[1]
+			.components[0] as unknown as ButtonBuilder;
 
 		if (buttonComponent?.data?.style === ButtonStyle.Danger) {
 			await client.custombots.updatePowerState(
 				custombot.id.toString(),
 				interaction.user.id,
-				"launching",
+				"offline",
 			);
 			await customClient.destroy();
 			await client.custombots.updatePowerState(
@@ -140,7 +112,7 @@ export async function run(
 			);
 
 			await interaction.editReply({
-				embeds: [embedDestroyed],
+				embeds: [embed],
 				components: [interaction.message.components[0], actionRow],
 			});
 		}

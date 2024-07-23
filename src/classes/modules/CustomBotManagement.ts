@@ -17,18 +17,6 @@ export class CustomBotManagement {
 		const bot = await this.client.users.fetch(custombot.clientId);
 
 		switch (powerState) {
-			case "launching":
-				return this.client.prisma.custombots.update({
-					where: {
-						id_userId: {
-							id: custombot.id,
-							userId,
-						},
-					},
-					data: {
-						status: "launching",
-					},
-				});
 			case "working":
 				return this.client.prisma.custombots.update({
 					where: {
@@ -41,6 +29,7 @@ export class CustomBotManagement {
 						status: "working",
 					},
 				});
+				break;
 			case "error":
 				return this.client.prisma.custombots.update({
 					where: {
@@ -53,6 +42,20 @@ export class CustomBotManagement {
 						status: "error",
 					},
 				});
+				break;
+			case "offline":
+				return this.client.prisma.custombots.update({
+					where: {
+						id_userId: {
+							id: custombot.id,
+							userId,
+						},
+					},
+					data: {
+						status: "offline",
+					},
+				});
+				break;
 		}
 	}
 	async findCustomBot(id: string, userId: string) {
