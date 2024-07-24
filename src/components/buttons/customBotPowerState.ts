@@ -1,10 +1,6 @@
 import { SkyndalexClient } from "#classes";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
 import {
-	Client,
-	GatewayIntentBits,
-	Partials,
-	ActivityType,
 	type MessageComponentInteraction,
 	ActionRowBuilder,
 	ButtonStyle,
@@ -44,23 +40,8 @@ export async function run(
 			components: [interaction.message.components[0]],
 		});
 
-		const customClient = new Client({
-			intents: [
-				GatewayIntentBits.Guilds,
-				GatewayIntentBits.GuildMessages,
-				GatewayIntentBits.GuildVoiceStates,
-			],
-			partials: [Partials.Message],
-			allowedMentions: { repliedUser: false },
-			presence: {
-				activities: [
-					{
-						name: custombot.activity,
-						type: ActivityType.Playing,
-					},
-				],
-			},
-		});
+		const customClient = new SkyndalexClient();
+		await customClient.init();
 
 		customClient.login(custombot.token);
 

@@ -77,16 +77,21 @@ export class SkyndalexClient extends Client {
 		});
 
 		this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
+
 		this.shoukaku.on("error", (_, error) =>
 			console.error(`[LAVALINK] :: ${error}`),
 		);
+
 		this.shoukaku.on("ready", (name) =>
 			console.log(`[LAVALINK] :: Connected successfully to ${name}`),
 		);
+
 		await this.loader.loadEvents(this, "../events");
 		await this.loader.loadCommands("../commands");
+
 		this.components = await this.loader.loadComponents("../components");
 		this.modals = await this.loader.loadModals("../modals");
+		
 		checkMissingTranslations();
 
 		await this.login(process.env.BOT_TOKEN);
