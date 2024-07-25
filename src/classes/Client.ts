@@ -64,7 +64,7 @@ export class SkyndalexClient extends Client {
 		});
 	}
 
-	async init() {
+	async init(token: string) {
 		const __dirname = dirname(fileURLToPath(import.meta.url));
 		await this.i18n.use(Backend).init({
 			fallbackLng: "en-US",
@@ -91,10 +91,11 @@ export class SkyndalexClient extends Client {
 
 		this.components = await this.loader.loadComponents("../components");
 		this.modals = await this.loader.loadModals("../modals");
-		
+
 		checkMissingTranslations();
 
-		await this.login(process.env.BOT_TOKEN);
+		await this.login(token);
+
 		process.on("unhandledRejection", async (reason, p) => {
 			console.log(" [antiCrash] :: Unhandled Rejection/Catch");
 			console.log(reason, p);

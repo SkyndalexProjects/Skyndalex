@@ -41,9 +41,7 @@ export async function run(
 		});
 
 		const customClient = new SkyndalexClient();
-		await customClient.init();
-
-		customClient.login(custombot.token);
+		await customClient.init(custombot.token);
 
 		await client.custombots.updatePowerState(
 			custombot.id.toString(),
@@ -73,11 +71,6 @@ export async function run(
 			.components[0] as unknown as ButtonBuilder;
 
 		if (buttonComponent?.data?.style === ButtonStyle.Danger) {
-			await client.custombots.updatePowerState(
-				custombot.id.toString(),
-				interaction.user.id,
-				"offline",
-			);
 			await customClient.destroy();
 			await client.custombots.updatePowerState(
 				custombot.id.toString(),
