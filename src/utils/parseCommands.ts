@@ -1,20 +1,21 @@
 import {
 	SlashCommandBuilder,
 	SlashCommandSubcommandGroupBuilder,
-	Routes,
+	Collection,
 } from "discord.js";
-import type { SkyndalexClient } from "#classes";
-export function parseCommands(client: SkyndalexClient) {
+import type { Command } from "#types";
+
+export function parseCommands(commands: Collection<string, Command>) {
 	const parsedCommands = [];
 	const addedCommands = new Set();
 
-	for (const [key, value] of client.commands) {
+	for (const [key, value] of commands.entries()) {
 		if (key.includes("/")) {
 			if (!key.includes("index") || key.split("/").length > 2) continue;
 
 			const [commandName] = key.split("/");
 
-			const subcommands = client.commands.filter(
+			const subcommands = commands.filter(
 				(x, v) =>
 					v.startsWith(`${commandName}/`) && !v.includes("index"),
 			);
@@ -36,13 +37,13 @@ export function parseCommands(client: SkyndalexClient) {
 				} else {
 					const groupName = key.split("/")[1];
 
-					const groups = client.commands.filter(
+					const groups = commands.filter(
 						(x, v) =>
 							v.startsWith(`${commandName}/${groupName}`) &&
 							!v.includes("index"),
 					);
 
-					const groupIndex = client.commands.get(
+					const groupIndex = commands.get(
 						`${commandName}/${groupName}/index`,
 					);
 					if (!groupIndex) continue;
