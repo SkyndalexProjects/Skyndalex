@@ -10,15 +10,11 @@ import {
 } from "discord.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
-import type { Command, Component, Modal } from "../types/structures.js";
-import { Loaders } from "./Loaders.js";
-import { Logger } from "./Logger.js";
-import { CaseManagement } from "./modules/CasesManagement.js";
-import { RadioPlayer } from "./modules/RadioPlayer.js";
 import { Connectors, Shoukaku } from "shoukaku";
-import { TicketManagement } from "./modules/TicketManagement.js";
-import { checkMissingTranslations } from "utils/checkMissingTranslations.js";
-import { CustomBotManagement } from "./modules/CustomBotManagement.js";
+import { checkMissingTranslations } from "#utils";
+import { CaseManagement, RadioPlayer, CustomBotManagement } from "#modules";
+import type { Command, Component, Modal } from "#types";
+import { Loaders, Logger } from "#classes";
 const Nodes = [
 	{
 		name: "Localhost",
@@ -37,7 +33,6 @@ export class SkyndalexClient extends Client {
 	modals: Collection<string, Modal>;
 	loader = new Loaders(this);
 	cases = new CaseManagement(this);
-	tickets = new TicketManagement(this);
 	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 	radio = new RadioPlayer(this);
 	custombots = new CustomBotManagement(this);
