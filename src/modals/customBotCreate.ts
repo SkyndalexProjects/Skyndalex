@@ -32,7 +32,7 @@ export async function run(
 		},
 	});
 
-	const commands = parseCommands(client);
+	const commands = parseCommands(client.commands);
 	const customRest = new REST().setToken(token);
 	customRest.put(Routes.applicationCommands(clientId), {
 		body: commands,

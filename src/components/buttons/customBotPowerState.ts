@@ -2,10 +2,10 @@ import { SkyndalexClient } from "#classes";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
 import {
 	type MessageComponentInteraction,
-	ActionRowBuilder,
-	ButtonStyle,
 	APIActionRowComponent,
 	APIButtonComponent,
+	ActionRowBuilder,
+	ButtonStyle,
 } from "discord.js";
 
 export async function run(
@@ -21,6 +21,10 @@ export async function run(
 
 	const bot = await client.users.fetch(custombot.clientId);
 
+	client.logger.log(
+		`(customBotPowertState): Running custom bot ${bot.username} with id ${custombot.id} for user ${interaction.user.username} [${interaction.user.id}]`,
+	);
+	
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
 		.setDescription("CUSTOM_BOT_CURRENT_DESC", {

@@ -25,6 +25,7 @@ export async function run(
 	const taskId = `${interaction.user.id}-${Date.now()}`;
 
 	if (model !== defaultModel) {
+		// @ts-expect-error
 		if (!interaction.channel.nsfw) {
 			const embed = new EmbedBuilder(client, interaction.locale)
 				.setDescription("CUSTOM_MODELS_NSFW_WARNING")

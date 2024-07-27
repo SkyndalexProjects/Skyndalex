@@ -10,8 +10,6 @@ export async function run(
 ) {
 	return interaction.reply("Nothing is implemented here");
 
-	// client.logger.error("DUPA");
-
 	// const embed = new EmbedBuilder(client, interaction.locale)
 	// 	.setDescription(
 	// 		`${client.i18n.t("TEST", {

@@ -25,8 +25,3 @@ export async function run(
 
 	return interaction.editReply({ embeds: [embed] });
 }
-
-export const data = new SlashCommandSubcommandBuilder()
-	.setName("gay")
-	.setDescription("check who is gay")
-	.addUserOption((option) => option.setName("who").setDescription("User"));

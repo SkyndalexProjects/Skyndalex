@@ -4,9 +4,7 @@ export const data = {
 	...new SlashCommandBuilder()
 		.setName("gen")
 		.setDescription("Generate content with AI")
-
 		// NOTE: Subcommands options are declared here for correct userapps implementation.
-
 		.addSubcommand((subcommand) =>
 			subcommand
 				.setName("text")
@@ -18,7 +16,10 @@ export const data = {
 						.setRequired(true),
 				)
 				.addStringOption((option) =>
-					option.setName("model").setDescription("Model to use"),
+					option
+						.setName("model")
+						.setDescription("Model to use")
+						.setAutocomplete(true),
 				),
 		)
 		.addSubcommand((subcommand) =>
