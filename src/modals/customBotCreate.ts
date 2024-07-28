@@ -15,7 +15,6 @@ export async function run(
 	);
 
 	if (!clientId) {
-		console.log("true");
 		const invalidDataEmbed = new EmbedBuilder(client, interaction.locale)
 			.setDescription("CUSTOMBOT_INVALID_DATA_DESCRIPTION")
 			.setColor("Red");
