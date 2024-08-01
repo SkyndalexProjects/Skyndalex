@@ -24,7 +24,7 @@ export async function run(
 	client.logger.log(
 		`(customBotPowertState): Running custom bot ${bot.username} with id ${custombot.id} for user ${interaction.user.username} [${interaction.user.id}]`,
 	);
-	
+
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
 		.setDescription("CUSTOM_BOT_CURRENT_DESC", {
@@ -45,13 +45,6 @@ export async function run(
 		});
 
 		const customClient = new SkyndalexClient();
-		await customClient.init(custombot.token);
-
-		await client.custombots.updatePowerState(
-			custombot.id.toString(),
-			interaction.user.id,
-			"working",
-		);
 
 		const actionRow: ActionRowBuilder<ButtonBuilder> =
 			ActionRowBuilder.from(
@@ -59,33 +52,19 @@ export async function run(
 					.components[1] as APIActionRowComponent<APIButtonComponent>,
 			);
 
-		actionRow.setComponents(
-			new ButtonBuilder(client, interaction.locale)
-				.setLabel("CUSTOM_BOT_POWER_STATE_OFF")
-				.setStyle(ButtonStyle.Danger)
-				.setCustomId(`customBotPowerState-${custombot.id}`),
-		);
+		if (custombot.status === "offline") {
+			await customClient.init(custombot.token);
 
-		await interaction.editReply({
-			embeds: [embed],
-			components: [interaction.message.components[0], actionRow],
-		});
-
-		const buttonComponent = interaction?.message?.components[1]
-			.components[0] as unknown as ButtonBuilder;
-
-		if (buttonComponent?.data?.style === ButtonStyle.Danger) {
-			await customClient.destroy();
 			await client.custombots.updatePowerState(
 				custombot.id.toString(),
 				interaction.user.id,
-				"offline",
+				"working",
 			);
 
 			actionRow.setComponents(
 				new ButtonBuilder(client, interaction.locale)
-					.setLabel("CUSTOM_BOT_POWER_STATE_ON")
-					.setStyle(ButtonStyle.Success)
+					.setLabel("CUSTOM_BOT_POWER_STATE_OFF")
+					.setStyle(ButtonStyle.Danger)
 					.setCustomId(`customBotPowerState-${custombot.id}`),
 			);
 
@@ -93,6 +72,31 @@ export async function run(
 				embeds: [embed],
 				components: [interaction.message.components[0], actionRow],
 			});
+		} else {
+			const buttonComponent = interaction?.message?.components[1]
+				.components[0] as unknown as ButtonBuilder;
+
+			if (buttonComponent?.data?.style === ButtonStyle.Danger) {
+				customClient.destroy();
+
+				await client.custombots.updatePowerState(
+					custombot.id.toString(),
+					interaction.user.id,
+					"offline",
+				);
+
+				actionRow.setComponents(
+					new ButtonBuilder(client, interaction.locale)
+						.setLabel("CUSTOM_BOT_POWER_STATE_ON")
+						.setStyle(ButtonStyle.Success)
+						.setCustomId(`customBotPowerState-${custombot.id}`),
+				);
+
+				await interaction.editReply({
+					embeds: [embed],
+					components: [interaction.message.components[0], actionRow],
+				});
+			}
 		}
 	} catch (e) {
 		console.error(e);
