@@ -19,17 +19,23 @@ export function checkMissingTranslations() {
 	const missingKeysEn = Object.keys(enUsData).filter((key) => !plData[key]);
 	const missingKeysPl = Object.keys(plData).filter((key) => !enUsData[key]);
 
+	let missingKeys = false;
+
 	if (missingKeysEn.length > 0) {
 		console.log("Missing keys in PL: ", missingKeysEn);
+		missingKeys = true;
 	}
 
 	if (missingKeysPl.length > 0) {
 		console.log("Missing keys in EN: ", missingKeysPl);
+		missingKeys = true;
 	}
 
 	console.log(
-		`${picocolors.blue("[i18n]")} ${picocolors.green(
-			"Translations check finished. No missing keys.",
-		)}`,
+		`${picocolors.blue("[i18n]")} ${
+			missingKeys
+				? picocolors.red("Code checked. Missing translations found.")
+				: picocolors.green("Code checked.. No missing keys.")
+		}`
 	);
 }
