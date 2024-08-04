@@ -26,12 +26,12 @@
   "devDependencies": {
     "@biomejs/biome": "1.6.4",
     "prisma": "^5.15.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "tsx": "^4.16.5"
   },
   "dependencies": {
     "@huggingface/inference": "^2.7.0",
     "@napi-rs/canvas": "^0.1.52",
-    "@napi-rs/canvas-win32-x64-msvc": "^0.1.53",
     "@prisma/client": "^5.15.1",
     "@types/gamedig": "^5.0.2",
     "discord.js": "^14.15.2",
