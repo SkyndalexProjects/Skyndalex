@@ -26,8 +26,8 @@
   "devDependencies": {
     "@biomejs/biome": "1.6.4",
     "prisma": "^5.15.1",
-    "typescript": "^5.4.5",
-    "tsx": "^4.16.5"
+    "tsx": "^4.16.5",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@huggingface/inference": "^2.7.0",
@@ -36,6 +36,7 @@
     "@types/gamedig": "^5.0.2",
     "discord.js": "^14.15.2",
     "ffmpeg-static": "^5.2.0",
+    "find-process": "^1.4.7",
     "gamedig": "^5.0.0",
     "i18next": "^23.11.2",
     "i18next-fs-backend": "^2.3.1",
