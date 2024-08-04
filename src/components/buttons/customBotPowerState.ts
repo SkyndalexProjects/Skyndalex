@@ -7,7 +7,7 @@ import {
 	ActionRowBuilder,
 	ButtonStyle,
 } from "discord.js";
-const customInstances = new Map<string, SkyndalexClient>();
+import find from "find-process";
 export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction,
@@ -29,7 +29,6 @@ export async function run(
 		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
 		.setDescription("CUSTOM_BOT_CURRENT_DESC", {
 			currentBot: bot.username,
-			status: custombot.status,
 			botId: custombot.id,
 		})
 		.setColor("Yellow");
@@ -38,13 +37,15 @@ export async function run(
 		if (!interaction.deferred && !interaction.replied) {
 			await interaction.deferUpdate();
 		}
-
 		await interaction.editReply({
 			embeds: [embed],
 			components: [interaction.message.components[0]],
 		});
 
-		client.custombots.init(custombot.clientId, custombot.token);
+		let bot = await find(
+			"name",
+			`customBot ${custombot.clientId}`,
+		);
 
 		const actionRow: ActionRowBuilder<ButtonBuilder> =
 			ActionRowBuilder.from(
@@ -52,35 +53,8 @@ export async function run(
 					.components[1] as APIActionRowComponent<APIButtonComponent>,
 			);
 
-		if (custombot.status === "offline") {
-			await client.custombots.updatePowerState(
-				custombot.id.toString(),
-				interaction.user.id,
-				"working",
-			);
-
-			actionRow.setComponents(
-				new ButtonBuilder(client, interaction.locale)
-					.setLabel("CUSTOM_BOT_POWER_STATE_OFF")
-					.setStyle(ButtonStyle.Danger)
-					.setCustomId(`customBotPowerState-${custombot.id}`),
-			);
-
-			await interaction.editReply({
-				embeds: [embed],
-				components: [interaction.message.components[0], actionRow],
-			});
-		} else {
-			const buttonComponent = interaction?.message?.components[1]
-				.components[0] as unknown as ButtonBuilder;
-
-			if (buttonComponent?.data?.style === ButtonStyle.Danger) {
-				customInstances.delete(custombot.id.toString());
-				await client.custombots.updatePowerState(
-					custombot.id.toString(),
-					interaction.user.id,
-					"offline",
-				);
+			if (bot[0]?.pid) {
+				// TURNING OFF
 
 				actionRow.setComponents(
 					new ButtonBuilder(client, interaction.locale)
@@ -93,14 +67,24 @@ export async function run(
 					embeds: [embed],
 					components: [interaction.message.components[0], actionRow],
 				});
+
+				await process.kill(bot[0].pid);
+			} else {
+				client.custombots.init(custombot.clientId, custombot.token);
+
+				actionRow.setComponents(
+					new ButtonBuilder(client, interaction.locale)
+						.setLabel("CUSTOM_BOT_POWER_STATE_OFF")
+						.setStyle(ButtonStyle.Danger)
+						.setCustomId(`customBotPowerState-${custombot.id}`),
+				);
+	
+				await interaction.editReply({
+					embeds: [embed],
+					components: [interaction.message.components[0], actionRow],
+				});
 			}
-		}
 	} catch (e) {
 		console.error(e);
-		await client.custombots.updatePowerState(
-			custombot.id.toString(),
-			interaction.user.id,
-			"error",
-		);
 	}
 }

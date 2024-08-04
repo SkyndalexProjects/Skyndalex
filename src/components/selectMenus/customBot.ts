@@ -34,7 +34,6 @@ export async function run(
 		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
 		.setDescription("CUSTOM_BOT_CURRENT_DESC", {
 			currentBot: customBotDiscord.username,
-			status: customBot.status,
 			botId: customBot.id,
 			activity: customBot.activity,
 		})

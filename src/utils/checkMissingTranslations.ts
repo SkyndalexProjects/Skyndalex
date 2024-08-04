@@ -36,6 +36,6 @@ export function checkMissingTranslations() {
 			missingKeys
 				? picocolors.red("Code checked. Missing translations found.")
 				: picocolors.green("Code checked.. No missing keys.")
-		}`
+		}`,
 	);
 }
