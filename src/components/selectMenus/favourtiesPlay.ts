@@ -1,6 +1,6 @@
-import type { SkyndalexClient } from "#classes";
 import type { StringSelectMenuInteraction } from "discord.js";
 import type { TrackResult } from "shoukaku";
+import type { SkyndalexClient } from "#classes";
 
 export async function run(
 	client: SkyndalexClient,

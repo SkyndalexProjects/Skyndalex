@@ -1,10 +1,10 @@
-import { ButtonBuilder } from "#builders";
 import {
 	ActionRowBuilder,
+	type AutocompleteInteraction,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
-	type AutocompleteInteraction,
 } from "discord.js";
+import { ButtonBuilder } from "#builders";
 import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 import type { HuggingFaceSearchResult, HuggingFaceText } from "#types";

@@ -1,10 +1,10 @@
 import type { SkyndalexClient } from "classes/Client.js";
-import { EmbedBuilder } from "#builders";
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
 import { GameDig, games } from "gamedig";
+import { EmbedBuilder } from "#builders";
 
 export async function run(
 	client: SkyndalexClient,

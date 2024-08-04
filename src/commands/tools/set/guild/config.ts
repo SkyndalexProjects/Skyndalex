@@ -1,11 +1,11 @@
 import {
+	ActionRowBuilder,
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
-	ActionRowBuilder,
 } from "discord.js";
+import type { SkyndalexClient } from "../../../../classes/Client.js";
 import { EmbedBuilder } from "../../../../classes/builders/EmbedBuilder.js";
 import { StringSelectMenuBuilder } from "../../../../classes/builders/components/StringSelectMenuBuilder.js";
-import type { SkyndalexClient } from "../../../../classes/Client.js";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,

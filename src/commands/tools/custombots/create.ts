@@ -1,8 +1,8 @@
 import {
+	ActionRowBuilder,
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
 	TextInputStyle,
-	ActionRowBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
 import { ModalBuilder, TextInputBuilder } from "#classes/builders";

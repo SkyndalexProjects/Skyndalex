@@ -1,14 +1,14 @@
 import {
+	ActionRowBuilder,
 	type AutocompleteInteraction,
+	ButtonStyle,
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
-	ActionRowBuilder,
-	ButtonStyle,
 } from "discord.js";
-import type { SkyndalexClient } from "#classes";
-import { ButtonBuilder, EmbedBuilder } from "#builders";
-import type { radioStationSearchQueryResult, radioStationData } from "#types";
 import type { TrackResult } from "shoukaku";
+import { ButtonBuilder, EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
+import type { radioStationData, radioStationSearchQueryResult } from "#types";
 
 export async function run(
 	client: SkyndalexClient,

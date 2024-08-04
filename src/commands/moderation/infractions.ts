@@ -1,8 +1,8 @@
 import {
-	type ChatInputCommandInteraction,
-	SlashCommandBuilder,
 	ActionRowBuilder,
 	ButtonStyle,
+	type ChatInputCommandInteraction,
+	SlashCommandBuilder,
 } from "discord.js";
 import {
 	ButtonBuilder,

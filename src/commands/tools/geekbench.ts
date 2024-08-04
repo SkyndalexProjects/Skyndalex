@@ -1,9 +1,9 @@
+import * as cheerio from "cheerio";
 import {
 	type ChatInputCommandInteraction,
-	SlashCommandBuilder,
 	EmbedBuilder,
+	SlashCommandBuilder,
 } from "discord.js";
-import * as cheerio from "cheerio";
 import type { SkyndalexClient } from "#classes";
 export async function run(
 	client: SkyndalexClient,

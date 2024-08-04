@@ -1,6 +1,6 @@
 import { REST, Routes } from "discord.js";
-import { parseCommands } from "#utils";
 import type { SkyndalexClient } from "#classes";
+import { parseCommands } from "#utils";
 
 export async function ready(client: SkyndalexClient) {
 	const commands = await parseCommands(client.commands);

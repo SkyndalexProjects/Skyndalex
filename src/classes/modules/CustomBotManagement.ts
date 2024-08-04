@@ -1,5 +1,5 @@
-import type { SkyndalexClient } from "../Client.js";
 import { execSync, fork } from "node:child_process";
+import type { SkyndalexClient } from "../Client.js";
 
 export class CustomBotManagement {
 	constructor(private readonly client: SkyndalexClient) {
@@ -26,13 +26,12 @@ export class CustomBotManagement {
 				execSync(`export DATABASE_URL=${DBURL} && npx prisma db push`, {
 					stdio: "inherit",
 				});
-				
 
 				const processInfo = await fork("./src/customBot", [clientId], {
 					env: {
 						BOT_TOKEN: botToken,
 						LAVALINK_URL: "0.0.0.0:2333",
-						LAVALINK_SERVER_PASSWORD: "youshallnotpass"
+						LAVALINK_SERVER_PASSWORD: "youshallnotpass",
 					},
 				});
 

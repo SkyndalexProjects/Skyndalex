@@ -1,6 +1,6 @@
+import type { ModalSubmitInteraction } from "discord.js";
 import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#classes/builders";
-import type { ModalSubmitInteraction } from "discord.js";
 
 export async function run(
 	client: SkyndalexClient,
@@ -37,7 +37,7 @@ export async function run(
 			botName: bot.username,
 			botId: clientId,
 		})
-		.setColor("Green")
+		.setColor("Green");
 
 	return interaction.reply({ embeds: [embed], ephemeral: true });
 }

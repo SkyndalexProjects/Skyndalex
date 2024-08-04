@@ -15,6 +15,7 @@
   },
   "imports": {
     "#": "./dist/*/index.js",
+    "#classes": "./dist/classes/index.js",
     "#builders": "./dist/classes/builders/index.js",
     "#components": "./dist/classes/builders/components/index.js",
     "#utils": "./dist/utils/index.js",

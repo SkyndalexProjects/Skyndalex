@@ -1,14 +1,14 @@
-import type { SkyndalexClient } from "#classes";
 import {
-	type MessageComponentInteraction,
 	ActionRowBuilder,
 	ButtonStyle,
+	type MessageComponentInteraction,
 } from "discord.js";
 import {
 	ButtonBuilder,
 	EmbedBuilder,
 	StringSelectMenuBuilder,
 } from "#builders";
+import type { SkyndalexClient } from "#classes";
 
 export async function run(
 	client: SkyndalexClient,

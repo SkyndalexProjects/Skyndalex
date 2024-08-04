@@ -11,10 +11,10 @@ import {
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
 import { Connectors, Shoukaku } from "shoukaku";
-import { checkMissingTranslations } from "#utils";
-import { CaseManagement, RadioPlayer, CustomBotManagement } from "#modules";
-import type { Command, Component, Modal } from "#types";
 import { Loaders, Logger } from "#classes";
+import { CaseManagement, CustomBotManagement, RadioPlayer } from "#modules";
+import type { Command, Component, Modal } from "#types";
+import { checkMissingTranslations } from "#utils";
 const Nodes = [
 	{
 		name: "Localhost",
@@ -91,18 +91,21 @@ export class SkyndalexClient extends Client {
 
 		await this.login(token);
 
-		process.on("message", async (message: { name: string, presence: string }) => {
-			if (message.name === "changePresence") {
-				this.user.setPresence({
-					activities: [
-						{
-							name: message.presence,
-							type: ActivityType.Playing,
-						},
-					],
-				})
-			}
-		})
+		process.on(
+			"message",
+			async (message: { name: string; presence: string }) => {
+				if (message.name === "changePresence") {
+					this.user.setPresence({
+						activities: [
+							{
+								name: message.presence,
+								type: ActivityType.Playing,
+							},
+						],
+					});
+				}
+			},
+		);
 
 		process.on("unhandledRejection", async (reason, p) => {
 			console.log(" [antiCrash] :: Unhandled Rejection/Catch");

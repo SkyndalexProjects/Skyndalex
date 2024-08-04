@@ -1,7 +1,7 @@
 import {
+	type Collection,
 	SlashCommandBuilder,
 	SlashCommandSubcommandGroupBuilder,
-	Collection,
 } from "discord.js";
 import type { Command } from "#types";
 

@@ -4,8 +4,8 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
+import type { radioStationData, radioStationSearchQueryResult } from "#types";
 import type { SkyndalexClient } from "../../../../classes/Client.js";
-import type { radioStationSearchQueryResult, radioStationData } from "#types";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,

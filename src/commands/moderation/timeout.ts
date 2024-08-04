@@ -1,13 +1,13 @@
 import {
-	type ChatInputCommandInteraction,
-	SlashCommandBuilder,
-	PermissionFlagsBits,
-	ButtonStyle,
 	ActionRowBuilder,
+	ButtonStyle,
+	type ChatInputCommandInteraction,
+	PermissionFlagsBits,
+	SlashCommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "#classes";
-import { EmbedBuilder, ButtonBuilder } from "#builders";
 import ms from "ms";
+import { ButtonBuilder, EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction<"cached">,

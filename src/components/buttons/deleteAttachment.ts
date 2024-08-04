@@ -1,8 +1,8 @@
-import type { SkyndalexClient } from "#classes";
 import {
-	PermissionFlagsBits,
 	type MessageComponentInteraction,
+	PermissionFlagsBits,
 } from "discord.js";
+import type { SkyndalexClient } from "#classes";
 
 export async function run(
 	client: SkyndalexClient,

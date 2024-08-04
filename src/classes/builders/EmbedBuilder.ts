@@ -1,7 +1,7 @@
 import {
+	type APIEmbedField,
 	type ColorResolvable,
 	EmbedBuilder as embedBuilder,
-	type APIEmbedField,
 } from "discord.js";
 import type { LocaleFieldOptions } from "../../types/structures.js";
 import type { SkyndalexClient } from "../Client.js";

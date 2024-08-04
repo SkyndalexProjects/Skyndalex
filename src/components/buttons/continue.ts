@@ -1,4 +1,3 @@
-import type { SkyndalexClient } from "#classes";
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -6,6 +5,7 @@ import {
 	EmbedBuilder,
 	type MessageComponentInteraction,
 } from "discord.js";
+import type { SkyndalexClient } from "#classes";
 import type { HuggingFaceText } from "#types";
 
 export async function run(

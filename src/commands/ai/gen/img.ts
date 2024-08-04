@@ -1,14 +1,14 @@
-import {
-	AttachmentBuilder,
-	type ChatInputCommandInteraction,
-	type AutocompleteInteraction,
-	ActionRowBuilder,
-	ButtonStyle,
-} from "discord.js";
-import type { SkyndalexClient } from "#classes";
-import { ButtonBuilder, EmbedBuilder } from "#builders";
-import type { HuggingFaceImage, HuggingFaceSearchResult } from "#types";
 import { HfInference } from "@huggingface/inference";
+import {
+	ActionRowBuilder,
+	AttachmentBuilder,
+	type AutocompleteInteraction,
+	ButtonStyle,
+	type ChatInputCommandInteraction,
+} from "discord.js";
+import { ButtonBuilder, EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
+import type { HuggingFaceImage, HuggingFaceSearchResult } from "#types";
 const hf = new HfInference(process.env.HF_TOKEN);
 
 const imageQueue = new Map();

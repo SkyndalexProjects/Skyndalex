@@ -1,6 +1,6 @@
-import type { SkyndalexClient } from "#classes";
 import type { GuildMember } from "discord.js";
 import { EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 
 export async function guildMemberRemove(
 	client: SkyndalexClient,

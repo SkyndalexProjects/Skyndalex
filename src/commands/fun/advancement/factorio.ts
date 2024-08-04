@@ -3,8 +3,8 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import { getLines } from "#utils";
 import type { SkyndalexClient } from "#classes";
+import { getLines } from "#utils";
 
 const canvas = createCanvas(724, 219);
 

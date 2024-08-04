@@ -1,16 +1,16 @@
 import {
-	type ChatInputCommandInteraction,
-	SlashCommandSubcommandBuilder,
 	ActionRowBuilder,
 	ButtonStyle,
+	type ChatInputCommandInteraction,
+	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "#classes";
 import find from "find-process";
 import {
-	StringSelectMenuBuilder,
-	EmbedBuilder,
 	ButtonBuilder,
+	EmbedBuilder,
+	StringSelectMenuBuilder,
 } from "#builders";
+import type { SkyndalexClient } from "#classes";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
@@ -51,18 +51,19 @@ export async function run(
 			})),
 		);
 
-		let botOnline = await find(
-			"name",
-			`customBot ${custombots[0]?.clientId}`,
-		);
-
+	const botOnline = await find(
+		"name",
+		`customBot ${custombots[0]?.clientId}`,
+	);
 
 	const powerState = new ButtonBuilder(client, interaction.locale)
 		.setCustomId(`customBotPowerState-${custombots[0].id}`)
-		.setLabel(`${client.i18n.t(`CUSTOM_BOT_POWER_STATE_${botOnline ? "ON" : "OFF"}`)}`)
-		.setStyle(
-			botOnline ? ButtonStyle.Success : ButtonStyle.Danger,
+		.setLabel(
+			`${client.i18n.t(
+				`CUSTOM_BOT_POWER_STATE_${botOnline ? "ON" : "OFF"}`,
+			)}`,
 		)
+		.setStyle(botOnline ? ButtonStyle.Success : ButtonStyle.Danger);
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
 		.setDescription("CUSTOM_BOT_CURRENT_DESC", {

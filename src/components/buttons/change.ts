@@ -1,10 +1,10 @@
-import type { SkyndalexClient } from "#classes";
-import { ChannelSelectMenuBuilder, RoleSelectMenuBuilder } from "#builders";
 import {
-	type MessageComponentInteraction,
 	ActionRowBuilder,
 	ChannelType,
+	type MessageComponentInteraction,
 } from "discord.js";
+import { ChannelSelectMenuBuilder, RoleSelectMenuBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 
 export async function run(
 	client: SkyndalexClient,

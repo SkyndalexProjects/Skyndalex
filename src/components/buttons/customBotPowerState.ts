@@ -1,13 +1,13 @@
-import { SkyndalexClient } from "#classes";
-import { ButtonBuilder, EmbedBuilder } from "#builders";
 import {
-	type MessageComponentInteraction,
-	APIActionRowComponent,
-	APIButtonComponent,
+	type APIActionRowComponent,
+	type APIButtonComponent,
 	ActionRowBuilder,
 	ButtonStyle,
+	type MessageComponentInteraction,
 } from "discord.js";
 import find from "find-process";
+import { ButtonBuilder, EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction,
@@ -42,10 +42,7 @@ export async function run(
 			components: [interaction.message.components[0]],
 		});
 
-		let bot = await find(
-			"name",
-			`customBot ${custombot.clientId}`,
-		);
+		const bot = await find("name", `customBot ${custombot.clientId}`);
 
 		const actionRow: ActionRowBuilder<ButtonBuilder> =
 			ActionRowBuilder.from(
@@ -53,37 +50,37 @@ export async function run(
 					.components[1] as APIActionRowComponent<APIButtonComponent>,
 			);
 
-			if (bot[0]?.pid) {
-				// TURNING OFF
+		if (bot[0]?.pid) {
+			// TURNING OFF
 
-				actionRow.setComponents(
-					new ButtonBuilder(client, interaction.locale)
-						.setLabel("CUSTOM_BOT_POWER_STATE_ON")
-						.setStyle(ButtonStyle.Success)
-						.setCustomId(`customBotPowerState-${custombot.id}`),
-				);
+			actionRow.setComponents(
+				new ButtonBuilder(client, interaction.locale)
+					.setLabel("CUSTOM_BOT_POWER_STATE_ON")
+					.setStyle(ButtonStyle.Success)
+					.setCustomId(`customBotPowerState-${custombot.id}`),
+			);
 
-				await interaction.editReply({
-					embeds: [embed],
-					components: [interaction.message.components[0], actionRow],
-				});
+			await interaction.editReply({
+				embeds: [embed],
+				components: [interaction.message.components[0], actionRow],
+			});
 
-				await process.kill(bot[0].pid);
-			} else {
-				client.custombots.init(custombot.clientId, custombot.token);
+			await process.kill(bot[0].pid);
+		} else {
+			client.custombots.init(custombot.clientId, custombot.token);
 
-				actionRow.setComponents(
-					new ButtonBuilder(client, interaction.locale)
-						.setLabel("CUSTOM_BOT_POWER_STATE_OFF")
-						.setStyle(ButtonStyle.Danger)
-						.setCustomId(`customBotPowerState-${custombot.id}`),
-				);
-	
-				await interaction.editReply({
-					embeds: [embed],
-					components: [interaction.message.components[0], actionRow],
-				});
-			}
+			actionRow.setComponents(
+				new ButtonBuilder(client, interaction.locale)
+					.setLabel("CUSTOM_BOT_POWER_STATE_OFF")
+					.setStyle(ButtonStyle.Danger)
+					.setCustomId(`customBotPowerState-${custombot.id}`),
+			);
+
+			await interaction.editReply({
+				embeds: [embed],
+				components: [interaction.message.components[0], actionRow],
+			});
+		}
 	} catch (e) {
 		console.error(e);
 	}
