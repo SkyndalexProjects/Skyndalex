@@ -12,7 +12,7 @@
       "#components": ["classes/builders/components/index.js"],
       "#utils": ["utils/index.js"],
       "#types": ["types/index.js"],
-      "#modules": ["classes/modules/index.js",],
+      "#modules": ["classes/modules/index.js"],
     },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

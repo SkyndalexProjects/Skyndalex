@@ -5,7 +5,7 @@ import {
 	TextInputStyle,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { ModalBuilder, TextInputBuilder } from "#classes/builders";
+import { ModalBuilder, TextInputBuilder } from "#builders";
 
 export async function run(
 	client: SkyndalexClient,

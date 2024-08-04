@@ -20,7 +20,7 @@
     "#components": "./dist/classes/builders/components/index.js",
     "#utils": "./dist/utils/index.js",
     "#types": "./dist/types/index.js",
-    "#modules": "./dist/modules/index.js"
+    "#modules": "./dist/classes/modules/index.js"
   },
   "author": "",
   "license": "ISC",
