@@ -7,7 +7,7 @@ import {
 	ActionRowBuilder,
 	ButtonStyle,
 } from "discord.js";
-
+const customInstances = new Map<string, SkyndalexClient>();
 export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction,
@@ -44,7 +44,7 @@ export async function run(
 			components: [interaction.message.components[0]],
 		});
 
-		const customClient = new SkyndalexClient();
+		client.custombots.init(custombot.clientId, custombot.token);
 
 		const actionRow: ActionRowBuilder<ButtonBuilder> =
 			ActionRowBuilder.from(
@@ -53,8 +53,6 @@ export async function run(
 			);
 
 		if (custombot.status === "offline") {
-			await customClient.init(custombot.token);
-
 			await client.custombots.updatePowerState(
 				custombot.id.toString(),
 				interaction.user.id,
@@ -77,8 +75,7 @@ export async function run(
 				.components[0] as unknown as ButtonBuilder;
 
 			if (buttonComponent?.data?.style === ButtonStyle.Danger) {
-				customClient.destroy();
-
+				customInstances.delete(custombot.id.toString());
 				await client.custombots.updatePowerState(
 					custombot.id.toString(),
 					interaction.user.id,
