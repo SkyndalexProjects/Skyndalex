@@ -132,5 +132,11 @@
   "GOODBYE_DESCRIPTION": "[-] User **{{ user }}** left the server. We now have `{{ memberCount }}` members",
   "WELCOME_DESCRIPTION": "[+] User **{{ user }}** joined the server. We now have `{{ memberCount }}` members",
   "NOT_YOUR_BUTTON": "This is not your button",
-  "RADIO_FAVOURTIE_DELETED": "Deleted from favorites"
+  "RADIO_FAVOURTIE_DELETED": "Deleted from favorites",
+  "CUSTOM_BOT_MANAGE_TITLE": "Custombots",
+  "CUSTOM_BOT_CURRENT_DESC": "You are currently managing the bot: **{{ currentBot }}**\nID: **{{ botId }}**\nPresence: `{{ activity }}`",
+  "CUSTOM_BOT_SELECT_PLACEHOLDER": "Select a bot",
+  "CUSTOM_BOT_POWER_STATE_ON": "Turn On",
+  "CUSTOM_BOT_POWER_STATE_OFF": "Turn Off",
+  "CUSTOMBOT_CREATED": "Successfully created a custom bot named **{{ botName }}**."
 }
