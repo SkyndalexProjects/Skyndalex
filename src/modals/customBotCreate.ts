@@ -31,12 +31,6 @@ export async function run(
 		},
 	});
 
-	const commands = parseCommands(client.commands);
-	const customRest = new REST().setToken(token);
-	customRest.put(Routes.applicationCommands(clientId), {
-		body: commands,
-	});
-
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CUSTOMBOT_CREATED")
 		.setDescription("CUSTOMBOT_CREATED_DESCRIPTION");
