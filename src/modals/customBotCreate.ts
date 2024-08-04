@@ -1,7 +1,6 @@
 import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#classes/builders";
-import { parseCommands } from "#utils";
-import { REST, Routes, type ModalSubmitInteraction } from "discord.js";
+import type { ModalSubmitInteraction } from "discord.js";
 
 export async function run(
 	client: SkyndalexClient,
@@ -31,9 +30,14 @@ export async function run(
 		},
 	});
 
+	const bot = await client.users.fetch(clientId);
+
 	const embed = new EmbedBuilder(client, interaction.locale)
-		.setTitle("CUSTOMBOT_CREATED")
-		.setDescription("CUSTOMBOT_CREATED_DESCRIPTION");
+		.setDescription("CUSTOMBOT_CREATED", {
+			botName: bot.username,
+			botId: clientId,
+		})
+		.setColor("Green")
 
 	return interaction.reply({ embeds: [embed], ephemeral: true });
 }

@@ -137,5 +137,6 @@
   "CUSTOM_BOT_CURRENT_DESC": "Aktualnie zarządzasz botem: **{{ currentBot }}**\nID: **{{ botId }}**\nPresence: `{{ activity }}`",
   "CUSTOM_BOT_SELECT_PLACEHOLDER": "Wybierz bota",
   "CUSTOM_BOT_POWER_STATE_ON": "Włącz",
-  "CUSTOM_BOT_POWER_STATE_OFF": "Wyłącz"
+  "CUSTOM_BOT_POWER_STATE_OFF": "Wyłącz",
+  "CUSTOMBOT_CREATED": "Pomyślnie utworzono custombota o nazwie **{{ botName }}**."
 }
