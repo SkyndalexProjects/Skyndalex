@@ -91,6 +91,19 @@ export class SkyndalexClient extends Client {
 
 		await this.login(token);
 
+		process.on("message", async (message: { name: string, presence: string }) => {
+			if (message.name === "changePresence") {
+				this.user.setPresence({
+					activities: [
+						{
+							name: message.presence,
+							type: ActivityType.Playing,
+						},
+					],
+				})
+			}
+		})
+
 		process.on("unhandledRejection", async (reason, p) => {
 			console.log(" [antiCrash] :: Unhandled Rejection/Catch");
 			console.log(reason, p);

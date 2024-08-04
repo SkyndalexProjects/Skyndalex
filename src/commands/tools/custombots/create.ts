@@ -45,6 +45,7 @@ export async function run(
 		.setLabel("CUSTOMBOT_ACTIVITY")
 		.setPlaceholder("CUSTOMBOT_ACTIVITY_PLACEHOLDER")
 		.setStyle(TextInputStyle.Short)
+		.setRequired(false)
 		.setMaxLength(128);
 
 	const actionRow = new ActionRowBuilder<TextInputBuilder>().addComponents(
