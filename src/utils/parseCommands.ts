@@ -7,7 +7,6 @@ import type { Command } from "#types";
 
 export function parseCommands(commands: Collection<string, Command>) {
 	const parsedCommands = [];
-	const addedCommands = new Set();
 
 	for (const [key, value] of commands.entries()) {
 		if (key.includes("/")) {
@@ -24,15 +23,11 @@ export function parseCommands(commands: Collection<string, Command>) {
 
 			for (const [key, subcommandValue] of subcommands.entries()) {
 				if (key.split("/").length <= 2) {
-					if (
-						command instanceof SlashCommandBuilder &&
-						!addedCommands.has(key)
-					) {
+					if (command instanceof SlashCommandBuilder) {
 						command.addSubcommand(
 							// @ts-expect-error
 							subcommandValue.data,
 						);
-						addedCommands.add(key);
 					}
 				} else {
 					const groupName = key.split("/")[1];
@@ -53,36 +48,23 @@ export function parseCommands(commands: Collection<string, Command>) {
 						SlashCommandSubcommandGroupBuilder
 					) {
 						for (const [gk, gv] of groups.entries()) {
-							if (!addedCommands.has(gk)) {
-								groupIndex.data.addSubcommand(
-									// @ts-expect-error
-									gv.data,
-								);
-								addedCommands.add(gk);
-							}
+							groupIndex.data.addSubcommand(
+								// @ts-expect-error
+								gv.data,
+							);
 						}
 
-						if (
-							command instanceof SlashCommandBuilder &&
-							!addedCommands.has(`${commandName}/${groupName}`)
-						) {
+						if (command instanceof SlashCommandBuilder) {
 							command.addSubcommandGroup(
 								groupIndex.data as SlashCommandSubcommandGroupBuilder,
 							);
-							addedCommands.add(`${commandName}/${groupName}`);
 						}
 					}
 				}
 			}
-			if (!addedCommands.has(commandName)) {
-				parsedCommands.push(command);
-				addedCommands.add(commandName);
-			}
+			parsedCommands.push(command);
 		} else {
-			if (!addedCommands.has(key)) {
-				parsedCommands.push(value.data);
-				addedCommands.add(key);
-			}
+			parsedCommands.push(value.data);
 		}
 	}
 
