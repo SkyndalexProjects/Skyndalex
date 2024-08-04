@@ -5,6 +5,7 @@ import {
 	ButtonStyle,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
+import find from "find-process";
 import {
 	StringSelectMenuBuilder,
 	EmbedBuilder,
@@ -50,16 +51,22 @@ export async function run(
 			})),
 		);
 
+		let botOnline = await find(
+			"name",
+			`customBot ${custombots[0]?.clientId}`,
+		);
+
+
 	const powerState = new ButtonBuilder(client, interaction.locale)
 		.setCustomId(`customBotPowerState-${custombots[0].id}`)
-		.setLabel("CUSTOM_BOT_POWER_STATE_ON")
-		.setStyle(ButtonStyle.Success);
-
+		.setLabel(`${client.i18n.t(`CUSTOM_BOT_POWER_STATE_${botOnline ? "ON" : "OFF"}`)}`)
+		.setStyle(
+			botOnline ? ButtonStyle.Success : ButtonStyle.Danger,
+		)
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
 		.setDescription("CUSTOM_BOT_CURRENT_DESC", {
 			currentBot: custombotsWithNames[0].name,
-			status: custombots[0].status,
 			botId: custombots[0].id,
 			activity: custombots[0].activity,
 		})
