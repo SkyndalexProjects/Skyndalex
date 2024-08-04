@@ -13,7 +13,7 @@ export async function run(
 		"utf-8",
 	);
 
-	if (!clientId) {
+	if (isNaN(Number(clientId))) {
 		const invalidDataEmbed = new EmbedBuilder(client, interaction.locale)
 			.setDescription("CUSTOMBOT_INVALID_DATA_DESCRIPTION")
 			.setColor("Red");
