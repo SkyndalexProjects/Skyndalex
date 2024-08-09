@@ -5,9 +5,9 @@ import {
 	ButtonStyle,
 	type MessageComponentInteraction,
 } from "discord.js";
-import find from "find-process";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
-import type { SkyndalexClient } from "#classes";
+import { SkyndalexClient } from "#classes";
+const customInstances = new Map<string, SkyndalexClient>();
 export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction,
@@ -21,10 +21,6 @@ export async function run(
 
 	const bot = await client.users.fetch(custombot.clientId);
 
-	client.logger.log(
-		`(customBotPowertState): Running custom bot ${bot.username} with id ${custombot.id} for user ${interaction.user.username} [${interaction.user.id}]`,
-	);
-
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
 		.setDescription("CUSTOM_BOT_CURRENT_DESC", {
@@ -37,12 +33,28 @@ export async function run(
 		if (!interaction.deferred && !interaction.replied) {
 			await interaction.deferUpdate();
 		}
+		const instance = customInstances.get(
+			`${interaction.user.id}-${custombot.id}`,
+		);
+
+		if (!instance) {
+			const customClient = new SkyndalexClient();
+
+			client.logger.log(
+				`(customBotPowertState): RUNNING custom bot ${bot.username} with id ${custombot.id} for user ${interaction.user.username} [${interaction.user.id}]`,
+			);
+
+			await customClient.init(custombot.token);
+			customInstances.set(
+				`${interaction.user.id}-${custombot.id}`,
+				customClient,
+			);
+		}
+
 		await interaction.editReply({
 			embeds: [embed],
 			components: [interaction.message.components[0]],
 		});
-
-		const bot = await find("name", `customBot ${custombot.clientId}`);
 
 		const actionRow: ActionRowBuilder<ButtonBuilder> =
 			ActionRowBuilder.from(
@@ -50,9 +62,10 @@ export async function run(
 					.components[1] as APIActionRowComponent<APIButtonComponent>,
 			);
 
-		if (bot[0]?.pid) {
-			// TURNING OFF
+		const buttonComponent = interaction?.message?.components[1]
+			.components[0] as unknown as ButtonBuilder;
 
+		if (buttonComponent?.data?.style === ButtonStyle.Danger) {
 			actionRow.setComponents(
 				new ButtonBuilder(client, interaction.locale)
 					.setLabel("CUSTOM_BOT_POWER_STATE_ON")
@@ -65,10 +78,12 @@ export async function run(
 				components: [interaction.message.components[0], actionRow],
 			});
 
-			await process.kill(bot[0].pid);
+			client.logger.log(
+				`(customBotPowerState): Turning OFF custom bot ${bot.username} with id ${custombot.id} for user ${interaction.user.username} [${interaction.user.id}]`,
+			);
+			await instance.destroy();
+			customInstances.delete(`${interaction.user.id}-${custombot.id}`);
 		} else {
-			client.custombots.init(custombot.clientId, custombot.token);
-
 			actionRow.setComponents(
 				new ButtonBuilder(client, interaction.locale)
 					.setLabel("CUSTOM_BOT_POWER_STATE_OFF")

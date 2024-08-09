@@ -11,11 +11,7 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	const getCustombots = await client.prisma.custombots.findMany({
-		where: {
-			userId: interaction.user.id,
-		},
-	});
+	const getCustombots = client.custombots.findCustomBots(interaction.user.id);
 
 	const getUser = await client.prisma.users.findUnique({
 		where: {
@@ -23,11 +19,11 @@ export async function run(
 		},
 	});
 
-	if (getCustombots.length >= 2) {
-		if (getUser?.type === "premium" && getCustombots.length >= 5) {
-			return interaction.reply(client.i18n.t("CUSTOMBOT_LIMIT_REACHED"));
-		}
-	}
+	// if (getCustombots.length >= 2) {
+	// 	if (getUser?.type === "premium" && getCustombots.length >= 5) {
+	// 		return interaction.reply(client.i18n.t("CUSTOMBOT_LIMIT_REACHED"));
+	// 	}
+	// }
 
 	const modal = new ModalBuilder(client, interaction.locale)
 		.setCustomId("customBotCreate")
@@ -60,7 +56,6 @@ export async function run(
 
 	await interaction.showModal(modal);
 }
-
 export const data = new SlashCommandSubcommandBuilder()
 	.setName("create")
-	.setDescription("Create custom bot");
+	.setDescription("Create custombot");

@@ -11,15 +11,14 @@ import {
 	StringSelectMenuBuilder,
 } from "#builders";
 import type { SkyndalexClient } from "#classes";
+
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	const custombots = await client.prisma.custombots.findMany({
-		where: {
-			userId: interaction.user.id,
-		},
-	});
+	const custombots = await client.custombots.findCustomBots(
+		interaction.user.id,
+	);
 
 	if (custombots.length <= 0) {
 		return interaction.reply({
@@ -28,20 +27,14 @@ export async function run(
 		});
 	}
 
-	const custombotsWithNames = await Promise.all(
-		custombots.map(async (custombot) => {
-			const bot = await client.users.fetch(custombot.clientId);
-			return {
-				...custombot,
-				name: bot.username,
-			};
-		}),
-	);
+	const custombotsWithNames =
+		await client.custombots.getCustomBotNames(custombots);
 
 	const customBotSelect = new StringSelectMenuBuilder(
 		client,
 		interaction.locale,
 	)
+
 		.setPlaceholder("CUSTOM_BOT_SELECT_PLACEHOLDER")
 		.setCustomId("customBot")
 		.addOptions(
@@ -64,6 +57,7 @@ export async function run(
 			)}`,
 		)
 		.setStyle(botOnline ? ButtonStyle.Success : ButtonStyle.Danger);
+
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
 		.setDescription("CUSTOM_BOT_CURRENT_DESC", {
@@ -86,7 +80,6 @@ export async function run(
 		ephemeral: true,
 	});
 }
-
 export const data = new SlashCommandSubcommandBuilder()
-	.setName("menu")
-	.setDescription("Custom bot menu");
+	.setName("list")
+	.setDescription("Custombots list");

@@ -1,13 +1,9 @@
-import { REST, Routes } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { parseCommands } from "#utils";
-
+import { deploy } from "#utils";
 export async function ready(client: SkyndalexClient) {
-	const commands = await parseCommands(client.commands);
+	// const commands = parseCommands(client.commands);
 
-	const rest = new REST().setToken(client.token);
-	rest.put(Routes.applicationCommands(client.user.id), { body: commands });
-
+	await deploy(client);
 	client.logger.success(
 		`Ready in ${((performance.now() - client.createdAt) / 1000).toFixed(
 			2,

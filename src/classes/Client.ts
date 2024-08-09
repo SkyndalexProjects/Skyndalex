@@ -82,7 +82,7 @@ export class SkyndalexClient extends Client {
 		);
 
 		await this.loader.loadEvents(this, "../events");
-		await this.loader.loadCommands("../commands");
+		this.commands = await this.loader.loadCommands("../commands");
 
 		this.components = await this.loader.loadComponents("../components");
 		this.modals = await this.loader.loadModals("../modals");
@@ -90,22 +90,6 @@ export class SkyndalexClient extends Client {
 		checkMissingTranslations();
 
 		await this.login(token);
-
-		process.on(
-			"message",
-			async (message: { name: string; presence: string }) => {
-				if (message.name === "changePresence") {
-					this.user.setPresence({
-						activities: [
-							{
-								name: message.presence,
-								type: ActivityType.Playing,
-							},
-						],
-					});
-				}
-			},
-		);
 
 		process.on("unhandledRejection", async (reason, p) => {
 			console.log(" [antiCrash] :: Unhandled Rejection/Catch");

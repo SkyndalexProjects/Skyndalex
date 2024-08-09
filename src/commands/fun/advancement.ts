@@ -1,11 +1,10 @@
-import { GlobalFonts, createCanvas, loadImage } from "@napi-rs/canvas";
 import {
+	SlashCommandBuilder,
 	type ChatInputCommandInteraction,
-	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "#classes";
+import { GlobalFonts, createCanvas, loadImage } from "@napi-rs/canvas";
 import { getLines } from "#utils";
-
+import { SkyndalexClient } from "#classes";
 const canvas = createCanvas(724, 219);
 
 const ctx = canvas.getContext("2d");
@@ -30,8 +29,8 @@ export async function run(
 	const icon = await loadImage(
 		"https://wiki.factorio.com/images/Getting-on-track-achievement.png",
 	);
-	ctx.drawImage(img, 0, 0, canvas.width, canvas.height); // Load background
-	ctx.drawImage(icon, 10, 10, 200, 200); // Load icon
+	ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+	ctx.drawImage(icon, 10, 10, 200, 200);
 
 	// Title
 	ctx.fillStyle = "#96ca88";
@@ -58,23 +57,27 @@ export async function run(
 		files: [Buffer.from(image)],
 	});
 }
-
-export const data = new SlashCommandSubcommandBuilder()
-	.setName("factorio")
-	.setDescription("Generate factorio advancement")
-	.addStringOption((option) =>
-		option
-			.setName("title")
-			.setDescription("Factorio advancement title")
-			.setRequired(true)
-			.setMaxLength(30)
-			.setMinLength(1),
-	)
-	.addStringOption((option) =>
-		option
-			.setName("description")
-			.setDescription("Factorio advancement description")
-			.setRequired(true)
-			.setMaxLength(200)
-			.setMinLength(1),
+export const data = new SlashCommandBuilder()
+	.setName("advancement")
+	.setDescription("Generate advancement")
+	.addSubcommand((subcommand) =>
+		subcommand
+			.setName("factorio")
+			.setDescription("Factorio advancement")
+			.addStringOption((option) =>
+				option
+					.setName("title")
+					.setDescription("Factorio advancement title")
+					.setRequired(true)
+					.setMaxLength(30)
+					.setMinLength(1),
+			)
+			.addStringOption((option) =>
+				option
+					.setName("description")
+					.setDescription("Factorio advancement description")
+					.setRequired(true)
+					.setMaxLength(200)
+					.setMinLength(1),
+			),
 	);

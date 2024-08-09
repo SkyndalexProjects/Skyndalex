@@ -1,5 +1,4 @@
-import { lstatSync } from "node:fs";
-import { readdir } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { Collection } from "discord.js";
 import type { Command, Component, Modal } from "../types/structures.js";
 import type { SkyndalexClient } from "./Client.js";
@@ -9,43 +8,32 @@ export class Loaders {
 	}
 	async loadCommands(path: string): Promise<Collection<string, Command>> {
 		const commands = new Collection<string, Command>();
-		const dirs = await readdir(new URL(path, import.meta.url));
+		const dir = await readdir(new URL(path, import.meta.url));
 
-		await Promise.all(
-			dirs.map((dir) =>
-				this.loadCommandsAndSubcommands(`${path}/${dir}`),
-			),
-		);
+		for (const category of dir.filter(
+			(file) => !file.endsWith(".ts") && !file.endsWith(".js"),
+		)) {
+			const { files, directoriesFound } = await this.loadFolder(
+				new URL(`${path}/${category}`, import.meta.url),
+			);
+			for (const [name, command] of files) {
+				commands.set(name, command as Command);
+			}
 
-		return commands;
-	}
-	async loadCommandsAndSubcommands(path: string, prefix?: string) {
-		const dirs = await readdir(new URL(path, import.meta.url));
-
-		await Promise.all(
-			dirs.map(async (dir) => {
-				const lstat = lstatSync(
-					new URL(`${path}/${dir}`, import.meta.url),
+			for (const directory of directoriesFound) {
+				const { files } = await this.loadFolder(
+					new URL(
+						`${path}/${category}/${directory}`,
+						import.meta.url,
+					),
 				);
 
-				if (lstat.isDirectory()) {
-					await this.loadCommandsAndSubcommands(
-						`${path}/${dir}`,
-						prefix ? `${prefix}/${dir}` : dir,
-					);
-				} else {
-					if (!dir.endsWith(".ts") && !dir.endsWith(".js")) return;
-					const command = await import(`${path}/${dir}`);
-
-					this.client.commands.set(
-						prefix
-							? `${prefix}/${dir.split(".")[0]}`
-							: dir.split(".")[0],
-						command,
-					);
+				for (const [name, command] of files) {
+					commands.set(`${directory}/${name}`, command as Command);
 				}
-			}),
-		);
+			}
+		}
+		return commands;
 	}
 	async loadEvents(client: SkyndalexClient, path: string) {
 		const files = await readdir(new URL(path, import.meta.url));
@@ -87,5 +75,23 @@ export class Loaders {
 			modals.set(customId, modalFile);
 		}
 		return modals;
+	}
+	async loadFolder<T>(
+		folder: string | URL,
+	): Promise<{ files: Map<string, T>; directoriesFound: string[] }> {
+		const files = new Map();
+		const directory = await readdir(folder).catch((e) => {});
+		const directoriesFound: string[] = [];
+		if (!directory) return { files, directoriesFound };
+		for (const file of directory) {
+			if (!file.endsWith(".ts")) {
+				directoriesFound.push(file);
+				continue;
+			}
+			const path = `${folder}/${file}`;
+			const data = await import(path);
+			files.set(file.split(".")[0], data);
+		}
+		return { files, directoriesFound };
 	}
 }

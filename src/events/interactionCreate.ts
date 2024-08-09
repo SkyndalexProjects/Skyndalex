@@ -1,7 +1,7 @@
 import type { Interaction } from "discord.js";
 import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
-
+import type { Command } from "#types";
 export async function interactionCreate(
 	client: SkyndalexClient,
 	interaction: Interaction<"cached">,
@@ -22,15 +22,15 @@ export async function interactionCreate(
 			.setColor("Red");
 
 		const subcommand = interaction.options.getSubcommand(false);
-		const subcommandGroup = interaction.options.getSubcommandGroup(false);
+		let command: Command | undefined;
+		if (subcommand) {
+			command = client.commands.get(
+				`${interaction.commandName}/${subcommand}`,
+			);
+		} else {
+			command = client.commands.get(interaction.commandName);
+		}
 
-		const command = client.commands.get(
-			subcommandGroup
-				? `${interaction.commandName}/${subcommandGroup}/${subcommand}`
-				: subcommand
-					? `${interaction.commandName}/${subcommand}`
-					: interaction.commandName,
-		);
 		if (!command) {
 			await interaction
 				.reply({
