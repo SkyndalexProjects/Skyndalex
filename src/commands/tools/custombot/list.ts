@@ -4,7 +4,6 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import find from "find-process";
 import {
 	ButtonBuilder,
 	EmbedBuilder,
@@ -44,11 +43,8 @@ export async function run(
 			})),
 		);
 
-	const botOnline = await find(
-		"name",
-		`customBot ${custombots[0]?.clientId}`,
-	);
-
+		const botOnline = "offline"
+		
 	const powerState = new ButtonBuilder(client, interaction.locale)
 		.setCustomId(`customBotPowerState-${custombots[0].id}`)
 		.setLabel(
