@@ -7,7 +7,6 @@ import {
 } from "discord.js";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
 import { SkyndalexClient } from "#classes";
-// const customInstances = new Map<string, SkyndalexClient>();
 export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction,
@@ -36,7 +35,7 @@ export async function run(
 		}
 		const instance = client.customInstances.get(
 			`${interaction.user.id}-${custombot.id}`,
-		);
+		)
 
 		if (!instance) {
 			const customClient = new SkyndalexClient(custombot.activity);
@@ -46,6 +45,13 @@ export async function run(
 			);
 
 			await customClient.init(custombot.token);
+
+			await client.custombots.updatePowerState(
+				custombot.id.toString(),
+				interaction.user.id,
+				"online",
+			)
+			
 			client.customInstances.set(
 				`${interaction.user.id}-${custombot.id}`,
 				customClient,
@@ -83,6 +89,11 @@ export async function run(
 				`(customBotPowerState): Turning OFF custom bot ${bot.username} with id ${custombot.id} for user ${interaction.user.username} [${interaction.user.id}]`,
 			);
 			await instance.destroy();
+			await client.custombots.updatePowerState(
+				custombot.id.toString(),
+				interaction.user.id,
+				"offline",
+			)
 			client.customInstances.delete(`${interaction.user.id}-${custombot.id}`);
 		} else {
 			actionRow.setComponents(

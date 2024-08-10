@@ -43,16 +43,17 @@ export async function run(
 			})),
 		);
 
-		const botOnline = "offline"
+	const botOnline = custombots[0].status === "online";
 		
+	console.log(botOnline);
 	const powerState = new ButtonBuilder(client, interaction.locale)
 		.setCustomId(`customBotPowerState-${custombots[0].id}`)
 		.setLabel(
 			`${client.i18n.t(
-				`CUSTOM_BOT_POWER_STATE_${botOnline ? "ON" : "OFF"}`,
+				`CUSTOM_BOT_POWER_STATE_${botOnline ? "OFF" : "ON"}`,
 			)}`,
 		)
-		.setStyle(botOnline ? ButtonStyle.Success : ButtonStyle.Danger);
+		.setStyle(botOnline ? ButtonStyle.Danger : ButtonStyle.Success);
 
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CUSTOM_BOT_MANAGE_TITLE")
