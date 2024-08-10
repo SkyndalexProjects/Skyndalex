@@ -44,7 +44,7 @@ export async function run(
 		);
 
 	const botOnline = custombots[0].status === "online";
-		
+
 	console.log(botOnline);
 	const powerState = new ButtonBuilder(client, interaction.locale)
 		.setCustomId(`customBotPowerState-${custombots[0].id}`)

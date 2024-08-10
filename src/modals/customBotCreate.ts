@@ -30,6 +30,14 @@ export async function run(
 		},
 	});
 
+	await client.prisma.customBotSettings.create({
+		data: {
+			clientId,
+			userId: interaction.user.id,
+			guildId: interaction.guild.id,
+		},
+	});
+
 	const bot = await client.users.fetch(clientId);
 
 	const embed = new EmbedBuilder(client, interaction.locale)

@@ -23,7 +23,7 @@ export async function guildMemberRemove(
 		getSettings?.goodbyeChannel,
 	);
 	if (channel) {
-	(channel as BaseGuildTextChannel).send({
+		(channel as BaseGuildTextChannel).send({
 			embeds: [goodbyeEmbed],
 		});
 	}

@@ -3,8 +3,8 @@ import {
 	type AutocompleteInteraction,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
-    SlashCommandSubcommandBuilder,
-    type BaseGuildTextChannel
+	SlashCommandSubcommandBuilder,
+	type BaseGuildTextChannel,
 } from "discord.js";
 import { ButtonBuilder } from "#builders";
 import { EmbedBuilder } from "#builders";
@@ -100,15 +100,15 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
 export const data = new SlashCommandSubcommandBuilder()
 	.setName("text")
 	.setDescription("Generate text using AI")
-    .addStringOption((option) =>
-        option
-            .setName("prompt")
-            .setDescription("Prompt for the AI")
-            .setRequired(true),
-    )
-    .addStringOption((option) =>
-        option
-            .setName("model")
-            .setDescription("Model to use")
-            .setAutocomplete(true),
-    )
+	.addStringOption((option) =>
+		option
+			.setName("prompt")
+			.setDescription("Prompt for the AI")
+			.setRequired(true),
+	)
+	.addStringOption((option) =>
+		option
+			.setName("model")
+			.setDescription("Model to use")
+			.setAutocomplete(true),
+	);

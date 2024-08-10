@@ -35,7 +35,7 @@ export async function run(
 		}
 		const instance = client.customInstances.get(
 			`${interaction.user.id}-${custombot.id}`,
-		)
+		);
 
 		if (!instance) {
 			const customClient = new SkyndalexClient(custombot.activity);
@@ -50,8 +50,8 @@ export async function run(
 				custombot.id.toString(),
 				interaction.user.id,
 				"online",
-			)
-			
+			);
+
 			client.customInstances.set(
 				`${interaction.user.id}-${custombot.id}`,
 				customClient,
@@ -93,8 +93,10 @@ export async function run(
 				custombot.id.toString(),
 				interaction.user.id,
 				"offline",
-			)
-			client.customInstances.delete(`${interaction.user.id}-${custombot.id}`);
+			);
+			client.customInstances.delete(
+				`${interaction.user.id}-${custombot.id}`,
+			);
 		} else {
 			actionRow.setComponents(
 				new ButtonBuilder(client, interaction.locale)

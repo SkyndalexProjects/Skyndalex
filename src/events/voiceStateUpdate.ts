@@ -1,49 +1,74 @@
-import { type ColorResolvable, EmbedBuilder } from "discord.js";
-export async function voiceStateUpdate(client, oldState, newState) {
-	const settings = await client.prisma.settings.findFirst({
-		where: {
-			guildId: newState.guild.id,
-		},
-	});
+import { SkyndalexClient } from "#classes";
+import { type ColorResolvable, EmbedBuilder, VoiceState } from "discord.js";
 
-	let description = "";
-	let color = "";
+export async function voiceStateUpdate(
+    client: SkyndalexClient,
+    oldState: VoiceState,
+    newState: VoiceState,
+) {
+    const settings = await client.prisma.settings.findFirst({
+        where: {
+            guildId: newState.guild.id,
+        },
+    });
 
-	const embed = new EmbedBuilder().setTimestamp();
+    const customBotSettings = await client.prisma.customBotSettings.findUnique({
+        where: {
+            guildId: newState.guild.id,
+            clientId: client.user.id,
+        },
+    });
 
-	if (oldState.channel !== newState.channel) {
-		if (!oldState.channel && newState.channel) {
-			description = `User ${newState.member.user.username} **joined channel** <#${newState.channel.id}> \`[${newState.channel.name}]\``;
-			color = "Green";
+    let description = "";
+    let color = "";
 
-			if (newState.channel.id === settings?.autoRadioVoiceChannel) {
-				if (client.shoukaku.connections.size <= 0) {
-					await client.radio.startRadio(client, newState.guild.id);
+    const embed = new EmbedBuilder().setTimestamp();
+
+    if (oldState.channel !== newState.channel) {
+        if (!oldState.channel && newState.channel) {
+            description = `User ${newState.member.user.username} **joined channel** <#${newState.channel.id}> \`[${newState.channel.name}]\``;
+            color = "Green";
+
+			if (client.user.id !== process.env.CLIENT_ID) {
+				if (newState.channel.id === customBotSettings?.autoRadioVoiceChannel) {
+					if (!client.shoukaku.connections.has(newState.guild.id)) {
+						await client.radio.startRadio(client, newState.guild.id);
+				}
+				}
+			} else {
+				if (newState.channel.id === settings?.autoRadioVoiceChannel) {
+					if (!client.shoukaku.connections.has(newState.guild.id)) {
+						console.log("i am alive")
+						await client.radio.startRadio(client, newState.guild.id);
+					}
 				}
 			}
-		} else if (oldState.channel && !newState.channel) {
-			description = `User ${newState.member.user.username} **left channel** <#${oldState.channel.id}> \`[${oldState.channel.name}]\``;
-			color = "Green";
+        } else if (oldState.channel && !newState.channel) {
+            description = `User ${newState.member.user.username} **left channel** <#${oldState.channel.id}> \`[${oldState.channel.name}]\``;
+            color = "Green";
 
-			if (oldState.channel.members.size === 1) {
-				await client.radio.stopRadio(client, newState.guild.id);
-			}
-		} else {
-			description = `User ${newState.member.user.username} **moved from** <#${oldState.channel.id}> \`[${newState.channel.name}]\` to <#${newState.channel.id}> [${newState.channel.name}]`;
-			color = "Yellow";
+            if (oldState.channel.members.size === 1) {
+                await client.radio.stopRadio(client, newState.guild.id);
+            }
+        } else {
+            description = `User ${newState.member.user.username} **moved from** <#${oldState.channel.id}> \`[${oldState.channel.name}]\` to <#${newState.channel.id}> [${newState.channel.name}]`;
+            color = "Yellow";
 
-			if (newState.channel.id === settings?.autoRadioVoiceChannel) {
-				await client.radio.startRadio(client, newState.guild.id);
-			} else if (oldState.channel.members.size <= 1) {
-				await client.radio.stopRadio(client, newState.guild.id);
-			}
-		}
-	}
+            // const autoRadioVoiceChannel = customBotSettings?.autoRadioVoiceChannel && settings?.autoRadioVoiceChannel;
 
-	if (description) {
-		embed.setDescription(description);
-		embed.setColor(color as ColorResolvable);
+            // if (newState.channel.id === autoRadioVoiceChannel) {
+            //     await client.radio.startRadio(client, newState.guild.id);
+            // } else if (oldState.channel.members.size <= 1) {
+            //     await client.radio.stopRadio(client, newState.guild.id);
+            // }
+        }
+    }
 
-		client.channels.cache.get(settings)?.send({ embeds: [embed] });
-	}
+    if (description) {
+        embed.setDescription(description);
+        embed.setColor(color as ColorResolvable);
+
+        // @ts-expect-error
+        client.channels.cache.get(settings)?.send({ embeds: [embed] });
+    }
 }

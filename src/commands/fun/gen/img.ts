@@ -6,7 +6,7 @@ import {
 	BaseGuildTextChannel,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
-    SlashCommandSubcommandBuilder
+	SlashCommandSubcommandBuilder,
 } from "discord.js";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
@@ -124,15 +124,15 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
 export const data = new SlashCommandSubcommandBuilder()
 	.setName("img")
 	.setDescription("Generate text using AI")
-    .addStringOption((option) =>
-        option
-            .setName("prompt")
-            .setDescription("Prompt for the AI")
-            .setRequired(true),
-    )
-    .addStringOption((option) =>
-        option
-            .setName("model")
-            .setDescription("Model to use")
-            .setAutocomplete(true),
-    )
+	.addStringOption((option) =>
+		option
+			.setName("prompt")
+			.setDescription("Prompt for the AI")
+			.setRequired(true),
+	)
+	.addStringOption((option) =>
+		option
+			.setName("model")
+			.setDescription("Model to use")
+			.setAutocomplete(true),
+	);

@@ -34,11 +34,7 @@ export class CustomBotManagement {
 			}),
 		);
 	}
-	async updatePowerState(
-		id: string,
-		userId: string,
-		status: string,
-	) {
+	async updatePowerState(id: string, userId: string, status: string) {
 		return this.client.prisma.custombots.update({
 			where: {
 				id_userId: {

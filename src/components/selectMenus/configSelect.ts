@@ -1,6 +1,7 @@
 import { ActionRowBuilder, type StringSelectMenuInteraction } from "discord.js";
 import { EmbedBuilder, StringSelectMenuBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
+
 export async function run(
 	client: SkyndalexClient,
 	interaction: StringSelectMenuInteraction,
@@ -8,24 +9,62 @@ export async function run(
 	const value = interaction.values[0];
 	const option = interaction.customId.split("-")[1];
 
-	await client.prisma.settings.upsert({
+	switch (option) {
+		case "autoRadioVoiceChannel":
+			if (client.user.id !== process.env.CLIENT_ID) {
+				await client.prisma.customBotSettings.upsert({
+					where: {
+						clientId: client.user.id,
+						userId: interaction.user.id,
+						guildId: interaction.guild.id,
+					},
+					create: {
+						guildId: interaction.guild.id,
+						clientId: client.user.id,
+						userId: interaction.user.id,
+						autoRadioVoiceChannel: value,
+					},
+					update: {
+						autoRadioVoiceChannel: value,
+					},
+				});
+			}
+			break;
+		default:
+			await client.prisma.settings.upsert({
+				where: {
+					guildId: interaction.guild.id,
+				},
+				create: {
+					guildId: interaction.guild.id,
+					[option]: value,
+				},
+				update: {
+					[option]: value,
+				},
+			});
+			break;
+	}
+	let availableSettings = await client.prisma.settings.findMany({
 		where: {
 			guildId: interaction.guild.id,
-		},
-		create: {
-			guildId: interaction.guild.id,
-			[option]: value,
-		},
-		update: {
-			[option]: value,
 		},
 	});
 
-	const availableSettings = await client.prisma.settings.findMany({
-		where: {
-			guildId: interaction.guild.id,
-		},
-	});
+	if (client.user.id !== process.env.CLIENT_ID) {
+		const customBotSettings =
+			await client.prisma.customBotSettings.findMany({
+				where: {
+					clientId: client.user.id,
+					userId: interaction.user.id,
+				},
+			});
+
+		if (customBotSettings.length > 0) {
+			availableSettings[0].autoRadioVoiceChannel =
+				customBotSettings[0]?.autoRadioVoiceChannel;
+		}
+	}
 
 	const fields = Object.keys(availableSettings[0])
 		.map((key, index) => {
@@ -70,12 +109,13 @@ export async function run(
 				.filter((field) => field.name !== "guildId"),
 		);
 
-	return interaction.update({
+	return interaction.reply({
 		embeds: [embed],
 		components: [
 			new ActionRowBuilder<StringSelectMenuBuilder>({
 				components: [select],
 			}),
 		],
+		ephemeral: true,
 	});
 }

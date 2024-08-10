@@ -1,39 +1,55 @@
 import type { SkyndalexClient } from "../Client.js";
+
 export class RadioPlayer {
-	constructor(private readonly client: SkyndalexClient) {
-		this.client = client;
-	}
+    constructor(private readonly client: SkyndalexClient) {
+        this.client = client;
+    }
 
-	async startRadio(client, guildId) {
-		try {
-			const settings = await client.prisma.settings.findFirst({
-				where: {
-					guildId: guildId,
+    async startRadio(client, guildId) {
+        try {
+            const settings = await client.prisma.settings.findFirst({
+                where: {
+                    guildId: guildId,
+                },
+            });
+            const customBotSettings = await client.prisma.customBotSettings.findUnique({
+                where: {
+                    guildId: guildId,
+                    clientId: client.user.id,
 				},
-			});
-			const channel = client?.channels?.cache?.get(
-				settings?.autoRadioVoiceChannel,
-			);
+            });
+            let channel = client?.channels?.cache?.get(
+                settings?.autoRadioVoiceChannel,
+            );
+			let radioStation = settings?.radioStation;
 
-			if (channel.id && settings.radioStation) {
-				const resourceUrl = `https://radio.garden/api/ara/content/listen/${settings.radioStation}/channel.mp3`;
+            if (client.user.id !== process.env.CLIENT_ID) {
+                channel = client?.channels?.cache?.get(customBotSettings?.autoRadioVoiceChannel);
+				radioStation = customBotSettings?.radioStation;
+            }
 
-				const player = await client.shoukaku.joinVoiceChannel({
-					guildId: guildId,
-					channelId: channel.id,
-					shardId: 0,
-				});
+            if (channel?.id && radioStation) {
+                const resourceUrl = `https://radio.garden/api/ara/content/listen/${radioStation}/channel.mp3`;
 
-				const result = await player.node.rest.resolve(resourceUrl);
+                const player = await client.shoukaku.joinVoiceChannel({
+                    guildId: guildId,
+                    channelId: channel.id,
+                    shardId: 0,
+                });
 
-				await player.playTrack({ track: result.data.encoded });
-			}
-		} catch (e) {
-			console.error(e);
-		}
-	}
-	async stopRadio(client, guildId) {
-		await client.shoukaku.leaveVoiceChannel(guildId);
-		client.shoukaku.connections.delete(guildId);
-	}
+                const result = await player.node.rest.resolve(resourceUrl);
+
+                await player.playTrack({ track: result.data.encoded });
+            } else {
+                console.log('Channel or radio station not found.');
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async stopRadio(client, guildId) {
+        await client.shoukaku.leaveVoiceChannel(guildId);
+        client.shoukaku.connections.delete(guildId);
+    }
 }

@@ -12,7 +12,6 @@ model settings {
   voiceStateUpdateChannel String?
   radioStation            String?
   autoRadioVoiceChannel   String?
-  radioId                 String?
   autoRole                String?
   ticketArchiveCategory    String?
   welcomeChannel         String?
@@ -58,4 +57,11 @@ model favourties {
   userId String
   radioId String
   radioName String
+}
+model customBotSettings {
+  userId String 
+  clientId String @unique
+  radioStation String?
+  autoRadioVoiceChannel String?
+  guildId String
 }
