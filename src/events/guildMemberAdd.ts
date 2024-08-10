@@ -1,4 +1,4 @@
-import type { GuildMember } from "discord.js";
+import type { Base, BaseGuildTextChannel, GuildMember } from "discord.js";
 import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 
@@ -30,8 +30,7 @@ export async function guildMemberAdd(
 		getSettings?.welcomeChannel,
 	);
 	if (channel) {
-		// @ts-expect-error
-		channel.send({
+		(channel as BaseGuildTextChannel).send({
 			embeds: [welcomeEmbed],
 		});
 	}

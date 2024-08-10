@@ -1,5 +1,5 @@
 import {
-	SlashCommandBuilder,
+	SlashCommandSubcommandBuilder,
 	type ChatInputCommandInteraction,
 } from "discord.js";
 import { GlobalFonts, createCanvas, loadImage } from "@napi-rs/canvas";
@@ -57,27 +57,6 @@ export async function run(
 		files: [Buffer.from(image)],
 	});
 }
-export const data = new SlashCommandBuilder()
-	.setName("advancement")
-	.setDescription("Generate advancement")
-	.addSubcommand((subcommand) =>
-		subcommand
-			.setName("factorio")
-			.setDescription("Factorio advancement")
-			.addStringOption((option) =>
-				option
-					.setName("title")
-					.setDescription("Factorio advancement title")
-					.setRequired(true)
-					.setMaxLength(30)
-					.setMinLength(1),
-			)
-			.addStringOption((option) =>
-				option
-					.setName("description")
-					.setDescription("Factorio advancement description")
-					.setRequired(true)
-					.setMaxLength(200)
-					.setMinLength(1),
-			),
-	);
+export const data = new SlashCommandSubcommandBuilder()
+	.setName("factorio")
+	.setDescription("Creat an advancement for factorio");

@@ -1,6 +1,5 @@
 import { SkyndalexClient } from "#classes";
 import type {
-	Collection,
 	SlashCommandSubcommandBuilder,
 	SlashCommandBuilder,
 } from "discord.js";
