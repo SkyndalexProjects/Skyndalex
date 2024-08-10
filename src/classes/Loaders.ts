@@ -82,7 +82,7 @@ export class Loaders {
 		const directoriesFound: string[] = [];
 		if (!directory) return { files, directoriesFound };
 		for (const file of directory) {
-			if (!file.endsWith(".ts")) {
+			if (!file.endsWith(".ts") && !file.endsWith(".js")) {
 				directoriesFound.push(file);
 				continue;
 			}

@@ -28,6 +28,5 @@ export async function deploy(client: SkyndalexClient) {
 				parsedCommands.push(cmd.data);
 			}
 		});
-
-	await client.application?.commands.set(parsedCommands);
+	 await client.application.commands.set(parsedCommands);
 }
