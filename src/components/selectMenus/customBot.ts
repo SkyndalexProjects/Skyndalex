@@ -35,7 +35,7 @@ export async function run(
 		.setDescription("CUSTOM_BOT_CURRENT_DESC", {
 			currentBot: customBotDiscord.username,
 			botId: customBot.id,
-			activity: customBot.activity,
+			activity: customBot[0].activity,
 		})
 		.setColor("DarkAqua");
 

@@ -36,10 +36,11 @@ export class SkyndalexClient extends Client {
 	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 	radio = new RadioPlayer(this);
 	custombots = new CustomBotManagement(this);
+	customInstances = new Map<string, SkyndalexClient>();
 
 	i18n = i18next;
 
-	constructor() {
+	constructor(presence?: string) {
 		super({
 			intents: [
 				GatewayIntentBits.Guilds,
@@ -51,7 +52,7 @@ export class SkyndalexClient extends Client {
 			presence: {
 				activities: [
 					{
-						name: `Version: ${process.env.npm_package_version} | discord.skyndalex.com `,
+						name: presence ?? `Version: ${process.env.npm_package_version} | discord.skyndalex.com`,
 						type: ActivityType.Playing,
 					},
 				],
@@ -86,6 +87,8 @@ export class SkyndalexClient extends Client {
 
 		this.components = await this.loader.loadComponents("../components");
 		this.modals = await this.loader.loadModals("../modals");
+
+		this.customInstances = new Map<string, SkyndalexClient>();
 
 		checkMissingTranslations();
 

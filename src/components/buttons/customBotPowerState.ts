@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
 import { SkyndalexClient } from "#classes";
-const customInstances = new Map<string, SkyndalexClient>();
+// const customInstances = new Map<string, SkyndalexClient>();
 export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction,
@@ -26,6 +26,7 @@ export async function run(
 		.setDescription("CUSTOM_BOT_CURRENT_DESC", {
 			currentBot: bot.username,
 			botId: custombot.id,
+			activity: custombot.activity,
 		})
 		.setColor("Yellow");
 
@@ -33,19 +34,19 @@ export async function run(
 		if (!interaction.deferred && !interaction.replied) {
 			await interaction.deferUpdate();
 		}
-		const instance = customInstances.get(
+		const instance = client.customInstances.get(
 			`${interaction.user.id}-${custombot.id}`,
 		);
 
 		if (!instance) {
-			const customClient = new SkyndalexClient();
+			const customClient = new SkyndalexClient(custombot.activity);
 
 			client.logger.log(
 				`(customBotPowertState): RUNNING custom bot ${bot.username} with id ${custombot.id} for user ${interaction.user.username} [${interaction.user.id}]`,
 			);
 
 			await customClient.init(custombot.token);
-			customInstances.set(
+			client.customInstances.set(
 				`${interaction.user.id}-${custombot.id}`,
 				customClient,
 			);
@@ -82,7 +83,7 @@ export async function run(
 				`(customBotPowerState): Turning OFF custom bot ${bot.username} with id ${custombot.id} for user ${interaction.user.username} [${interaction.user.id}]`,
 			);
 			await instance.destroy();
-			customInstances.delete(`${interaction.user.id}-${custombot.id}`);
+			client.customInstances.delete(`${interaction.user.id}-${custombot.id}`);
 		} else {
 			actionRow.setComponents(
 				new ButtonBuilder(client, interaction.locale)

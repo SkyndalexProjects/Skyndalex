@@ -10,9 +10,7 @@ export class Loaders {
 		const commands = new Collection<string, Command>();
 		const dir = await readdir(new URL(path, import.meta.url));
 
-		for (const category of dir.filter(
-			(file) => !file.endsWith(".ts") && !file.endsWith(".js"),
-		)) {
+		for (const category of dir) {
 			const { files, directoriesFound } = await this.loadFolder(
 				new URL(`${path}/${category}`, import.meta.url),
 			);
