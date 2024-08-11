@@ -44,7 +44,6 @@ export async function voiceStateUpdate(
 			} else {
 				if (newState.channel.id === settings?.autoRadioVoiceChannel) {
 					if (!client.shoukaku.connections.has(newState.guild.id)) {
-						console.log("i am alive");
 						await client.radio.startRadio(
 							client,
 							newState.guild.id,
@@ -62,7 +61,7 @@ export async function voiceStateUpdate(
 		} else {
 			description = `User ${newState.member.user.username} **moved from** <#${oldState.channel.id}> \`[${oldState.channel.name}]\` to <#${newState.channel.id}> [${newState.channel.name}]`;
 			color = "Yellow";
-			
+
 			if (client.user.id !== process.env.CLIENT_ID) {
 				if (
 					newState.channel.id ===
