@@ -150,5 +150,6 @@
   "BOT_STATS_NODE_VERSION": "Node.js version: {{ version }}",
   "BOT_STATS_NODE_MEMORY": "Memory usage: {{ memory }}",
   "BOT_STATS_DISCORDJS_VERSION": "Discord.js version: {{ version }}",
-  "BOT_INFO_UPTIME": "Uptime"
+  "BOT_INFO_UPTIME": "Uptime",
+  "LEAVE_SUCCESS": "Left voice channel"
 }

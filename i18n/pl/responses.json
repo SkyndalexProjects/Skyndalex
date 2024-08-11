@@ -150,5 +150,6 @@
   "BOT_STATS_NODE_VERSION": "Wersja Node.js: {{ version }}",
   "BOT_STATS_NODE_MEMORY": "Użycie pamięci: {{ memory }}",
   "BOT_STATS_DISCORDJS_VERSION": "Wersja Discord.js: {{ version }}",
-  "BOT_INFO_UPTIME": "Czas działania"
+  "BOT_INFO_UPTIME": "Czas działania",
+  "LEAVE_SUCCESS": "Pomyślnie opuściłem kanał głosowy."
 }

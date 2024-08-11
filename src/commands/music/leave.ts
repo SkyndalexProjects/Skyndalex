@@ -9,6 +9,11 @@ export async function run(
 	interaction: ChatInputCommandInteraction<"cached">,
 ) {
 	await client.radio.stopRadio(client, interaction.guild.id);
+
+	return interaction.reply({
+		content: client.i18n.t("LEAVE_SUCCESS"),
+		ephemeral: true,
+	})
 }
 
 export const data = new SlashCommandBuilder()
