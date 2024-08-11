@@ -59,4 +59,20 @@ export async function run(
 }
 export const data = new SlashCommandSubcommandBuilder()
 	.setName("factorio")
-	.setDescription("Creat an advancement for factorio");
+	.setDescription("Creat an advancement for factorio")
+	.addStringOption((option) =>
+		option
+			.setName("title")
+			.setDescription("Factorio advancement title")
+			.setRequired(true)
+			.setMaxLength(30)
+			.setMinLength(1),
+	)
+	.addStringOption((option) =>
+		option
+			.setName("description")
+			.setDescription("Factorio advancement description")
+			.setRequired(true)
+			.setMaxLength(200)
+			.setMinLength(1),
+	);
