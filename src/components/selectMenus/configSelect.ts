@@ -28,20 +28,32 @@ export async function run(
 				},
 			});
 		} else {
-			console.log("triggered")
 			await client.prisma.settings.upsert({
 				where: {
 					guildId: interaction.guild.id,
 				},
 				create: {
 					guildId: interaction.guild.id,
-					[option]: value,
+					autoRadioVoiceChannel: value,
 				},
 				update: {
-					[option]: value,
+					autoRadioVoiceChannel: value,
 				},
 			});
 		}
+	} else {
+		await client.prisma.settings.upsert({
+			where: {
+				guildId: interaction.guild.id,
+			},
+			create: {
+				guildId: interaction.guild.id,
+				[option]: value,
+			},
+			update: {
+				[option]: value,
+			},
+		});
 	}
 	
 	let availableSettings = await client.prisma.settings.findMany({

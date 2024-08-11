@@ -12,10 +12,10 @@ model settings {
   voiceStateUpdateChannel String?
   radioStation            String?
   autoRadioVoiceChannel   String?
-  autoRole                String?
+  // autoRole                String?
   ticketArchiveCategory    String?
-  welcomeChannel         String?
-  goodbyeChannel         String?
+  // welcomeChannel         String?
+  // goodbyeChannel         String?
   // antiPhishing            Boolean?
 }
 model users {

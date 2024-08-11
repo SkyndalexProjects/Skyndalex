@@ -29,6 +29,7 @@ export async function guildMemberAdd(
 	const channel = member.guild.channels.cache.get(
 		getSettings?.welcomeChannel,
 	);
+
 	if (channel) {
 		(channel as BaseGuildTextChannel).send({
 			embeds: [welcomeEmbed],
