@@ -15,7 +15,7 @@ export async function run(
 		.addFields([
 			{
 				name: "8BALL_RESPONSE",
-				value: `8BALL_RESPONSES.${Math.floor(Math.random() * 5)}`,
+				value: client.i18n.t(`8BALL_RESPONSES.${Math.floor(Math.random() * 5)}`, { lng: interaction.locale }),
 				inline: true,
 			},
 		])
@@ -33,7 +33,7 @@ export const data = {
 				.setName("question")
 				.setDescription("The question you want to ask the 8ball")
 				.setRequired(true)
-				.setMaxLength(500)
+				.setMaxLength(200)
 				.setMinLength(1),
 		),
 	integration_types: [0, 1],

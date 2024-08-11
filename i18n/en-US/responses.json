@@ -138,5 +138,6 @@
   "CUSTOM_BOT_SELECT_PLACEHOLDER": "Select a bot",
   "CUSTOM_BOT_POWER_STATE_ON": "Turn On",
   "CUSTOM_BOT_POWER_STATE_OFF": "Turn Off",
-  "CUSTOMBOT_CREATED": "Successfully created a custom bot named **{{ botName }}**."
+  "CUSTOMBOT_CREATED": "Successfully created a custom bot named **{{ botName }}**.",
+  "CUSTOMBOT_INVALID_DATA_DESCRIPTION": "No valid data provided. Make sure you have entered the correct data and try again."
 }
