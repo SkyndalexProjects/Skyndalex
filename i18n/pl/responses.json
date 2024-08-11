@@ -80,6 +80,7 @@
   "GAME_PING": "Ping",
   "CONFIG_GUILD_SELECT_PLACEHOLDER": "Co mam ustawić?",
   "CONFIG_GUILD_TITLE": "Konfiguracja serwera",
+  "CONFIG_SUCCESS": "Ustawiono.",
   "CONFIG_NOT_SET": "Nie ustawiono",
   "CONFIG_STATUS_DESCRIPTION": "Aktualnie ustawiasz opcję: `{{ value }}`",
   "CONFIG_CHANGE_BUTTON": "Zmień",

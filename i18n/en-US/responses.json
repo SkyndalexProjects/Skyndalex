@@ -83,6 +83,7 @@
   "CONFIG_STATUS_DESCRIPTION": "You are currently setting the option: `{{ value }}`",
   "CONFIG_GUILD_DESCRIPTION": "Successfully set the option **{{ option }}** to value `{{ value }}`",
   "CONFIG_CHANGE_BUTTON": "Change",
+  "CONFIG_SUCCESS": "Set",
   "CONFIG_DISABLE_BUTTON": "Disable/Delete",
   "CONFIG_GUILD_CHANNEL_SELECT_PLACEHOLDER": "Choose channel",
   "CONFIG_GUILD_CHANNEL_SELECT_ERROR": "This option cannot be set. It can only be removed. Check if it is available to set in the subcommands of the /set command.",

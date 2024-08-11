@@ -62,14 +62,33 @@ export async function voiceStateUpdate(
 		} else {
 			description = `User ${newState.member.user.username} **moved from** <#${oldState.channel.id}> \`[${oldState.channel.name}]\` to <#${newState.channel.id}> [${newState.channel.name}]`;
 			color = "Yellow";
-
-			// const autoRadioVoiceChannel = customBotSettings?.autoRadioVoiceChannel && settings?.autoRadioVoiceChannel;
-
-			// if (newState.channel.id === autoRadioVoiceChannel) {
-			//     await client.radio.startRadio(client, newState.guild.id);
-			// } else if (oldState.channel.members.size <= 1) {
-			//     await client.radio.stopRadio(client, newState.guild.id);
-			// }
+			
+			if (client.user.id !== process.env.CLIENT_ID) {
+				if (
+					newState.channel.id ===
+					customBotSettings?.autoRadioVoiceChannel
+				) {
+					if (!client.shoukaku.connections.has(newState.guild.id)) {
+						await client.radio.startRadio(
+							client,
+							newState.guild.id,
+						);
+					}
+				} else if (oldState.channel.members.size <= 1) {
+					await client.radio.stopRadio(client, newState.guild.id);
+				}
+			} else {
+				if (newState.channel.id === settings?.autoRadioVoiceChannel) {
+					if (!client.shoukaku.connections.has(newState.guild.id)) {
+						await client.radio.startRadio(
+							client,
+							newState.guild.id,
+						);
+					}
+				} else if (oldState.channel.members.size <= 1) {
+					await client.radio.stopRadio(client, newState.guild.id);
+				}
+			}
 		}
 	}
 

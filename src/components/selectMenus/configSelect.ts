@@ -9,28 +9,26 @@ export async function run(
 	const value = interaction.values[0];
 	const option = interaction.customId.split("-")[1];
 
-	switch (option) {
-		case "autoRadioVoiceChannel":
-			if (client.user.id !== process.env.CLIENT_ID) {
-				await client.prisma.customBotSettings.upsert({
-					where: {
-						clientId: client.user.id,
-						userId: interaction.user.id,
-						guildId: interaction.guild.id,
-					},
-					create: {
-						guildId: interaction.guild.id,
-						clientId: client.user.id,
-						userId: interaction.user.id,
-						autoRadioVoiceChannel: value,
-					},
-					update: {
-						autoRadioVoiceChannel: value,
-					},
-				});
-			}
-			break;
-		default:
+	if (option === "autoRadioVoiceChannel") {
+		if (client.user.id !== process.env.CLIENT_ID) {
+			await client.prisma.customBotSettings.upsert({
+				where: {
+					clientId: client.user.id,
+					userId: interaction.user.id,
+					guildId: interaction.guild.id,
+				},
+				create: {
+					guildId: interaction.guild.id,
+					clientId: client.user.id,
+					userId: interaction.user.id,
+					autoRadioVoiceChannel: value,
+				},
+				update: {
+					autoRadioVoiceChannel: value,
+				},
+			});
+		} else {
+			console.log("triggered")
 			await client.prisma.settings.upsert({
 				where: {
 					guildId: interaction.guild.id,
@@ -43,8 +41,9 @@ export async function run(
 					[option]: value,
 				},
 			});
-			break;
+		}
 	}
+	
 	let availableSettings = await client.prisma.settings.findMany({
 		where: {
 			guildId: interaction.guild.id,

@@ -48,7 +48,6 @@ export async function run(
 				}))
 				.filter((option) => !option.value.endsWith("Id")),
 		);
-
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("CONFIG_GUILD_TITLE")
 		.setColor("Blurple")
@@ -60,13 +59,12 @@ export async function run(
 			keys
 				.filter((key) => key !== "guildId")
 				.map((key) => {
-					let value = availableSettings[0][key];
-					console.log(`value ${key}`, value);
+					let value = availableSettings[0] ? availableSettings[0][key] : null;
 					if (value === null)
 						value = client.i18n.t("CONFIG_NOT_SET", {
 							lng: interaction.locale,
 						});
-
+	
 					return {
 						name: key,
 						value: value,
