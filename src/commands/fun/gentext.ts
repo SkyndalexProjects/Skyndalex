@@ -5,6 +5,7 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
 	type BaseGuildTextChannel,
+	SlashCommandBuilder,
 } from "discord.js";
 import { ButtonBuilder } from "#builders";
 import { EmbedBuilder } from "#builders";
@@ -78,6 +79,25 @@ export async function run(
 		});
 	}
 }
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("gentext")
+		.setDescription("Generate text")
+		.addStringOption((option) =>
+			option
+				.setName("prompt")
+				.setDescription("Prompt for the AI")
+				.setRequired(true),
+		)
+		.addStringOption((option) =>
+			option
+				.setName("model")
+				.setDescription("Model for the AI")
+				.setRequired(false),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+};
 export async function autocomplete(interaction: AutocompleteInteraction) {
 	const focusedValue = interaction.options.getFocused(true).value;
 	const apiURL = `https://huggingface.co/api/models?search=${focusedValue}&filter=text-generation`;
@@ -97,18 +117,3 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
 
 	await interaction.respond(choices);
 }
-export const data = new SlashCommandSubcommandBuilder()
-	.setName("text")
-	.setDescription("Generate text using AI")
-	.addStringOption((option) =>
-		option
-			.setName("prompt")
-			.setDescription("Prompt for the AI")
-			.setRequired(true),
-	)
-	.addStringOption((option) =>
-		option
-			.setName("model")
-			.setDescription("Model to use")
-			.setAutocomplete(true),
-	);

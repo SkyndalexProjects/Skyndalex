@@ -53,3 +53,6 @@ export interface weatherData {
 export interface HuggingFaceText {
 	generated_text: string;
 }
+export interface BotData {
+	approximate_user_install_count: number;
+}

@@ -6,6 +6,7 @@ import {
 	BaseGuildTextChannel,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
+	SlashCommandBuilder,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
@@ -102,6 +103,26 @@ export async function run(
 	}
 	imageQueue.delete(taskId);
 }
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("genimg")
+		.setDescription("Generate image")
+		.addStringOption((option) =>
+			option
+				.setName("prompt")
+				.setDescription("Prompt for the AI")
+				.setRequired(true),
+		)
+		.addStringOption((option) =>
+			option
+				.setName("model")
+				.setDescription("Model to use")
+				.setAutocomplete(true),
+		),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+};
+
 export async function autocomplete(interaction: AutocompleteInteraction) {
 	const focusedValue = interaction.options.getFocused(true).value;
 	const apiURL = `https://huggingface.co/api/models?search=${focusedValue}&filter=image-generation`;
@@ -121,18 +142,3 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
 
 	await interaction.respond(choices);
 }
-export const data = new SlashCommandSubcommandBuilder()
-	.setName("img")
-	.setDescription("Generate text using AI")
-	.addStringOption((option) =>
-		option
-			.setName("prompt")
-			.setDescription("Prompt for the AI")
-			.setRequired(true),
-	)
-	.addStringOption((option) =>
-		option
-			.setName("model")
-			.setDescription("Model to use")
-			.setAutocomplete(true),
-	);

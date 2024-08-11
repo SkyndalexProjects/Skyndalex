@@ -15,7 +15,10 @@ export async function run(
 		.addFields([
 			{
 				name: "8BALL_RESPONSE",
-				value: client.i18n.t(`8BALL_RESPONSES.${Math.floor(Math.random() * 5)}`, { lng: interaction.locale }),
+				value: client.i18n.t(
+					`8BALL_RESPONSES.${Math.floor(Math.random() * 5)}`,
+					{ lng: interaction.locale },
+				),
 				inline: true,
 			},
 		])

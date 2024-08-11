@@ -13,14 +13,40 @@ export async function run(
 		"utf-8",
 	);
 
-	if (isNaN(Number(clientId))) {
+	if (isNaN(Number(clientId)) && clientId === process.env.CLIENT_ID) {
 		const invalidDataEmbed = new EmbedBuilder(client, interaction.locale)
 			.setDescription("CUSTOMBOT_INVALID_DATA_DESCRIPTION")
 			.setColor("Red");
 
-		return interaction.reply({ embeds: [invalidDataEmbed] });
+		return interaction.reply({
+			embeds: [invalidDataEmbed],
+			ephemeral: true,
+		});
 	}
 
+	const currentlyAvailableCustomBots =
+		await client.prisma.custombots.findMany({
+			where: {
+				userId: interaction.user.id,
+			},
+		});
+
+	if (
+		currentlyAvailableCustomBots
+			.map((bot) => bot.clientId)
+			.includes(clientId)
+	) {
+		const bot = await client.users.fetch(clientId);
+
+		const embed = new EmbedBuilder(client, interaction.locale)
+			.setDescription("CUSTOMBOT_ALREADY_EXISTS", {
+				botName: bot.username,
+				botId: clientId,
+			})
+			.setColor("Red");
+
+		return interaction.reply({ embeds: [embed], ephemeral: true });
+	}
 	await client.prisma.custombots.create({
 		data: {
 			token,

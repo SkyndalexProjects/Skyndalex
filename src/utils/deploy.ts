@@ -1,13 +1,9 @@
 import { SkyndalexClient } from "#classes";
-import type {
-	SlashCommandSubcommandBuilder,
-	SlashCommandBuilder,
-} from "discord.js";
+import { SlashCommandSubcommandBuilder, SlashCommandBuilder } from "discord.js";
 const parsedCommands: SlashCommandBuilder[] = [];
 
 export async function deploy(client: SkyndalexClient) {
 	const commands = client.commands;
-
 	if (parsedCommands.length === 0)
 		commands.forEach(async (cmd, key) => {
 			if (key.includes("/")) {
@@ -20,7 +16,7 @@ export async function deploy(client: SkyndalexClient) {
 				const command = cmd.data;
 				subcommands.forEach((subcmd) => {
 					command.addSubcommand(
-						subcmd.data as any as SlashCommandSubcommandBuilder,
+						subcmd.data as unknown as SlashCommandSubcommandBuilder,
 					);
 				});
 				parsedCommands.push(command);
@@ -28,5 +24,8 @@ export async function deploy(client: SkyndalexClient) {
 				parsedCommands.push(cmd.data);
 			}
 		});
-	await client.application.commands.set(parsedCommands);
+
+	client.rest.put(`/applications/${client.user.id}/commands`, {
+		body: parsedCommands,
+	});
 }

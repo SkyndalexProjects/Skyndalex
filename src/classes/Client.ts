@@ -17,7 +17,7 @@ import type { Command, Component, Modal } from "#types";
 import { checkMissingTranslations } from "#utils";
 const Nodes = [
 	{
-		name: "Localhost",
+		name: "SkyndalexLava",
 		url: process.env.LAVALINK_URL,
 		auth: process.env.LAVALINK_SERVER_PASSWORD,
 	},
@@ -81,7 +81,9 @@ export class SkyndalexClient extends Client {
 		);
 
 		this.shoukaku.on("ready", (name) =>
-			console.log(`[LAVALINK] :: Connected successfully to ${name}`),
+			this.logger.log(
+				`Lavalink: Client ${name} is connected to the server.`,
+			),
 		);
 
 		await this.loader.loadEvents(this, "../events");

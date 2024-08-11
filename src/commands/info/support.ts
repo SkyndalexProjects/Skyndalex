@@ -8,10 +8,15 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	return interaction.reply(
-		client.i18n.t("SUPPORT_INVITE", { lng: interaction.locale }),
-	);
+	return interaction.reply({
+		content: client.i18n.t("SUPPORT_INVITE", { lng: interaction.locale }),
+		ephemeral: true,
+	});
 }
-export const data = new SlashCommandBuilder()
-	.setName("support")
-	.setDescription("Get invite to the support");
+export const data = {
+	...new SlashCommandBuilder()
+		.setName("support")
+		.setDescription("Get invite to the support"),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+};

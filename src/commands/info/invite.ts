@@ -15,6 +15,8 @@ export async function run(
 		}),
 	);
 }
-export const data = new SlashCommandBuilder()
-	.setName("invite")
-	.setDescription("Invite");
+export const data = {
+	...new SlashCommandBuilder().setName("invite").setDescription("Invite"),
+	integration_types: [0, 1],
+	contexts: [0, 1, 2],
+};
