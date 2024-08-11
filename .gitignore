@@ -133,7 +133,7 @@ dist
 
 .idea
 src/configdeprecated.json
-.env
 .npmrc
-src/config.json
-src/commands/bot/test.js
+.env
+db
+.project.inlang

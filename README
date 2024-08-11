@@ -1,0 +1,14 @@
+# Running example
+
+```
+npm install
+npm run build
+npm run dev
+```
+
+## Links
+
+- [skyndalex.com](skyndalex.com)
+- [docs](docs.skyndalex.com)
+- [support](https://discord.gg/SqPUr5R7YF)
+
