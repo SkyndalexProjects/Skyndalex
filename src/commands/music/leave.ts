@@ -13,7 +13,7 @@ export async function run(
 	return interaction.reply({
 		content: client.i18n.t("LEAVE_SUCCESS"),
 		ephemeral: true,
-	})
+	});
 }
 
 export const data = new SlashCommandBuilder()

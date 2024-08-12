@@ -44,7 +44,9 @@ export class RadioPlayer {
 
 				await player.playTrack({ track: result.data.encoded });
 			} else {
-				client.logger.log(`No channel or radio station found for guild ${guildId}`);
+				client.logger.log(
+					`No channel or radio station found for guild ${guildId}`,
+				);
 			}
 		} catch (e) {
 			console.error(e);

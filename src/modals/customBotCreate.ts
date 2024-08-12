@@ -13,11 +13,15 @@ export async function run(
 		"utf-8",
 	);
 
-	if (isNaN(Number(clientId)) && clientId === process.env.CLIENT_ID) {
-		const invalidDataEmbed = new EmbedBuilder(client, interaction.locale)
-			.setDescription("CUSTOMBOT_INVALID_DATA_DESCRIPTION")
-			.setColor("Red");
+	const invalidDataEmbed = new EmbedBuilder(client, interaction.locale)
+		.setDescription("CUSTOMBOT_INVALID_DATA_DESCRIPTION")
+		.setColor("Red");
 
+	if (
+		isNaN(Number(clientId)) &&
+		clientId === process.env.CLIENT_ID &&
+		clientId.length < 17
+	) {
 		return interaction.reply({
 			embeds: [invalidDataEmbed],
 			ephemeral: true,
@@ -30,14 +34,22 @@ export async function run(
 				userId: interaction.user.id,
 			},
 		});
+	const bot = await client?.users?.fetch(clientId).catch(() => null);
 
+	if (!bot) {
+		const embed = new EmbedBuilder(client, interaction.locale)
+			.setDescription("CUSTOMBOT_NOT_FOUND", {
+				botId: clientId,
+			})
+			.setColor("Red");
+
+		return interaction.reply({ embeds: [embed], ephemeral: true });
+	}
 	if (
 		currentlyAvailableCustomBots
 			.map((bot) => bot.clientId)
 			.includes(clientId)
 	) {
-		const bot = await client.users.fetch(clientId);
-
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setDescription("CUSTOMBOT_ALREADY_EXISTS", {
 				botName: bot.username,
@@ -55,16 +67,6 @@ export async function run(
 			activity,
 		},
 	});
-
-	await client.prisma.customBotSettings.create({
-		data: {
-			clientId,
-			userId: interaction.user.id,
-			guildId: interaction.guild.id,
-		},
-	});
-
-	const bot = await client.users.fetch(clientId);
 
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setDescription("CUSTOMBOT_CREATED", {

@@ -55,7 +55,7 @@ export async function run(
 			},
 		});
 	}
-	
+
 	let availableSettings = await client.prisma.settings.findMany({
 		where: {
 			guildId: interaction.guild.id,

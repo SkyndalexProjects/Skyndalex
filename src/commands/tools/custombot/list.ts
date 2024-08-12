@@ -33,19 +33,19 @@ export async function run(
 		client,
 		interaction.locale,
 	)
-
 		.setPlaceholder("CUSTOM_BOT_SELECT_PLACEHOLDER")
 		.setCustomId("customBot")
 		.addOptions(
-			custombotsWithNames.map((custombot) => ({
-				label: custombot.name,
-				value: custombot.id.toString(),
-			})),
+			custombotsWithNames
+				.map((custombot: { name: string; id: number }) => ({
+					label: custombot.name,
+					value: custombot.id?.toString() ?? "unkown_bot",
+				}))
+				.filter((custombot) => custombot.value !== "unkown_bot"),
 		);
 
 	const botOnline = custombots[0].status === "online";
 
-	console.log(botOnline);
 	const powerState = new ButtonBuilder(client, interaction.locale)
 		.setCustomId(`customBotPowerState-${custombots[0].id}`)
 		.setLabel(
