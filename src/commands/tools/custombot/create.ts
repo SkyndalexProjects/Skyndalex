@@ -34,14 +34,12 @@ export async function run(
 	const token = new TextInputBuilder(client, interaction.locale)
 		.setCustomId("token")
 		.setLabel("CUSTOMBOT_TOKEN")
-		.setPlaceholder("CUSTOMBOT_TOKEN_PLACEHOLDER")
 		.setStyle(TextInputStyle.Short)
 		.setRequired(true);
 
 	const activity = new TextInputBuilder(client, interaction.locale)
 		.setCustomId("activity")
 		.setLabel("CUSTOMBOT_ACTIVITY")
-		.setPlaceholder("CUSTOMBOT_ACTIVITY_PLACEHOLDER")
 		.setStyle(TextInputStyle.Short)
 		.setRequired(false)
 		.setMaxLength(128);
