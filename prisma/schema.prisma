@@ -13,7 +13,7 @@ model settings {
   radioStation            String?
   autoRadioVoiceChannel   String?
   // autoRole                String?
-  ticketArchiveCategory    String?
+  // ticketArchiveCategory    String?
   // welcomeChannel         String?
   // goodbyeChannel         String?
   // antiPhishing            Boolean?
