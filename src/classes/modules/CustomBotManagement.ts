@@ -26,11 +26,20 @@ export class CustomBotManagement {
 	) {
 		return await Promise.all(
 			custombots.map(async (custombot) => {
-				const bot = await this.client.users.fetch(custombot.clientId);
-				return {
-					...custombot,
-					name: bot.username,
-				};
+				try {
+					const bot = await this.client.users.fetch(
+						custombot.clientId,
+					);
+					return {
+						...(custombot ?? {}),
+						name: bot.username ?? "Unknown",
+					};
+				} catch (error) {
+					return {
+						value: "unkown_bot",
+						name: "Unknown",
+					};
+				}
 			}),
 		);
 	}

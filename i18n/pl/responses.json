@@ -152,5 +152,6 @@
   "BOT_STATS_NODE_MEMORY": "Użycie pamięci: {{ memory }}",
   "BOT_STATS_DISCORDJS_VERSION": "Wersja Discord.js: {{ version }}",
   "BOT_INFO_UPTIME": "Czas działania",
-  "LEAVE_SUCCESS": "Pomyślnie opuściłem kanał głosowy."
+  "LEAVE_SUCCESS": "Pomyślnie opuściłem kanał głosowy.",
+  "CUSTOMBOT_NOT_FOUND": "Nie znaleziono bota"
 }

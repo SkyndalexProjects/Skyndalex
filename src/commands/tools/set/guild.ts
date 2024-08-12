@@ -59,12 +59,14 @@ export async function run(
 			keys
 				.filter((key) => key !== "guildId")
 				.map((key) => {
-					let value = availableSettings[0] ? availableSettings[0][key] : null;
+					let value = availableSettings[0]
+						? availableSettings[0][key]
+						: null;
 					if (value === null)
 						value = client.i18n.t("CONFIG_NOT_SET", {
 							lng: interaction.locale,
 						});
-	
+
 					return {
 						name: key,
 						value: value,

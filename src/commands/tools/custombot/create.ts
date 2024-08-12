@@ -11,7 +11,9 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	const getCustombots = await client.custombots.findCustomBots(interaction.user.id);
+	const getCustombots = await client.custombots.findCustomBots(
+		interaction.user.id,
+	);
 
 	const getUser = await client.prisma.users.findUnique({
 		where: {
