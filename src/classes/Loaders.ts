@@ -1,11 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { Collection } from "discord.js";
 import type { Command, Component, Modal } from "../types/structures.js";
-import type { SkyndalexClient } from "./Client.js";
 export class Loaders {
-	constructor(private readonly client: SkyndalexClient) {
-		this.client = client;
-	}
 	async loadCommands(path: string): Promise<Collection<string, Command>> {
 		const commands = new Collection<string, Command>();
 		const dir = await readdir(new URL(path, import.meta.url));
@@ -33,7 +29,7 @@ export class Loaders {
 		}
 		return commands;
 	}
-	async loadEvents(client: SkyndalexClient, path: string) {
+	async loadEvents(client, path: string) {
 		const files = await readdir(new URL(path, import.meta.url));
 		for (const file of files) {
 			if (!file.endsWith(".js") && !file.endsWith(".ts")) continue;
