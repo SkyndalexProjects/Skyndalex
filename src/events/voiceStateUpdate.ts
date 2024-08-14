@@ -1,5 +1,11 @@
 import { SkyndalexClient } from "#classes";
-import { type ColorResolvable, EmbedBuilder, NewsChannel, TextBasedChannel, VoiceState } from "discord.js";
+import {
+	type ColorResolvable,
+	EmbedBuilder,
+	NewsChannel,
+	TextBasedChannel,
+	VoiceState,
+} from "discord.js";
 
 export async function voiceStateUpdate(
 	client: SkyndalexClient,
@@ -109,10 +115,11 @@ export async function voiceStateUpdate(
 		embed.setDescription(description);
 		embed.setColor(color as ColorResolvable);
 
-		const channel = client.channels.cache.get(settings?.voiceStateUpdateChannel) as TextBasedChannel;
+		const channel = client.channels.cache.get(
+			settings?.voiceStateUpdateChannel,
+		) as TextBasedChannel;
 		if (channel) {
-		  channel.send({ embeds: [embed] });
-		};
-		
+			channel.send({ embeds: [embed] });
+		}
 	}
 }

@@ -1,9 +1,8 @@
-import { SkyndalexClient } from "#classes";
+import { CustomBot, SkyndalexClient } from "#classes";
 import { deploy } from "#utils";
 
 export async function ready(client: SkyndalexClient) {
-	await deploy(client);
-
+	const commands = await deploy(client);
 	if (client.user.id === process.env.CLIENT_ID) {
 		const customBots = await client.prisma.custombots.findMany();
 		for (const customBot of customBots) {
@@ -12,10 +11,17 @@ export async function ready(client: SkyndalexClient) {
 					`${customBot.userId}-${customBot.id}`,
 				);
 				if (!custombotInstance) {
-					const customClient = new SkyndalexClient(
+					const customClient = new CustomBot(
+						customBot.token,
+						commands,
+						client.components,
+						client.modals,
 						customBot.activity,
 					);
-					await customClient.init(customBot.token);
+
+					console.log("client.commands", client.commands);
+					await customClient.init();
+
 					client.customInstances.set(
 						`${customBot.userId}-${customBot.id}`,
 						customClient,

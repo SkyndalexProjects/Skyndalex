@@ -28,4 +28,6 @@ export async function deploy(client: SkyndalexClient) {
 	client.rest.put(`/applications/${client.user.id}/commands`, {
 		body: parsedCommands,
 	});
+	
+	return commands;
 }

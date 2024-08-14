@@ -1,5 +1,3 @@
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { PrismaClient } from "@prisma/client";
 import {
 	ActivityType,
@@ -8,14 +6,14 @@ import {
 	GatewayIntentBits,
 	Partials,
 } from "discord.js";
-import i18next from "i18next";
-import Backend from "i18next-fs-backend";
 import { Connectors, Shoukaku } from "shoukaku";
 import { Loaders, Logger } from "#classes";
-import { CaseManagement, CustomBotManagement, RadioPlayer } from "#modules";
 import type { Command, Component, Modal } from "#types";
-import { checkMissingTranslations } from "#utils";
-import type { CustomBot } from "#classes";
+import i18next from "i18next";
+import Backend from "i18next-fs-backend";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
 const Nodes = [
 	{
 		name: "SkyndalexLava",
@@ -24,24 +22,25 @@ const Nodes = [
 	},
 ];
 
-export class SkyndalexClient extends Client {
+export class CustomBot extends Client {
 	prisma = new PrismaClient();
 	logger = new Logger();
 	createdAt = performance.now();
 
-	commands: Collection<string, Command> = new Collection<string, Command>();
-	components: Collection<string, Component>;
-	modals: Collection<string, Modal>;
 	loader = new Loaders();
-	cases = new CaseManagement(this);
 	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
-	radio = new RadioPlayer(this);
-	custombots = new CustomBotManagement(this);
-	customInstances = new Map<string, CustomBot>();
-
+	commands: Collection<string, Command>;
+	modals: Collection<string, Modal>;
+	components: Collection<string, Component>;
 	i18n = i18next;
 
-	constructor(presence?: string) {
+	constructor(
+		token: string,
+		commands: Collection<string, Command>,
+		components: Collection<string, Component>,
+		modals: Collection<string, Modal>,
+		presence?: string,
+	) {
 		super({
 			intents: [
 				GatewayIntentBits.Guilds,
@@ -61,10 +60,16 @@ export class SkyndalexClient extends Client {
 				],
 			},
 		});
+
+		this.token = token;
+		this.commands = commands;
+		this.components = components;
+		this.modals = modals;
 	}
 
-	async init(token: string) {
+	async init() {
 		const __dirname = dirname(fileURLToPath(import.meta.url));
+
 		await this.i18n.use(Backend).init({
 			fallbackLng: "en-US",
 			ns: ["responses", "commands"],
@@ -88,30 +93,7 @@ export class SkyndalexClient extends Client {
 		);
 
 		await this.loader.loadEvents(this, "../events");
-		this.commands = await this.loader.loadCommands("../commands");
 
-		this.components = await this.loader.loadComponents("../components");
-		this.modals = await this.loader.loadModals("../modals");
-
-		this.customInstances = new Map<string, CustomBot>();
-
-		checkMissingTranslations();
-
-		await this.login(token);
-
-		process.on("unhandledRejection", async (reason, p) => {
-			console.log(" [antiCrash] :: Unhandled Rejection/Catch");
-			console.log(reason, p);
-		});
-
-		process.on("uncaughtException", async (err, origin) => {
-			console.log(" [antiCrash] :: Uncaught Exception/Catch");
-			console.log(err, origin);
-		});
-
-		process.on("uncaughtExceptionMonitor", async (err, origin) => {
-			console.log(" [antiCrash] :: Uncaught Exception/Catch (MONITOR)");
-			console.log(err, origin);
-		});
+		this.login(this.token);
 	}
 }

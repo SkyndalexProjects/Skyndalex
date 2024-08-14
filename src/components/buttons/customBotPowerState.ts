@@ -6,7 +6,7 @@ import {
 	type MessageComponentInteraction,
 } from "discord.js";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
-import { SkyndalexClient } from "#classes";
+import { CustomBot, SkyndalexClient } from "#classes";
 export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction,
@@ -38,13 +38,19 @@ export async function run(
 		);
 
 		if (!instance) {
-			const customClient = new SkyndalexClient(custombot.activity);
+			const customClient = new CustomBot(
+				custombot.token,
+				client.commands,
+				client.components,
+				client.modals,
+				custombot.activity,
+			);
 
 			client.logger.log(
 				`(customBotPowertState): RUNNING custom bot ${bot.username} with id ${custombot.id} for user ${interaction.user.username} [${interaction.user.id}]`,
 			);
 
-			await customClient.init(custombot.token);
+			await customClient.init();
 
 			await client.custombots.updatePowerState(
 				custombot.id.toString(),
