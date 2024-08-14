@@ -139,6 +139,7 @@
   "CUSTOMBOT_CREATED": "Successfully created a custom bot named **{{ botName }}**.",
   "CUSTOMBOT_INVALID_DATA_DESCRIPTION": "No valid data provided. Make sure you have entered the correct data and try again.",
   "CUSTOMBOT_ALREADY_EXISTS": "The bot already exists in our database.",
+  
   "BOT_INFO_CACHE_STATS": "Cache stats",
   "BOT_STATS_GUILD_COUNT": "Servers: {{ count }}",
   "BOT_STATS_USERAPPS_COUNT": "User apps installs: {{ count }}",
@@ -154,6 +155,9 @@
   "BOT_INFO_UPTIME": "Uptime",
   "LEAVE_SUCCESS": "Left voice channel",
   "CUSTOMBOT_NOT_FOUND": "Bot not found",
+  "CUSTOMBOT_CREATE": "Create",
+  "CUSTOMBOT_TOKEN": "Token",
+  "CUSTOMBOT_ACTIVITY": "Activity",
   "USER_MOVED": "User **{{ user }}** moved to <#{{ newChannelId }}> from <#{{ oldChannelId }}>",
   "USER_LEFT": "User **{{ user }}** left voice channel <#{{ channelId }}>",
   "USER_JOINED": "User **{{ user }}** joined voice channel <#{{ channelId }}>"
