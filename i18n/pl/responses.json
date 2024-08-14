@@ -156,5 +156,8 @@
   "CUSTOMBOT_NOT_FOUND": "Nie znaleziono bota",
   "CUSTOMBOT_CREATE": "Create custom bot",
   "CUSTOMBOT_TOKEN": "Token",
-  "CUSTOMBOT_ACTIVITY": "Activity"
+  "CUSTOMBOT_ACTIVITY": "Activity",
+  "USER_MOVED": "Użytkownik **{{ user }}** przeniósł/został przeniesiony do <#{{ newChannelId }}> z <#{{ oldChannelId }}>",
+  "USER_LEFT": "Użytkownik **{{ user }}** opuścił kanał głosowy <#{{ channelId }}>",
+  "USER_JOINED": "Użytkownik **{{ user }}** dołączył na kanał głosowy <#{{ channelId }}>"
 }

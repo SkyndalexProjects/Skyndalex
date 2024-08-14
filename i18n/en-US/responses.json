@@ -153,5 +153,8 @@
   "BOT_STATS_DISCORDJS_VERSION": "Discord.js version: {{ version }}",
   "BOT_INFO_UPTIME": "Uptime",
   "LEAVE_SUCCESS": "Left voice channel",
-  "CUSTOMBOT_NOT_FOUND": "Bot not found"
+  "CUSTOMBOT_NOT_FOUND": "Bot not found",
+  "USER_MOVED": "User **{{ user }}** moved to <#{{ newChannelId }}> from <#{{ oldChannelId }}>",
+  "USER_LEFT": "User **{{ user }}** left voice channel <#{{ channelId }}>",
+  "USER_JOINED": "User **{{ user }}** joined voice channel <#{{ channelId }}>"
 }
