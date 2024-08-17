@@ -19,7 +19,6 @@ export async function ready(client: SkyndalexClient) {
 						customBot.activity,
 					);
 
-					console.log("client.commands", client.commands);
 					await customClient.init();
 
 					client.customInstances.set(
