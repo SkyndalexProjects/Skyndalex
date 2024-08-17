@@ -12,7 +12,7 @@ export async function run(
 	const categories = client.commands
 		.map((c) => c.category)
 		.filter((v, i, a) => a.indexOf(v) === i);
-		
+
 	const fields = categories.map((category) => ({
 		name: category.charAt(0).toUpperCase() + category.slice(1),
 		value: client.commands
@@ -27,7 +27,19 @@ export async function run(
 		.setColor("Green")
 		.addFields(fields);
 
+	if (!interaction.guild) {
+		const embed = new EmbedBuilder(client, interaction.locale)
+		.setTitle("Help")
+		.setDescription("Help for userapps")
+		.setColor("Green")
+		.addFields([
+			{ name: "Userapps", value: client.commands.filter((c) => c.data.integration_types).map((c) => `</${c.data.name}:0>`).join(", ") },
+		])
+		return interaction.reply({ embeds: [embed] });
+	};
+	
 	return interaction.reply({ embeds: [embed] });
+
 }
 
 export const data = {
