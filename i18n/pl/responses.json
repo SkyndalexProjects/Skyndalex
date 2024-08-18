@@ -159,5 +159,7 @@
   "CUSTOMBOT_ACTIVITY": "Status",
   "USER_MOVED": "Użytkownik **{{ user }}** przeniósł/został przeniesiony do <#{{ newChannelId }}> z <#{{ oldChannelId }}>",
   "USER_LEFT": "Użytkownik **{{ user }}** opuścił kanał głosowy <#{{ channelId }}>",
-  "USER_JOINED": "Użytkownik **{{ user }}** dołączył na kanał głosowy <#{{ channelId }}>"
+  "USER_JOINED": "Użytkownik **{{ user }}** dołączył na kanał głosowy <#{{ channelId }}>",
+  "SYSTEM_UNKOWN_ERROR": "Wystąpił nieznany błąd. Spróbuj ponownie.",
+  "IMG_ERROR": "Wystąpił błąd podczas generowania obrazka. Spróbuj ponownie."
 }
