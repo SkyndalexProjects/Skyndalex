@@ -8,7 +8,9 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
+	 client.emit("guildMemberRemove", interaction.member)
 	await interaction.reply(`Ping: \`\`\`yaml\n${client.ws.ping}ms\`\`\``);
+	
 }
 export const data = new SlashCommandBuilder()
 	.setName("ping")
