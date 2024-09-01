@@ -26,9 +26,9 @@ export async function run(
 		const prompt = interaction.options.getString("prompt");
 		const defaultModel = "stabilityai/stable-diffusion-2-1";
 		const model = interaction?.options?.getString("model") || defaultModel;
-	
+
 		const queuePosition = imageQueue.size + 1;
-	
+
 		if (model !== defaultModel) {
 			if (!(interaction.channel as BaseGuildTextChannel).nsfw) {
 				const embed = new EmbedBuilder(client, interaction.locale)
@@ -37,14 +37,14 @@ export async function run(
 				return interaction.reply({ embeds: [embed] });
 			}
 		}
-	
+
 		if (!imageQueue.has(interaction.user.id)) {
 			imageQueue.set(taskId, {
 				status: "queued",
 				position: queuePosition,
 				input: prompt,
 			});
-	
+
 			const queueMessage = new EmbedBuilder(client, interaction.locale)
 				.setColor("#3498db")
 				.setDescription("IMG_PROCESSING", {
@@ -55,11 +55,11 @@ export async function run(
 				.setFooter({
 					text: "Powered by Huggingface using Skyndalex bot",
 				});
-	
+
 			await interaction.reply({
 				embeds: [queueMessage],
 			});
-	
+
 			const response = await hf.textToImage({
 				inputs: prompt,
 				model: model,
@@ -67,7 +67,7 @@ export async function run(
 					negative_prompt: "blurry",
 				},
 			});
-	
+
 			if (!interaction.deferred && !interaction.replied) {
 				const embed = new EmbedBuilder(client, interaction.locale)
 					.setDescription("SYSTEM_UNKOWN_ERROR")
@@ -85,7 +85,7 @@ export async function run(
 			const imageBuffer =
 				(await response.arrayBuffer()) as HuggingFaceImage["generatedImage"];
 			const image = new AttachmentBuilder(Buffer.from(imageBuffer));
-	
+
 			const deleteAttachment =
 				new ActionRowBuilder<ButtonBuilder>().addComponents(
 					new ButtonBuilder(client, interaction.locale)
@@ -105,13 +105,13 @@ export async function run(
 					text: "IMG_GENERATED_NSFW_WARNING",
 				})
 				.setColor("Green");
-	
+
 			await interaction.editReply({
 				embeds: [embed],
 				files: [image],
 				components: [deleteAttachment],
 			});
-	
+
 			await interaction.followUp({
 				content: client.i18n.t("IMAGE_READY", {
 					userId: interaction.user.id,

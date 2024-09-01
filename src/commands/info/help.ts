@@ -29,17 +29,22 @@ export async function run(
 
 	if (!interaction.guild) {
 		const embed = new EmbedBuilder(client, interaction.locale)
-		.setTitle("Help")
-		.setDescription("Help for userapps")
-		.setColor("Green")
-		.addFields([
-			{ name: "Userapps", value: client.commands.filter((c) => c.data.integration_types).map((c) => `</${c.data.name}:0>`).join(", ") },
-		])
+			.setTitle("Help")
+			.setDescription("Help for userapps")
+			.setColor("Green")
+			.addFields([
+				{
+					name: "Userapps",
+					value: client.commands
+						.filter((c) => c.data.integration_types)
+						.map((c) => `</${c.data.name}:0>`)
+						.join(", "),
+				},
+			]);
 		return interaction.reply({ embeds: [embed] });
-	};
-	
-	return interaction.reply({ embeds: [embed] });
+	}
 
+	return interaction.reply({ embeds: [embed] });
 }
 
 export const data = {

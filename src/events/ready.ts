@@ -1,6 +1,6 @@
 import { CustomBot, SkyndalexClient } from "#classes";
 import { deploy } from "#utils";
-
+import pc from "picocolors";
 export async function ready(client: SkyndalexClient) {
 	const commands = await deploy(client);
 	if (client.user.id === process.env.CLIENT_ID) {
@@ -29,12 +29,15 @@ export async function ready(client: SkyndalexClient) {
 			}
 		}
 	}
+	let logStatus =
+		client.user.id !== process.env.CLIENT_ID
+			? pc.red(`[CUSTOMBOT]`)
+			: pc.green(`[BOT]`);
 
-	client.logger.success(
-		`${client.user.username}: Ready in ${(
-			(performance.now() - client.createdAt) /
-			1000
-		).toFixed(2)}s (commands: ${client.commands.size}, components: ${
+	console.log(
+		`${logStatus} ${client.user.username}: Ready in ${
+			(performance.now() - client.createdAt) / 1000
+		}s (commands: ${client.commands.size}, components: ${
 			client.components.size
 		}, guilds: ${client.guilds.cache.size}, users: ${
 			client.users.cache.size
