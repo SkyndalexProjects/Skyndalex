@@ -62,14 +62,22 @@ export async function run(
 					let value = availableSettings[0]
 						? availableSettings[0][key]
 						: null;
-					if (value === null)
+
+					if (value === null) {
 						value = client.i18n.t("CONFIG_NOT_SET", {
 							lng: interaction.locale,
 						});
-
+					} else if (key.endsWith("Channel")) {
+						value = `<#${value}>`;
+					} else if (key.endsWith("Role")) {
+						if (value !== null) {
+							value = `<@&${value}>`;
+						}
+					}
+					
 					return {
 						name: key,
-						value: value,
+						value,
 						inline: true,
 					};
 				}),
