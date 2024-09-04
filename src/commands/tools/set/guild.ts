@@ -74,7 +74,7 @@ export async function run(
 							value = `<@&${value}>`;
 						}
 					}
-					
+
 					return {
 						name: key,
 						value,

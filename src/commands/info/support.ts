@@ -16,7 +16,7 @@ export async function run(
 export const data = {
 	...new SlashCommandBuilder()
 		.setName("support")
-		.setDescription("Get invite to the support"),
-	integration_types: [0, 1],
-	contexts: [0, 1, 2],
+		.setDescription("Get invite to the support")
+		.setIntegrationTypes([0, 1])
+		.setContexts([0, 1, 2])
 };

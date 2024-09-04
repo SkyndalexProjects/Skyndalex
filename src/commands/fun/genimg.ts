@@ -144,9 +144,9 @@ export const data = {
 				.setName("model")
 				.setDescription("Model to use")
 				.setAutocomplete(true),
-		),
-	integration_types: [0, 1],
-	contexts: [0, 1, 2],
+		)
+		.setIntegrationTypes([0, 1])
+		.setContexts([0, 1, 2])
 };
 
 export async function autocomplete(interaction: AutocompleteInteraction) {

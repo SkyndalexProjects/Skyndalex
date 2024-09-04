@@ -96,7 +96,7 @@ export const data = {
 				.setName("generate-image")
 				.setDescription("Generate image from anime gallery?")
 				.setRequired(false),
-		),
-	integration_types: [0, 1],
-	contexts: [0, 1, 2],
+		)
+		.setIntegrationTypes([0, 1])
+		.setContexts([0, 1, 2])
 };

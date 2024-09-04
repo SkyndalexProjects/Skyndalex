@@ -48,7 +48,7 @@ export async function run(
 }
 
 export const data = {
-	...new SlashCommandBuilder().setName("help").setDescription("help"),
-	integration_types: [0, 1],
-	contexts: [0, 1, 2],
+	...new SlashCommandBuilder().setName("help").setDescription("help")
+	.setIntegrationTypes([0, 1])
+	.setContexts([0, 1, 2])
 };

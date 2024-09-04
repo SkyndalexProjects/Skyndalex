@@ -69,7 +69,7 @@ export async function run(
 	return interaction.reply({ embeds: [embed] });
 }
 export const data = {
-	...new SlashCommandBuilder().setName("stats").setDescription("Bot stats"),
-	integration_types: [0, 1],
-	contexts: [0, 1, 2],
+	...new SlashCommandBuilder().setName("stats").setDescription("Bot stats")
+	.setIntegrationTypes([0, 1])
+	.setContexts([0, 1, 2])
 };

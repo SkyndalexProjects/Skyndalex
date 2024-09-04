@@ -23,7 +23,7 @@ export async function run(
 export const data = {
 	...new SlashCommandBuilder()
 		.setName("dog")
-		.setDescription("Generate random dog"),
-	integration_types: [0, 1],
-	contexts: [0, 1, 2],
+		.setDescription("Generate random dog")
+		.setIntegrationTypes([0, 1])
+		.setContexts([0, 1, 2])
 };
