@@ -1,6 +1,5 @@
-import type { MessageComponentInteraction } from "discord.js";
+import { type MessageComponentInteraction, EmbedBuilder } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-
 export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction<"cached">,
@@ -22,21 +21,14 @@ export async function run(
 			signedCount: getPetition.signedCount + 1,
 		},
 	});
+	const embed = EmbedBuilder.from(interaction.message.embeds[0])
+		.setFooter({
+			text: client.i18n.t("PETITION_CREATED_FOOTER", {
+				lng: interaction.locale,
+				signs: getPetition.signedCount,
+			}),
+			iconURL: client.user.displayAvatarURL(),
+		})
 
-	await interaction.update({
-		embeds: [
-			{
-				title: interaction.message.embeds[0].title,
-				description: interaction.message.embeds[0].description,
-				color: interaction.message.embeds[0].color,
-				footer: {
-					text: client.i18n.t("PETITION_CREATED_FOOTER", {
-						lng: interaction.locale,
-						signs: getPetition.signedCount + 1,
-					}),
-					icon_url: client.user?.displayAvatarURL(),
-				},
-			},
-		],
-	});
+	await interaction.update({ embeds: [embed] });
 }
