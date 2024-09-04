@@ -40,5 +40,5 @@ export const data = {
 				.setMinLength(1),
 		)
 		.setIntegrationTypes([0, 1])
-		.setContexts([0, 1, 2])
+		.setContexts([0, 1, 2]),
 };

@@ -146,7 +146,7 @@ export const data = {
 				.setAutocomplete(true),
 		)
 		.setIntegrationTypes([0, 1])
-		.setContexts([0, 1, 2])
+		.setContexts([0, 1, 2]),
 };
 
 export async function autocomplete(interaction: AutocompleteInteraction) {

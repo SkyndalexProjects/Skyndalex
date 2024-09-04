@@ -88,7 +88,7 @@ export const data = {
 			option.setName("server").setDescription("Server").setRequired(true),
 		)
 		.setIntegrationTypes([0, 1])
-		.setContexts([0, 1, 2])
+		.setContexts([0, 1, 2]),
 };
 
 export async function autocomplete(interaction) {

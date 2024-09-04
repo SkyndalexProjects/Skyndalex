@@ -64,3 +64,8 @@ model customBotSettings {
   autoRadioVoiceChannel String?
   guildId String
 }
+model petitions {
+  id Int @id @default(autoincrement())
+  author String
+  signedCount Int
+}

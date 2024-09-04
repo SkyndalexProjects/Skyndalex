@@ -25,5 +25,5 @@ export const data = {
 		.setName("dog")
 		.setDescription("Generate random dog")
 		.setIntegrationTypes([0, 1])
-		.setContexts([0, 1, 2])
+		.setContexts([0, 1, 2]),
 };

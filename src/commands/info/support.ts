@@ -18,5 +18,5 @@ export const data = {
 		.setName("support")
 		.setDescription("Get invite to the support")
 		.setIntegrationTypes([0, 1])
-		.setContexts([0, 1, 2])
+		.setContexts([0, 1, 2]),
 };

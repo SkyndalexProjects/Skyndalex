@@ -16,7 +16,9 @@ export async function run(
 	);
 }
 export const data = {
-	...new SlashCommandBuilder().setName("invite").setDescription("Invite")
-	.setIntegrationTypes([0, 1])
-	.setContexts([0, 1, 2])
+	...new SlashCommandBuilder()
+		.setName("invite")
+		.setDescription("Invite")
+		.setIntegrationTypes([0, 1])
+		.setContexts([0, 1, 2]),
 };

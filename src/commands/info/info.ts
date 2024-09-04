@@ -27,7 +27,9 @@ export async function run(
 	return interaction.reply({ embeds: [embed] });
 }
 export const data = {
-	...new SlashCommandBuilder().setName("info").setDescription("Bot info")
-	.setIntegrationTypes([0, 1])
-	.setContexts([0, 1, 2])
+	...new SlashCommandBuilder()
+		.setName("info")
+		.setDescription("Bot info")
+		.setIntegrationTypes([0, 1])
+		.setContexts([0, 1, 2]),
 };

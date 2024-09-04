@@ -75,4 +75,4 @@ export const data = new SlashCommandSubcommandBuilder()
 			.setRequired(true)
 			.setMaxLength(200)
 			.setMinLength(1),
-	)
+	);
