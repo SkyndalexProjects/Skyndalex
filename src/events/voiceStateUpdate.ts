@@ -2,7 +2,7 @@ import { SkyndalexClient } from "#classes";
 import {
 	type ColorResolvable,
 	EmbedBuilder,
-	NewsChannel,
+	type BaseGuildTextChannel,
 	TextBasedChannel,
 	VoiceState,
 } from "discord.js";
@@ -119,7 +119,7 @@ export async function voiceStateUpdate(
 			settings?.voiceStateUpdateChannel,
 		) as TextBasedChannel;
 		if (channel) {
-			channel.send({ embeds: [embed] });
+			await (channel as BaseGuildTextChannel).send({ embeds: [embed] });
 		}
 	}
 }
