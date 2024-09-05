@@ -35,3 +35,8 @@ export interface LocaleFieldOptions {
 	rawValue?: string;
 	inline?: boolean;
 }
+export interface radioStatus {
+	requestedBy: string;
+	radioStation: string;
+	resourceUrl: string;
+}

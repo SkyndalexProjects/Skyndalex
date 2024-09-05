@@ -13,7 +13,7 @@ import Backend from "i18next-fs-backend";
 import { Connectors, Shoukaku } from "shoukaku";
 import { Loaders, Logger } from "#classes";
 import { CaseManagement, CustomBotManagement, RadioPlayer } from "#modules";
-import type { Command, Component, Modal } from "#types";
+import type { Command, Component, Modal, radioStatus } from "#types";
 import { checkMissingTranslations } from "#utils";
 import type { CustomBot } from "#classes";
 const Nodes = [
@@ -38,6 +38,7 @@ export class SkyndalexClient extends Client {
 	radio = new RadioPlayer(this);
 	custombots = new CustomBotManagement(this);
 	customInstances = new Map<string, CustomBot>();
+	radioInstances = new Map<string, radioStatus>();
 
 	i18n = i18next;
 
@@ -95,7 +96,8 @@ export class SkyndalexClient extends Client {
 		this.modals = await this.loader.loadModals("../modals");
 
 		this.customInstances = new Map<string, CustomBot>();
-
+		this.radioInstances = new Map<string, radioStatus>();
+		
 		checkMissingTranslations();
 
 		await this.login(token);

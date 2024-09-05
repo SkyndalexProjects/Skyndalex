@@ -72,6 +72,7 @@ export async function voiceStateUpdate(
 
 			if (oldState.channel.members.size === 1) {
 				await client.radio.stopRadio(client, newState.guild.id);
+				client.radioInstances.delete(newState.guild.id);
 			}
 		} else {
 			description = client.i18n.t("USER_MOVED", {
@@ -95,6 +96,7 @@ export async function voiceStateUpdate(
 					}
 				} else if (oldState.channel.members.size <= 1) {
 					await client.radio.stopRadio(client, newState.guild.id);
+					client.radioInstances.delete(newState.guild.id);
 				}
 			} else {
 				if (newState.channel.id === settings?.autoRadioVoiceChannel) {
@@ -106,6 +108,7 @@ export async function voiceStateUpdate(
 					}
 				} else if (oldState.channel.members.size <= 1) {
 					await client.radio.stopRadio(client, newState.guild.id);
+					client.radioInstances.delete(newState.guild.id);
 				}
 			}
 		}

@@ -73,7 +73,15 @@ export async function run(
 			const result = (await player.node.rest.resolve(
 				resourceUrl,
 			)) as TrackResult;
+			client.radioInstances.delete(interaction.guild.id);
+			
 			await player.playTrack({ track: result.data.encoded });
+
+			client.radioInstances.set(interaction.guild.id, {
+				requestedBy: interaction.user.id,
+				radioStation: id,
+				resourceUrl,
+			});
 
 			embed.setTitle("RADIO_CHANGED").setColor("Blue");
 
@@ -88,6 +96,12 @@ export async function run(
 			shardId: 0,
 		});
 
+		client.radioInstances.set(interaction.guild.id, {
+			requestedBy: interaction.user.id,
+			radioStation: id,
+			resourceUrl,
+		});
+		
 		const result = (await player.node.rest.resolve(
 			resourceUrl,
 		)) as TrackResult;

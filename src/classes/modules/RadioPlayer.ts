@@ -40,6 +40,12 @@ export class RadioPlayer {
 					shardId: 0,
 				});
 
+				client.radioInstances.set(guildId, {
+					requestedBy: client.user.id,
+					radioStation,
+					resourceUrl,
+				});
+
 				const result = await player.node.rest.resolve(resourceUrl);
 
 				await player.playTrack({ track: result.data.encoded });

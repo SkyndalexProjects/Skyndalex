@@ -25,7 +25,15 @@ export async function run(
 		const result = (await player.node.rest.resolve(
 			resourceUrl,
 		)) as TrackResult;
+
+		client.radioInstances.delete(interaction.guild.id);
 		await player.playTrack({ track: result.data.encoded });
+
+		client.radioInstances.set(interaction.guild.id, {
+			requestedBy: interaction.user.id,
+			radioStation: value,
+			resourceUrl,
+		});
 
 		return interaction.reply({
 			content: `🔁 Switched to **${result.data.info.title}**`,
@@ -41,7 +49,15 @@ export async function run(
 
 	const result = (await player.node.rest.resolve(resourceUrl)) as TrackResult;
 
+	client.radioInstances.delete(interaction.guild.id);
+	
 	await player.playTrack({ track: result.data.encoded });
+
+	client.radioInstances.set(interaction.guild.id, {
+		requestedBy: interaction.user.id,
+		radioStation: value,
+		resourceUrl,
+	});
 
 	return interaction.reply({
 		content: `▶️ Playing **${result.data.info.title}**`,
