@@ -97,5 +97,5 @@ export async function run(
 	});
 }
 export const data = new SlashCommandBuilder()
-	.setName("liked-radio")
+	.setName("liked-radios")
 	.setDescription("Show your favourties radios");

@@ -21,14 +21,13 @@ export async function run(
 			signedCount: getPetition.signedCount + 1,
 		},
 	});
-	const embed = EmbedBuilder.from(interaction.message.embeds[0])
-		.setFooter({
-			text: client.i18n.t("PETITION_CREATED_FOOTER", {
-				lng: interaction.locale,
-				signs: getPetition.signedCount,
-			}),
-			iconURL: client.user.displayAvatarURL(),
-		})
+	const embed = EmbedBuilder.from(interaction.message.embeds[0]).setFooter({
+		text: client.i18n.t("PETITION_CREATED_FOOTER", {
+			lng: interaction.locale,
+			signs: getPetition.signedCount,
+		}),
+		iconURL: client.user.displayAvatarURL(),
+	});
 
 	await interaction.update({ embeds: [embed] });
 }

@@ -97,7 +97,7 @@ export class SkyndalexClient extends Client {
 
 		this.customInstances = new Map<string, CustomBot>();
 		this.radioInstances = new Map<string, radioStatus>();
-		
+
 		checkMissingTranslations();
 
 		await this.login(token);

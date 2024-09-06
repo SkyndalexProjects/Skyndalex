@@ -18,49 +18,16 @@ export async function run(
 		});
 	}
 
-	const resourceUrl = `https://radio.garden/api/ara/content/listen/${value}/channel.mp3`;
-
-	if (client.shoukaku.connections.has(interaction.guild.id)) {
-		const player = client.shoukaku.players.get(interaction.guild.id);
-		const result = (await player.node.rest.resolve(
-			resourceUrl,
-		)) as TrackResult;
-
-		client.radioInstances.delete(interaction.guild.id);
-		await player.playTrack({ track: result.data.encoded });
-
-		client.radioInstances.set(interaction.guild.id, {
-			requestedBy: interaction.user.id,
-			radioStation: value,
-			resourceUrl,
-		});
-
-		return interaction.reply({
-			content: `🔁 Switched to **${result.data.info.title}**`,
-			ephemeral: true,
-		});
-	}
-
-	const player = await client.shoukaku.joinVoiceChannel({
-		guildId: interaction.guild.id,
-		channelId: memberChannel.id,
-		shardId: 0,
-	});
-
-	const result = (await player.node.rest.resolve(resourceUrl)) as TrackResult;
-
-	client.radioInstances.delete(interaction.guild.id);
-	
-	await player.playTrack({ track: result.data.encoded });
-
-	client.radioInstances.set(interaction.guild.id, {
-		requestedBy: interaction.user.id,
-		radioStation: value,
-		resourceUrl,
-	});
+	const playRadio = await client.radio.startRadio(
+		client,
+		value,
+		interaction.guild.id,
+		memberChannel.id,
+		interaction.user.id,
+	);
 
 	return interaction.reply({
-		content: `▶️ Playing **${result.data.info.title}**`,
+		content: `▶️ Playing **${playRadio.json.data.title}**`,
 		ephemeral: true,
 	});
 }
