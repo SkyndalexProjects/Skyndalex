@@ -35,6 +35,7 @@ export async function run(
         })
         .setColor("Green")
         .setTimestamp();
+        
     return await interaction.reply({
         embeds: [embed],
     });

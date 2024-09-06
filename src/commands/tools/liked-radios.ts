@@ -41,7 +41,7 @@ export async function run(
 		new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 			new StringSelectMenuBuilder(client, interaction.locale)
 				.setPlaceholder("RADIO_FAVOURTIES_PLAY")
-				.setCustomId("favourtiesPlay")
+				.setCustomId("playLikedRadio")
 				.addOptions(
 					favourties
 						.slice(
@@ -58,12 +58,12 @@ export async function run(
 	const paginationButtons =
 		new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder(client, interaction.locale)
-				.setCustomId(`favourtiesList-page_${currentPage - 1}`)
+				.setCustomId(`likedRadios-page_${currentPage - 1}`)
 				.setLabel("PAGINATION_EMBED_PREVIOUS")
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(currentPage === 1),
 			new ButtonBuilder(client, interaction.locale)
-				.setCustomId(`favourtiesList-page_${currentPage + 1}`)
+				.setCustomId(`likedRadios-page_${currentPage + 1}`)
 				.setLabel("PAGINATION_EMBED_NEXT")
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(currentPage === totalPages),
@@ -97,5 +97,5 @@ export async function run(
 	});
 }
 export const data = new SlashCommandBuilder()
-	.setName("favourties")
-	.setDescription("Your radio favourites");
+	.setName("liked-radio")
+	.setDescription("Show your favourties radios");

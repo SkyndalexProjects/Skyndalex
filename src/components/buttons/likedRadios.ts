@@ -58,7 +58,7 @@ export async function run(
 			new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 				new StringSelectMenuBuilder(client, interaction.locale)
 					.setPlaceholder("RADIO_FAVOURTIES_PLAY")
-					.setCustomId("favourtiesPlay")
+					.setCustomId("playLikedRadio")
 					.addOptions(
 						favourites.map((favourite) => ({
 							label: favourite.radioName,
