@@ -167,5 +167,10 @@
   "PETITION_CREATED_FOOTER": "Number of signatures: {{ signs }} | Will automatically close in one hour.",
   "PETITION_CLOSE": "Close",
   "PETITION_SIGN": "Sign",
-  "PETITION_CLOSE_NOT_AUTHOR": "You are not the author of this petition."
+  "PETITION_CLOSE_NOT_AUTHOR": "You are not the author of this petition.",
+  "ALREADY_SIGNED": "You have already signed this petition.",
+  "RADIO_STATUS_TITLE": "Radio Status",
+  "RADIO_STATUS_DESC": "Radio Title: {{ title }} | Played by: <@{{ requestedBy }}> | Voice Channel: <#{{ voiceChannelId }}>",
+  "RADIO_NOT_PLAYING": "Radio is not playing."
+
 }
