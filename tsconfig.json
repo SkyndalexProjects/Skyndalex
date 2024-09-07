@@ -13,6 +13,7 @@
       "#utils": ["utils/index.js"],
       "#types": ["types/index.js"],
       "#modules": ["classes/modules/index.js"],
+      "#classes": ["classes/index.js"],
     },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

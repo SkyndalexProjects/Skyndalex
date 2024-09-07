@@ -1,5 +1,6 @@
 import type { SkyndalexClient } from "classes/Client.js";
 import {
+	type AutocompleteInteraction,
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
@@ -91,7 +92,7 @@ export const data = {
 		.setContexts([0, 1, 2]),
 };
 
-export async function autocomplete(interaction) {
+export async function autocomplete(interaction: AutocompleteInteraction) {
 	const focusedValue = interaction.options.getFocused();
 	const filteredGames = Object.keys(games).filter((game) =>
 		game.startsWith(focusedValue),

@@ -34,7 +34,7 @@ export async function run(
 			reason,
 			interaction.user.id,
 		);
-		const messagesToDeleteSeconds = Math.floor((await ms(messages)) / 1000);
+		const messagesToDeleteSeconds = Math.floor(ms(String(messages)) / 1000);
 
 		await interaction.guild.members.ban(member.id, {
 			reason: reason,

@@ -7,7 +7,7 @@ import {
 	Partials,
 } from "discord.js";
 import { Connectors, Shoukaku } from "shoukaku";
-import { Loaders, Logger } from "#classes";
+import { Loaders, Logger, SkyndalexClient } from "#classes";
 import type { Command, Component, Modal } from "#types";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
@@ -92,7 +92,7 @@ export class CustomBot extends Client {
 			),
 		);
 
-		await this.loader.loadEvents(this, "../events");
+		await this.loader.loadEvents(this as unknown as SkyndalexClient, "../events");
 
 		this.login(this.token);
 	}
