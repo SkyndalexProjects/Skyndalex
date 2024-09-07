@@ -11,7 +11,11 @@ export class Loaders {
 				new URL(`${path}/${category}`, import.meta.url),
 			);
 			for (const [name, command] of files) {
-				commands.set(name, command as Command);
+				const commandWithCategory = {
+					...(command as object),
+					category,
+				};
+				commands.set(name, commandWithCategory as unknown as Command);
 			}
 
 			for (const directory of directoriesFound) {
@@ -23,7 +27,14 @@ export class Loaders {
 				);
 
 				for (const [name, command] of files) {
-					commands.set(`${directory}/${name}`, command as Command);
+					const commandWithCategory = {
+						...(command as object),
+						category,
+					};
+					commands.set(
+						`${directory}/${name}`,
+						commandWithCategory as unknown as Command,
+					);
 				}
 			}
 		}

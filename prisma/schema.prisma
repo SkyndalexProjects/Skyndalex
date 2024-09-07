@@ -12,12 +12,11 @@ model settings {
   voiceStateUpdateChannel String?
   radioStation            String?
   autoRadioVoiceChannel   String?
-  // autoRole                String?
-  // ticketArchiveCategory    String?
-  // welcomeChannel         String?
-  // goodbyeChannel         String?
-  // antiPhishing            Boolean?
+  autoRole                String?
+  welcomeChannel         String?
+  goodbyeChannel         String?
 }
+
 model users {
   type String @default("normal")
   userId    String @id
@@ -64,4 +63,14 @@ model customBotSettings {
   radioStation String?
   autoRadioVoiceChannel String?
   guildId String
+}
+model petitions {
+  id Int @id @default(autoincrement())
+  author String
+  signedCount Int
+}
+model alreadySignedPetitions {
+  id Int @id @default(autoincrement())
+  userId String
+  petitionId Int
 }

@@ -94,9 +94,9 @@ export const data = {
 				.setName("model")
 				.setDescription("Model for the AI")
 				.setRequired(false),
-		),
-	integration_types: [0, 1],
-	contexts: [0, 1, 2],
+		)
+		.setIntegrationTypes([0, 1])
+		.setContexts([0, 1, 2]),
 };
 export async function autocomplete(interaction: AutocompleteInteraction) {
 	const focusedValue = interaction.options.getFocused(true).value;

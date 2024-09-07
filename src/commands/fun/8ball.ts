@@ -38,7 +38,7 @@ export const data = {
 				.setRequired(true)
 				.setMaxLength(200)
 				.setMinLength(1),
-		),
-	integration_types: [0, 1],
-	contexts: [0, 1, 2],
+		)
+		.setIntegrationTypes([0, 1])
+		.setContexts([0, 1, 2]),
 };

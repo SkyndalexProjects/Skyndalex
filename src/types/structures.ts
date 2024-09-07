@@ -7,7 +7,8 @@ import type {
 import type { SkyndalexClient } from "#classes";
 
 export interface Command {
-	data: SlashCommandBuilder;
+	category: string;
+	data: SlashCommandBuilder & { integration_types?: string[] };
 	run: (client: SkyndalexClient, interaction: Interaction) => Promise<void>;
 	autocomplete: (interaction: Interaction) => Promise<void>;
 }
@@ -33,4 +34,9 @@ export interface LocaleFieldOptions {
 	rawName?: string;
 	rawValue?: string;
 	inline?: boolean;
+}
+export interface radioStatus {
+	requestedBy: string;
+	radioStation: string;
+	resourceUrl: string;
 }

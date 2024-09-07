@@ -127,7 +127,7 @@
   "IMG_PROCESSING": "<a:4704loadingicon:1183416396223352852> | Przetwarzanie obrazka\n\n**Pozycja w kolejce:** `{{ queuePosition }}`\n**Prompt:** `{{ prompt }}`",
   "AI_DELETE_ATTACHMENT": "Usuń załącznik",
   "IMAGE_READY": "<@{{ userId }}>, Twój obrazek jest gotowy!",
-  "BOT_INFO_DESCRIPTION": "Aktualnie używasz wersji bota: `{{ version }}`.\n[`Dodaj bota już teraz`](https://discord.com/api/oauth2/authorize?client_id={{clientId}}&permissions=0&scope=bot%20applications.commands)\n# Informacje o bocie.\n\nWitaj w Skyndalexie! Jest to bot wielofunkcyjny, który posiada **Funkcje AI, moderację, radio (Również automatyczne!), inne rzeczy typu narzędzia.**\nJest to projekt tworzony hobbyistycznie, należący do organizacji [SkyndalexProjects](https://github.com/SkyndalexProjects) polskiej produkcji (:flag_pl:). Nasze wszystkie projekty są 100% open-source, i każdy może w nie ingerować.\n# Przydatne linki:\n - [`Support`](https://discord.gg/SqPUr5R7YF)\n- [`Strona`](https://skyndalex.com)\n- [`Dokumentacja, poradniki`](https://docs.skyndalex.xyz)\n- [`Github`](https://github.com/SkyndalexProjects/Skyndalex)",
+  "BOT_INFO_DESCRIPTION": "Aktualnie używasz wersji bota: `{{ version }}`.\n[`Dodaj bota już teraz`](https://discord.com/api/oauth2/authorize?client_id={{clientId}}&permissions=0&scope=bot%20applications.commands)\n# Informacje o bocie.\n\nWitaj w Skyndalexie! Jest to bot wielofunkcyjny, który posiada **Funkcje AI, moderację, radio (Również automatyczne!), inne rzeczy typu narzędzia.**\nJest to projekt tworzony hobbyistycznie, należący do organizacji [SkyndalexProjects](https://github.com/SkyndalexProjects). Nasze wszystkie projekty są 100% open-source, i każdy może w nie ingerować.\n# Przydatne linki:\n - [`Support`](https://discord.gg/SqPUr5R7YF)\n- [`Strona`](https://skyndalex.com)\n- [`Dokumentacja, poradniki`](https://docs.skyndalex.xyz)\n- [`Github`](https://github.com/SkyndalexProjects/Skyndalex)",
   "GOODBYE_DESCRIPTION": "[-] Użytkownik **{{ user }}** opuścił serwer. Teraz mamy `{{ memberCount }}` członków",
   "WELCOME_DESCRIPTION": "[+] Użytkownik **{{ user }}** dołączył do serwera. Teraz mamy `{{ memberCount }}` członków",
   "NOT_YOUR_BUTTON": "To nie twój przycisk",
@@ -159,5 +159,17 @@
   "CUSTOMBOT_ACTIVITY": "Status",
   "USER_MOVED": "Użytkownik **{{ user }}** przeniósł/został przeniesiony do <#{{ newChannelId }}> z <#{{ oldChannelId }}>",
   "USER_LEFT": "Użytkownik **{{ user }}** opuścił kanał głosowy <#{{ channelId }}>",
-  "USER_JOINED": "Użytkownik **{{ user }}** dołączył na kanał głosowy <#{{ channelId }}>"
+  "USER_JOINED": "Użytkownik **{{ user }}** dołączył na kanał głosowy <#{{ channelId }}>",
+  "SYSTEM_UNKOWN_ERROR": "Wystąpił nieznany błąd. Spróbuj ponownie.",
+  "IMG_ERROR": "Wystąpił błąd podczas generowania obrazka. Spróbuj ponownie.",
+  "PETITION_CREATED": "Utworzono petycję",
+  "PETITION_CREATED_DESC": "**{{ title }}**\n\n*{{ description }}*",
+  "PETITION_CREATED_FOOTER": "Tyle razy podpisano: {{ signs }} | Zakończy się automatycznie za godzinę.",
+  "PETITION_CLOSE": "Zakończ",
+  "PETITION_SIGN": "Podpisz",
+  "ALREADY_SIGNED": "Już podpisałeś tę petycję.",
+  "PETITION_CLOSE_NOT_AUTHOR": "Nie jesteś autorem tej petycji.",
+  "RADIO_STATUS_TITLE": "Status radia",
+  "RADIO_STATUS_DESC": "Tytuł radia: {{ title }} | Odtworzono przez: <@{{ requestedBy }}> | Kanał głosowy: <#{{ voiceChannelId }}>",
+  "RADIO_NOT_PLAYING": "Radio nie jest odtwarzane."
 }

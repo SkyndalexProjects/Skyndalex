@@ -27,79 +27,49 @@ export async function run(
 			});
 		}
 
-		const url = `https://radio.garden/api/ara/content/channel/${station}`;
-
-		const response = await fetch(url, {
-			method: "GET",
-			headers: {
-				accept: "application/json",
-			},
-		});
-		const json = (await response.json()) as radioStationData;
-
-		if (json.error)
-			return interaction.editReply({
-				content: client.i18n.t("RADIO_STATION_NOT_FOUND", {
-					lng: interaction.locale,
-				}),
-			});
-
-		const id = json.data.url.split("/")[3];
-		const resourceUrl = `https://radio.garden/api/ara/content/listen/${id}/channel.mp3`;
+		const playRadio = await client.radio.startRadio(
+			client,
+			station,
+			interaction.guild.id,
+			memberChannel.id,
+			interaction.user.id,
+		);
 
 		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder(client, interaction.locale)
 				.setStyle(ButtonStyle.Success)
 				.setLabel("RADIO_FAVORITE_ADD")
-				.setCustomId(`addFavorite-${id}`),
+				.setCustomId(`addFavorite-${playRadio.json.data.id}`),
 		);
 
 		const embed = new EmbedBuilder(client, interaction.locale)
+			.setTitle("RADIO_PLAYING")
+			.setColor("Green")
 			.setDescription("RADIO_PLAYING_DESC", {
-				radioStation: json.data.title,
-				radioCountry: json.data.country.title,
-				radioPlace: json.data.place.title,
+				radioStation: playRadio.json.data.title,
+				radioCountry: playRadio.json.data.country.title,
+				radioPlace: playRadio.json.data.place.title,
 			})
 			.setFooter({
 				text: "RADIO_PLAYING_FOOTER",
 				textArgs: {
-					radioWebsite: decodeURIComponent(json.data.website),
+					radioWebsite: decodeURIComponent(
+						playRadio.json.data.website,
+					),
 				},
 			})
 			.setTimestamp();
 
-		if (client.shoukaku.connections.has(interaction.guild.id)) {
-			const player = client.shoukaku.players.get(interaction.guild.id);
-			const result = (await player.node.rest.resolve(
-				resourceUrl,
-			)) as TrackResult;
-			await player.playTrack({ track: result.data.encoded });
-
-			embed.setTitle("RADIO_CHANGED").setColor("Blue");
-
-			return interaction.editReply({
-				embeds: [embed],
-				components: [row],
-			});
+		if (playRadio.action === "switched") {
+			embed.setTitle("RADIO_CHANGED");
+			embed.setColor("Blue");
 		}
-		const player = await client.shoukaku.joinVoiceChannel({
-			guildId: interaction.guild.id,
-			channelId: memberChannel.id,
-			shardId: 0,
-		});
-
-		const result = (await player.node.rest.resolve(
-			resourceUrl,
-		)) as TrackResult;
-
-		await player.playTrack({ track: result.data.encoded });
-
-		embed.setTitle("RADIO_PLAYING").setColor("Gold");
 
 		return interaction.editReply({
 			embeds: [embed],
 			components: [row],
 		});
+
 	} catch (e) {
 		console.error(e);
 	}

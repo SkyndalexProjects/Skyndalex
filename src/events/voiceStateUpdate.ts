@@ -2,7 +2,7 @@ import { SkyndalexClient } from "#classes";
 import {
 	type ColorResolvable,
 	EmbedBuilder,
-	NewsChannel,
+	type BaseGuildTextChannel,
 	TextBasedChannel,
 	VoiceState,
 } from "discord.js";
@@ -46,19 +46,13 @@ export async function voiceStateUpdate(
 					customBotSettings?.autoRadioVoiceChannel
 				) {
 					if (!client.shoukaku.connections.has(newState.guild.id)) {
-						await client.radio.startRadio(
-							client,
-							newState.guild.id,
-						);
+						await client.radio.autoStart(client, newState.guild.id);
 					}
 				}
 			} else {
 				if (newState.channel.id === settings?.autoRadioVoiceChannel) {
 					if (!client.shoukaku.connections.has(newState.guild.id)) {
-						await client.radio.startRadio(
-							client,
-							newState.guild.id,
-						);
+						await client.radio.autoStart(client, newState.guild.id);
 					}
 				}
 			}
@@ -71,7 +65,8 @@ export async function voiceStateUpdate(
 			color = "Red";
 
 			if (oldState.channel.members.size === 1) {
-				await client.radio.stopRadio(client, newState.guild.id);
+				await client.radio?.stopRadio(client, newState.guild.id);
+				client.radioInstances?.delete(newState.guild.id);
 			}
 		} else {
 			description = client.i18n.t("USER_MOVED", {
@@ -88,24 +83,20 @@ export async function voiceStateUpdate(
 					customBotSettings?.autoRadioVoiceChannel
 				) {
 					if (!client.shoukaku.connections.has(newState.guild.id)) {
-						await client.radio.startRadio(
-							client,
-							newState.guild.id,
-						);
+						await client.radio.autoStart(client, newState.guild.id);
 					}
 				} else if (oldState.channel.members.size <= 1) {
 					await client.radio.stopRadio(client, newState.guild.id);
+					client.radioInstances.delete(newState.guild.id);
 				}
 			} else {
 				if (newState.channel.id === settings?.autoRadioVoiceChannel) {
 					if (!client.shoukaku.connections.has(newState.guild.id)) {
-						await client.radio.startRadio(
-							client,
-							newState.guild.id,
-						);
+						await client.radio.autoStart(client, newState.guild.id);
 					}
 				} else if (oldState.channel.members.size <= 1) {
 					await client.radio.stopRadio(client, newState.guild.id);
+					client.radioInstances.delete(newState.guild.id);
 				}
 			}
 		}
@@ -119,7 +110,7 @@ export async function voiceStateUpdate(
 			settings?.voiceStateUpdateChannel,
 		) as TextBasedChannel;
 		if (channel) {
-			channel.send({ embeds: [embed] });
+			await (channel as BaseGuildTextChannel).send({ embeds: [embed] });
 		}
 	}
 }

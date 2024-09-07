@@ -86,9 +86,9 @@ export const data = {
 		)
 		.addStringOption((option) =>
 			option.setName("server").setDescription("Server").setRequired(true),
-		),
-	integration_types: [0, 1],
-	contexts: [0, 1, 2],
+		)
+		.setIntegrationTypes([0, 1])
+		.setContexts([0, 1, 2]),
 };
 
 export async function autocomplete(interaction) {

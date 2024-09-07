@@ -139,7 +139,6 @@
   "CUSTOMBOT_CREATED": "Successfully created a custom bot named **{{ botName }}**.",
   "CUSTOMBOT_INVALID_DATA_DESCRIPTION": "No valid data provided. Make sure you have entered the correct data and try again.",
   "CUSTOMBOT_ALREADY_EXISTS": "The bot already exists in our database.",
-  
   "BOT_INFO_CACHE_STATS": "Cache stats",
   "BOT_STATS_GUILD_COUNT": "Servers: {{ count }}",
   "BOT_STATS_USERAPPS_COUNT": "User apps installs: {{ count }}",
@@ -160,5 +159,18 @@
   "CUSTOMBOT_ACTIVITY": "Activity",
   "USER_MOVED": "User **{{ user }}** moved to <#{{ newChannelId }}> from <#{{ oldChannelId }}>",
   "USER_LEFT": "User **{{ user }}** left voice channel <#{{ channelId }}>",
-  "USER_JOINED": "User **{{ user }}** joined voice channel <#{{ channelId }}>"
+  "USER_JOINED": "User **{{ user }}** joined voice channel <#{{ channelId }}>",
+  "SYSTEM_UNKOWN_ERROR": "An unknown error occurred. Please try again.",
+  "IMG_ERROR": "An error occurred while generating the image. Please try again.",
+  "PETITION_CREATED": "Petition created",
+  "PETITION_CREATED_DESC": "**{{ title }}**\n\n*{{ description }}*",
+  "PETITION_CREATED_FOOTER": "Number of signatures: {{ signs }} | Will automatically close in one hour.",
+  "PETITION_CLOSE": "Close",
+  "PETITION_SIGN": "Sign",
+  "PETITION_CLOSE_NOT_AUTHOR": "You are not the author of this petition.",
+  "ALREADY_SIGNED": "You have already signed this petition.",
+  "RADIO_STATUS_TITLE": "Radio Status",
+  "RADIO_STATUS_DESC": "Radio Title: {{ title }} | Played by: <@{{ requestedBy }}> | Voice Channel: <#{{ voiceChannelId }}>",
+  "RADIO_NOT_PLAYING": "Radio is not playing."
+
 }
