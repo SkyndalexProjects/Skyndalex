@@ -3,7 +3,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { EmbedBuilder } from "#classes/builders";
+import { EmbedBuilder } from "#builders";
 
 export async function run(
 	client: SkyndalexClient,

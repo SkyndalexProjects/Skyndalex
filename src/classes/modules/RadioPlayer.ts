@@ -134,7 +134,7 @@ export class RadioPlayer {
 
 		return { json, action: "played" };
 	}
-	async stopRadio(client, guildId) {
+	async stopRadio(client: SkyndalexClient, guildId: string) {
 		await client.shoukaku.leaveVoiceChannel(guildId);
 		client.shoukaku.connections.delete(guildId);
 	}
