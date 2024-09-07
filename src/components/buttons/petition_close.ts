@@ -1,9 +1,6 @@
-import {
-	ActionRowBuilder,
-	ButtonStyle,
-	type MessageComponentInteraction,
+import type {
+	MessageComponentInteraction,
 } from "discord.js";
-import { ButtonBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 
 export async function run(
@@ -23,6 +20,12 @@ export async function run(
 		where: {
 			id: parseInt(id),
 			author: authorId,
+		},
+	});
+
+	await client.prisma.alreadySignedPetitions.deleteMany({
+		where: {
+			petitionId: parseInt(id),
 		},
 	});
 

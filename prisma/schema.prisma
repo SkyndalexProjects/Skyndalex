@@ -69,3 +69,8 @@ model petitions {
   author String
   signedCount Int
 }
+model alreadySignedPetitions {
+  id Int @id @default(autoincrement())
+  userId String
+  petitionId Int
+}
