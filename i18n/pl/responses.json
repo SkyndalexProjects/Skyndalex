@@ -169,5 +169,6 @@
   "PETITION_SIGN": "Podpisz",
   "PETITION_CLOSE_NOT_AUTHOR": "Nie jesteś autorem tej petycji.",
   "RADIO_STATUS_TITLE": "Status radia",
-  "RADIO_STATUS_DESC": "Tytuł radia: {{ title }} | Odtworzono przez: <@{{ requestedBy }}> | Kanał głosowy: <#{{ voiceChannelId }}>"
+  "RADIO_STATUS_DESC": "Tytuł radia: {{ title }} | Odtworzono przez: <@{{ requestedBy }}> | Kanał głosowy: <#{{ voiceChannelId }}>",
+  "RADIO_NOT_PLAYING": "Radio nie jest odtwarzane."
 }
