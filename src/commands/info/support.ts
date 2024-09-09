@@ -9,7 +9,7 @@ export async function run(
 	interaction: ChatInputCommandInteraction,
 ) {
 	return interaction.reply({
-		content: client.i18n.t("SUPPORT_INVITE", { lng: interaction.locale }),
+		content: client.i18n.t("SUPPORT_INVITE", { lng: interaction.locale, support: client.support }),
 		ephemeral: true,
 	});
 }

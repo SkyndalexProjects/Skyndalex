@@ -39,6 +39,7 @@ export class SkyndalexClient extends Client {
 	custombots = new CustomBotManagement(this);
 	customInstances = new Map<string, CustomBot>();
 	radioInstances = new Map<string, radioStatus>();
+	support = "https://discord.gg/SVN6HXCKT3";
 
 	i18n = i18next;
 
@@ -97,7 +98,8 @@ export class SkyndalexClient extends Client {
 
 		this.customInstances = new Map<string, CustomBot>();
 		this.radioInstances = new Map<string, radioStatus>();
-
+		this.support = "https://discord.gg/SVN6HXCKT3";
+		
 		checkMissingTranslations();
 
 		await this.login(token);

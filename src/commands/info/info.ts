@@ -18,10 +18,13 @@ export async function run(
 		Math.floor(Date.now() / 1000 - os.uptime()),
 	)}:R>`;
 
+	const invite = `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=0&scope=bot%20applications.commands`;
+
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setDescription("BOT_INFO_DESCRIPTION", {
 			version: process.env.npm_package_version,
 			clientId: client.user.id,
+			invite,
 		})
 		.setColor("Blurple");
 	return interaction.reply({ embeds: [embed] });

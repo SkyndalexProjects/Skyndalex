@@ -8,10 +8,12 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
+	const url = "https://discord.com/application-directory/1059594156839809074";
+
 	return interaction.reply(
 		client.i18n.t("BOT_INVITE", {
 			lng: interaction.locale,
-			clientId: client.user.id,
+			url
 		}),
 	);
 }
