@@ -118,7 +118,7 @@
   "CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION": "Pomyślnie dodano przycisk o nazwie **{{ name }}** (styl: `{{ button }}`)\nTickety będą tworzone w kategorii <#{{ channel }}>.",
   "SUPPORT_INVITE_FOOTER": "Jeśli coś poszło nie tak, dołącz na nasz serwer support i poinformuj administrację: /support",
   "SUPPORT_INVITE": "➡️ Dołącz na nasz serwer support: https://discord.gg/SVN6HXCKT3",
-  "BOT_INVITE": "➡️ Dodaj bota na swój serwer: [Kliknij tutaj](https://discord.com/api/oauth2/authorize?client_id={{clientId}}&permissions=8&scope=bot%20applications.commands)",
+  "BOT_INVITE": "➡️ Dodaj bota na swój serwer lub do konta\nhttps://discord.com/application-directory/1059594156839809074",
   "8BALL_RESPONSE": "Odpowiedź",
   "8BALL_RESPONSES": ["Tak", "Nie", "Wątpię", "Prawdopodobnie", "Nie mam pojęcia"],
   "ERROR": "Błąd",

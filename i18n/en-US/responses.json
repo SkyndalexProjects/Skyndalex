@@ -117,7 +117,7 @@
   "CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION": "Button **{{ name }}** has been added successfully\nChannel: <#{{ channel }}>",
   "SUPPORT_INVITE_FOOTER": "If something went wrong, join our support server and tell about this: /support",
   "SUPPORT_INVITE": "➡️ Join our support server: https://discord.gg/SVN6HXCKT3",
-  "BOT_INVITE": "➡️ Add bot: [Click here](https://discord.com/api/oauth2/authorize?client_id={{clientId}}&permissions=8&scope=bot%20applications.commands)",
+  "BOT_INVITE": "➡️ Add bot\nhttps://discord.com/application-directory/1059594156839809074",
   "8BALL_RESPONSE": "Response",
   "8BALL_RESPONSES": ["Yes", "No", "I doubt", "Probably", "I don't know"],
   "ERROR": "Error",
