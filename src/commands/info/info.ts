@@ -10,14 +10,6 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	const botUptimeTimestamp = `<t:${Math.round(
-		client.readyTimestamp / 1000,
-	)}:R>`;
-
-	const serverUptimeTimestamp = `<t:${Math.floor(
-		Math.floor(Date.now() / 1000 - os.uptime()),
-	)}:R>`;
-
 	const invite = `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=0&scope=bot%20applications.commands`;
 
 	const embed = new EmbedBuilder(client, interaction.locale)
