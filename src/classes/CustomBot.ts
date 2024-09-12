@@ -92,7 +92,10 @@ export class CustomBot extends Client {
 			),
 		);
 
-		await this.loader.loadEvents(this as unknown as SkyndalexClient, "../events");
+		await this.loader.loadEvents(
+			this as unknown as SkyndalexClient,
+			"../events",
+		);
 
 		this.login(this.token);
 	}

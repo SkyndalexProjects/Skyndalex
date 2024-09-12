@@ -99,7 +99,7 @@ export class SkyndalexClient extends Client {
 		this.customInstances = new Map<string, CustomBot>();
 		this.radioInstances = new Map<string, radioStatus>();
 		this.support = "https://discord.gg/SVN6HXCKT3";
-		
+
 		checkMissingTranslations();
 
 		await this.login(token);

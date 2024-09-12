@@ -11,6 +11,7 @@ import { ButtonBuilder } from "#builders";
 import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 import type { HuggingFaceSearchResult, HuggingFaceText } from "#types";
+import { handleError } from "utils/handleError";
 
 export async function run(
 	client: SkyndalexClient,
@@ -66,17 +67,7 @@ export async function run(
 	} catch (e) {
 		console.error(e);
 
-		const embedError = new EmbedBuilder(client, interaction.locale)
-			.setTitle("ERROR")
-			.setDescription("AI_GENERATION_ERROR", {
-				lng: interaction.locale,
-				model,
-			})
-			.setColor("Red");
-
-		return interaction.editReply({
-			embeds: [embedError],
-		});
+		await handleError(client, e, interaction);
 	}
 }
 export const data = {

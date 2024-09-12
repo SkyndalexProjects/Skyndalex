@@ -12,24 +12,27 @@ export async function run(
 			author: authorId,
 		},
 	});
-	const checkIfAlreadySigned = await client.prisma.alreadySignedPetitions.findFirst({
-		where: {
-			petitionId: parseInt(petitionId),
-			userId: interaction.user.id,
-		},
-	});
+	const checkIfAlreadySigned =
+		await client.prisma.alreadySignedPetitions.findFirst({
+			where: {
+				petitionId: parseInt(petitionId),
+				userId: interaction.user.id,
+			},
+		});
 
 	if (checkIfAlreadySigned) {
 		return interaction.reply({
-			content: client.i18n.t("ALREADY_SIGNED", { lng: interaction.locale }),
-			ephemeral: true
+			content: client.i18n.t("ALREADY_SIGNED", {
+				lng: interaction.locale,
+			}),
+			ephemeral: true,
 		});
 	}
 
 	await client.prisma.alreadySignedPetitions.create({
 		data: {
 			petitionId: parseInt(petitionId),
-			userId: interaction.user.id
+			userId: interaction.user.id,
 		},
 	});
 
@@ -49,7 +52,6 @@ export async function run(
 		}),
 		iconURL: client.user.displayAvatarURL(),
 	});
-
 
 	await interaction.update({ embeds: [embed] });
 }

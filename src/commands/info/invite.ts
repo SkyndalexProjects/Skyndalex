@@ -13,7 +13,7 @@ export async function run(
 	return interaction.reply(
 		client.i18n.t("BOT_INVITE", {
 			lng: interaction.locale,
-			url
+			url,
 		}),
 	);
 }

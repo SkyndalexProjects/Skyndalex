@@ -12,6 +12,7 @@ import {
 import { ButtonBuilder, EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 import type { HuggingFaceImage, HuggingFaceSearchResult } from "#types";
+import { handleError } from "utils/handleError";
 const hf = new HfInference(process.env.HF_TOKEN);
 
 const imageQueue = new Map();
@@ -112,21 +113,36 @@ export async function run(
 				components: [deleteAttachment],
 			});
 
+			// </COMMAND_NAME:COMMAND_ID>
+
+			const commands = await client.application.commands.fetch();
+			const suggestedCommands = commands.filter((command) =>
+				["gentext", "radio", "ship"].includes(command.name)
+			);
+
+			const formattedSuggestedCommands = suggestedCommands.map((command) => {
+				return `</${command.name}:${command.id}>`;
+			})
+
 			await interaction.followUp({
 				content: client.i18n.t("IMAGE_READY", {
 					userId: interaction.user.id,
 				}),
 			});
+
+			await interaction.followUp({
+				content: client.i18n.t("COMMAND_FIRST_TIME", {
+					suggestedCommands: formattedSuggestedCommands.join(" "),
+				}),
+				ephemeral: true
+			})
 		}
 		imageQueue.delete(taskId);
 	} catch (e) {
+		console.error(e);
 		imageQueue.delete(taskId);
 
-		const embedErorr = new EmbedBuilder(client, interaction.locale)
-			.setDescription("SYSTEM_UNKOWN_ERROR")
-			.setColor("Red");
-
-		return interaction.reply({ embeds: [embedErorr] });
+		await handleError(client, e, interaction);
 	}
 }
 export const data = {
