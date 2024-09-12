@@ -115,27 +115,28 @@ export async function run(
 
 			// </COMMAND_NAME:COMMAND_ID>
 
-			const commands = await client.application.commands.fetch();
-			const suggestedCommands = commands.filter((command) =>
-				["gentext", "radio", "ship"].includes(command.name)
-			);
+			// TODO: move it to a seperate function 
+			// const commands = await client.application.commands.fetch();
+			// const suggestedCommands = commands.filter((command) =>
+			// 	["gentext", "radio", "ship"].includes(command.name)
+			// );
 
-			const formattedSuggestedCommands = suggestedCommands.map((command) => {
-				return `</${command.name}:${command.id}>`;
-			})
+			// const formattedSuggestedCommands = suggestedCommands.map((command) => {
+			// 	return `</${command.name}:${command.id}>`;
+			// })
 
-			await interaction.followUp({
-				content: client.i18n.t("IMAGE_READY", {
-					userId: interaction.user.id,
-				}),
-			});
+			// await interaction.followUp({
+			// 	content: client.i18n.t("IMAGE_READY", {
+			// 		userId: interaction.user.id,
+			// 	}),
+			// });
 
-			await interaction.followUp({
-				content: client.i18n.t("COMMAND_FIRST_TIME", {
-					suggestedCommands: formattedSuggestedCommands.join(" "),
-				}),
-				ephemeral: true
-			})
+			// await interaction.followUp({
+			// 	content: client.i18n.t("COMMAND_FIRST_TIME", {
+			// 		suggestedCommands: formattedSuggestedCommands.join(" "),
+			// 	}),
+			// 	ephemeral: true
+			// })
 		}
 		imageQueue.delete(taskId);
 	} catch (e) {
