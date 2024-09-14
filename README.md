@@ -18,7 +18,7 @@ sudo docker compose -f docker-compose:preview.yml up
 ## From Stable
 
 ```
-sudo docker build --tag skyndalex:bot .
+sudo docker build --tag skyndalex:stable .
 sudo docker compose up
 ```
 
