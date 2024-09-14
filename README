@@ -6,15 +6,16 @@ npm run build
 npm run dev
 ```
 
-# Running on docker
+# Running on Docker
 
-## From preview
+## From Preview
 
 ```
 sudo docker build --tag skyndalex:preview .
 sudo docker compose -f docker-compose:preview.yml up
 ```
-## From stable
+
+## From Stable
 
 ```
 sudo docker build --tag skyndalex:bot .
@@ -23,7 +24,7 @@ sudo docker compose up
 
 ## Links
 
-- [skyndalex.com](skyndalex.com)
-- [docs](docs.skyndalex.com)
+- [skyndalex.com](https://skyndalex.com)
+- [docs](https://docs.skyndalex.com)
 - [support](https://discord.gg/SqPUr5R7YF)
 
