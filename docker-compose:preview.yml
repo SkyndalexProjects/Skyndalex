@@ -1,6 +1,6 @@
 services:
-  stable:
-    image: "skyndalex:stable"
+  preview:
+    image: "skyndalex:preview"
     env_file:
       - .env
     links:
