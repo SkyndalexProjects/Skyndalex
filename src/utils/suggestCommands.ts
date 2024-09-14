@@ -17,13 +17,12 @@ export async function suggestCommands(client: SkyndalexClient, userId: string) {
 
 	if (getSuggested) {
 		return null;
-	} else {
-		await client.prisma.alreadySuggestedCommandsTo.create({
-			data: {
-				userId,
-			},
-		});
 	}
+	await client.prisma.alreadySuggestedCommandsTo.create({
+		data: {
+			userId,
+		},
+	});
 
 	return commands;
 }

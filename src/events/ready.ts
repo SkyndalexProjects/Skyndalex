@@ -31,8 +31,8 @@ export async function ready(client: SkyndalexClient) {
 	}
 	const logStatus =
 		client.user.id !== process.env.CLIENT_ID
-			? pc.red(`[CUSTOMBOT]`)
-			: pc.green(`[BOT]`);
+			? pc.red("[CUSTOMBOT]")
+			: pc.green("[BOT]");
 
 	console.log(
 		`${logStatus} ${client.user.username}: Ready in ${

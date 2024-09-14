@@ -18,7 +18,7 @@ export async function run(
 		.setColor("Red");
 
 	if (
-		isNaN(Number(clientId)) &&
+		Number.isNaN(Number(clientId)) &&
 		clientId === process.env.CLIENT_ID &&
 		clientId.length < 17
 	) {
