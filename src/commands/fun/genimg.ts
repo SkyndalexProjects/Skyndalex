@@ -6,13 +6,15 @@ import {
 	BaseGuildTextChannel,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
+	Collection,
 	SlashCommandBuilder,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
-import type { HuggingFaceImage, HuggingFaceSearchResult } from "#types";
+import type { Command, HuggingFaceImage, HuggingFaceSearchResult } from "#types";
 import { handleError } from "utils/handleError";
+import { suggestCommands } from "#utils";
 const hf = new HfInference(process.env.HF_TOKEN);
 
 const imageQueue = new Map();
@@ -112,33 +114,20 @@ export async function run(
 				files: [image],
 				components: [deleteAttachment],
 			});
-
-			// </COMMAND_NAME:COMMAND_ID>
-
-			// TODO: move it to a seperate function 
-			// const commands = await client.application.commands.fetch();
-			// const suggestedCommands = commands.filter((command) =>
-			// 	["gentext", "radio", "ship"].includes(command.name)
-			// );
-
-			// const formattedSuggestedCommands = suggestedCommands.map((command) => {
-			// 	return `</${command.name}:${command.id}>`;
-			// })
-
-			// await interaction.followUp({
-			// 	content: client.i18n.t("IMAGE_READY", {
-			// 		userId: interaction.user.id,
-			// 	}),
-			// });
-
-			// await interaction.followUp({
-			// 	content: client.i18n.t("COMMAND_FIRST_TIME", {
-			// 		suggestedCommands: formattedSuggestedCommands.join(" "),
-			// 	}),
-			// 	ephemeral: true
-			// })
 		}
 		imageQueue.delete(taskId);
+	
+		const commands = await suggestCommands(client, interaction.user.id);
+
+		if (!commands) return;
+
+		await interaction.followUp({
+			content: client.i18n.t("SUGGESTED_COMMANDS", {
+				lng: interaction.locale,
+				commands: commands.join(" "),
+			}),
+			ephemeral: true,
+		})
 	} catch (e) {
 		console.error(e);
 		imageQueue.delete(taskId);
