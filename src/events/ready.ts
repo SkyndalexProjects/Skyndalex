@@ -1,6 +1,6 @@
-import { CustomBot, SkyndalexClient } from "#classes";
-import { deploy } from "#utils";
 import pc from "picocolors";
+import { CustomBot, type SkyndalexClient } from "#classes";
+import { deploy } from "#utils";
 export async function ready(client: SkyndalexClient) {
 	const commands = await deploy(client);
 	if (client.user.id === process.env.CLIENT_ID) {
@@ -29,7 +29,7 @@ export async function ready(client: SkyndalexClient) {
 			}
 		}
 	}
-	let logStatus =
+	const logStatus =
 		client.user.id !== process.env.CLIENT_ID
 			? pc.red(`[CUSTOMBOT]`)
 			: pc.green(`[BOT]`);

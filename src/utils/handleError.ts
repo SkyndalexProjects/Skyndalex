@@ -1,6 +1,9 @@
-import { SkyndalexClient } from "#classes";
-import { ChatInputCommandInteraction, BaseGuildTextChannel } from "discord.js";
+import type {
+	BaseGuildTextChannel,
+	ChatInputCommandInteraction,
+} from "discord.js";
 import { EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 
 export async function handleError(
 	client: SkyndalexClient,

@@ -1,17 +1,16 @@
 import {
 	ActionRowBuilder,
 	type AutocompleteInteraction,
+	type BaseGuildTextChannel,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
-	SlashCommandSubcommandBuilder,
-	type BaseGuildTextChannel,
 	SlashCommandBuilder,
 } from "discord.js";
+import { handleError } from "#utils";
 import { ButtonBuilder } from "#builders";
 import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 import type { HuggingFaceSearchResult, HuggingFaceText } from "#types";
-import { handleError } from "utils/handleError";
 
 export async function run(
 	client: SkyndalexClient,

@@ -3,8 +3,8 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
+import { EmbedBuilder, StringSelectMenuBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
-import { StringSelectMenuBuilder, EmbedBuilder } from "#builders";
 import type { Setting } from "#types";
 
 export async function run(
@@ -14,7 +14,7 @@ export async function run(
 	const settings: Setting[] = await client.prisma.$queryRaw<Setting[]>`
         SELECT column_name FROM information_schema.columns WHERE table_name = 'settings'`;
 
-	let availableSettings: { [key: string]: string }[] =
+	const availableSettings: { [key: string]: string }[] =
 		await client.prisma.settings.findMany({
 			where: {
 				guildId: interaction.guild.id,

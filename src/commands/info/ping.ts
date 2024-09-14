@@ -3,7 +3,6 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { suggestCommands } from "#utils";
 
 export async function run(
 	client: SkyndalexClient,

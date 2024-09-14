@@ -1,4 +1,4 @@
-import { type MessageComponentInteraction, EmbedBuilder } from "discord.js";
+import { EmbedBuilder, type MessageComponentInteraction } from "discord.js";
 import type { SkyndalexClient } from "#classes";
 export async function run(
 	client: SkyndalexClient,
@@ -8,14 +8,14 @@ export async function run(
 
 	const getPetition = await client.prisma.petitions.findFirst({
 		where: {
-			id: parseInt(petitionId),
+			id: Number.parseInt(petitionId),
 			author: authorId,
 		},
 	});
 	const checkIfAlreadySigned =
 		await client.prisma.alreadySignedPetitions.findFirst({
 			where: {
-				petitionId: parseInt(petitionId),
+				petitionId: Number.parseInt(petitionId),
 				userId: interaction.user.id,
 			},
 		});
@@ -31,14 +31,14 @@ export async function run(
 
 	await client.prisma.alreadySignedPetitions.create({
 		data: {
-			petitionId: parseInt(petitionId),
+			petitionId: Number.parseInt(petitionId),
 			userId: interaction.user.id,
 		},
 	});
 
 	const updatedCount = await client.prisma.petitions.update({
 		where: {
-			id: parseInt(petitionId),
+			id: Number.parseInt(petitionId),
 		},
 		data: {
 			signedCount: getPetition.signedCount + 1,

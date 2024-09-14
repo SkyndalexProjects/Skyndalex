@@ -4,8 +4,7 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { TrackResult } from "shoukaku";
-import { EmbedBuilder, ButtonBuilder } from "#builders";
+import { ButtonBuilder, EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 import type { radioStationData } from "#types";
 

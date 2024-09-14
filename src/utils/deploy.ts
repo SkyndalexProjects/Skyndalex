@@ -1,5 +1,8 @@
-import { SkyndalexClient } from "#classes";
-import { SlashCommandSubcommandBuilder, SlashCommandBuilder } from "discord.js";
+import type {
+	SlashCommandBuilder,
+	SlashCommandSubcommandBuilder,
+} from "discord.js";
+import type { SkyndalexClient } from "#classes";
 const parsedCommands: SlashCommandBuilder[] = [];
 
 export async function deploy(client: SkyndalexClient) {

@@ -3,17 +3,15 @@ import {
 	ActionRowBuilder,
 	AttachmentBuilder,
 	type AutocompleteInteraction,
-	BaseGuildTextChannel,
+	type BaseGuildTextChannel,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
-	Collection,
 	SlashCommandBuilder,
-	SlashCommandSubcommandBuilder,
 } from "discord.js";
+import { handleError } from "#utils";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
-import type { Command, HuggingFaceImage, HuggingFaceSearchResult } from "#types";
-import { handleError } from "utils/handleError";
+import type { HuggingFaceImage, HuggingFaceSearchResult } from "#types";
 import { suggestCommands } from "#utils";
 const hf = new HfInference(process.env.HF_TOKEN);
 
@@ -116,7 +114,7 @@ export async function run(
 			});
 		}
 		imageQueue.delete(taskId);
-	
+
 		const commands = await suggestCommands(client, interaction.user.id);
 
 		if (!commands) return;
@@ -127,7 +125,7 @@ export async function run(
 				commands: commands.join(" "),
 			}),
 			ephemeral: true,
-		})
+		});
 	} catch (e) {
 		console.error(e);
 		imageQueue.delete(taskId);

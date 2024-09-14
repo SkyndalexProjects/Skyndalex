@@ -12,10 +12,10 @@ import i18next from "i18next";
 import Backend from "i18next-fs-backend";
 import { Connectors, Shoukaku } from "shoukaku";
 import { Loaders, Logger } from "#classes";
+import type { CustomBot } from "#classes";
 import { CaseManagement, CustomBotManagement, RadioPlayer } from "#modules";
 import type { Command, Component, Modal, radioStatus } from "#types";
 import { checkMissingTranslations } from "#utils";
-import type { CustomBot } from "#classes";
 const Nodes = [
 	{
 		name: "SkyndalexLava",

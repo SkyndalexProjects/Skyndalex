@@ -1,18 +1,18 @@
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { PrismaClient } from "@prisma/client";
 import {
 	ActivityType,
 	Client,
-	Collection,
+	type Collection,
 	GatewayIntentBits,
 	Partials,
 } from "discord.js";
-import { Connectors, Shoukaku } from "shoukaku";
-import { Loaders, Logger, SkyndalexClient } from "#classes";
-import type { Command, Component, Modal } from "#types";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { Connectors, Shoukaku } from "shoukaku";
+import { Loaders, Logger, type SkyndalexClient } from "#classes";
+import type { Command, Component, Modal } from "#types";
 
 const Nodes = [
 	{
