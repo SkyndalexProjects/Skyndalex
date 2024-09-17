@@ -4,8 +4,8 @@ services:
     env_file:
       - .env
     links:
-      - lavalink
-      - db
+      - lavalink-preview
+      - db-preview
     depends_on:
       lavalink-preview:
         condition: service_started
