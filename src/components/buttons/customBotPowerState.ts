@@ -6,7 +6,7 @@ import {
 	type MessageComponentInteraction,
 } from "discord.js";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
-import { CustomBot, SkyndalexClient } from "#classes";
+import { CustomBot, type SkyndalexClient } from "#classes";
 export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction,

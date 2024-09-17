@@ -4,8 +4,7 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { TrackResult } from "shoukaku";
-import { EmbedBuilder, ButtonBuilder } from "#builders";
+import { ButtonBuilder, EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 import type { radioStationData } from "#types";
 
@@ -23,11 +22,12 @@ export async function run(
 
 	const radio = client.radioInstances.get(interaction.guild.id);
 
-	if (!radio) return await interaction.reply({
-		content: `${client.i18n.t("RADIO_NOT_PLAYING", {
-			lng: interaction.locale,
-		})}`,
-	});
+	if (!radio)
+		return await interaction.reply({
+			content: `${client.i18n.t("RADIO_NOT_PLAYING", {
+				lng: interaction.locale,
+			})}`,
+		});
 
 	const getRadioData = await fetch(
 		`https://radio.garden/api/ara/content/channel/${radio.radioStation}`,
@@ -46,12 +46,12 @@ export async function run(
 		.setColor("Green")
 		.setTimestamp();
 
-		const mp3Click = new ActionRowBuilder<ButtonBuilder>().addComponents(
-			new ButtonBuilder(client, interaction.locale)
-				.setStyle(ButtonStyle.Link)
-				.setLabel("mp3")
-				.setURL(radio.resourceUrl)
-		);
+	const mp3Click = new ActionRowBuilder<ButtonBuilder>().addComponents(
+		new ButtonBuilder(client, interaction.locale)
+			.setStyle(ButtonStyle.Link)
+			.setLabel("mp3")
+			.setURL(radio.resourceUrl),
+	);
 
 	return await interaction.reply({
 		embeds: [embed],

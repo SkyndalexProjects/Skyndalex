@@ -5,7 +5,7 @@ export class Logger {
 		console.error(`${pc.red(pc.bold("[ERROR]"))} ${message}`);
 	}
 	log(message: string) {
-		console.log(`${pc.blue(pc.bold(`[LOG]`))} ${message}`);
+		console.log(`${pc.blue(pc.bold("[LOG]"))} ${message}`);
 	}
 	success(message: string) {
 		console.log(`${pc.green(pc.bold("[SUCCESS]"))} ${message}`);

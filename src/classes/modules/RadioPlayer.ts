@@ -1,6 +1,6 @@
-import type { SkyndalexClient } from "../Client.js";
 import type { TrackResult } from "shoukaku";
 import type { radioStationData } from "#types";
+import type { SkyndalexClient } from "#classes";
 
 export class RadioPlayer {
 	constructor(private readonly client: SkyndalexClient) {

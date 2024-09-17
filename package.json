@@ -1,6 +1,6 @@
 {
   "name": "skyndalex",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
@@ -36,7 +36,7 @@
     "@napi-rs/canvas": "^0.1.52",
     "@prisma/client": "^5.15.1",
     "@types/gamedig": "^5.0.2",
-    "discord.js": "^14.16.0",
+    "discord.js": "^14.16.2",
     "ffmpeg-static": "^5.2.0",
     "find-process": "^1.4.7",
     "gamedig": "^5.0.0",

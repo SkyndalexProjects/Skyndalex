@@ -5,10 +5,9 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { TrackResult } from "shoukaku";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
-import type { radioStationData, radioStationSearchQueryResult } from "#types";
+import type { radioStationSearchQueryResult } from "#types";
 
 export async function run(
 	client: SkyndalexClient,
@@ -69,7 +68,6 @@ export async function run(
 			embeds: [embed],
 			components: [row],
 		});
-
 	} catch (e) {
 		console.error(e);
 	}
@@ -90,6 +88,8 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
 	const focusedValue = interaction.options.getFocused(true).value;
 	const url = `https://radio.garden/api/search?q=${focusedValue}`;
 
+	console.log("focusedValue", !focusedValue);
+
 	const response = await fetch(url, {
 		method: "GET",
 		headers: {
@@ -102,11 +102,24 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
 
 	const data = [];
 
+	if (!focusedValue) {
+		const getFavourites = await (
+			interaction.client as SkyndalexClient
+		).prisma.favourties.findMany({
+			where: { userId: interaction.user.id },
+		});
+
+		for (const favourite of getFavourites) {
+			data.push({ name: favourite.radioName, value: favourite.radioId });
+		}
+	}
+
 	for (const radioStation of jsonResponse.hits.hits) {
 		if (radioStation._source.type !== "channel") continue;
 
 		const id = radioStation._source.url.split("/")[3];
 		data.push({ name: radioStation._source.title, value: id });
 	}
+
 	await interaction.respond(data);
 }

@@ -4,8 +4,8 @@ import {
 	SlashCommandSubcommandBuilder,
 	TextInputStyle,
 } from "discord.js";
-import type { SkyndalexClient } from "#classes";
 import { ModalBuilder, TextInputBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 
 export async function run(
 	client: SkyndalexClient,

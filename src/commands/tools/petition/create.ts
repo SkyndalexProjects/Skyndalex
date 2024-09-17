@@ -1,11 +1,11 @@
 import {
 	ActionRowBuilder,
 	ButtonStyle,
-	SlashCommandSubcommandBuilder,
 	type ChatInputCommandInteraction,
+	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import { SkyndalexClient } from "#classes";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,

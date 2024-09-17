@@ -1,6 +1,6 @@
 import type { ModalSubmitInteraction } from "discord.js";
-import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 
 export async function run(
 	client: SkyndalexClient,
@@ -18,7 +18,7 @@ export async function run(
 		.setColor("Red");
 
 	if (
-		isNaN(Number(clientId)) &&
+		Number.isNaN(Number(clientId)) &&
 		clientId === process.env.CLIENT_ID &&
 		clientId.length < 17
 	) {

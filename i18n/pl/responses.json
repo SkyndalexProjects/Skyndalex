@@ -1,9 +1,12 @@
 {
+  "SYSTEM_ERROR_SENT": "> ❌ | Wystąpił błąd podczas wykonywania komendy. Błąd został wysłany do nas wysłany. Proszę spróbować ponownie później.\n\n-# ➡️ | Możesz dołączyć do naszego 🔗 [supportu](https://discord.gg/SVN6HXCKT3) i go zgłosić",
+  "COMMAND_FIRST_TIME": "Hej, widzę, że to jest twoje pierwsze użycie mojej komendy. Może cię również zainteresować:\n\n {{- suggestedCommands }}",
+  "SUGGESTED_COMMANDS": "Widzę, że jesteś nowym użytkownikiem. Bardzo to doceniamy! Oto lista innych komend, które mogą ci się spodobać:\n\n{{- commands}}\n\n-# ➡️ Rozważ odwiedzenie, jeśli chcesz dodać bota lub dowiedzieć się więcej informacji 🔗 [skyndalex.com](https://skyndalex.com)",
   "TEST": "To jest test uruchomiony z komendy {{ commandName }}",
   "IMG_GENERATED": "Obrazek **{{ prompt }}** został wygenerowany pomyślnie przez {{ author }}!",
   "IMG_GENERATED_NSFW_WARNING": "UWAGA! Uważaj na to, co wpisujesz. Zawartość obrazka może być nieodpowiednia dla niektórych użytkowników.",
   "BUTTON_CONTINUE": "Kontynuuj",
-  "COMPONENT_FAILED": "❌ Komponent `{{ componentId }}`nie istnieje. Spróbuj ponownie.\n❗ Proszę dołączyć na [support](https://discord.gg/nEF9PPMsYx) i zgłosić błąd administracji bota",
+  "COMPONENT_FAILED": "❌ Komponent `{{ componentId }}`nie istnieje. Spróbuj ponownie.\n❗ Proszę dołączyć na [support]({{- support }}) i zgłosić błąd administracji bota",
   "COMMAND_FAILED": "Wystąpił błąd podczas interakcji z komendą `{{commandName}}`. Spróbuj ponownie.",
   "RADIO_JOIN_VOICE_CHANNEL": "Przykro mi, ale nie można uruchomić radia, ponieważ nie ma Cię na kanale głosowym.",
   "RADIO_STATION_NOT_FOUND": "Nie znaleziono tej stacji radiowej.",
@@ -117,8 +120,8 @@
   "CUSTOM_BUTTON_ADD_SUCCESS": "Dodano pomyślnie",
   "CUSTOM_BUTTON_ADD_SUCCESS_DESCRIPTION": "Pomyślnie dodano przycisk o nazwie **{{ name }}** (styl: `{{ button }}`)\nTickety będą tworzone w kategorii <#{{ channel }}>.",
   "SUPPORT_INVITE_FOOTER": "Jeśli coś poszło nie tak, dołącz na nasz serwer support i poinformuj administrację: /support",
-  "SUPPORT_INVITE": "➡️ Dołącz na nasz serwer support: https://discord.gg/SVN6HXCKT3",
-  "BOT_INVITE": "➡️ Dodaj bota na swój serwer: [Kliknij tutaj](https://discord.com/api/oauth2/authorize?client_id={{clientId}}&permissions=8&scope=bot%20applications.commands)",
+  "SUPPORT_INVITE": "➡️ Dołącz na nasz serwer support: {{-support }}",
+  "BOT_INVITE": "➡️ Dodaj bota na swój serwer lub do konta\n{{- url }}",
   "8BALL_RESPONSE": "Odpowiedź",
   "8BALL_RESPONSES": ["Tak", "Nie", "Wątpię", "Prawdopodobnie", "Nie mam pojęcia"],
   "ERROR": "Błąd",
@@ -127,7 +130,7 @@
   "IMG_PROCESSING": "<a:4704loadingicon:1183416396223352852> | Przetwarzanie obrazka\n\n**Pozycja w kolejce:** `{{ queuePosition }}`\n**Prompt:** `{{ prompt }}`",
   "AI_DELETE_ATTACHMENT": "Usuń załącznik",
   "IMAGE_READY": "<@{{ userId }}>, Twój obrazek jest gotowy!",
-  "BOT_INFO_DESCRIPTION": "Aktualnie używasz wersji bota: `{{ version }}`.\n[`Dodaj bota już teraz`](https://discord.com/api/oauth2/authorize?client_id={{clientId}}&permissions=0&scope=bot%20applications.commands)\n# Informacje o bocie.\n\nWitaj w Skyndalexie! Jest to bot wielofunkcyjny, który posiada **Funkcje AI, moderację, radio (Również automatyczne!), inne rzeczy typu narzędzia.**\nJest to projekt tworzony hobbyistycznie, należący do organizacji [SkyndalexProjects](https://github.com/SkyndalexProjects). Nasze wszystkie projekty są 100% open-source, i każdy może w nie ingerować.\n# Przydatne linki:\n - [`Support`](https://discord.gg/SqPUr5R7YF)\n- [`Strona`](https://skyndalex.com)\n- [`Dokumentacja, poradniki`](https://docs.skyndalex.xyz)\n- [`Github`](https://github.com/SkyndalexProjects/Skyndalex)",
+  "BOT_INFO_DESCRIPTION": "Aktualnie używasz wersji bota: `{{ version }}`.\n[`Dodaj bota już teraz`]({{- invite }})\n# Informacje o bocie.\n\nWitaj w Skyndalexie! Jest to bot wielofunkcyjny, który posiada **Funkcje AI, moderację, radio (Również automatyczne!), inne rzeczy typu narzędzia.**\nJest to projekt tworzony hobbyistycznie, należący do organizacji [SkyndalexProjects](https://github.com/SkyndalexProjects). Nasze wszystkie projekty są 100% open-source, i każdy może w nie ingerować.\n# Przydatne linki:\n - [`Support`](https://discord.gg/SqPUr5R7YF)\n- [`Strona`](https://skyndalex.com)\n- [`Dokumentacja, poradniki`](https://docs.skyndalex.xyz)\n- [`Github`](https://github.com/SkyndalexProjects/Skyndalex)",
   "GOODBYE_DESCRIPTION": "[-] Użytkownik **{{ user }}** opuścił serwer. Teraz mamy `{{ memberCount }}` członków",
   "WELCOME_DESCRIPTION": "[+] Użytkownik **{{ user }}** dołączył do serwera. Teraz mamy `{{ memberCount }}` członków",
   "NOT_YOUR_BUTTON": "To nie twój przycisk",
@@ -171,5 +174,6 @@
   "PETITION_CLOSE_NOT_AUTHOR": "Nie jesteś autorem tej petycji.",
   "RADIO_STATUS_TITLE": "Status radia",
   "RADIO_STATUS_DESC": "Tytuł radia: {{ title }} | Odtworzono przez: <@{{ requestedBy }}> | Kanał głosowy: <#{{ voiceChannelId }}>",
-  "RADIO_NOT_PLAYING": "Radio nie jest odtwarzane."
+  "RADIO_NOT_PLAYING": "Radio nie jest odtwarzane.",
+  "AI_MODEL_NOT_RESPONDING": "Model AI `{{ model }}` nie odpowiada. Spróbuj ponownie później."
 }

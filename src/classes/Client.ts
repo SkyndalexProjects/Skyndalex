@@ -12,10 +12,10 @@ import i18next from "i18next";
 import Backend from "i18next-fs-backend";
 import { Connectors, Shoukaku } from "shoukaku";
 import { Loaders, Logger } from "#classes";
+import type { CustomBot } from "#classes";
 import { CaseManagement, CustomBotManagement, RadioPlayer } from "#modules";
 import type { Command, Component, Modal, radioStatus } from "#types";
 import { checkMissingTranslations } from "#utils";
-import type { CustomBot } from "#classes";
 const Nodes = [
 	{
 		name: "SkyndalexLava",
@@ -39,6 +39,7 @@ export class SkyndalexClient extends Client {
 	custombots = new CustomBotManagement(this);
 	customInstances = new Map<string, CustomBot>();
 	radioInstances = new Map<string, radioStatus>();
+	support = "https://discord.gg/SVN6HXCKT3";
 
 	i18n = i18next;
 
@@ -97,6 +98,7 @@ export class SkyndalexClient extends Client {
 
 		this.customInstances = new Map<string, CustomBot>();
 		this.radioInstances = new Map<string, radioStatus>();
+		this.support = "https://discord.gg/SVN6HXCKT3";
 
 		checkMissingTranslations();
 

@@ -61,6 +61,7 @@ export async function interactionCreate(
 			.setDescription("COMPONENT_FAILED", {
 				lng: interaction.locale,
 				componentId: interaction.customId,
+				support: client.support,
 			})
 			.setFooter({
 				text: "SUPPORT_INVITE_FOOTER",

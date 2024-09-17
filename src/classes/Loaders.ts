@@ -1,7 +1,7 @@
-import { readdir, readFile } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import { Collection } from "discord.js";
 import type { Command, Component, Modal } from "../types/structures.js";
-import { SkyndalexClient } from "./Client.js";
+import type { SkyndalexClient } from "./Client.js";
 export class Loaders {
 	async loadCommands(path: string): Promise<Collection<string, Command>> {
 		const commands = new Collection<string, Command>();

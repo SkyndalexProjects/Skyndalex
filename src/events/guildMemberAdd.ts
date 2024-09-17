@@ -1,4 +1,4 @@
-import type { Base, BaseGuildTextChannel, GuildMember } from "discord.js";
+import type { BaseGuildTextChannel, GuildMember } from "discord.js";
 import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 

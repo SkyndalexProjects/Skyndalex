@@ -1,6 +1,4 @@
-import type {
-	MessageComponentInteraction,
-} from "discord.js";
+import type { MessageComponentInteraction } from "discord.js";
 import type { SkyndalexClient } from "#classes";
 
 export async function run(
@@ -18,14 +16,14 @@ export async function run(
 
 	await client.prisma.petitions.delete({
 		where: {
-			id: parseInt(id),
+			id: Number.parseInt(id),
 			author: authorId,
 		},
 	});
 
 	await client.prisma.alreadySignedPetitions.deleteMany({
 		where: {
-			petitionId: parseInt(id),
+			petitionId: Number.parseInt(id),
 		},
 	});
 

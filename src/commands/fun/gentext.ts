@@ -1,12 +1,12 @@
 import {
 	ActionRowBuilder,
 	type AutocompleteInteraction,
+	type BaseGuildTextChannel,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
-	SlashCommandSubcommandBuilder,
-	type BaseGuildTextChannel,
 	SlashCommandBuilder,
 } from "discord.js";
+import { handleError } from "#utils";
 import { ButtonBuilder } from "#builders";
 import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
@@ -66,17 +66,7 @@ export async function run(
 	} catch (e) {
 		console.error(e);
 
-		const embedError = new EmbedBuilder(client, interaction.locale)
-			.setTitle("ERROR")
-			.setDescription("AI_GENERATION_ERROR", {
-				lng: interaction.locale,
-				model,
-			})
-			.setColor("Red");
-
-		return interaction.editReply({
-			embeds: [embedError],
-		});
+		await handleError(client, e, interaction);
 	}
 }
 export const data = {

@@ -3,15 +3,16 @@ import {
 	ActionRowBuilder,
 	AttachmentBuilder,
 	type AutocompleteInteraction,
-	BaseGuildTextChannel,
+	type BaseGuildTextChannel,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
-	SlashCommandSubcommandBuilder,
 } from "discord.js";
+import { handleError } from "#utils";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 import type { HuggingFaceImage, HuggingFaceSearchResult } from "#types";
+import { suggestCommands } from "#utils";
 const hf = new HfInference(process.env.HF_TOKEN);
 
 const imageQueue = new Map();
@@ -111,22 +112,40 @@ export async function run(
 				files: [image],
 				components: [deleteAttachment],
 			});
+		}
+		imageQueue.delete(taskId);
 
-			await interaction.followUp({
-				content: client.i18n.t("IMAGE_READY", {
-					userId: interaction.user.id,
+		const commands = await suggestCommands(client, interaction.user.id);
+
+		if (!commands) return;
+
+		await interaction.followUp({
+			content: client.i18n.t("SUGGESTED_COMMANDS", {
+				lng: interaction.locale,
+				commands: commands.join(" "),
+			}),
+			ephemeral: true,
+		});
+	} catch (e) {
+		console.error(e);
+		imageQueue.delete(taskId);
+ 
+		if (!interaction.deferred && !interaction.replied) {
+			await interaction.reply({
+				content: client.i18n.t("AI_MODEL_NOT_RESPONDING", {
+					lng: interaction.locale,
+					model: interaction.options.getString("model"),
+				}),
+				ephemeral: true,
+			});
+		} else {
+			await interaction.editReply({
+				content: client.i18n.t("AI_MODEL_NOT_RESPONDING", {
+					lng: interaction.locale,
+					model: interaction.options.getString("model"),
 				}),
 			});
 		}
-		imageQueue.delete(taskId);
-	} catch (e) {
-		imageQueue.delete(taskId);
-
-		const embedErorr = new EmbedBuilder(client, interaction.locale)
-			.setDescription("SYSTEM_UNKOWN_ERROR")
-			.setColor("Red");
-
-		return interaction.reply({ embeds: [embedErorr] });
 	}
 }
 export const data = {

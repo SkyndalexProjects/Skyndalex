@@ -1,11 +1,11 @@
-import { SkyndalexClient } from "#classes";
 import {
+	type BaseGuildTextChannel,
 	type ColorResolvable,
 	EmbedBuilder,
-	type BaseGuildTextChannel,
-	TextBasedChannel,
-	VoiceState,
+	type TextBasedChannel,
+	type VoiceState,
 } from "discord.js";
+import type { SkyndalexClient } from "#classes";
 
 export async function voiceStateUpdate(
 	client: SkyndalexClient,
