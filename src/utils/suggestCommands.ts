@@ -4,12 +4,12 @@ export async function suggestCommands(client: SkyndalexClient, userId: string) {
 
 	const fetchedCommands = await client.application.commands.fetch();
 
-
-	const commands = fetchedCommands.random(5)
-	.filter((command) => !command.name.includes("test"))
-	.map((command) => {
-		return `</${command.name}:${command.id}>`
-	})
+	const commands = fetchedCommands
+		.random(5)
+		.filter((command) => !command.name.includes("test"))
+		.map((command) => {
+			return `</${command.name}:${command.id}>`;
+		});
 
 	const getSuggested =
 		await client.prisma.alreadySuggestedCommandsTo.findFirst({

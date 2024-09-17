@@ -129,8 +129,23 @@ export async function run(
 	} catch (e) {
 		console.error(e);
 		imageQueue.delete(taskId);
-
-		await handleError(client, e, interaction);
+ 
+		if (!interaction.deferred && !interaction.replied) {
+			await interaction.reply({
+				content: client.i18n.t("AI_MODEL_NOT_RESPONDING", {
+					lng: interaction.locale,
+					model: interaction.options.getString("model"),
+				}),
+				ephemeral: true,
+			});
+		} else {
+			await interaction.editReply({
+				content: client.i18n.t("AI_MODEL_NOT_RESPONDING", {
+					lng: interaction.locale,
+					model: interaction.options.getString("model"),
+				}),
+			});
+		}
 	}
 }
 export const data = {
