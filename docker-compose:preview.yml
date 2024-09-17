@@ -7,13 +7,13 @@ services:
       - lavalink
       - db
     depends_on:
-      lavalink:
+      lavalink-preview:
         condition: service_started
-      db:
+      db-preview:
         condition: service_started
-  lavalink:
+  lavalink-preview:
     image: ghcr.io/lavalink-devs/lavalink:4
-    container_name: lavalink
+    container_name: lavalink-preview
     restart: unless-stopped
     environment:
       - _JAVA_OPTIONS=-Xmx6G
@@ -22,8 +22,8 @@ services:
     volumes:
       - ./application.yml:/opt/Lavalink/application.yml
       - ./plugins/:/opt/Lavalink/plugins/
-  db:
-    container_name: postgres
+  db-preview:
+    container_name: postgres-preview
     image: postgres
     restart: always
     shm_size: 128mb
