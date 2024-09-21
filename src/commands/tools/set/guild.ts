@@ -12,9 +12,9 @@ export async function run(
 	interaction: ChatInputCommandInteraction,
 ) {
 	const settings: Setting[] = await client.prisma.$queryRaw<Setting[]>`
-        SELECT column_name FROM information_schema.columns WHERE table_name = 'settings'`;
+        SELECT column_name FROM information_schema.columns WHERE table_name = 'Settings'`;
 
-	const availableSettings: { [key: string]: string }[] =
+	const availableSettings: { [key: string | number]: string | number }[] =
 		await client.prisma.settings.findMany({
 			where: {
 				guildId: interaction.guild.id,
@@ -76,12 +76,7 @@ export async function run(
 							value = `<@&${value}>`;
 						}
 					}
-
-					return {
-						name: key,
-						value,
-						inline: true,
-					};
+                    return { name: key, value: value.toString()};
 				}),
 		);
 	return interaction.reply({

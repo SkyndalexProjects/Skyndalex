@@ -19,6 +19,7 @@ model Settings {
   chatBotSystemPrompt String?
   chatBotTemperature Int?
   chatBotMaxTokens Int?
+  chatbotAPIKey String?
 }
 
 model Users {
@@ -78,10 +79,4 @@ model AlreadySignedPetitions {
   id Int @id @default(autoincrement())
   userId String
   petitionId Int
-}
-model GuildApiKys {
-  id Int @id @default(autoincrement())
-  guildId String
-  key String
-  service String
 }
