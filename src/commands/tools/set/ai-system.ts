@@ -41,6 +41,7 @@ export const data = new SlashCommandSubcommandBuilder()
 		option
 			.setName("system-prompt")
 			.setDescription("Your system prompt for AI chatbot")
+			.setMaxLength(1000)
 			.setRequired(true),
 	)
 	.addIntegerOption((option) =>

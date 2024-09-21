@@ -40,13 +40,3 @@ export const data = new SlashCommandSubcommandBuilder()
 			.setDescription("API key or token to activate AI chatbot")
 			.setRequired(true),
 	)
-	.addStringOption((option) =>
-		option
-			.setName("service")
-			.setDescription("Service to activate AI chatbot on")
-			.addChoices(
-				{ name: "Huggingface", value: "huggingfaceToken" },
-				{ name: "GroqAI", value: "groqAuthKey" },
-			)
-			.setRequired(true),
-	);
