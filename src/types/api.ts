@@ -66,13 +66,13 @@ export interface GroqResponse {
 		message: {
 			content: string;
 			role: string;
-		}
+		};
 		logprobs: null;
 		finish_reason: string;
-	}>
+	}>;
 	error: {
 		message: string;
 		type: string;
-		code: string
-	}
+		code: string;
+	};
 }

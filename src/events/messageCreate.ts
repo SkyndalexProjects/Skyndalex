@@ -1,7 +1,6 @@
-import pc from "picocolors";
+import type { Message } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { Message } from "discord.js";
-import type { GroqResponse, HuggingFaceText } from "#types";
+import type { GroqResponse } from "#types";
 
 export async function messageCreate(client: SkyndalexClient, message: Message) {
 	const settings = await client.prisma.settings.findFirst({
@@ -13,7 +12,7 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 	if (message.channel.id === settings.chatbotChannel) {
 		if (message.author.bot) return;
 
-		const url = `https://api.groq.com/openai/v1/chat/completions`;
+		const url = "https://api.groq.com/openai/v1/chat/completions";
 		const response = await fetch(url, {
 			method: "POST",
 			headers: {
@@ -34,16 +33,16 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 				stream: false,
 			}),
 		});
-		const json = await response.json() as GroqResponse;
+		const json = (await response.json()) as GroqResponse;
 
 		if (json.error) {
-			return message.reply("An error occurred: " + json.error.message);
+			return message.reply(`An error occurred: ${json.error}`);
 		}
-		
+
 		const responseContent = json.choices[0]?.message?.content || "";
 		const maxLength = 2000;
 		if (responseContent.length > maxLength) {
-			message.reply(responseContent.slice(0, maxLength - 3) + "[...]");
+			message.reply(`${responseContent.slice(0, maxLength - 3)} [...]`);
 		} else {
 			message.reply(responseContent);
 		}

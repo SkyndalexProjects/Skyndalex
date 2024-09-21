@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "npx @biomejs/biome format --write ./src",
     "lint": "npx @biomejs/biome lint ./src",
-    "lint-apply": "npx @biomejs/biome check --apply ./src",
+    "lint:fix": "npx @biomejs/biome check --apply ./src",
     "dev": "npx tsx src/index.ts",
     "build": "rm -rf dist/ && tsc",
     "migrate:deploy": "prisma migrate deploy",

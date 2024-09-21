@@ -76,7 +76,7 @@ export async function run(
 							value = `<@&${value}>`;
 						}
 					}
-                    return { name: key, value: value.toString()};
+					return { name: key, value: value.toString() };
 				}),
 		);
 	return interaction.reply({
