@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model settings {
+model Settings {
   guildId                 String   @id
   voiceStateUpdateChannel String?
   radioStation            String?
@@ -15,13 +15,18 @@ model settings {
   autoRole                String?
   welcomeChannel         String?
   goodbyeChannel         String?
+  chatbotChannel String?
+  chatBotSystemPrompt String?
+  chatBotTemperature Int?
+  chatBotMaxTokens Int?
 }
 
-model users {
+model Users {
   type String @default("normal")
   userId    String @id
+  usedCommand Boolean
 }
-model custombots {
+model Custombots {
   id       Int      @default(autoincrement())
   userId String
   clientId String 
@@ -31,7 +36,7 @@ model custombots {
   
   @@id([id, userId])
 }
-model cases {
+model Cases {
   id        Int      @id @default(autoincrement())
   guildId   String
   userId    String
@@ -43,7 +48,7 @@ model cases {
   active    Boolean?
 }
 
-model economy {
+model Economy {
   guildId   String
   userId    String
   bank      String?
@@ -51,30 +56,32 @@ model economy {
 
   @@id([guildId, userId])
 }
-model favourties {
+model Favourties {
   id     Int      @id @default(autoincrement())
   userId String
   radioId String
   radioName String
 }
-model customBotSettings {
+model CustomBotSettings {
   userId String 
   clientId String @unique
   radioStation String?
   autoRadioVoiceChannel String?
   guildId String
 }
-model petitions {
+model Petitions {
   id Int @id @default(autoincrement())
   author String
   signedCount Int
 }
-model alreadySignedPetitions {
+model AlreadySignedPetitions {
   id Int @id @default(autoincrement())
   userId String
   petitionId Int
 }
-model alreadySuggestedCommandsTo {
+model GuildApiKys {
   id Int @id @default(autoincrement())
-  userId String
+  guildId String
+  key String
+  service String
 }
