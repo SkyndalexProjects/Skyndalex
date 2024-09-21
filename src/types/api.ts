@@ -56,3 +56,23 @@ export interface HuggingFaceText {
 export interface BotData {
 	approximate_user_install_count: number;
 }
+export interface GroqResponse {
+	id: string;
+	object: string;
+	created: number;
+	model: string;
+	choices: Array<{
+		index: 0;
+		message: {
+			content: string;
+			role: string;
+		}
+		logprobs: null;
+		finish_reason: string;
+	}>
+	error: {
+		message: string;
+		type: string;
+		code: string
+	}
+}

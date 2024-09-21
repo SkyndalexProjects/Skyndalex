@@ -11,11 +11,16 @@ export async function run(
 	const apiKey = interaction.options.getString("api-key");
 	const service = interaction.options.getString("service");
 
-	await client.prisma.guildApiKys.create({
-		data: {
-			guildId: interaction.guild.id,
-			service,
-			key: apiKey,
+	await client.prisma.settings.upsert({
+		where: {
+			guildId: interaction.guildId,
+		},
+		update: {
+			chatbotAPIKey: apiKey,
+		},
+		create: {
+			guildId: interaction.guildId,
+			chatbotAPIKey: apiKey,
 		},
 	});
 
@@ -40,9 +45,8 @@ export const data = new SlashCommandSubcommandBuilder()
 			.setName("service")
 			.setDescription("Service to activate AI chatbot on")
 			.addChoices(
-				{ name: 'Huggingface', value: 'huggingfaceToken' },
-				{ name: 'GroqAI', value: 'groqAuthKey' },
+				{ name: "Huggingface", value: "huggingfaceToken" },
+				{ name: "GroqAI", value: "groqAuthKey" },
 			)
 			.setRequired(true),
-	)
-	
+	);

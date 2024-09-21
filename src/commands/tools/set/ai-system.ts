@@ -26,21 +26,23 @@ export async function run(
 	});
 
 	return interaction.reply({
-		content: `<:checkpassed:1071529475541565620> | AI chatbot system prompt set to *${interaction.options.getString("system-prompt")}*\n\n**with temperature ${interaction.options.getInteger("temperature")} and max tokens ${interaction.options.getInteger("max-tokens")}.**`,
+		content: `<:checkpassed:1071529475541565620> | AI chatbot system prompt set to *${interaction.options.getString(
+			"system-prompt",
+		)}*\n\n**with temperature ${interaction.options.getInteger(
+			"temperature",
+		)} and max tokens ${interaction.options.getInteger("max-tokens")}.**`,
 		ephemeral: true,
 	});
 }
 export const data = new SlashCommandSubcommandBuilder()
 	.setName("ai-system")
-    .setDescription(
-        "Set your AI chatbot on your server."
-    )
-    .addStringOption((option) =>
-        option
-            .setName("system-prompt")
-            .setDescription("Your system prompt for AI chatbot")
-            .setRequired(true),
-    )
+	.setDescription("Set your AI chatbot on your server.")
+	.addStringOption((option) =>
+		option
+			.setName("system-prompt")
+			.setDescription("Your system prompt for AI chatbot")
+			.setRequired(true),
+	)
 	.addIntegerOption((option) =>
 		option
 			.setName("temperature")
@@ -56,4 +58,4 @@ export const data = new SlashCommandSubcommandBuilder()
 			.setRequired(true)
 			.setMaxValue(2048)
 			.setMinValue(1),
-	)
+	);
