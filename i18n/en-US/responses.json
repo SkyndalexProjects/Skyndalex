@@ -176,5 +176,5 @@
   "RADIO_STATUS_TITLE": "Radio Status",
   "RADIO_STATUS_DESC": "Radio Title: {{ title }} | Played by: <@{{ requestedBy }}> | Voice Channel: <#{{ voiceChannelId }}>",
   "RADIO_NOT_PLAYING": "Radio is not playing.",
-  "AI_MODEL_NOT_RESPONDING": "The model `{{ model }}` is not responding. Please try again later"
+  "AI_MODEL_NOT_RESPONDING": "The model `{{- model }}` is not responding. Please try again later"
 }
