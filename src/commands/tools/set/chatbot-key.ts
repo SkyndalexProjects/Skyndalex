@@ -9,7 +9,6 @@ export async function run(
 	interaction: ChatInputCommandInteraction,
 ) {
 	const apiKey = interaction.options.getString("api-key");
-	const service = interaction.options.getString("service");
 
 	await client.prisma.settings.upsert({
 		where: {
@@ -25,18 +24,18 @@ export async function run(
 	});
 
 	await interaction.reply({
-		content: `<:checkpassed:1071529475541565620> | Key activated on this server using ${service} service.`,
+		content: client.i18n.t("CHATBOT_ACTIVATED", {
+			lng: interaction.locale,
+		}),
 		ephemeral: true,
 	});
 }
 export const data = new SlashCommandSubcommandBuilder()
-	.setName("ai-key")
-	.setDescription(
-		"Activate AI on your server/account by providing API key from specific service.",
-	)
+	.setName("chatbot-key")
+	.setDescription("Activate AI on your guild by providing API key.")
 	.addStringOption((option) =>
 		option
 			.setName("api-key")
 			.setDescription("API key or token to activate AI chatbot")
 			.setRequired(true),
-	)
+	);

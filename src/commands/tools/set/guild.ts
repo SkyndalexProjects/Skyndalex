@@ -76,7 +76,9 @@ export async function run(
 							value = `<@&${value}>`;
 						}
 					} else if (key === "chatbotAPIKey") {
-						value = client.i18n.t("CONFIG_HIDDEN", { lng: interaction.locale });
+						value = client.i18n.t("CONFIG_HIDDEN", {
+							lng: interaction.locale,
+						});
 					}
 					return { name: key, value: value.toString(), inline: true };
 				}),

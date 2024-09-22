@@ -8,34 +8,39 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
+	const chatBotTemperature = interaction.options.getInteger("temperature");
+	const chatBotMaxTokens = interaction.options.getInteger("max-tokens");
+	const chatBotSystemPrompt = interaction.options.getString("system-prompt");
+
 	await client.prisma.settings.upsert({
 		where: {
 			guildId: interaction.guild.id,
 		},
 		create: {
 			guildId: interaction.guild.id,
-			chatBotTemperature: interaction.options.getInteger("temperature"),
-			chatBotMaxTokens: interaction.options.getInteger("max-tokens"),
-			chatBotSystemPrompt: interaction.options.getString("system-prompt"),
+			chatBotTemperature,
+			chatBotMaxTokens,
+			chatBotSystemPrompt,
 		},
 		update: {
-			chatBotTemperature: interaction.options.getInteger("temperature"),
-			chatBotMaxTokens: interaction.options.getInteger("max-tokens"),
-			chatBotSystemPrompt: interaction.options.getString("system-prompt"),
+			chatBotTemperature,
+			chatBotMaxTokens,
+			chatBotSystemPrompt,
 		},
 	});
 
 	return interaction.reply({
-		content: `<:checkpassed:1071529475541565620> | AI chatbot system prompt set to *${interaction.options.getString(
-			"system-prompt",
-		)}*\n\n**with temperature ${interaction.options.getInteger(
-			"temperature",
-		)} and max tokens ${interaction.options.getInteger("max-tokens")}.**`,
+		content: client.i18n.t("CHATBOT_CONFIG_SET", {
+			chatBotSystemPrompt,
+			chatBotTemperature,
+			chatBotMaxTokens,
+			lng: interaction.locale,
+		}),
 		ephemeral: true,
 	});
 }
 export const data = new SlashCommandSubcommandBuilder()
-	.setName("ai-system")
+	.setName("chatbot-config")
 	.setDescription("Set your AI chatbot on your server.")
 	.addStringOption((option) =>
 		option
