@@ -90,6 +90,7 @@
   "CONFIG_DISABLE_BUTTON": "Disable/Delete",
   "CONFIG_GUILD_CHANNEL_SELECT_PLACEHOLDER": "Choose channel",
   "CONFIG_GUILD_CHANNEL_SELECT_ERROR": "This option cannot be set. It can only be removed. Check if it is available to set in the subcommands of the /set command.",
+  "CONFIG_HIDDEN": "<hidden>",
   "VOICE_CHANNEL_LEFT": "<:checkpassed:1071529475541565620> | I left channel!",
   "VOICE_NOT_CONNECTED": "Bot is not connected to any voice channel.",
   "ECONOMY_WORK_TITLE": "Work",
