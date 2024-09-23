@@ -51,15 +51,6 @@ model Cases {
   active    Boolean?
 }
 
-model Economy {
-  guildId String
-  userId  String
-  bank    String?
-  wallet  String?
-
-  @@id([guildId, userId])
-}
-
 model Favourties {
   id        Int    @id @default(autoincrement())
   userId    String
