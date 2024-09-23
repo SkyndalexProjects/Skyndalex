@@ -36,7 +36,6 @@ export async function run(
 			chatBotMaxTokens,
 			lng: interaction.locale,
 		}),
-		ephemeral: true,
 	});
 }
 export const data = new SlashCommandSubcommandBuilder()
