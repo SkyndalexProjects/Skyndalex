@@ -90,6 +90,7 @@
   "CONFIG_DISABLE_BUTTON": "Disable/Delete",
   "CONFIG_GUILD_CHANNEL_SELECT_PLACEHOLDER": "Choose channel",
   "CONFIG_GUILD_CHANNEL_SELECT_ERROR": "This option cannot be set. It can only be removed. Check if it is available to set in the subcommands of the /set command.",
+  "CONFIG_HIDDEN": "<hidden>",
   "VOICE_CHANNEL_LEFT": "<:checkpassed:1071529475541565620> | I left channel!",
   "VOICE_NOT_CONNECTED": "Bot is not connected to any voice channel.",
   "ECONOMY_WORK_TITLE": "Work",
@@ -127,7 +128,6 @@
   "AI_GENERATION_ERROR": "An error occurred while generating content using the `{{ model }}` model. Please try again, search for another model, or use the default one. If the problem persists, check the official website to see if the model is available in the \"Interfaces API\" service.",
   "CUSTOM_MODELS_NSFW_WARNING": "You cannot use custom models on channels that are not NSFW! If there are no NSFW channels on the server, you can add bot to your server",
   "IMAGE_READY": "<@{{ userId }}>, your image is ready!",
-
   "IMG_PROCESSING": "<a:4704loadingicon:1183416396223352852> | Processing image\n\n**Position in queue:** `{{ queuePosition }}`\n**Prompt:** `{{ prompt }}`",
   "AI_DELETE_ATTACHMENT": "Delete attachment",
   "BOT_INFO_DESCRIPTION": "You are currently using bot version: `{{ version }}`.\n[`Add the bot now`]({{- invite }})\n# Bot Information.\n\nWelcome to Skyndalex! This is a multifunctional bot that has **cool AI features, moderation, radio (including automatic!), and other tools.**\nThis is a hobbyist project owned by [SkyndalexProjects](https://github.com/SkyndalexProjects). All of our projects are 100% open-source, and anyone can contribute to them.\n# Useful links:\n - [`Support`](https://discord.gg/SqPUr5R7YF)\n- [`Website`](https://skyndalex.com)\n- [`Documentation, guides`](https://docs.skyndalex.xyz)\n- [`Github`](https://github.com/SkyndalexProjects/Skyndalex)",
@@ -176,5 +176,6 @@
   "RADIO_STATUS_TITLE": "Radio Status",
   "RADIO_STATUS_DESC": "Radio Title: {{ title }} | Played by: <@{{ requestedBy }}> | Voice Channel: <#{{ voiceChannelId }}>",
   "RADIO_NOT_PLAYING": "Radio is not playing.",
-  "AI_MODEL_NOT_RESPONDING": "The model `{{ model }}` is not responding. Please try again later"
+  "AI_MODEL_NOT_RESPONDING": "The model `{{- model }}` is not responding. Please try again later",
+  "CHATBOT_CONFIG_SET": "<:checkpassed:1071529475541565620> | Changed chatbot configuration.\n\n**New configuration:**\n- **System prompt:** *{{ chatBotSystemPrompt }}*\n- **Temperature value:** `{{ chatBotTemperature }}`\n- **Maximum number of tokens:** `{{ chatBotMaxTokens }}`"
 }

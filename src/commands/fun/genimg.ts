@@ -8,7 +8,6 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import { handleError } from "#utils";
 import { ButtonBuilder, EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 import type { HuggingFaceImage, HuggingFaceSearchResult } from "#types";
@@ -22,12 +21,13 @@ export async function run(
 	interaction: ChatInputCommandInteraction,
 ) {
 	const taskId = `${interaction.user.id}-${Date.now()}`;
+	const defaultModel = "stabilityai/stable-diffusion-2-1";
+	const model = interaction?.options?.getString("model") || defaultModel;
 
 	try {
 		const prompt = interaction.options.getString("prompt");
-		const defaultModel = "stabilityai/stable-diffusion-2-1";
-		const model = interaction?.options?.getString("model") || defaultModel;
 
+		console.log("model", model);
 		const queuePosition = imageQueue.size + 1;
 
 		if (model !== defaultModel) {
@@ -63,10 +63,7 @@ export async function run(
 
 			const response = await hf.textToImage({
 				inputs: prompt,
-				model: model,
-				parameters: {
-					negative_prompt: "blurry",
-				},
+				model,
 			});
 
 			if (!interaction.deferred && !interaction.replied) {
@@ -129,12 +126,12 @@ export async function run(
 	} catch (e) {
 		console.error(e);
 		imageQueue.delete(taskId);
- 
+
 		if (!interaction.deferred && !interaction.replied) {
 			await interaction.reply({
 				content: client.i18n.t("AI_MODEL_NOT_RESPONDING", {
 					lng: interaction.locale,
-					model: interaction.options.getString("model"),
+					model: interaction.options.getString("model") || model,
 				}),
 				ephemeral: true,
 			});
@@ -142,7 +139,7 @@ export async function run(
 			await interaction.editReply({
 				content: client.i18n.t("AI_MODEL_NOT_RESPONDING", {
 					lng: interaction.locale,
-					model: interaction.options.getString("model"),
+					model: interaction.options.getString("model") || model,
 				}),
 			});
 		}

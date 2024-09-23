@@ -7,31 +7,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model settings {
-  guildId                 String   @id
+model Settings {
+  guildId                 String  @id
   voiceStateUpdateChannel String?
   radioStation            String?
   autoRadioVoiceChannel   String?
   autoRole                String?
-  welcomeChannel         String?
-  goodbyeChannel         String?
+  welcomeChannel          String?
+  goodbyeChannel          String?
+  chatbotChannel          String?
+  chatBotSystemPrompt     String? @default("You are a helpful and smart assistant writing on Discord guild.. You are able to adapt your language to the one in which the user is writing. Use emoticons to make the conversation more engaging (though not too often!).")
+  chatBotTemperature      Int?    @default(1)
+  chatBotMaxTokens        Int?    @default(1024)
+  chatbotAPIKey           String?
 }
 
-model users {
-  type String @default("normal")
-  userId    String @id
+model Users {
+  type        String  @default("normal")
+  userId      String  @id
+  usedCommand Boolean
 }
-model custombots {
-  id       Int      @default(autoincrement())
-  userId String
-  clientId String 
-  token String  
+
+model Custombots {
+  id       Int    @default(autoincrement())
+  userId   String
+  clientId String
+  token    String
   activity String @default("Skyndalex v2.0 | discord.skyndalex.com")
-  status String @default("offline")
-  
+  status   String @default("offline")
+
   @@id([id, userId])
 }
-model cases {
+
+model Cases {
   id        Int      @id @default(autoincrement())
   guildId   String
   userId    String
@@ -43,38 +51,29 @@ model cases {
   active    Boolean?
 }
 
-model economy {
-  guildId   String
+model Favourties {
+  id        Int    @id @default(autoincrement())
   userId    String
-  bank      String?
-  wallet    String?
-
-  @@id([guildId, userId])
-}
-model favourties {
-  id     Int      @id @default(autoincrement())
-  userId String
-  radioId String
+  radioId   String
   radioName String
 }
-model customBotSettings {
-  userId String 
-  clientId String @unique
-  radioStation String?
+
+model CustomBotSettings {
+  userId                String
+  clientId              String  @unique
+  radioStation          String?
   autoRadioVoiceChannel String?
-  guildId String
+  guildId               String
 }
-model petitions {
-  id Int @id @default(autoincrement())
-  author String
+
+model Petitions {
+  id          Int    @id @default(autoincrement())
+  author      String
   signedCount Int
 }
-model alreadySignedPetitions {
-  id Int @id @default(autoincrement())
-  userId String
+
+model AlreadySignedPetitions {
+  id         Int    @id @default(autoincrement())
+  userId     String
   petitionId Int
-}
-model alreadySuggestedCommandsTo {
-  id Int @id @default(autoincrement())
-  userId String
 }

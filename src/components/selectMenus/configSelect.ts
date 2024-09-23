@@ -80,6 +80,9 @@ export async function run(
 	const fields = Object.keys(availableSettings[0])
 		.map((key, index) => {
 			const value = Object.values(availableSettings[0])[index];
+
+			if (key === "chatbotAPIKey") key === client.i18n.t("CONFIG_HIDDEN");
+
 			return {
 				name: key,
 				value: value,

@@ -11,19 +11,21 @@ export async function suggestCommands(client: SkyndalexClient, userId: string) {
 			return `</${command.name}:${command.id}>`;
 		});
 
-	const getSuggested =
-		await client.prisma.alreadySuggestedCommandsTo.findFirst({
-			where: {
-				userId,
-			},
-		});
+	const getSuggested = await client.prisma.users.findFirst({
+		where: {
+			userId,
+		},
+	});
 
-	if (getSuggested) {
+	if (getSuggested.usedCommand) {
 		return null;
 	}
-	await client.prisma.alreadySuggestedCommandsTo.create({
-		data: {
+	await client.prisma.users.update({
+		where: {
 			userId,
+		},
+		data: {
+			usedCommand: true,
 		},
 	});
 

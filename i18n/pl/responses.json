@@ -91,6 +91,7 @@
   "CONFIG_GUILD_CHANNEL_SELECT_PLACEHOLDER": "Wybierz kanał",
   "CONFIG_GUILD_CHANNEL_SELECT_ERROR": "Ta opcja nie może być ustawiona. Może być jedynie usunięta. Sprawdź, czy jest dostępna do ustawienia w subkomendach komendy /set.",
   "CONFIG_GUILD_DESCRIPTION": "Pomyślnie ustawiono opcję **{{ option }}** na wartość `{{ value }}`",
+  "CONFIG_HIDDEN": "<ukryto>",
   "VOICE_CHANNEL_LEFT": "<:checkpassed:1071529475541565620> | Opuszczono kanał głosowy",
   "VOICE_NOT_CONNECTED": "Bot nie jest połączony z żadnym kanałem głosowym.",
   "ECONOMY_WORK_TITLE": "Praca",
@@ -175,5 +176,7 @@
   "RADIO_STATUS_TITLE": "Status radia",
   "RADIO_STATUS_DESC": "Tytuł radia: {{ title }} | Odtworzono przez: <@{{ requestedBy }}> | Kanał głosowy: <#{{ voiceChannelId }}>",
   "RADIO_NOT_PLAYING": "Radio nie jest odtwarzane.",
-  "AI_MODEL_NOT_RESPONDING": "Model AI `{{ model }}` nie odpowiada. Spróbuj ponownie później."
+  "AI_MODEL_NOT_RESPONDING": "Model AI `{{- model }}` nie odpowiada. Spróbuj ponownie później.",
+  "CHATBOT_ACTIVATED": "<:checkpassed:1071529475541565620> | Pomyślnie aktywowano chatbota na tym serwerze.",
+  "CHATBOT_CONFIG_SET": "<:checkpassed:1071529475541565620> | Zmieniono konfigurację chatbota.\n\n**Nowa konfiguracja:**\n- **Osobowość:** *{{ chatBotSystemPrompt }}*\n- **Wartość temperatury:** `{{ chatBotTemperature }}`\n- **Maksymalna ilość tokenów:** `{{ chatBotMaxTokens }}`"
 }
