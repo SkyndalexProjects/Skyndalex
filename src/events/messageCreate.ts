@@ -1,4 +1,4 @@
-import type { Message } from "discord.js";
+import type { Message, BaseGuildTextChannel } from "discord.js";
 import type { SkyndalexClient } from "#classes";
 import type { GroqResponse } from "#types";
 
@@ -14,6 +14,8 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 			if (message.author.bot) return;
 
 			const url = "https://api.groq.com/openai/v1/chat/completions";
+
+			(message.channel as BaseGuildTextChannel).sendTyping()
 
 			const response = await fetch(url, {
 				method: "POST",
@@ -37,7 +39,6 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 			});
 			const json = (await response.json()) as GroqResponse;
 
-			console.log("json", json);
 			if (json.error) {
 				return message.reply(
 					`An error occurred: \`${
