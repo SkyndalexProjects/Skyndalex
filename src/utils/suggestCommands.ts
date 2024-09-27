@@ -17,14 +17,19 @@ export async function suggestCommands(client: SkyndalexClient, userId: string) {
 		},
 	});
 
-	if (getSuggested.usedCommand) {
+	if (getSuggested?.usedCommand) {
 		return null;
 	}
-	await client.prisma.users.update({
+
+	await client.prisma.users.upsert({
 		where: {
 			userId,
 		},
-		data: {
+		update: {
+			usedCommand: true,
+		},
+		create: {
+			userId,
 			usedCommand: true,
 		},
 	});

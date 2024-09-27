@@ -15,7 +15,7 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 
 			const url = "https://api.groq.com/openai/v1/chat/completions";
 
-			(message.channel as BaseGuildTextChannel).sendTyping()
+			(message.channel as BaseGuildTextChannel).sendTyping();
 
 			const response = await fetch(url, {
 				method: "POST",

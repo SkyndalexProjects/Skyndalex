@@ -1,4 +1,3 @@
-import { HfInference } from "@huggingface/inference";
 import {
 	ActionRowBuilder,
 	AttachmentBuilder,
@@ -11,8 +10,7 @@ import {
 import { ButtonBuilder, EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 import type { HuggingFaceImage, HuggingFaceSearchResult } from "#types";
-import { suggestCommands } from "#utils";
-const hf = new HfInference(process.env.HF_TOKEN);
+import { handleError, suggestCommands } from "#utils";
 
 const imageQueue = new Map();
 
@@ -61,10 +59,20 @@ export async function run(
 				embeds: [queueMessage],
 			});
 
-			const response = await hf.textToImage({
-				inputs: prompt,
-				model,
-			});
+			const response = await fetch(
+				`https://api-inference.huggingface.co/models/${model}`,
+				{
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${process.env.HF_TOKEN}`,
+						"Content-Type": "application/json",
+						"x-wait-for-model": "true",
+					},
+					body: JSON.stringify({
+						inputs: prompt,
+					}),
+				},
+			);
 
 			if (!interaction.deferred && !interaction.replied) {
 				const embed = new EmbedBuilder(client, interaction.locale)
@@ -80,9 +88,12 @@ export async function run(
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			const imageBuffer =
-				(await response.arrayBuffer()) as HuggingFaceImage["generatedImage"];
-			const image = new AttachmentBuilder(Buffer.from(imageBuffer));
+			const result = await response.blob() as HuggingFaceImage["generatedImage"];
+			
+			const imageBuffer = Buffer.from(await result.arrayBuffer());
+			const image = new AttachmentBuilder(imageBuffer, {
+				name: "image.jpg",
+			});
 
 			const deleteAttachment =
 				new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -91,6 +102,7 @@ export async function run(
 						.setLabel("AI_DELETE_ATTACHMENT")
 						.setStyle(ButtonStyle.Danger),
 				);
+
 			const embed = new EmbedBuilder(client, interaction.locale)
 				.setDescription(
 					client.i18n.t("IMG_GENERATED", {
@@ -106,8 +118,8 @@ export async function run(
 
 			await interaction.editReply({
 				embeds: [embed],
-				files: [image],
 				components: [deleteAttachment],
+				files: [image],
 			});
 		}
 		imageQueue.delete(taskId);
@@ -136,12 +148,7 @@ export async function run(
 				ephemeral: true,
 			});
 		} else {
-			await interaction.editReply({
-				content: client.i18n.t("AI_MODEL_NOT_RESPONDING", {
-					lng: interaction.locale,
-					model: interaction.options.getString("model") || model,
-				}),
-			});
+			await handleError(client, e, interaction);
 		}
 	}
 }

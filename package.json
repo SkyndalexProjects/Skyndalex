@@ -1,6 +1,6 @@
 {
   "name": "skyndalex",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
@@ -32,12 +32,10 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@huggingface/inference": "^2.7.0",
     "@napi-rs/canvas": "^0.1.52",
     "@prisma/client": "^5.15.1",
     "@types/gamedig": "^5.0.2",
     "discord.js": "^14.16.2",
-    "ffmpeg-static": "^5.2.0",
     "find-process": "^1.4.7",
     "gamedig": "^5.0.0",
     "i18next": "^23.11.2",
