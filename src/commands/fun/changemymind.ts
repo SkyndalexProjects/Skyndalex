@@ -18,14 +18,17 @@ export async function run(
 		"../../../assets/images/ChangeMyMind.jpg",
 		import.meta.url,
 	).pathname;
-	const fontPath = new URL("../../../assets/fonts/Poppins-SemiBold.ttf", import.meta.url).pathname;
+	const fontPath = new URL(
+		"../../../assets/fonts/Poppins-SemiBold.ttf",
+		import.meta.url,
+	).pathname;
 	GlobalFonts.registerFromPath(fontPath, "Poppins-SemiBold");
-	
+
 	const img = await loadImage(imagePath);
 
 	ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-    ctx.font = "20px Poppins-SemiBold";
+	ctx.font = "20px Poppins-SemiBold";
 	ctx.fillStyle = "black";
 	ctx.textAlign = "left";
 

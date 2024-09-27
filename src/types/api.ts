@@ -40,7 +40,7 @@ export interface HuggingFaceSearchResult {
 	modelId: string;
 }
 export interface HuggingFaceImage {
-	generatedImage: ArrayBuffer;
+	generatedImage: Blob;
 }
 export interface weatherData {
 	current_condition: {
