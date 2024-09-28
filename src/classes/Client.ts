@@ -95,7 +95,7 @@ export class SkyndalexClient extends Client {
 		this.commands = await this.loader.loadCommands("../commands");
 
 		this.components = await this.loader.loadComponents("../components");
-		this.modals = await this.loader.loadModals("../modals");
+		this.modals = (await this.loader.loadFolder<Modal>("../modals")).files;
 
 		this.customInstances = new Map<string, CustomBot>();
 		this.radioInstances = new Map<string, radioStatus>();
@@ -112,11 +112,6 @@ export class SkyndalexClient extends Client {
 
 		process.on("uncaughtException", async (err, origin) => {
 			console.log(" [antiCrash] :: Uncaught Exception/Catch");
-			console.log(err, origin);
-		});
-
-		process.on("uncaughtExceptionMonitor", async (err, origin) => {
-			console.log(" [antiCrash] :: Uncaught Exception/Catch (MONITOR)");
 			console.log(err, origin);
 		});
 	}

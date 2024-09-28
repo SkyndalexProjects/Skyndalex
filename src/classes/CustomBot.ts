@@ -29,16 +29,13 @@ export class CustomBot extends Client {
 
 	loader = new Loaders();
 	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
-	commands: Collection<string, Command>;
-	modals: Collection<string, Modal>;
-	components: Collection<string, Component>;
 	i18n = i18next;
 
 	constructor(
-		token: string,
-		commands: Collection<string, Command>,
-		components: Collection<string, Component>,
-		modals: Collection<string, Modal>,
+		public token: string,
+		public commands: Collection<string, Command>,
+		public components: Collection<string, Component>,
+		public modals: Collection<string, Modal>,
 		presence?: string,
 	) {
 		super({
@@ -60,11 +57,6 @@ export class CustomBot extends Client {
 				],
 			},
 		});
-
-		this.token = token;
-		this.commands = commands;
-		this.components = components;
-		this.modals = modals;
 	}
 
 	async init() {
