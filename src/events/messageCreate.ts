@@ -3,7 +3,7 @@ import {
 	type BaseGuildTextChannel,
 	ThreadAutoArchiveDuration,
 	ChannelType,
-	Collection,
+	type Collection,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
 import type { GroqResponse } from "#types";
@@ -63,7 +63,7 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 				apiUrl,
 				settings,
 				response,
-				new URL(message.attachments.first()!.url),
+				new URL(message.attachments.first()?.url),
 			);
 
 			await sendResponse(
@@ -201,7 +201,7 @@ async function createThreadAndReply(
 	message: Message,
 	content: string,
 ) {
-	let threadName =
+	const threadName =
 		message.content.slice(0, 50) +
 		(message.content.length > 50 ? "[...]" : "");
 	const thread = await channel.threads.create({
