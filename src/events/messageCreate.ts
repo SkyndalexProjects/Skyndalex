@@ -1,4 +1,4 @@
-import type { Message, BaseGuildTextChannel } from "discord.js";
+import { type Message, type BaseGuildTextChannel, MessageActivityType } from "discord.js";
 import type { SkyndalexClient } from "#classes";
 import type { GroqResponse } from "#types";
 
@@ -70,7 +70,7 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 								content: [
 									{
 										type: "text",
-										text: "What's in this image?",
+										text: message?.content || "What is this image?",
 									},
 									{
 										type: "image_url",
@@ -83,7 +83,7 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 							},
 							{
 								role: "assistant",
-								content: "",
+								content: `Describe the image in the image above. Adjust your description to the user's input language.`,
 							},
 						],
 						max_tokens: 2048,
@@ -98,7 +98,7 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 					);
 
 				message.reply(
-					json.choices[0]?.message?.content
+					`${json.choices[0]?.message?.content || "I couldn't analyze this image."}`,
 				);
 			} else {
 				if (responseContent.length > maxLength) {
