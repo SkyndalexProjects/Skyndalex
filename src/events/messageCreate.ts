@@ -49,12 +49,65 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 
 			const responseContent = json.choices[0]?.message?.content || "";
 			const maxLength = 2000;
-			if (responseContent.length > maxLength) {
+
+			if (
+				message.attachments.size > 0 &&
+				["image/png", "image/jpeg", "image/jpg"].includes(message.attachments.first().contentType || "")
+			) {
+				// llama-3.2-11b-vision-preview
+
+				const response = await fetch(url, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${settings?.chatbotAPIKey}`,
+					},
+					body: JSON.stringify({
+						model: "llama-3.2-11b-vision-preview",
+						messages: [
+							{
+								role: "user",
+								content: [
+									{
+										type: "text",
+										text: "What's in this image?",
+									},
+									{
+										type: "image_url",
+										image_url: {
+											url: message.attachments.first()
+												?.url,
+										},
+									},
+								],
+							},
+							{
+								role: "assistant",
+								content: "",
+							},
+						],
+						max_tokens: 2048,
+						stream: false,
+					}),
+				});
+				const json = (await response.json()) as GroqResponse;
+
+				if (json.error)
+					return message.reply(
+						`Oops! I couldn't analyze this image. Here is full error: \`${json.error.message}\``,
+					);
+
 				message.reply(
-					`${responseContent.slice(0, maxLength - 3)} [...]`,
+					json.choices[0]?.message?.content
 				);
 			} else {
-				message.reply(responseContent);
+				if (responseContent.length > maxLength) {
+					message.reply(
+						`${responseContent.slice(0, maxLength - 3)} [...]`,
+					);
+				} else {
+					message.reply(responseContent);
+				}
 			}
 		}
 	}
