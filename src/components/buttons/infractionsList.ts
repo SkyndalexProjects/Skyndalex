@@ -55,7 +55,11 @@ export async function run(
 		const embed = new EmbedBuilder(client, interaction.locale)
 			.setTitle("INFRACTIONS_EMBED_TITLE")
 			.setColor(interaction.message.embeds[0].color)
-			.setDescription("INFRACTIONS_EMBED_DESCRIPTION")
+			.setDescription("INFRACTIONS_EMBED_DESCRIPTION", {
+				pages: totalPages.toString(),
+				currentPage: (page + 1).toString(),
+				stats: totalInfractions.toString(),
+			})
 			.setFooter({
 				text: "INFRACTIONS_EMBED_FOOTER",
 				textArgs: {

@@ -25,7 +25,6 @@ export async function run(
 	try {
 		const prompt = interaction.options.getString("prompt");
 
-		console.log("model", model);
 		const queuePosition = imageQueue.size + 1;
 
 		if (model !== defaultModel) {
@@ -88,8 +87,9 @@ export async function run(
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			const result = await response.blob() as HuggingFaceImage["generatedImage"];
-			
+			const result =
+				(await response.blob()) as HuggingFaceImage["generatedImage"];
+
 			const imageBuffer = Buffer.from(await result.arrayBuffer());
 			const image = new AttachmentBuilder(imageBuffer, {
 				name: "image.jpg",
