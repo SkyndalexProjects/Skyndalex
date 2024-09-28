@@ -3,7 +3,7 @@ import {
 	type BaseGuildTextChannel,
 	ThreadAutoArchiveDuration,
 	ChannelType,
-	Attachment,
+	Collection,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
 import type { GroqResponse } from "#types";
@@ -28,12 +28,32 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 		const channel = message.channel as BaseGuildTextChannel;
 		channel.sendTyping();
 
-		const content = await getChatbotResponse(
-			apiUrl,
-			settings,
-			message.content,
-		);
-		if (!content) return;
+		let response: string | null = null;
+
+		if (
+			message.channel.type === ChannelType.PublicThread &&
+			message.channel.ownerId === client.user.id
+		) {
+			if (message.author.bot) return;
+			const messages = await message.channel.messages.fetch({
+				limit: 100,
+			});
+
+			response = await getChatbotResponse(
+				apiUrl,
+				settings,
+				message.content,
+				messages,
+			);
+		} else {
+			response = await getChatbotResponse(
+				apiUrl,
+				settings,
+				message.content,
+			);
+		}
+
+		if (!response) return;
 
 		if (
 			message.attachments.size > 0 &&
@@ -42,26 +62,30 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 			const imageContent = await analyzeImage(
 				apiUrl,
 				settings,
-				content,
+				response,
 				new URL(message.attachments.first()!.url),
 			);
-			return message.reply(
-				imageContent || "I couldn't analyze this image.",
-			);
-		}
 
-		await sendResponse(message, content, maxLength);
+			await sendResponse(
+				message,
+				imageContent || "I couldn't analyze this image.",
+				maxLength,
+			);
+		} else {
+			await sendResponse(message, response, maxLength);
+		}
 
 		if (isChatbotChannel && message.reference?.messageId) {
 			const referencedMessage = await message.channel.messages.fetch(
 				message.reference.messageId,
 			);
 			if (referencedMessage.author.id === client.user.id) {
-				await createThreadAndReply(channel, message, content);
+				await createThreadAndReply(channel, message, response);
 			}
 		}
 	}
 }
+
 interface Settings {
 	chatbotAPIKey: string;
 	chatBotSystemPrompt?: string;
@@ -69,11 +93,28 @@ interface Settings {
 	chatBotTemperature?: number;
 	chatbotChannel?: string;
 }
+
 async function getChatbotResponse(
 	apiUrl: string,
 	settings: Settings,
 	content: string,
+	history?: Collection<string, Message<true>>,
 ): Promise<string | null> {
+	const messages = history
+		? history
+				.filter((msg) => !msg.author.bot)
+				.sort((a, b) => a.createdTimestamp - b.createdTimestamp)
+				.map((msg) => ({
+					role: "user",
+					content: msg.content,
+				}))
+		: [
+				{
+					role: "user",
+					content: content,
+				},
+			];
+
 	const response = await fetch(apiUrl, {
 		method: "POST",
 		headers: {
@@ -82,10 +123,7 @@ async function getChatbotResponse(
 		},
 		body: JSON.stringify({
 			model: "llama3-70b-8192",
-			messages: [
-				{ role: "system", content: settings?.chatBotSystemPrompt },
-				{ role: "user", content },
-			],
+			messages,
 			max_tokens: settings?.chatBotMaxTokens,
 			temperature: settings?.chatBotTemperature,
 		}),
