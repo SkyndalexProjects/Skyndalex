@@ -77,7 +77,7 @@ export async function run(
 export const data = {
 	...new SlashCommandBuilder()
 		.setName("game")
-		.setDescription("Check status of your favourtie server in game!")
+		.setDescription("Check status of your favorite server in game!")
 		.addStringOption((option) =>
 			option
 				.setName("game")

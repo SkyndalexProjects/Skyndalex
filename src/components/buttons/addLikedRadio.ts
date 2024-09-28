@@ -23,7 +23,7 @@ export async function run(
 			.replaceAll("**", "")
 			.trim()
 			.split("\n")[0];
-		const currentFavorites = await client.prisma.favourties.findMany({
+		const currentFavorites = await client.prisma.likedRadios.findMany({
 			where: {
 				userId: interaction.user.id,
 			},
@@ -34,10 +34,10 @@ export async function run(
 				new ButtonBuilder(client, interaction.locale)
 					.setStyle(ButtonStyle.Danger)
 					.setLabel("RADIO_FAVOURTIE_DELETED")
-					.setCustomId(`addFavorite-${value}`),
+					.setCustomId(`addLikedRadio-${value}`),
 			);
 
-			await client.prisma.favourties.delete({
+			await client.prisma.likedRadios.delete({
 				where: {
 					id: currentFavorites.find((fav) => fav.radioId === value)
 						.id,
@@ -51,7 +51,7 @@ export async function run(
 			});
 		}
 
-		const add = await client.prisma.favourties.upsert({
+		const add = await client.prisma.likedRadios.upsert({
 			where: {
 				userId: interaction.user.id,
 				id: 0,
