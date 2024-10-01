@@ -20,6 +20,7 @@ model Settings {
   chatBotTemperature      Int?    @default(1)
   chatBotMaxTokens        Int?    @default(1024)
   chatbotAPIKey           String?
+  huggingFaceToken        String?
 }
 
 model Users {

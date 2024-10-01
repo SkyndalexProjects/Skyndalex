@@ -21,7 +21,12 @@ export async function run(
 	const taskId = `${interaction.user.id}-${Date.now()}`;
 	const defaultModel = "stabilityai/stable-diffusion-2-1";
 	const model = interaction?.options?.getString("model") || defaultModel;
-
+	const settings = await client.prisma.settings.findFirst({
+		where: {
+			guildId: interaction.guildId,
+		},
+	});
+	
 	try {
 		const prompt = interaction.options.getString("prompt");
 
@@ -63,7 +68,7 @@ export async function run(
 				{
 					method: "POST",
 					headers: {
-						Authorization: `Bearer ${process.env.HF_TOKEN}`,
+						Authorization: `Bearer ${settings?.huggingFaceToken || process.env.HF_TOKEN}`,
 						"Content-Type": "application/json",
 						"x-wait-for-model": "true",
 					},
