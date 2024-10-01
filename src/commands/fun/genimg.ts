@@ -80,7 +80,7 @@ export async function run(
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			if (!response) {
+			if (!response.ok) {
 				const embed = new EmbedBuilder(client, interaction.locale)
 					.setDescription("IMG_ERROR")
 					.setColor("Red");

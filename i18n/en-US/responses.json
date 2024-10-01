@@ -165,7 +165,7 @@
   "USER_LEFT": "User **{{ user }}** left voice channel <#{{ channelId }}>",
   "USER_JOINED": "User **{{ user }}** joined voice channel <#{{ channelId }}>",
   "SYSTEM_UNKOWN_ERROR": "An unknown error occurred. Please try again.",
-  "IMG_ERROR": "An error occurred while generating the image. Please try again.",
+  "IMG_ERROR": "An error occurred while generating the image. Model is not available. Please try again.",
   "PETITION_CREATED": "Petition created",
   "PETITION_CREATED_DESC": "**{{ title }}**\n\n*{{ description }}*",
   "PETITION_CREATED_FOOTER": "Number of signatures: {{ signs }} | Will automatically close in one hour.",

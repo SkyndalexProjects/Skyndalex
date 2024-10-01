@@ -165,7 +165,7 @@
   "USER_LEFT": "Użytkownik **{{ user }}** opuścił kanał głosowy <#{{ channelId }}>",
   "USER_JOINED": "Użytkownik **{{ user }}** dołączył na kanał głosowy <#{{ channelId }}>",
   "SYSTEM_UNKOWN_ERROR": "Wystąpił nieznany błąd. Spróbuj ponownie.",
-  "IMG_ERROR": "Wystąpił błąd podczas generowania obrazka. Spróbuj ponownie.",
+  "IMG_ERROR": "Wystąpił błąd podczas generowania obrazka. Model jest niedostępny. Spróbuj ponownie.",
   "PETITION_CREATED": "Utworzono petycję",
   "PETITION_CREATED_DESC": "**{{ title }}**\n\n*{{ description }}*",
   "PETITION_CREATED_FOOTER": "Tyle razy podpisano: {{ signs }} | Zakończy się automatycznie za godzinę.",
