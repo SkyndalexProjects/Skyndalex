@@ -40,3 +40,6 @@ export interface radioStatus {
 	radioStation: string;
 	resourceUrl: string;
 }
+export interface Setting {
+	column_name: string;
+}

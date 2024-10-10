@@ -36,7 +36,6 @@
     "@prisma/client": "^5.15.1",
     "@types/gamedig": "^5.0.2",
     "discord.js": "^14.16.2",
-    "find-process": "^1.4.7",
     "gamedig": "^5.0.0",
     "i18next": "^23.11.2",
     "i18next-fs-backend": "^2.3.1",
