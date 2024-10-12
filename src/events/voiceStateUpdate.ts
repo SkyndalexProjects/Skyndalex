@@ -1,4 +1,5 @@
 import {
+	BaseGuildTextChannel,
 	type ColorResolvable,
 	EmbedBuilder,
 	type VoiceState,
@@ -103,7 +104,6 @@ export async function voiceStateUpdate(
 	const channel = client.channels.cache.get(
 		settings?.voiceStateUpdateChannel,
 	);
-	if (channel?.isSendable()) {
-		await channel.send({ embeds: [embed] });
-	}
+	
+	await (channel as BaseGuildTextChannel).send({ embeds: [embed] });
 }
