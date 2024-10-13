@@ -10,7 +10,7 @@ export async function run(
 	interaction: ChatInputCommandInteraction,
 ) {
 	const amount = interaction.options.getInteger("amount");
-	await interaction.channel.bulkDelete(amount);
+	await interaction.channel.bulkDelete(amount, true);
 
 	return interaction.reply(`Deleted \`${amount}\` messages`);
 }
