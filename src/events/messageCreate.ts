@@ -51,7 +51,7 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 
 		if (
 			message.channel.type === ChannelType.PublicThread &&
-			message.channel.ownerId === client.user.id
+			message.channel.parentId === settings?.chatbotChannel
 		) {
 			const messages = client.chatbotMessageHistory;
 
@@ -116,8 +116,6 @@ async function getChatbotResponse(
 	content: string,
 	history?: ChatbotMessageHistory,
 ): Promise<string | null> {
-	console.log("history", history);
-
 	const messages: { role: string; content: string }[] = [];
 
 	if (history) {
