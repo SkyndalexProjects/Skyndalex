@@ -43,7 +43,7 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 	const apiUrl = "https://api.groq.com/openai/v1/chat/completions";
 	const maxLength = 2000;
 
-	if (isChatbotChannel || message.channel.type === ChannelType.PublicThread) {
+	if (isChatbotChannel || message.channel.type === ChannelType.PublicThread || message.thread.parentId === settings?.chatbotChannel) {
 		const channel = message.channel as BaseGuildTextChannel;
 		channel.sendTyping();
 
