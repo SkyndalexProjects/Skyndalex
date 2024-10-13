@@ -3,16 +3,35 @@ import {
 	type BaseGuildTextChannel,
 	ThreadAutoArchiveDuration,
 	ChannelType,
-	type Collection,
+	type Channel,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import type { GroqResponse } from "#types";
+import type {
+	ChatbotMessage,
+	ChatbotMessageHistory,
+	GroqResponse,
+} from "#types";
 
 export async function messageCreate(client: SkyndalexClient, message: Message) {
 	const settings = await client.prisma.settings.findFirst({
 		where: { guildId: message.guild.id },
 	});
 
+	if (
+		settings?.chatbotChannel ||
+		settings?.chatbotAPIKey ||
+		message.channel.type === ChannelType.PublicThread
+	) {
+		if (!client.chatbotMessageHistory[message.channel.id]) {
+			client.chatbotMessageHistory[message.channel.id] = [];
+		}
+
+		client.chatbotMessageHistory[message.channel.id].push({
+			content: message.content,
+			isBot: message.author.bot,
+			createdTimestamp: message.createdAt,
+		});
+	}
 	if (
 		!settings?.chatbotChannel ||
 		!settings?.chatbotAPIKey ||
@@ -34,10 +53,7 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 			message.channel.type === ChannelType.PublicThread &&
 			message.channel.ownerId === client.user.id
 		) {
-			if (message.author.bot) return;
-			const messages = await message.channel.messages.fetch({
-				limit: 100,
-			});
+			const messages = client.chatbotMessageHistory;
 
 			response = await getChatbotResponse(
 				apiUrl,
@@ -98,22 +114,44 @@ async function getChatbotResponse(
 	apiUrl: string,
 	settings: Settings,
 	content: string,
-	history?: Collection<string, Message<true>>,
+	history?: ChatbotMessageHistory,
 ): Promise<string | null> {
-	const messages = history
-		? history
-				.filter((msg) => !msg.author.bot)
-				.sort((a, b) => a.createdTimestamp - b.createdTimestamp)
-				.map((msg) => ({
-					role: "user",
-					content: msg.content,
-				}))
-		: [
-				{
-					role: "user",
-					content: content,
-				},
-			];
+	console.log("history", history);
+
+	const messages: { role: string; content: string }[] = [];
+
+	if (history) {
+		Object.keys(history).forEach((key) => {
+			history[key].forEach((msg) => {
+				const isDuplicate = messages.some(
+					(message) =>
+						message.content === msg.content &&
+						message.role === (msg.isBot ? "assistant" : "user"),
+				);
+
+				if (!isDuplicate) {
+					messages.push({
+						role: msg.isBot ? "assistant" : "user",
+						content: msg.content,
+					});
+				}
+			});
+		});
+	}
+
+	const userMessage = {
+		role: "user",
+		content: content,
+	};
+
+	const isUserMessageDuplicate = messages.some(
+		(message) =>
+			message.content === userMessage.content && message.role === "user",
+	);
+
+	if (!isUserMessageDuplicate) {
+		messages.push(userMessage);
+	}
 
 	const response = await fetch(apiUrl, {
 		method: "POST",
@@ -207,7 +245,7 @@ async function createThreadAndReply(
 	const thread = await channel.threads.create({
 		name: threadName,
 		autoArchiveDuration: ThreadAutoArchiveDuration.OneHour,
-		reason: "IS THAT CLYDE?",
+		reason: "Replied to the AI",
 	});
 
 	await thread.send(content);

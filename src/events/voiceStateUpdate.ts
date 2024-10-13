@@ -104,6 +104,6 @@ export async function voiceStateUpdate(
 	const channel = client.channels.cache.get(
 		settings?.voiceStateUpdateChannel,
 	);
-	
+
 	await (channel as BaseGuildTextChannel).send({ embeds: [embed] });
 }
