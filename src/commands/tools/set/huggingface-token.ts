@@ -34,8 +34,5 @@ export const data = new SlashCommandSubcommandBuilder()
 	.setName("huggingface-token")
 	.setDescription("Set Hugging Face API token")
 	.addStringOption((option) =>
-		option
-			.setName("token")
-			.setDescription("Token")
-			.setRequired(true),
+		option.setName("token").setDescription("Token").setRequired(true),
 	);

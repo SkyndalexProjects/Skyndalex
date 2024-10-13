@@ -26,7 +26,7 @@ export async function run(
 			guildId: interaction.guildId,
 		},
 	});
-	
+
 	try {
 		const prompt = interaction.options.getString("prompt");
 
@@ -68,7 +68,9 @@ export async function run(
 				{
 					method: "POST",
 					headers: {
-						Authorization: `Bearer ${settings?.huggingFaceToken || process.env.HF_TOKEN}`,
+						Authorization: `Bearer ${
+							settings?.huggingFaceToken || process.env.HF_TOKEN
+						}`,
 						"Content-Type": "application/json",
 						"x-wait-for-model": "true",
 					},
