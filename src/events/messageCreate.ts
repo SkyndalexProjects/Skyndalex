@@ -36,7 +36,6 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 				role: msg.author.bot ? "assistant" : "user",
 				content: msg.content,
 			}));
-
 		const response = await getChatbotResponse(
 			apiUrl,
 			settings,
@@ -97,13 +96,15 @@ async function getChatbotResponse(
 		},
 		body: JSON.stringify({
 			model: "llama3-70b-8192",
-			history,
+			messages: history,
 			max_tokens: settings?.chatBotMaxTokens,
 			temperature: settings?.chatBotTemperature,
 		}),
 	});
 
 	const json = (await response.json()) as GroqResponse;
+
+	console.log(json);
 	if (json.error) {
 		console.error("Error from chatbot API:", json.error.message);
 		return null;
