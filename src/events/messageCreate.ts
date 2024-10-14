@@ -1,11 +1,10 @@
 import {
-	type Message,
 	type BaseGuildTextChannel,
-	ThreadAutoArchiveDuration,
 	ChannelType,
+	type Message,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import type { ChatbotMessageHistory, GroqResponse } from "#types";
+import type { GroqResponse } from "#types";
 
 export async function messageCreate(client: SkyndalexClient, message: Message) {
 	const settings = await client.prisma.settings.findFirst({
@@ -19,23 +18,6 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 	)
 		return;
 
-	if (
-		settings?.chatbotChannel &&
-		settings.chatbotAPIKey &&
-		message.channel.type === ChannelType.PublicThread &&
-		message.channel.parentId === settings?.chatbotChannel
-	) {
-		if (!client.chatbotMessageHistory[message.channel.id]) {
-			client.chatbotMessageHistory[message.channel.id] = [];
-		}
-
-		client.chatbotMessageHistory[message.channel.id].push({
-			content: message.content,
-			isBot: message.author.bot,
-			createdTimestamp: message.createdAt,
-		});
-	}
-
 	const isChatbotChannel = message.channel.id === settings.chatbotChannel;
 	const apiUrl = "https://api.groq.com/openai/v1/chat/completions";
 	const maxLength = 2000;
@@ -48,11 +30,21 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 		const channel = message.channel as BaseGuildTextChannel;
 		channel.sendTyping();
 
+		const history = Array.from(message.channel.messages.cache.values())
+		.sort((a, b) => a.createdTimestamp - b.createdTimestamp)
+		.map(
+			(msg) => ({
+				role: msg.author.bot ? "assistant" : "user",
+				content: msg.content,
+			}),
+		)
+
+
 		const response = await getChatbotResponse(
 			apiUrl,
 			settings,
 			message.content,
-			client.chatbotMessageHistory,
+			history,
 		);
 		if (!response) return;
 
@@ -86,16 +78,20 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 	}
 }
 
+interface Settings {
+	chatbotAPIKey: string;
+	chatBotSystemPrompt?: string;
+	chatBotMaxTokens?: number;
+	chatBotTemperature?: number;
+	chatbotChannel?: string;
+}
+
 async function getChatbotResponse(
 	apiUrl: string,
-	settings: any,
+	settings: Settings,
 	content: string,
-	history: ChatbotMessageHistory,
+	history: Array<{ role: string; content: string }>,
 ): Promise<string | null> {
-	const messages: { role: string; content: string }[] = buildMessageHistory(
-		history,
-		content,
-	);
 	const response = await fetch(apiUrl, {
 		method: "POST",
 		headers: {
@@ -104,7 +100,7 @@ async function getChatbotResponse(
 		},
 		body: JSON.stringify({
 			model: "llama3-70b-8192",
-			messages,
+			history,
 			max_tokens: settings?.chatBotMaxTokens,
 			temperature: settings?.chatBotTemperature,
 		}),
@@ -119,42 +115,9 @@ async function getChatbotResponse(
 	return json.choices[0]?.message?.content || null;
 }
 
-function buildMessageHistory(
-	history: ChatbotMessageHistory,
-	userContent: string,
-): { role: string; content: string }[] {
-	const messages: { role: string; content: string }[] = [];
-
-	for (const key of Object.keys(history)) {
-		for (const msg of history[key]) {
-			const role = msg.isBot ? "assistant" : "user";
-			if (
-				!messages.some(
-					(message) =>
-						message.content === msg.content &&
-						message.role === role,
-				)
-			) {
-				messages.push({ role, content: msg.content });
-			}
-		}
-	}
-
-	if (
-		!messages.some(
-			(message) =>
-				message.content === userContent && message.role === "user",
-		)
-	) {
-		messages.push({ role: "user", content: userContent });
-	}
-
-	return messages;
-}
-
 async function analyzeImage(
 	apiUrl: string,
-	settings: any,
+	settings: Settings,
 	content: string,
 	attachment: URL,
 ): Promise<string | null> {

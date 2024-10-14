@@ -1,4 +1,3 @@
-import type { Channel, ThreadChannel } from "discord.js";
 import type {
 	Interaction,
 	MessageComponentInteraction,
@@ -43,13 +42,4 @@ export interface radioStatus {
 }
 export interface Setting {
 	column_name: string;
-}
-export interface ChatbotMessage {
-	content: string;
-	createdTimestamp: Date;
-	isBot: Boolean;
-}
-
-export interface ChatbotMessageHistory {
-	[channelId: string]: ChatbotMessage[];
 }

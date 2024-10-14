@@ -1,5 +1,5 @@
 import {
-	BaseGuildTextChannel,
+	type BaseGuildTextChannel,
 	type ColorResolvable,
 	EmbedBuilder,
 	type VoiceState,

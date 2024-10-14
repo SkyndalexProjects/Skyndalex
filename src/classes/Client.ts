@@ -3,12 +3,10 @@ import { fileURLToPath } from "node:url";
 import { PrismaClient } from "@prisma/client";
 import {
 	ActivityType,
-	Channel,
 	Client,
 	Collection,
 	GatewayIntentBits,
 	Partials,
-	User,
 } from "discord.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
@@ -16,14 +14,7 @@ import { Connectors, Shoukaku } from "shoukaku";
 import { Loaders, Logger } from "#classes";
 import type { CustomBot } from "#classes";
 import { CaseManagement, CustomBotManagement, RadioPlayer } from "#modules";
-import type {
-	ChatbotMessage,
-	ChatbotMessageHistory,
-	Command,
-	Component,
-	Modal,
-	radioStatus,
-} from "#types";
+import type { Command, Component, Modal, radioStatus } from "#types";
 import { checkMissingTranslations } from "#utils";
 const Nodes = [
 	{
@@ -49,7 +40,6 @@ export class SkyndalexClient extends Client {
 	customInstances = new Map<string, CustomBot>();
 	radioInstances = new Map<string, radioStatus>();
 	support = "https://discord.gg/SVN6HXCKT3";
-	chatbotMessageHistory: ChatbotMessageHistory = {};
 
 	i18n = i18next;
 
