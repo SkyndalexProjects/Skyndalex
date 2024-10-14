@@ -4,7 +4,7 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction<"cached">,
 ) {
-	const [customId, petitionId, authorId] = interaction.customId.split("-");
+	const [_customId, petitionId, authorId] = interaction.customId.split("-");
 
 	const getPetition = await client.prisma.petitions.findFirst({
 		where: {

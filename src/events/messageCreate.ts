@@ -31,14 +31,11 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 		channel.sendTyping();
 
 		const history = Array.from(message.channel.messages.cache.values())
-		.sort((a, b) => a.createdTimestamp - b.createdTimestamp)
-		.map(
-			(msg) => ({
+			.sort((a, b) => a.createdTimestamp - b.createdTimestamp)
+			.map((msg) => ({
 				role: msg.author.bot ? "assistant" : "user",
 				content: msg.content,
-			}),
-		)
-
+			}));
 
 		const response = await getChatbotResponse(
 			apiUrl,
@@ -89,7 +86,7 @@ interface Settings {
 async function getChatbotResponse(
 	apiUrl: string,
 	settings: Settings,
-	content: string,
+	_content: string,
 	history: Array<{ role: string; content: string }>,
 ): Promise<string | null> {
 	const response = await fetch(apiUrl, {
@@ -175,7 +172,7 @@ async function sendResponse(
 }
 
 async function createThreadAndReply(
-	channel: BaseGuildTextChannel,
+	_channel: BaseGuildTextChannel,
 	message: Message,
 	content: string,
 ) {

@@ -6,7 +6,7 @@ import {
 import type { SkyndalexClient } from "#classes";
 
 export async function run(
-	client: SkyndalexClient,
+	_client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
 	const amount = interaction.options.getInteger("amount");

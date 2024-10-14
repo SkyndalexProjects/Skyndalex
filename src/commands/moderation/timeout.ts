@@ -70,7 +70,7 @@ export async function run(
 				}),
 			],
 		});
-	} catch (e) {
+	} catch (_e) {
 		return interaction.reply({
 			content: client.i18n.t("TIMEOUT_FAILED", {
 				lng: interaction.locale,

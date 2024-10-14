@@ -21,7 +21,7 @@ export async function run(
 		});
 
 	try {
-		const [id, userId, pageId, type] = interaction.customId.split("-");
+		const [_id, userId, pageId, type] = interaction.customId.split("-");
 		const page = Number(pageId.split("_")[1]);
 
 		const guildId = interaction.guild

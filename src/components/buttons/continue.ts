@@ -9,7 +9,7 @@ import type { SkyndalexClient } from "#classes";
 import type { HuggingFaceText } from "#types";
 
 export async function run(
-	client: SkyndalexClient,
+	_client: SkyndalexClient,
 	interaction: MessageComponentInteraction,
 ) {
 	try {

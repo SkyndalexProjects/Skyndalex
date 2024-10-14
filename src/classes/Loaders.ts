@@ -74,7 +74,7 @@ export class Loaders {
 		folder: string | URL,
 	): Promise<{ files: Collection<string, T>; directoriesFound: string[] }> {
 		const files = new Collection<string, T>();
-		const directory = await readdir(folder).catch((e) => {});
+		const directory = await readdir(folder).catch((_e) => {});
 		const directoriesFound: string[] = [];
 		if (!directory) return { files, directoriesFound };
 		for (const file of directory) {

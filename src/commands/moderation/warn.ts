@@ -38,8 +38,6 @@ export async function run(
 		.setLabel("DELETE_CASE_BUTTON")
 		.setStyle(ButtonStyle.Danger);
 
-	const row = new ActionRowBuilder().addComponents(deleteButton);
-
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("ADD_WARN_TITLE", {
 			caseId: newCase.id,

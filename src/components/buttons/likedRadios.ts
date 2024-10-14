@@ -23,7 +23,6 @@ export async function run(
 		const pageId = interaction.customId.split("-")[1];
 		const page = Number(pageId.split("_")[1]);
 		const radiosPerPage = 15;
-		const currentPage = page + 1;
 		const favourites = await client.prisma.likedRadios.findMany({
 			where: {
 				userId: interaction.user.id,
