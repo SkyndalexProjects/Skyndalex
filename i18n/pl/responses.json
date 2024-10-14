@@ -4,7 +4,7 @@
   "SUGGESTED_COMMANDS": "Widzę, że jesteś nowym użytkownikiem. Bardzo to doceniamy! Oto lista innych komend, które mogą ci się spodobać:\n\n{{- commands}}\n\n-# ➡️ Rozważ odwiedzenie, jeśli chcesz dodać bota lub dowiedzieć się więcej informacji 🔗 [skyndalex.com](https://skyndalex.com)",
   "MODAL_FAILED": "Wystąpił nieznany błąd podczas wykonywania tego formularza\n\n❗ Proszę dołączyć na [support]({{- support }}) i zgłosić błąd administracji bota",
   "TEST": "To jest test uruchomiony z komendy {{ commandName }}",
-  "IMG_GENERATED": "Obrazek **{{ prompt }}** został wygenerowany pomyślnie przez {{ author }}!",
+  "IMG_GENERATED": "Obrazek dla **{{ prompt }}** został pomyślnie wygenerowany przez {{ author }}!\nModel: *{{- model }}* || [Pobierz]( {{- url }} )",
   "IMG_GENERATED_NSFW_WARNING": "UWAGA! Uważaj na to, co wpisujesz. Zawartość obrazka może być nieodpowiednia dla niektórych użytkowników.",
   "BUTTON_CONTINUE": "Kontynuuj",
   "COMPONENT_FAILED": "❌ Komponent `{{ componentId }}`nie istnieje. Spróbuj ponownie.\n❗ Proszę dołączyć na [support]({{- support }}) i zgłosić błąd administracji bota",

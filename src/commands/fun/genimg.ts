@@ -116,6 +116,7 @@ export async function run(
 						lng: interaction.locale,
 						prompt,
 						author: interaction.user.username,
+						model,
 					}),
 				)
 				.setFooter({
