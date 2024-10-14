@@ -2,6 +2,7 @@ import type { Interaction } from "discord.js";
 import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 import type { Command } from "#types";
+import { handleError } from "#utils";
 export async function interactionCreate(
 	client: SkyndalexClient,
 	interaction: Interaction<"cached">,
@@ -72,11 +73,14 @@ export async function interactionCreate(
 		const component = client.components.get(
 			interaction.customId.split("-")[0],
 		);
-		if (!component)
-			return interaction.reply({
+		if (!component) {
+			await handleError(client, new Error("Component not found"), interaction);
+
+			await interaction.reply({
 				embeds: [embedComponentNotFound],
 				ephemeral: true,
-			});
+			});			
+		}
 
 		try {
 			await component.run(client, interaction);
@@ -120,28 +124,33 @@ export async function interactionCreate(
 			.setDescription("MODAL_FAILED", {
 				lng: interaction.locale,
 				modalId: interaction.customId,
+				support: client.support,
 			})
 			.setFooter({
 				text: "SUPPORT_INVITE_FOOTER",
 				iconURL: client.user.displayAvatarURL(),
 			})
 			.setColor("Red");
-
 		const modal = client.modals.get(interaction.customId.split("-")[0]);
-		if (!modal)
+		if (!modal) {
+			await handleError(client, new Error("Modal not found"), interaction);
+
 			return interaction.reply({
 				embeds: [embedModalNotFound],
 				ephemeral: true,
 			});
+		}
 
 		try {
 			await modal.run(client, interaction);
 		} catch (e) {
 			console.error(e);
+			await handleError(client, e, interaction);
 			const embedError = new EmbedBuilder(client, interaction.locale)
 				.setDescription("MODAL_FAILED", {
 					lng: interaction.locale,
 					modalId: interaction.customId,
+					support: client.support,
 				})
 				.setFooter({
 					text: "SUPPORT_INVITE_FOOTER",

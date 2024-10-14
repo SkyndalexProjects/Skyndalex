@@ -94,6 +94,7 @@ export async function run(
 			client.logger.log(
 				`(customBotPowerState): Turning OFF custom bot ${bot.username} with id ${custombot.id} for user ${interaction.user.username} [${interaction.user.id}]`,
 			);
+
 			await instance.destroy();
 			await client.custombots.updatePowerState(
 				custombot.id.toString(),

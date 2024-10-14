@@ -38,8 +38,6 @@ export async function run(
 		.setLabel("DELETE_CASE_BUTTON")
 		.setStyle(ButtonStyle.Danger);
 
-	const row = new ActionRowBuilder().addComponents(deleteButton);
-
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("ADD_WARN_TITLE", {
 			caseId: newCase.id,
@@ -52,7 +50,11 @@ export async function run(
 			},
 			{
 				name: "ADD_WARN_REASON",
-				value: reason || "NO_REASON_PROVIDED",
+				value:
+					reason ||
+					client.i18n.t("NO_REASON_PROVIDED", {
+						lng: interaction.locale,
+					}),
 			},
 		]);
 

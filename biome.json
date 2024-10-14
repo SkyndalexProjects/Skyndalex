@@ -11,7 +11,8 @@
         "noExplicitAny": "error"
       },
       "correctness": {
-        "noUnusedImports": "error"
+        "noUnusedImports": "warn",
+        "noUnusedVariables": "warn"
       }
     }
   },
@@ -23,5 +24,10 @@
     "lineWidth": 80,
     "lineEnding": "lf",
     "ignore": []
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
   }
 }

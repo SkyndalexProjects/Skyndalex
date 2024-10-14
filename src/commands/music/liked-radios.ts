@@ -17,7 +17,7 @@ export async function run(
 ) {
 	const radiosPerPage = 15;
 
-	const favourties = await client.prisma.favourties.findMany({
+	const likedRadios = await client.prisma.likedRadios.findMany({
 		where: {
 			userId: interaction.user.id,
 		},
@@ -27,14 +27,14 @@ export async function run(
 		take: radiosPerPage,
 	});
 
-	if (favourties.length <= 0) {
+	if (likedRadios.length <= 0) {
 		return interaction.reply({
 			content: "No favourties found",
 			ephemeral: true,
 		});
 	}
 
-	const totalPages = Math.ceil(favourties.length / radiosPerPage);
+	const totalPages = Math.ceil(likedRadios.length / radiosPerPage);
 	const currentPage = 1;
 
 	const select =
@@ -43,14 +43,14 @@ export async function run(
 				.setPlaceholder("RADIO_FAVOURTIES_PLAY")
 				.setCustomId("playLikedRadio")
 				.addOptions(
-					favourties
+					likedRadios
 						.slice(
 							(currentPage - 1) * radiosPerPage,
 							currentPage * radiosPerPage,
 						)
-						.map((favourite) => ({
-							label: favourite.radioName,
-							value: favourite.radioId,
+						.map((likedRadio) => ({
+							label: likedRadio.radioName,
+							value: likedRadio.radioId,
 						})),
 				),
 		);
@@ -80,7 +80,7 @@ export async function run(
 		.addFields([
 			{
 				name: "FAVOURTIED_EMBED_FIELD",
-				value: favourties
+				value: likedRadios
 					.slice(
 						(currentPage - 1) * radiosPerPage,
 						currentPage * radiosPerPage,
@@ -98,4 +98,4 @@ export async function run(
 }
 export const data = new SlashCommandBuilder()
 	.setName("liked-radios")
-	.setDescription("Show your favourties radios");
+	.setDescription("Show your liked radios");

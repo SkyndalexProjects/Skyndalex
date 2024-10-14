@@ -5,7 +5,7 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: MessageComponentInteraction<"cached">,
 ) {
-	const [customId, id, authorId] = interaction.customId.split("-");
+	const [_customId, id, authorId] = interaction.customId.split("-");
 
 	if (interaction.user.id !== authorId) {
 		return interaction.reply({

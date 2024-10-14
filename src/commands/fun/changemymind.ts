@@ -1,4 +1,4 @@
-import { createCanvas, loadImage, GlobalFonts } from "@napi-rs/canvas";
+import { GlobalFonts, createCanvas, loadImage } from "@napi-rs/canvas";
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
@@ -9,7 +9,7 @@ const canvas = createCanvas(384, 385);
 const ctx = canvas.getContext("2d");
 
 export async function run(
-	client: SkyndalexClient,
+	_client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
 	await interaction.deferReply();

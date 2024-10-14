@@ -32,6 +32,7 @@ export async function run(
 			{
 				name: "USER_ROLES",
 				value: member.roles.cache
+					.filter((role) => role.name !== "@everyone")
 					.map((role) => role.toString())
 					.join(" "),
 			},

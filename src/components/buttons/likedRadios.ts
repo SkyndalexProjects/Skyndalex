@@ -23,8 +23,7 @@ export async function run(
 		const pageId = interaction.customId.split("-")[1];
 		const page = Number(pageId.split("_")[1]);
 		const radiosPerPage = 15;
-		const currentPage = page + 1;
-		const favourites = await client.prisma.favourties.findMany({
+		const favourites = await client.prisma.likedRadios.findMany({
 			where: {
 				userId: interaction.user.id,
 			},
@@ -35,7 +34,7 @@ export async function run(
 			skip: page * radiosPerPage,
 		});
 
-		const totalFavourites = await client.prisma.favourties.count({
+		const totalFavourites = await client.prisma.likedRadios.count({
 			where: {
 				userId: interaction.user.id,
 			},

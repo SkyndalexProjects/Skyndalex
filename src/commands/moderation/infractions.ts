@@ -65,7 +65,11 @@ export async function run(
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle("INFRACTIONS_EMBED_TITLE")
 		.setColor("Blurple")
-		.setDescription("INFRACTIONS_EMBED_DESCRIPTION")
+		.setDescription("INFRACTIONS_EMBED_DESCRIPTION", {
+			pages: "0",
+			currentPage: "0",
+			stats: infractions.length.toString(),
+		})
 		.setFooter({
 			text: "INFRACTIONS_EMBED_FOOTER",
 			textArgs: {

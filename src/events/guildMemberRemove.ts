@@ -1,4 +1,4 @@
-import type { BaseGuildTextChannel, GuildMember } from "discord.js";
+import type { GuildMember } from "discord.js";
 import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
 
@@ -22,8 +22,8 @@ export async function guildMemberRemove(
 	const channel = member.guild.channels.cache.get(
 		getSettings?.goodbyeChannel,
 	);
-	if (channel) {
-		(channel as BaseGuildTextChannel).send({
+	if (channel?.isTextBased()) {
+		channel.send({
 			embeds: [goodbyeEmbed],
 		});
 	}

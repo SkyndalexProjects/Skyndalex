@@ -38,7 +38,7 @@ export async function run(
 			new ButtonBuilder(client, interaction.locale)
 				.setStyle(ButtonStyle.Success)
 				.setLabel("RADIO_FAVORITE_ADD")
-				.setCustomId(`addFavorite-${playRadio.json.data.id}`),
+				.setCustomId(`addLikedRadio-${playRadio.json.data.id}`),
 		);
 
 		const embed = new EmbedBuilder(client, interaction.locale)
@@ -105,7 +105,7 @@ export async function autocomplete(interaction: AutocompleteInteraction) {
 	if (!focusedValue) {
 		const getFavourites = await (
 			interaction.client as SkyndalexClient
-		).prisma.favourties.findMany({
+		).prisma.likedRadios.findMany({
 			where: { userId: interaction.user.id },
 		});
 

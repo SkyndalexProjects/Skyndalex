@@ -26,7 +26,9 @@ export async function run(
 					content: !interaction.member.permissions.has([
 						PermissionsBitField.Flags.BanMembers,
 					])
-						? "MISSING_PERMISSIONS"
+						? client.i18n.t("MISSING_PERMISSIONS", {
+								lng: interaction.locale,
+							})
 						: client.i18n.t("DELETE_OWN_CASE_PROHIBITED", {
 								lng: interaction.locale,
 							}),

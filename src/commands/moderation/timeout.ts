@@ -54,7 +54,11 @@ export async function run(
 				},
 				{
 					name: "SET_TIMEOUT_REASON",
-					value: reason || "NO_REASON_PROVIDED",
+					value:
+						reason ||
+						client.i18n.t("NO_REASON_PROVIDED", {
+							lng: interaction.locale,
+						}),
 				},
 				{
 					name: "SET_TIMEOUT_DURATION",
@@ -70,7 +74,7 @@ export async function run(
 				}),
 			],
 		});
-	} catch (e) {
+	} catch (_e) {
 		return interaction.reply({
 			content: client.i18n.t("TIMEOUT_FAILED", {
 				lng: interaction.locale,

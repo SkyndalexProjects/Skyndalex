@@ -70,23 +70,11 @@ export class Loaders {
 		}
 		return components;
 	}
-	async loadModals(path: string): Promise<Collection<string, Modal>> {
-		const modals = new Collection<string, Modal>();
-		const modalFiles = await readdir(new URL(path, import.meta.url));
-		for (const modal of modalFiles) {
-			if (!modal.endsWith(".ts") && !modal.endsWith(".js")) continue;
-
-			const modalFile = await import(`${path}/${modal}`);
-			const customId = modal.split(".")[0];
-			modals.set(customId, modalFile);
-		}
-		return modals;
-	}
 	async loadFolder<T>(
 		folder: string | URL,
-	): Promise<{ files: Map<string, T>; directoriesFound: string[] }> {
-		const files = new Map();
-		const directory = await readdir(folder).catch((e) => {});
+	): Promise<{ files: Collection<string, T>; directoriesFound: string[] }> {
+		const files = new Collection<string, T>();
+		const directory = await readdir(folder).catch((_e) => {});
 		const directoriesFound: string[] = [];
 		if (!directory) return { files, directoriesFound };
 		for (const file of directory) {
@@ -99,5 +87,17 @@ export class Loaders {
 			files.set(file.split(".")[0], data);
 		}
 		return { files, directoriesFound };
+	}
+	async loadModals(path: string): Promise<Collection<string, Modal>> {
+		const modals = new Collection<string, Modal>();
+		const modalFiles = await readdir(new URL(path, import.meta.url));
+		for (const modal of modalFiles) {
+			if (!modal.endsWith(".ts") && !modal.endsWith(".js")) continue;
+
+			const modalFile = await import(`${path}/${modal}`);
+			const customId = modal.split(".")[0];
+			modals.set(customId, modalFile);
+		}
+		return modals;
 	}
 }

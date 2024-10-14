@@ -1,6 +1,8 @@
 import type {
 	BaseGuildTextChannel,
 	ChatInputCommandInteraction,
+	MessageComponentInteraction,
+	ModalSubmitInteraction,
 } from "discord.js";
 import { EmbedBuilder } from "#builders";
 import type { SkyndalexClient } from "#classes";
@@ -8,7 +10,7 @@ import type { SkyndalexClient } from "#classes";
 export async function handleError(
 	client: SkyndalexClient,
 	error: Error,
-	interaction: ChatInputCommandInteraction,
+	interaction: ChatInputCommandInteraction | ModalSubmitInteraction | MessageComponentInteraction,
 ) {
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle(`${error.message}`)

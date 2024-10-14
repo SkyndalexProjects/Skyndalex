@@ -21,11 +21,15 @@ export async function run(
 	const taskId = `${interaction.user.id}-${Date.now()}`;
 	const defaultModel = "stabilityai/stable-diffusion-2-1";
 	const model = interaction?.options?.getString("model") || defaultModel;
+	const settings = await client.prisma.settings.findFirst({
+		where: {
+			guildId: interaction.guildId,
+		},
+	});
 
 	try {
 		const prompt = interaction.options.getString("prompt");
 
-		console.log("model", model);
 		const queuePosition = imageQueue.size + 1;
 
 		if (model !== defaultModel) {
@@ -64,7 +68,9 @@ export async function run(
 				{
 					method: "POST",
 					headers: {
-						Authorization: `Bearer ${process.env.HF_TOKEN}`,
+						Authorization: `Bearer ${
+							settings?.huggingFaceToken || process.env.HF_TOKEN
+						}`,
 						"Content-Type": "application/json",
 						"x-wait-for-model": "true",
 					},
@@ -81,15 +87,16 @@ export async function run(
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			if (!response) {
+			if (!response.ok) {
 				const embed = new EmbedBuilder(client, interaction.locale)
 					.setDescription("IMG_ERROR")
 					.setColor("Red");
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			const result = await response.blob() as HuggingFaceImage["generatedImage"];
-			
+			const result =
+				(await response.blob()) as HuggingFaceImage["generatedImage"];
+
 			const imageBuffer = Buffer.from(await result.arrayBuffer());
 			const image = new AttachmentBuilder(imageBuffer, {
 				name: "image.jpg",
@@ -109,6 +116,7 @@ export async function run(
 						lng: interaction.locale,
 						prompt,
 						author: interaction.user.username,
+						model,
 					}),
 				)
 				.setFooter({

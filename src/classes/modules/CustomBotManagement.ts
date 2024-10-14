@@ -34,7 +34,7 @@ export class CustomBotManagement {
 						...(custombot ?? {}),
 						name: bot.username ?? "Unknown",
 					};
-				} catch (error) {
+				} catch (_error) {
 					return {
 						value: "unkown_bot",
 						name: "Unknown",
