@@ -1,7 +1,8 @@
 {
-  "SYSTEM_ERROR_SENT": "> ❌ | Wystąpił błąd podczas wykonywania komendy. Błąd został wysłany do nas wysłany. Proszę spróbować ponownie później.\n\n-# ➡️ | Możesz dołączyć do naszego 🔗 [supportu](https://discord.gg/SVN6HXCKT3) i go zgłosić",
+  "SYSTEM_ERROR_SENT": "> ❌ | Wystąpił błąd podczas wykonywania komendy. Błąd został do nas wysłany. Proszę spróbować ponownie później.\n\n-# ➡️ | Możesz dołączyć do naszego 🔗 [supportu](https://discord.gg/SVN6HXCKT3) i go zgłosić",
   "COMMAND_FIRST_TIME": "Hej, widzę, że to jest twoje pierwsze użycie mojej komendy. Może cię również zainteresować:\n\n {{- suggestedCommands }}",
   "SUGGESTED_COMMANDS": "Widzę, że jesteś nowym użytkownikiem. Bardzo to doceniamy! Oto lista innych komend, które mogą ci się spodobać:\n\n{{- commands}}\n\n-# ➡️ Rozważ odwiedzenie, jeśli chcesz dodać bota lub dowiedzieć się więcej informacji 🔗 [skyndalex.com](https://skyndalex.com)",
+  "MODAL_FAILED": "Wystąpił nieznany błąd podczas wykonywania tego formularza\n\n❗ Proszę dołączyć na [support]({{- support }}) i zgłosić błąd administracji bota",
   "TEST": "To jest test uruchomiony z komendy {{ commandName }}",
   "IMG_GENERATED": "Obrazek **{{ prompt }}** został wygenerowany pomyślnie przez {{ author }}!",
   "IMG_GENERATED_NSFW_WARNING": "UWAGA! Uważaj na to, co wpisujesz. Zawartość obrazka może być nieodpowiednia dla niektórych użytkowników.",

@@ -13,7 +13,6 @@ export async function deploy(client: SkyndalexClient) {
 				const [name, subcommand] = key.split("/");
 				if (subcommand !== "index") return;
 				const subcommands = commands.filter(
-
 					(_value, key) =>
 						key.startsWith(`${name}/`) && key !== `${name}/index`,
 				);

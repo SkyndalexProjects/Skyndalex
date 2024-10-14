@@ -18,8 +18,8 @@ export async function run(
 		.setColor("Red");
 
 	if (
-		Number.isNaN(clientId) ||
-		clientId === process.env.CLIENT_ID ||
+		Number.isNaN(Number(clientId)) &&
+		clientId === process.env.CLIENT_ID &&
 		clientId.length < 17
 	) {
 		return interaction.reply({

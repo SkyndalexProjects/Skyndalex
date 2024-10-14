@@ -1,6 +1,6 @@
 import { readdir } from "node:fs/promises";
 import { Collection } from "discord.js";
-import type { Command, Component } from "../types/structures.js";
+import type { Command, Component, Modal } from "../types/structures.js";
 import type { SkyndalexClient } from "./Client.js";
 export class Loaders {
 	async loadCommands(path: string): Promise<Collection<string, Command>> {
@@ -87,5 +87,17 @@ export class Loaders {
 			files.set(file.split(".")[0], data);
 		}
 		return { files, directoriesFound };
+	}
+	async loadModals(path: string): Promise<Collection<string, Modal>> {
+		const modals = new Collection<string, Modal>();
+		const modalFiles = await readdir(new URL(path, import.meta.url));
+		for (const modal of modalFiles) {
+			if (!modal.endsWith(".ts") && !modal.endsWith(".js")) continue;
+
+			const modalFile = await import(`${path}/${modal}`);
+			const customId = modal.split(".")[0];
+			modals.set(customId, modalFile);
+		}
+		return modals;
 	}
 }

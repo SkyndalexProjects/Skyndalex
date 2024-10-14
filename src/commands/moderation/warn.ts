@@ -50,7 +50,11 @@ export async function run(
 			},
 			{
 				name: "ADD_WARN_REASON",
-				value: reason || "NO_REASON_PROVIDED",
+				value:
+					reason ||
+					client.i18n.t("NO_REASON_PROVIDED", {
+						lng: interaction.locale,
+					}),
 			},
 		]);
 
