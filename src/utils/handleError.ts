@@ -10,7 +10,10 @@ import type { SkyndalexClient } from "#classes";
 export async function handleError(
 	client: SkyndalexClient,
 	error: Error,
-	interaction: ChatInputCommandInteraction | ModalSubmitInteraction | MessageComponentInteraction,
+	interaction:
+		| ChatInputCommandInteraction
+		| ModalSubmitInteraction
+		| MessageComponentInteraction,
 ) {
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle(`${error.message}`)
