@@ -30,12 +30,38 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 		const channel = message.channel as BaseGuildTextChannel;
 		channel.sendTyping();
 
-		const history = Array.from(message.channel.messages.cache.values())
+		let history = Array.from(message.channel.messages.cache.values())
 			.sort((a, b) => a.createdTimestamp - b.createdTimestamp)
 			.map((msg) => ({
 				role: msg.author.bot ? "assistant" : "user",
 				content: msg.content,
 			}));
+
+		if (
+			message.channel.type === ChannelType.PublicThread &&
+			message.channel.parent.id === settings?.chatbotChannel
+		) {
+			const threadMessages = Array.from(
+				message.channel.messages.cache.values(),
+			)
+				.sort((a, b) => a.createdTimestamp - b.createdTimestamp)
+				.slice(-10);
+			const threadHistory = threadMessages.map((msg) => ({
+				role: msg.author.bot ? "assistant" : "user",
+				content: msg.content,
+			}));
+			history = threadHistory;
+		} else {
+			history = [
+				{
+					role: "user",
+					content: message.content,
+				},
+			];
+
+			console.log("Channel history:", history);
+		}
+
 		const response = await getChatbotResponse(
 			apiUrl,
 			settings,
@@ -86,7 +112,7 @@ async function getChatbotResponse(
 	apiUrl: string,
 	settings: Settings,
 	_content: string,
-	history: Array<{ role: string; content: string }>,
+	history?: Array<{ role: string; content: string }>,
 ): Promise<string | null> {
 	const response = await fetch(apiUrl, {
 		method: "POST",
@@ -104,7 +130,6 @@ async function getChatbotResponse(
 
 	const json = (await response.json()) as GroqResponse;
 
-	console.log(json);
 	if (json.error) {
 		console.error("Error from chatbot API:", json.error.message);
 		return null;

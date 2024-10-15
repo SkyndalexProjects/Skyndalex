@@ -74,12 +74,16 @@ export async function interactionCreate(
 			interaction.customId.split("-")[0],
 		);
 		if (!component) {
-			await handleError(client, new Error("Component not found"), interaction);
+			await handleError(
+				client,
+				new Error("Component not found"),
+				interaction,
+			);
 
 			await interaction.reply({
 				embeds: [embedComponentNotFound],
 				ephemeral: true,
-			});			
+			});
 		}
 
 		try {
@@ -133,7 +137,11 @@ export async function interactionCreate(
 			.setColor("Red");
 		const modal = client.modals.get(interaction.customId.split("-")[0]);
 		if (!modal) {
-			await handleError(client, new Error("Modal not found"), interaction);
+			await handleError(
+				client,
+				new Error("Modal not found"),
+				interaction,
+			);
 
 			return interaction.reply({
 				embeds: [embedModalNotFound],
