@@ -46,10 +46,16 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 			)
 				.sort((a, b) => a.createdTimestamp - b.createdTimestamp)
 				.slice(-10);
-			const threadHistory = threadMessages.map((msg) => ({
-				role: msg.author.bot ? "assistant" : "user",
-				content: msg.content,
-			}));
+			const threadHistory = [
+				{
+					role: "system",
+					content: settings.chatBotSystemPrompt,
+				},
+				...threadMessages.map((msg) => ({
+					role: msg.author.bot ? "system" : "user",
+					content: msg.content,
+				})),
+			];
 			history = threadHistory;
 		} else {
 			history = [
@@ -57,6 +63,10 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 					role: "user",
 					content: message.content,
 				},
+				{
+					role: "system",
+					content: settings.chatBotSystemPrompt
+				}
 			];
 
 			console.log("Channel history:", history);
@@ -128,8 +138,10 @@ async function getChatbotResponse(
 		}),
 	});
 
+	// Read response body
 	const json = (await response.json()) as GroqResponse;
 
+	console.log("Chatbot response:", json);
 	if (json.error) {
 		console.error("Error from chatbot API:", json.error.message);
 		return null;
