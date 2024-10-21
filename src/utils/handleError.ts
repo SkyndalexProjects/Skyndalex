@@ -15,6 +15,8 @@ export async function handleError(
 		| ModalSubmitInteraction
 		| MessageComponentInteraction,
 ) {
+	client.imageQueue.delete(`${interaction.user.id}-${interaction.guildId}`);
+	
 	const embed = new EmbedBuilder(client, interaction.locale)
 		.setTitle(`${error.message}`)
 		.setDescription(`\`\`\`js\n${error.stack}\`\`\``)

@@ -7,6 +7,7 @@
   "IMG_GENERATED": "Obrazek dla **{{ prompt }}** został pomyślnie wygenerowany przez {{ author }}!\nModel: *{{- model }}* || [Pobierz]( {{- url }} )",
   "IMG_GENERATED_NSFW_WARNING": "UWAGA! Uważaj na to, co wpisujesz. Zawartość obrazka może być nieodpowiednia dla niektórych użytkowników.",
   "BUTTON_CONTINUE": "Kontynuuj",
+  "CANNOT_USE_BUTTON": "Nie możesz użyć tego przycisku",
   "COMPONENT_FAILED": "❌ Komponent `{{ componentId }}`nie istnieje. Spróbuj ponownie.\n❗ Proszę dołączyć na [support]({{- support }}) i zgłosić błąd administracji bota",
   "COMMAND_FAILED": "Wystąpił błąd podczas interakcji z komendą `{{commandName}}`. Spróbuj ponownie.",
   "RADIO_JOIN_VOICE_CHANNEL": "Przykro mi, ale nie można uruchomić radia, ponieważ nie ma Cię na kanale głosowym.",

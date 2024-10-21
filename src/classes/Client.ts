@@ -14,7 +14,7 @@ import { Connectors, Shoukaku } from "shoukaku";
 import { Loaders, Logger } from "#classes";
 import type { CustomBot } from "#classes";
 import { CaseManagement, CustomBotManagement, RadioPlayer } from "#modules";
-import type { Command, Component, Modal, radioStatus } from "#types";
+import type { Command, Component, Modal, radioStatus, HuggingFaceQueueObject } from "#types";
 import { checkMissingTranslations } from "#utils";
 const Nodes = [
 	{
@@ -39,6 +39,8 @@ export class SkyndalexClient extends Client {
 	custombots = new CustomBotManagement(this);
 	customInstances = new Map<string, CustomBot>();
 	radioInstances = new Map<string, radioStatus>();
+	imageQueue = new Map<string, HuggingFaceQueueObject>();
+
 	support = "https://discord.gg/SVN6HXCKT3";
 
 	i18n = i18next;
@@ -99,6 +101,7 @@ export class SkyndalexClient extends Client {
 
 		this.customInstances = new Map<string, CustomBot>();
 		this.radioInstances = new Map<string, radioStatus>();
+		this.imageQueue = new Map<string, HuggingFaceQueueObject>();
 		this.support = "https://discord.gg/SVN6HXCKT3";
 
 		checkMissingTranslations();

@@ -65,11 +65,9 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 				},
 				{
 					role: "system",
-					content: settings.chatBotSystemPrompt
-				}
+					content: settings.chatBotSystemPrompt,
+				},
 			];
-
-			console.log("Channel history:", history);
 		}
 
 		const response = await getChatbotResponse(
@@ -105,6 +103,8 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 			);
 			if (referencedMessage.author.id === client.user.id) {
 				await createThreadAndReply(channel, message, response);
+			} else {
+				await referencedMessage.reply(response);
 			}
 		}
 	}
@@ -138,7 +138,6 @@ async function getChatbotResponse(
 		}),
 	});
 
-	// Read response body
 	const json = (await response.json()) as GroqResponse;
 
 	console.log("Chatbot response:", json);
@@ -202,11 +201,20 @@ async function sendResponse(
 	content: string,
 	maxLength: number,
 ) {
-	const responseContent =
-		content.length > maxLength
-			? `${content.slice(0, maxLength - 3)} [...]`
-			: content;
-	await message.reply(responseContent);
+	if (content.length > maxLength) {
+		const buffer = Buffer.from(content, "utf-8");
+		await message.reply({
+			content: "The response is too long to send in a single message. Here is a file:",
+			files: [
+				{
+					attachment: buffer,
+					name: "skyndalex-chatbot-response.txt",
+				},
+			],
+		});
+	} else {
+		message.reply(content);
+	}
 }
 
 async function createThreadAndReply(

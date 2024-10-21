@@ -10,8 +10,7 @@ export async function run(
 ) {
 	try {
 		if (
-			interaction.user.id !==
-				interaction?.message?.interaction?.user?.id &&
+			interaction.user.id !== interaction?.message?.author?.id &&
 			!interaction.member?.permissions.has(
 				PermissionFlagsBits.ManageChannels,
 			)
@@ -21,7 +20,7 @@ export async function run(
 				ephemeral: true,
 			});
 
-		await interaction.update({ files: [] });
+		await interaction.update({ files: [], components: [] });
 	} catch (e) {
 		console.error(e);
 		interaction.editReply({
