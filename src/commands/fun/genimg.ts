@@ -16,7 +16,10 @@ export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	const taskId = `${interaction.user.id}-${interaction.guild.id}`;
+	// const taskId = `${interaction.user.id}-${interaction.guild.id}`;
+
+	let taskId = null;
+	if (interaction.guildId) taskId = `${interaction.user.id}-${interaction.guildId}`;
 	const defaultModel = "stabilityai/stable-diffusion-2-1";
 	const model = interaction?.options?.getString("model") || defaultModel;
 
