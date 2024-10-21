@@ -21,11 +21,16 @@ export async function run(
 	const taskId = `${interaction.user.id}-${Date.now()}`;
 	const defaultModel = "stabilityai/stable-diffusion-2-1";
 	const model = interaction?.options?.getString("model") || defaultModel;
-	const settings = await client.prisma.settings.findFirst({
-		where: {
-			guildId: interaction.guildId,
-		},
-	});
+
+	let settings = null;
+
+	if (interaction.guildId) {
+		settings = await client.prisma.settings.findFirst({
+			where: {
+				guildId: interaction.guildId,
+			},
+		});
+	}
 
 	try {
 		const prompt = interaction.options.getString("prompt");
@@ -98,6 +103,7 @@ export async function run(
 				(await response.blob()) as HuggingFaceImage["generatedImage"];
 
 			const imageBuffer = Buffer.from(await result.arrayBuffer());
+
 			const image = new AttachmentBuilder(imageBuffer, {
 				name: "image.jpg",
 			});
