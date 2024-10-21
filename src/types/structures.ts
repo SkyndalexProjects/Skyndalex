@@ -43,3 +43,8 @@ export interface radioStatus {
 export interface Setting {
 	column_name: string;
 }
+export interface HuggingFaceQueueObject {
+	status: string;
+	position: number;
+	input: string;
+}

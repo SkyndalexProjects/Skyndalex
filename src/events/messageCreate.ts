@@ -65,11 +65,9 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 				},
 				{
 					role: "system",
-					content: settings.chatBotSystemPrompt
-				}
+					content: settings.chatBotSystemPrompt,
+				},
 			];
-
-			console.log("Channel history:", history);
 		}
 
 		const response = await getChatbotResponse(

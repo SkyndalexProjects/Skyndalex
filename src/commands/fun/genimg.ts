@@ -12,13 +12,11 @@ import type { SkyndalexClient } from "#classes";
 import type { HuggingFaceImage, HuggingFaceSearchResult } from "#types";
 import { handleError, suggestCommands } from "#utils";
 
-const imageQueue = new Map();
-
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	const taskId = `${interaction.user.id}-${Date.now()}`;
+	const taskId = `${interaction.user.id}-${interaction.guild.id}`;
 	const defaultModel = "stabilityai/stable-diffusion-2-1";
 	const model = interaction?.options?.getString("model") || defaultModel;
 
@@ -35,7 +33,7 @@ export async function run(
 	try {
 		const prompt = interaction.options.getString("prompt");
 
-		const queuePosition = imageQueue.size + 1;
+		const queuePosition = client.imageQueue.size + 1;
 
 		if (model !== defaultModel) {
 			if (!(interaction.channel as BaseGuildTextChannel).nsfw) {
@@ -46,8 +44,8 @@ export async function run(
 			}
 		}
 
-		if (!imageQueue.has(interaction.user.id)) {
-			imageQueue.set(taskId, {
+		if (!client.imageQueue.has(interaction.user.id)) {
+			client.imageQueue.set(taskId, {
 				status: "queued",
 				position: queuePosition,
 				input: prompt,
@@ -136,7 +134,7 @@ export async function run(
 				files: [image],
 			});
 		}
-		imageQueue.delete(taskId);
+		client.imageQueue.delete(taskId);
 
 		const commands = await suggestCommands(client, interaction.user.id);
 
@@ -151,7 +149,7 @@ export async function run(
 		});
 	} catch (e) {
 		console.error(e);
-		imageQueue.delete(taskId);
+		client.imageQueue.delete(taskId);
 
 		if (!interaction.deferred && !interaction.replied) {
 			await interaction.reply({
