@@ -5,8 +5,8 @@ export async function suggestCommands(client: SkyndalexClient, userId: string) {
 	const fetchedCommands = await client.application.commands.fetch();
 
 	const commands = fetchedCommands
-		.random(5)
 		.filter((command) => !command.name.includes("test"))
+		.random(5)
 		.map((command) => {
 			return `</${command.name}:${command.id}>`;
 		});
