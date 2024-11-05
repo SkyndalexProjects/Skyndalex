@@ -26,6 +26,7 @@
   "license": "ISC",
   "devDependencies": {
     "@biomejs/biome": "1.6.4",
+    "@types/express": "^5.0.0",
     "@types/ms": "^0.7.34",
     "prisma": "^5.15.1",
     "tsx": "^4.16.5",
@@ -36,6 +37,8 @@
     "@prisma/client": "^5.15.1",
     "@types/gamedig": "^5.0.2",
     "discord.js": "^14.16.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
     "find-process": "^1.4.7",
     "gamedig": "^5.0.0",
     "i18next": "^23.11.2",
