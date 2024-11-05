@@ -20,12 +20,14 @@
     "#components": "./dist/classes/builders/components/index.js",
     "#utils": "./dist/utils/index.js",
     "#types": "./dist/types/index.js",
-    "#modules": "./dist/classes/modules/index.js"
+    "#modules": "./dist/classes/modules/index.js",
+    "#commands": "./dist/classes/modules/commands/index.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@biomejs/biome": "1.6.4",
+    "@types/cookie-parser": "^1.4.7",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.0",
     "@types/ms": "^0.7.34",
@@ -38,6 +40,7 @@
     "@napi-rs/canvas": "^0.1.52",
     "@prisma/client": "^5.15.1",
     "@types/gamedig": "^5.0.2",
+    "cookie-parser": "^1.4.7",
     "discord.js": "^14.16.2",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",

@@ -4,6 +4,7 @@ import passport from "passport"
 import type { SkyndalexClient } from 'classes/Client'
 import { DiscordOauth } from './api/auth/discord'
 import { User } from 'discord.js'
+import cookieParser from 'cookie-parser'
 
 declare global {
     namespace Express {
@@ -25,6 +26,7 @@ export class ExpressApp {
     }
     init() {
         const app = express()
+        app.use(cookieParser())
         app.use(express.json())
 
         app.use(session({ secret: "test", resave: false, saveUninitialized: false }))

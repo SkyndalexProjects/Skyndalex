@@ -1,4 +1,5 @@
 import type { SkyndalexClient } from "#classes";
+import { DiscordOauthResponse } from "#types";
 import express from "express";
 import type { Request, Response } from "express";
 import type { Session } from "express-session";
@@ -31,8 +32,17 @@ export class DiscordOauth {
                 },
             });
     
-            const token = await response.json();
-            console.log("token", token)
+            const token = await response.json() as DiscordOauthResponse;
+
+            const cookies = req.cookies;
+            if (!cookies.token) {
+                res.cookie("token", token.access_token, {
+                    maxAge: token.expires_in,
+                    httpOnly: false,
+                });
+            }
+
+            res.send("Auth success");
         });
 
         router.get("/", (req, res) => {
