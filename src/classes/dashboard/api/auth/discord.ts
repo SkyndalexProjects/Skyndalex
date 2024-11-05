@@ -1,6 +1,7 @@
 import type { SkyndalexClient } from "#classes";
 import express from "express";
 import type { Request, Response } from "express";
+import type { Session } from "express-session";
 
 export class DiscordOauth {
     constructor(private readonly client: SkyndalexClient) {
@@ -33,6 +34,11 @@ export class DiscordOauth {
             const token = await response.json();
             console.log("token", token)
         });
+
+        router.get("/", (req, res) => {
+            console.log("session", req.session)
+            if (!req.session?.user) return res.redirect(process.env.OAUTH_URL)
+        })
         return router;
     }
 }

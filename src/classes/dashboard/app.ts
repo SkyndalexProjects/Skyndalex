@@ -3,12 +3,19 @@ import session from "express-session"
 import passport from "passport"
 import type { SkyndalexClient } from 'classes/Client'
 import { DiscordOauth } from './api/auth/discord'
+import { User } from 'discord.js'
 
 declare global {
     namespace Express {
         interface Request {
             client?: SkyndalexClient
         }
+    }
+}
+
+declare module "express-session" {
+    interface Session {
+        user?: User;
     }
 }
 
