@@ -27,7 +27,6 @@ router.get(
         });
 
         const token = (await response.json()) as DiscordOauthResponse;
-        req.session.token = token.access_token;
 
         const cookies = req.cookies;
         if (!cookies.token) {
@@ -37,8 +36,8 @@ router.get(
             });
         }
 
-        res.redirect("http://localhost:5173/api/guilds");
-        return;
+        res.redirect("http://localhost:5173");
+
     },
 );
 

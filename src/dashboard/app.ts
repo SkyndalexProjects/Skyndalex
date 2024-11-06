@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import fs from "fs";
 import path from "path";
-
+import cors from "cors"
 declare global {
 	namespace Express {
 		interface Request {
@@ -17,7 +17,6 @@ declare global {
 }
 declare module "express-session" {
 	interface Session {
-		user?: { accessToken: string };
 		token: string;
 	}
 }
@@ -36,16 +35,23 @@ export async function InitServer(client: SkyndalexClient) {
 	);
 	app.use(passport.initialize());
 	app.use(passport.session());
+	const corsSettings = {
+		origin: "http://localhost:5173",
+		credentials: true,
+	};
+
+	app.use(cors(corsSettings))
 
 	app.use((req, res, next) => {
 		req.client = client;
 		next();
 	});
+    
 	const __filename = fileURLToPath(import.meta.url);
 	const __dirname = dirname(__filename);
-	``;
-	const getRoutes = await loadRoutes(path.join(__dirname, "routes"), "/");
-	console.log("getRoutes", getRoutes);
+
+    const getRoutes = await loadRoutes(path.join(__dirname, "routes"), "/");
+
 	app.listen(3000, () => {
 		console.log("[Server] :: Listening on port 3000");
 	});

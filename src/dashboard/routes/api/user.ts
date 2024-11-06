@@ -11,7 +11,7 @@ router.get("/", async (req: Request, res: Response) => {
 	console.log("token", token);
 	const response = await fetch("https://discord.com/api/users/@me", {
 		headers: {
-			authorization: `Bearer ${req.cookies.token}`,
+			authorization: `Bearer ${token}`,
 		},
 	});
 
