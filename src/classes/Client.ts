@@ -1,9 +1,8 @@
 import { ActivityType, Client, GatewayIntentBits, Partials } from "discord.js";
 import { Loaders } from "./Loaders";
-import { ExpressApp } from "./dashboard/app";
+import { InitServer } from "dashboard/app";
 export class SkyndalexClient extends Client {
 	loader = new Loaders();
-	expressApp = new ExpressApp(this);
 	constructor() {
 		super({
 			intents: [
@@ -29,7 +28,7 @@ export class SkyndalexClient extends Client {
 	async init(token: string) {
 		await this.loader.loadEvents(this, "../events");
 
-		this.expressApp.init();
+		InitServer(this);
 		await this.login(token);
 
 		process.on("unhandledRejection", async (reason, p) => {
