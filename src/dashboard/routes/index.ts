@@ -1,12 +1,9 @@
-import Fastify from "fastify";
-import type { Guild } from "discord.js";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-const fastify = Fastify();
+export default async function index(fastify: FastifyInstance) {
+	fastify.get("/", async (req: FastifyRequest, reply: FastifyReply) => {
+		const token = req.cookies.token;
 
-fastify.get("/", (req, res) => {
-	const token = req.cookies.token;
-
-	if (!token) return res.redirect(process.env.OAUTH_URL);
-});
-
-export default fastify;
+		if (!token) return reply.redirect(process.env.OAUTH_URL);
+	});
+}
