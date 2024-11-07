@@ -1,9 +1,17 @@
-import { Router, Request, Response } from "express";
-import type { Guild } from "discord.js";
-const router = Router();
+import Fastify from "fastify";
 
-router.get("/", async (req: Request, res: Response) => {
-	const token = req.cookies.token;
+const fastify = Fastify();
+
+interface Guild {
+	id: string;
+	name: string;
+	icon: string;
+	owner: boolean;
+	permissions: string;
+}
+
+fastify.get("/guilds", async (request, reply) => {
+	const token = request.cookies.token;
 	console.log("headers", token);
 	console.log("[Server] :: Guilds requested");
 
@@ -19,8 +27,8 @@ router.get("/", async (req: Request, res: Response) => {
 		const hasPermission = (permissions & BigInt(0x20)) === BigInt(0x20);
 		return hasPermission;
 	});
-	res.send(filteredGuilds);
+	reply.send(filteredGuilds);
 	return;
 });
 
-export default router;
+export default fastify;

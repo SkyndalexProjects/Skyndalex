@@ -1,86 +1,74 @@
-import { SkyndalexClient } from "#classes";
-import cookieParser from "cookie-parser";
-import express from "express";
-import session from "express-session";
-import passport from "passport";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import fs from "fs";
-import path from "path";
-import cors from "cors"
-declare global {
-	namespace Express {
-		interface Request {
-			client?: SkyndalexClient;
-		}
-	}
-}
-declare module "express-session" {
-	interface Session {
-		token: string;
-	}
-}
-const app = express();
+import Fastify from 'fastify';
+import fastifyCookie from '@fastify/cookie';
+import fastifySession from '@fastify/session';
+import fastifyFlash from '@fastify/flash';
+import fastifyCors from '@fastify/cors';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path';
+import fs from 'fs';
+import { SkyndalexClient } from '#classes';
+import { FastifyRequest } from 'fastify';
+
+const fastify = Fastify({ logger: true });
 
 export async function InitServer(client: SkyndalexClient) {
-	app.use(cookieParser());
-	app.use(express.json());
-	app.use(
-		session({
-			secret: "test",
-			resave: false,
-			saveUninitialized: false,
-			cookie: { httpOnly: false, secure: false },
-		}),
-	);
-	app.use(passport.initialize());
-	app.use(passport.session());
-	const corsSettings = {
-		origin: "http://localhost:5173",
-		credentials: true,
-	};
-
-	app.use(cors(corsSettings))
-
-	app.use((req, res, next) => {
-		req.client = client;
-		next();
-	});
+    fastify.register(fastifyCookie);
     
-	const __filename = fileURLToPath(import.meta.url);
-	const __dirname = dirname(__filename);
+	fastify.register(fastifySession, { 
+        secret: process.env.SESSION_SECRET, 
+        cookie: { secure: false, httpOnly: false } 
+    });
 
-    const getRoutes = await loadRoutes(path.join(__dirname, "routes"), "/");
+    fastify.register(fastifyFlash);
+    
+	fastify.register(fastifyCors, {
+        origin: "http://localhost:5173",
+        credentials: true,
+    });
+	
+    fastify.addHook("preHandler", async (request: FastifyRequest & { client: SkyndalexClient }) => {
+        request.client = client;
+    });
 
-	app.listen(3000, () => {
-		console.log("[Server] :: Listening on port 3000");
-	});
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
 
-	return app;
+    await loadRoutes(path.join(__dirname, "routes"), "/");
+
+    try {
+        await fastify.listen({ port: 3000 });
+        fastify.log.info(`[server] listening on ${fastify.server.address()}`);
+    } catch (err) {
+        fastify.log.error(err);
+    }
+    return fastify;
 }
+
 async function loadRoutes(
-	dir: string,
-	basePath: string = "",
+    dir: string,
+    basePath: string = "",
 ): Promise<string[]> {
-	const files = fs.readdirSync(dir);
-	const routes: string[] = [];
+    const files = fs.readdirSync(dir);
+    const routes: string[] = [];
 
-	for (const file of files) {
-		const fullPath = path.join(dir, file);
-		const stat = fs.statSync(fullPath);
+    for (const file of files) {
+        const fullPath = path.join(dir, file);
+        const stat = fs.statSync(fullPath);
 
-		if (stat.isDirectory()) {
-			const subRoutes = await loadRoutes(fullPath, `${basePath}${file}/`);
-			routes.push(...subRoutes);
-		} else if (file.endsWith(".js") || file.endsWith(".ts")) {
-			const cleanRoute = file.split(".")[0];
-			const routePath =
-				cleanRoute === "index" ? basePath : `${basePath}${cleanRoute}`;
-			const route = (await import(fullPath)).default;
-			app.use(routePath, route);
-			routes.push(routePath);
-		}
-	}
+        if (stat.isDirectory()) {
+            const subRoutes = await loadRoutes(fullPath, `${basePath}${file}/`);
+            routes.push(...subRoutes);
+        } else if (file.endsWith(".js") || file.endsWith(".ts")) {
+            const cleanRoute = file.split(".")[0];
+            const routePath =
+                cleanRoute === "index" ? basePath : `${basePath}${cleanRoute}`;
+            const route = (await import(fullPath)).default;
 
-	return routes;
+            console.log("routePath", routePath);
+			fastify.register(route, { prefix: routePath });
+            routes.push(routePath);
+        }
+    }
+    return routes;
 }

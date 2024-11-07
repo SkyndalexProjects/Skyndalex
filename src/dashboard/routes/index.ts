@@ -1,9 +1,12 @@
-import { Router, Request, Response } from "express";
+import Fastify from "fastify";
+import type { Guild } from "discord.js";
 
-const router = Router();
+const fastify = Fastify();
 
-router.get("/", (req, res) => {
-	if (!req.session?.token) return res.redirect(process.env.OAUTH_URL);
+fastify.get("/", (req, res) => {
+	const token = req.cookies.token;
+
+	if (!token) return res.redirect(process.env.OAUTH_URL);
 });
 
-export default router;
+export default fastify;

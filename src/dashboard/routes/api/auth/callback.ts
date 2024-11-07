@@ -1,44 +1,45 @@
-import { Router, Request, Response } from "express";
+import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { DiscordOauthResponse } from "#types";
-const router = Router();
 
-router.get(
-    "/",
-    //@ts-expect-error
-    async (req: Request, res: Response) => {
-        if (!req.query.code) {
-            return res.send("No code provided");
-        }
+async function authCallback(fastify: FastifyInstance) {
+    fastify.get(
+        "/",
+        async (request: FastifyRequest, reply: FastifyReply) => {
+            const query = request.query as { code?: string };
 
-        const params = new URLSearchParams();
-        params.set("grant_type", "authorization_code");
-        params.set("code", req.query.code as string);
-        params.set("redirect_uri", "http://localhost:3000/api/auth/callback");
+            if (!query.code) {
+                return reply.send("No code provided");
+            }
 
-        const response = await fetch("https://discord.com/api/oauth2/token", {
-            method: "POST",
-            body: params.toString(),
-            headers: {
-                authorization: `Basic ${btoa(
-                    `${req.client.user.id}:${process.env.CLIENT_SECRET}`,
-                )}`,
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-        });
+            const params = new URLSearchParams();
+            params.set("grant_type", "authorization_code");
+            params.set("code", query.code);
+            params.set("redirect_uri", "http://localhost:3000/api/auth/callback");
 
-        const token = (await response.json()) as DiscordOauthResponse;
-
-        const cookies = req.cookies;
-        if (!cookies.token) {
-            res.cookie("token", token.access_token, {
-                maxAge: token.expires_in * 1000,
-                httpOnly: false,
+            const response = await fetch("https://discord.com/api/oauth2/token", {
+                method: "POST",
+                body: params.toString(),
+                headers: {
+                    authorization: `Basic ${Buffer.from(
+                        `${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`,
+                    ).toString("base64")}`,
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
             });
-        }
 
-        res.redirect("http://localhost:5173");
+            const token = (await response.json()) as DiscordOauthResponse;
 
-    },
-);
+            const cookies = request.cookies;
+            if (!cookies.token) {
+                reply.setCookie("token", token.access_token, {
+                    domain: "localhost",
+                    path: "/",
+                })
+            }
 
-export default router;
+            reply.redirect("http://localhost:5173");
+        },
+    );
+}
+
+export default authCallback;
