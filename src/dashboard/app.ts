@@ -10,7 +10,13 @@ import fs from "fs";
 import { SkyndalexClient } from "#classes";
 import { FastifyRequest } from "fastify";
 
-const fastify = Fastify({ logger: true });
+const fastify = Fastify();
+
+declare module "fastify" {
+	interface FastifyRequest {
+		client: SkyndalexClient;
+	}
+}
 
 export async function InitServer(client: SkyndalexClient) {
 	fastify.register(fastifyCookie);
@@ -66,6 +72,8 @@ async function loadRoutes(
 					`Route module at ${fullPath} does not export a default function`,
 				);
 			}
+
+			console.log(`[Server] :: Registering route ${routePath}`);
 			fastify.register(route, { prefix: routePath });
 			routes.push(routePath);
 		}
