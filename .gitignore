@@ -135,5 +135,5 @@ dist
 src/configdeprecated.json
 .npmrc
 .env
-db
+/db
 .project.inlang
