@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 
 export default async function userRoutes(fastify: FastifyInstance) {
-	fastify.get("/", async (request: FastifyRequest, reply: FastifyReply) => {
+	fastify.get("/user", async (request: FastifyRequest, reply: FastifyReply) => {
 		const token = request.cookies.token;
 		console.log("[Server] :: User requested");
 

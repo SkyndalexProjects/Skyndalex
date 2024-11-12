@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { DiscordOauthResponse } from "#types";
 export default async function callbackRoute(fastify: FastifyInstance) {
 	fastify.get(
-		"/",
+		"/callback",
 		async (
 			request: FastifyRequest<{ Querystring: { code: string } }>,
 			reply: FastifyReply,

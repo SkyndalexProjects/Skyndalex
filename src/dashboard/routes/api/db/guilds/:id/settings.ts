@@ -13,20 +13,19 @@ interface Guild {
 }
 
 export default async function guildSettingsRoute(fastify: FastifyInstance) {
-	fastify.post("/", async (request: FastifyRequest, reply: FastifyReply) => {
+	fastify.post("/settings", async (request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
         console.log("[Server] :: Settings requested");
+		const getId = request.params.id;
 
-		const getBody = request.body as { guildId: string };
-        const guildId = getBody.guildId;
-
-        console.log("chuj", guildId)
 
         const getSettings = await request.client.prisma.settings.findMany({
             where: {
-                guildId: guildId
+                guildId: getId
             }
         });
 
         console.log("getSettings", getSettings)
+
+		return getSettings;
 	});
 }

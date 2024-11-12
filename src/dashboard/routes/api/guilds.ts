@@ -13,7 +13,7 @@ interface Guild {
 }
 
 export default async function guildsRoute(fastify: FastifyInstance) {
-	fastify.get("/", async (request: FastifyRequest, reply: FastifyReply) => {
+	fastify.get("/guilds", async (request: FastifyRequest, reply: FastifyReply) => {
 		const token = request.cookies.token;
 		console.log("[Server] :: Guilds requested");
 
