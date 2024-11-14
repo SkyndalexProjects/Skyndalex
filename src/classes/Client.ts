@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 export class SkyndalexClient extends Client {
 	loader = new Loaders();
 	prisma = new PrismaClient();
-	
+
 	constructor() {
 		super({
 			intents: [

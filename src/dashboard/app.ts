@@ -3,7 +3,7 @@ import fastifyCookie from "@fastify/cookie";
 import fastifySession from "@fastify/session";
 import fastifyFlash from "@fastify/flash";
 import fastifyCors from "@fastify/cors";
-import autoLoad from "@fastify/autoload"
+import autoLoad from "@fastify/autoload";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import path from "path";
@@ -41,8 +41,8 @@ export async function InitServer(client: SkyndalexClient) {
 
 	fastify.register(autoLoad, {
 		dir: path.join(__dirname, "routes"),
-		routeParams: true
-	})
+		routeParams: true,
+	});
 	try {
 		await fastify.listen({ port: 3000 });
 		fastify.log.info(`[server] listening on ${fastify.server.address()}`);
