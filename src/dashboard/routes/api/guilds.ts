@@ -62,6 +62,7 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 					(permissions & BigInt(0x20)) === BigInt(0x20);
 				return hasPermission;
 			});
+
 			reply.send(filteredGuilds);
 			return;
 		},
