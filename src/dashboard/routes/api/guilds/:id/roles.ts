@@ -27,14 +27,11 @@ export default async function guildRolesRoute(fastify: FastifyInstance) {
 				};
 			});
 
-			console.log("getRoles", getRoles);
-
 			if (!getRoles.length) {
 				reply.status(404).send({ error: "Roles not found" });
 				return;
 			}
 
-			console.log("getChannels", getRoles);
 			if (!getRoles.length) {
 				reply.status(404).send({ error: "Channels not found" });
 				return;

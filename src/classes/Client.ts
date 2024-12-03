@@ -44,7 +44,7 @@ export class SkyndalexClient extends Client {
 	}
 
 	async init(token: string) {
-		const app = Fastify({ logger: true });
+		const app = Fastify();
 		app.register(fastifyCookie);
 		app.register(fastifySession, {
 			secret: process.env.SESSION_SECRET,
@@ -65,17 +65,23 @@ export class SkyndalexClient extends Client {
 		const __filename = fileURLToPath(import.meta.url);
 		const __dirname = dirname(__filename);
 
+
 		app.register(autoLoad, {
 			dir: path.join(__dirname, "../dashboard/routes"),
 			routeParams: true,
 		});
+
 		try {
 			app.listen({ port: Number(process.env.API_PORT) });
 			app.log.info(`[server] listening on ${app.server.address()}`);
 		} catch (err) {
 			app.log.error(err);
 		}
-	
+
+		app.ready(() => {
+			console.log(app.printRoutes())
+		})
+		
 		await this.loader.loadEvents(this, "../events");
 
 		await this.login(token);

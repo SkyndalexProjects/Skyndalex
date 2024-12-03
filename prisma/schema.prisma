@@ -32,13 +32,12 @@ model Users {
 model Custombots {
   id       Int    @default(autoincrement())
   guildId  String
-  userId   String
   clientId String
   token    String
   activity String @default("Skyndalex v2.0 | discord.skyndalex.com")
   status   String @default("offline")
 
-  @@id([guildId, userId])
+  @@id([id, guildId])
 }
 
 model Cases {

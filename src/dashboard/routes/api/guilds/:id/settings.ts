@@ -24,8 +24,6 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
 				},
 			});
 
-			console.log("getSettings", getSettings);
-
 			return getSettings;
 		},
 	);

@@ -29,8 +29,6 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
 						guildId: getId,
 					};
 				});
-
-			console.log("getChannels", getChannels);
 			if (!getChannels.length) {
 				reply.status(404).send({ error: "Channels not found" });
 				return;
