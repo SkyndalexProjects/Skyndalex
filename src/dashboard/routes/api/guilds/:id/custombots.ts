@@ -15,18 +15,21 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 			request: FastifyRequest<{ Params: { id: string } }>,
 			reply: FastifyReply,
 		) => {
-			console.log("[Server] :: Settings (custombots get) requested");
 			const getId = request.params.id;
 
 			const getCustombots = await request.client.prisma.custombots.findMany({
-				where: {
-					guildId: getId,
-				},
-			});
+					where: {
+						guildId: getId,
+					},
+				});
+			console.log(
+				"[Server] :: Settings (custombots get) requested",
+				getCustombots,
+			);
 			return getCustombots;
 		},
 	);
-	
+
 	interface AddCustomBotBody {
 		guildId: string;
 		clientId: string;
@@ -35,20 +38,26 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 		status: string;
 	}
 
-	fastify.post("/custombots/add", async (request: FastifyRequest<{ Body: AddCustomBotBody }>, reply: FastifyReply) => {
-		const body = request.body;
-		const { guildId, clientId, token, activity, status } = body;
-		const addCustombot = await request.client.prisma.custombots.create({
-			data: {
-				guildId,
-				clientId,
-				token,
-				activity,
-				status
-			},
-		});
+	fastify.post(
+		"/custombots/add",
+		async (
+			request: FastifyRequest<{ Body: AddCustomBotBody }>,
+			reply: FastifyReply,
+		) => {
+			const body = request.body;
+			const { guildId, clientId, token, activity, status } = body;
+			const addCustombot = await request.client.prisma.custombots.create({
+				data: {
+					guildId,
+					clientId,
+					token,
+					activity,
+					status,
+				},
+			});
 
-		console.log("[Server] :: Custombot added");
-		return addCustombot;
-	});
+			console.log("[Server] :: Custombot added");
+			return addCustombot;
+		},
+	);
 }

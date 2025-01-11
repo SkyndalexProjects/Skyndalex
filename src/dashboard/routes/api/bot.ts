@@ -9,13 +9,14 @@ export default async function userRoutes(fastify: FastifyInstance) {
 
 			const response = await fetch("https://discord.com/api/users/@me", {
 				headers: {
-                    "Content-Type": "application/json",
+					"Content-Type": "application/json",
 					Authorization: token,
 				},
 			});
 
 			const bot = await response.json();
 
+			console.log("[Server] :: Bot fetched", bot);
 			reply.send(bot);
 		},
 	);

@@ -55,13 +55,10 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 				reply.status(500).send({ error: "Invalid guilds response" });
 				return;
 			}
-
-			const filteredGuilds = guilds.filter((guild: Guild) => {
-				const permissions = BigInt(guild.permissions);
-				const hasPermission =
-					(permissions & BigInt(0x20)) === BigInt(0x20);
-				return hasPermission;
-			});
+			const filteredGuilds = guilds.filter(
+				(guild: Guild) =>
+					(BigInt(guild.permissions) & BigInt(0x20)) === BigInt(0x20),
+			);
 
 			reply.send(filteredGuilds);
 			return;

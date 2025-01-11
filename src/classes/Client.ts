@@ -50,7 +50,7 @@ export class SkyndalexClient extends Client {
 			secret: process.env.SESSION_SECRET,
 			cookie: { secure: true, httpOnly: true },
 		}),
-		app.register(fastifyFlash);
+			app.register(fastifyFlash);
 		app.register(fastifyCors, {
 			origin: process.env.FRONTEND_URL,
 			credentials: true,
@@ -65,7 +65,6 @@ export class SkyndalexClient extends Client {
 		const __filename = fileURLToPath(import.meta.url);
 		const __dirname = dirname(__filename);
 
-
 		app.register(autoLoad, {
 			dir: path.join(__dirname, "../dashboard/routes"),
 			routeParams: true,
@@ -79,9 +78,9 @@ export class SkyndalexClient extends Client {
 		}
 
 		app.ready(() => {
-			console.log(app.printRoutes())
-		})
-		
+			console.log(app.printRoutes());
+		});
+
 		await this.loader.loadEvents(this, "../events");
 
 		await this.login(token);
