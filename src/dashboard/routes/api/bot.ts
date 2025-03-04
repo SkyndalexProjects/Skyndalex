@@ -26,15 +26,18 @@ export default async function userRoutes(fastify: FastifyInstance) {
 			const clientID = request.headers.clientid;
 			console.log("[Server] :: Bot RPC requested");
 
-			const response = await fetch(`https://discord.com/api/applications/${clientID}/rpc`, {
-				headers: {
-					"Content-Type": "application/json",
+			const response = await fetch(
+				`https://discord.com/api/applications/${clientID}/rpc`,
+				{
+					headers: {
+						"Content-Type": "application/json",
+					},
 				},
-			});
+			);
 
 			const rpc = await response.json();
 			reply.send(rpc);
 			console.log("[Server] :: Bot RPC fetched", rpc);
 		},
-	)
+	);
 }

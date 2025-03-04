@@ -17,7 +17,8 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 		) => {
 			const getId = request.params.id;
 
-			const getCustombots = await request.client.prisma.custombots.findMany({
+			const getCustombots =
+				await request.client.prisma.custombots.findMany({
 					where: {
 						guildId: getId,
 					},

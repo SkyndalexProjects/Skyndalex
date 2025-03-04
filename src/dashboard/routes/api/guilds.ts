@@ -55,9 +55,30 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 				reply.status(500).send({ error: "Invalid guilds response" });
 				return;
 			}
+			const botGuildsResponse = await fetch(
+				"https://discord.com/api/users/@me/guilds",
+				{
+					headers: {
+						authorization: `Bot ${process.env.BOT_TOKEN}`,
+					},
+				},
+			);
+
+			if (!botGuildsResponse.ok) {
+				reply.status(botGuildsResponse.status).send({
+					error: "Failed to fetch bot guilds",
+					message: await botGuildsResponse.text(),
+				});
+				return;
+			}
+
+			const botGuilds = (await botGuildsResponse.json()) as Guild[];
+			const botGuildIds = new Set(botGuilds.map((guild) => guild.id));
+
 			const filteredGuilds = guilds.filter(
 				(guild: Guild) =>
-					(BigInt(guild.permissions) & BigInt(0x20)) === BigInt(0x20),
+					(BigInt(guild.permissions) & BigInt(0x20)) === BigInt(0x20) &&
+					botGuildIds.has(guild.id),
 			);
 
 			reply.send(filteredGuilds);
