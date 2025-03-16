@@ -17,6 +17,7 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 
 			let response;
 			let retryAfter = 0;
+
 			do {
 				if (retryAfter > 0) {
 					console.log(
@@ -51,6 +52,7 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 			}
 
 			const guilds = (await response.json()) as Guild[];
+
 			if (!Array.isArray(guilds)) {
 				reply.status(500).send({ error: "Invalid guilds response" });
 				return;
@@ -75,13 +77,12 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 			const botGuilds = (await botGuildsResponse.json()) as Guild[];
 			const botGuildIds = new Set(botGuilds.map((guild) => guild.id));
 
-			const filteredGuilds = guilds.filter(
-				(guild: Guild) =>
-					(BigInt(guild.permissions) & BigInt(0x20)) === BigInt(0x20) &&
-					botGuildIds.has(guild.id),
-			);
+			const guildsWithMoreUserData = guilds.map((guild: Guild) => ({
+				...guild,
+				isBotAdded: botGuildIds.has(guild.id),
+			}));
 
-			reply.send(filteredGuilds);
+			reply.send(guildsWithMoreUserData);
 			return;
 		},
 	);
