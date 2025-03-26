@@ -32,7 +32,6 @@ model Users {
 model Custombots {
   id       Int    @default(autoincrement())
   guildId  String
-  clientId String
   token    String
   activity String @default("Skyndalex v2.0 | discord.skyndalex.com")
   status   String @default("offline")

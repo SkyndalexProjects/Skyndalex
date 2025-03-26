@@ -46,11 +46,10 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 			reply: FastifyReply,
 		) => {
 			const body = request.body;
-			const { guildId, clientId, token, activity, status } = body;
+			const { guildId, token, activity, status } = body;
 			const addCustombot = await request.client.prisma.custombots.create({
 				data: {
 					guildId,
-					clientId,
 					token,
 					activity,
 					status,
