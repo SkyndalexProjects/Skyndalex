@@ -14,7 +14,6 @@
     "start": "npm run migrate:deploy && node dist/index.js"
   },
   "imports": {
-    "#": "./dist/*/index.js",
     "#classes": "./dist/classes/index.js",
     "#builders": "./dist/classes/builders/index.js",
     "#components": "./dist/classes/builders/components/index.js",
@@ -60,5 +59,8 @@
     "picocolors": "^1.0.0",
     "shoukaku": "^4.0.1"
   },
-  "description": ""
+  "description": "",
+  "prisma": {
+    "schema": "prisma/schema.prisma"
+  }
 }

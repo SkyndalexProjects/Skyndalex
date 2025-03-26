@@ -22,7 +22,6 @@ sudo docker build --tag skyndalex:preview .
 sudo docker compose -f docker-compose:preview.yml up
 ```
 
-
 ## Links
 
 - [skyndalex.com](https://skyndalex.com)
