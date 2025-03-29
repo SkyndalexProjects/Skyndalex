@@ -1,5 +1,6 @@
 import { ChannelType } from "discord.js";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
+import { REPL_MODE_SLOPPY } from "repl";
 
 export default async function userInfo(fastify: FastifyInstance) {
 	fastify.post(
@@ -16,6 +17,13 @@ export default async function userInfo(fastify: FastifyInstance) {
 					userId: getId,
 				},
 			});
+
+			console.log("[Server] :: User info requested", getUser);
+			if (!getUser) {
+				return reply.status(404).send({ message: "User not found" });
+			}
+
+			reply.send(getUser);
 		},
 	);
 }

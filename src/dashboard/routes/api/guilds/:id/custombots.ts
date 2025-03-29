@@ -37,6 +37,9 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 		token: string;
 		activity: string;
 		status: string;
+		value?: string;
+		userId?: string;
+		date?: string;
 	}
 
 	fastify.post(
@@ -46,7 +49,7 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 			reply: FastifyReply,
 		) => {
 			const body = request.body;
-			const { guildId, token, activity, status } = body;
+			const { guildId, token, activity, status, value, userId } = body;
 			const addCustombot = await request.client.prisma.custombots.create({
 				data: {
 					guildId,
@@ -57,6 +60,18 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 			});
 
 			console.log("[Server] :: Custombot added");
+
+			const addLog = await request.client.prisma.dashboardLogs.create({
+				data: {
+					guildId,
+					value,
+					userId,
+					date: BigInt(new Date().getTime()),
+				},
+			});
+
+			console.log("[Server] :: Dashboard log added");
+
 			return addCustombot;
 		},
 	);

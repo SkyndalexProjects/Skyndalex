@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
-import { DiscordOauthResponse } from "#types";
+import { DiscordOauthResponse, DiscordUser } from "#types";
 export default async function callbackRoute(fastify: FastifyInstance) {
 	fastify.get(
 		"/callback",
@@ -31,7 +31,33 @@ export default async function callbackRoute(fastify: FastifyInstance) {
 
 			const token = (await response.json()) as DiscordOauthResponse;
 
-			console.log("token", token);
+			const getUserData = await fetch(
+				"https://discord.com/api/users/@me",
+				{
+					headers: {
+						authorization: `Bearer ${token.access_token}`,
+					},
+				},
+			);
+			const userData = (await getUserData.json()) as DiscordUser;
+
+			const existingUser = await request.client.prisma.users.findUnique({
+				where: {
+					userId: userData.id,
+				},
+			});
+
+			if (!existingUser) {
+				await request.client.prisma.users.create({
+					data: {
+						type: "normal",
+						userId: userData.id,
+						username: userData.username,
+						avatar: userData.avatar,
+						usedCommand: false,
+					},
+				});
+			}
 			const cookies = request.cookies;
 			if (!cookies.token) {
 				// set token available also for localhost:5173
@@ -43,7 +69,6 @@ export default async function callbackRoute(fastify: FastifyInstance) {
 					httpOnly: false,
 				});
 			}
-
 			reply.redirect("http://localhost:5173/");
 		},
 	);

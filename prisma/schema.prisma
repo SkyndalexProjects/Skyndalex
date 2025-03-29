@@ -26,6 +26,8 @@ model Settings {
 model Users {
   type        String  @default("normal")
   userId      String  @id
+  username String
+  avatar String
   usedCommand Boolean
 }
 
@@ -76,4 +78,11 @@ model AlreadySignedPetitions {
   id         Int    @id @default(autoincrement())
   userId     String
   petitionId Int
+}
+model DashboardLogs {
+    id         Int    @id @default(autoincrement())
+  guildId String
+  value String?
+  userId String?
+  date BigInt?
 }
