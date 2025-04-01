@@ -2,4 +2,8 @@ import { SkyndalexClient } from "#classes";
 import dotenv from "dotenv";
 dotenv.config();
 
-new SkyndalexClient().init(process.env.BOT_TOKEN);
+const botToken = process.env.BOT_TOKEN;
+if (!botToken) {
+	throw new Error("BOT_TOKEN is not defined in the environment variables.");
+}
+new SkyndalexClient().init(botToken);

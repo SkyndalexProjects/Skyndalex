@@ -7,6 +7,12 @@ export default async function callbackRoute(fastify: FastifyInstance) {
 			request: FastifyRequest<{ Querystring: { code: string } }>,
 			reply: FastifyReply,
 		) => {
+			if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
+				throw new Error(
+					"CLIENT_ID or CLIENT_SECRET is not defined in environment variables",
+				);
+			}
+
 			const params = new URLSearchParams({
 				client_id: process.env.CLIENT_ID,
 				client_secret: process.env.CLIENT_SECRET,
@@ -53,7 +59,7 @@ export default async function callbackRoute(fastify: FastifyInstance) {
 						type: "normal",
 						userId: userData.id,
 						username: userData.username,
-						avatar: userData.avatar,
+						avatar: userData.avatar ?? "default-avatar",
 						usedCommand: false,
 					},
 				});
