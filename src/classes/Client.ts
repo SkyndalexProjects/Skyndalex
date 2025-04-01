@@ -34,6 +34,7 @@ export class SkyndalexClient extends Client {
 		await this.login(token);
 
 		if (token === process.env.BOT_TOKEN) {
+			console.log("[Server] :: Initializing dashboard");
 			this.dashboard.init();
 		} else {
 			console.log(

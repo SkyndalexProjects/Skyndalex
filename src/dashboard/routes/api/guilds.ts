@@ -15,34 +15,15 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 			const token = request.cookies.token;
 			console.log("[Server] :: Guilds requested");
 
-			let response;
-			let retryAfter = 0;
 
-			do {
-				if (retryAfter > 0) {
-					console.log(
-						`[Server] :: Rate limited, retrying after ${retryAfter} seconds`,
-					);
-					await new Promise((resolve) =>
-						setTimeout(resolve, retryAfter * 1000),
-					);
-				}
-				response = await fetch(
-					"https://discord.com/api/users/@me/guilds",
-					{
-						headers: {
-							authorization: `Bearer ${token}`,
-						},
+			const response = await fetch(
+				"https://discord.com/api/users/@me/guilds",
+				{
+					headers: {
+						authorization: `Bearer ${token}`,
 					},
-				);
-				if (response.status === 429) {
-					const data = await response.json();
-					retryAfter = (data as { retry_after: number }).retry_after;
-				} else {
-					retryAfter = 0;
-				}
-			} while (retryAfter > 0);
-
+				},
+			);
 			if (!response.ok) {
 				reply.status(response.status).send({
 					error: "Failed to fetch guilds",
@@ -50,7 +31,7 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 				});
 				return;
 			}
-
+			
 			const guilds = (await response.json()) as Guild[];
 
 			if (!Array.isArray(guilds)) {
