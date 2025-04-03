@@ -120,8 +120,8 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 						],
 						HostConfig: {
 							ExtraHosts: ["host.docker.internal:host-gateway"],
-							Binds: [`${dataPath}:/var/lib/postgresql/data:rw`]	
-						}
+							Binds: [`${dataPath}:/var/lib/postgresql/data:rw`],
+						},
 					});
 
 					container.attach(
@@ -135,7 +135,6 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 						},
 					);
 
-		
 					console.log("Container created successfully", container);
 
 					await container.start();

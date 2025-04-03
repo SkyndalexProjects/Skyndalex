@@ -15,7 +15,6 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 			const token = request.cookies.token;
 			console.log("[Server] :: Guilds requested");
 
-
 			const response = await fetch(
 				"https://discord.com/api/users/@me/guilds",
 				{
@@ -31,7 +30,7 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 				});
 				return;
 			}
-			
+
 			const guilds = (await response.json()) as Guild[];
 
 			if (!Array.isArray(guilds)) {
