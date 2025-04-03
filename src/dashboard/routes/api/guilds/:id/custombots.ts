@@ -1,7 +1,8 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import Docker from "dockerode";
+import { resolve } from "path";
+import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { dirname, resolve } from "path";
 interface Guild {
 	id: string;
 	name: string;
@@ -92,55 +93,9 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 				const docker = new Docker({
 					socketPath: "/var/run/docker.sock",
 				});
-
 				const __filename = fileURLToPath(import.meta.url);
 				const __dirname = dirname(__filename);
 				const dataPath = resolve(__dirname, "../../../../../data");
-				const databasePassword = process.env.CUSTOMBOT_DB_PASSWORD;
-				const databaseContainerName = `custombot-db-${clientId}`;
-
-				let databaseContainer;
-				try {
-					databaseContainer = await docker.createContainer({
-						Image: "postgres:17-alpine",
-						Env: [
-							`POSTGRES_USER=postgres`,
-							`POSTGRES_PASSWORD=${databasePassword}`,
-						],
-						ExposedPorts: {
-							"5432/tcp": {},
-						},
-						HostConfig: {
-							PortBindings: {
-								"5432/tcp": [
-									{
-										HostPort: "0",
-									},
-								],
-							},
-							Binds: [`${dataPath}:/var/lib/postgresql/data:rw`],
-							AutoRemove: true,
-						},
-						name: databaseContainerName,
-					});
-
-					await databaseContainer.start();
-
-					console.log("Database container started successfully");
-				} catch (error) {
-					console.error(
-						"Failed to create or start database container:",
-						error,
-					);
-					reply.send({
-						error: "Failed to create or start database container",
-						details:
-							error instanceof Error
-								? error.message
-								: String(error),
-					});
-					return;
-				}
 
 				try {
 					const container = await docker.createContainer({
@@ -148,26 +103,25 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 						Image: "skyndalex:stable",
 						Env: [
 							`BOT_TOKEN=${token}`,
-							`DATABASE_URL=postgresql://postgres:${process.env.CUSTOMBOT_DB_PASSWORD}@custombot-${clientId}:5432/skyndalex?schema=public`,
+							`DATABASE_URL=postgresql://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@host.docker.internal:5432/${process.env.POSTGRES_DATABASE}?schema=public`,
+							`CLIENT_ID=${clientId}`,
+							`POSTGRES_USER=${process.env.POSTGRES_USER}`,
+							`POSTGRES_PASSWORD=${process.env.POSTGRES_PASSWORD}`,
+							`POSTGRES_DB=${process.env.POSTGRES_DATABASE}`,
+							`CLIENT_SECRET=${process.env.CLIENT_SECRET}`,
 							`LAVALINK_URL=${process.env.LAVALINK_URL}`,
 							`LAVALINK_PORT=${process.env.LAVALINK_PORT}`,
 							`LAVALINK_SERVER_PASSWORD=${process.env.LAVALINK_SERVER_PASSWORD}`,
 							`CUSTOMBOT_DB_PASSWORD=${process.env.CUSTOMBOT_DATABASE_PASSWORD}`,
-							`POSTGRES_USER=${process.env.POSTGRES_USER}`,
-							`POSTGRES_PASSWORD=${process.env.POSTGRES_PASSWORD}`,
-							`POSTGRES_DB=${process.env.POSTGRES_DATABASE}`,
-							`CLIENT_ID=${clientId}`,
-							`CLIENT_SECRET=${process.env.CLIENT_SECRET}`,
 							`API_PORT=${process.env.API_PORT}`,
 							`API_ENDPOINT=${process.env.API_ENDPOINT}`,
 							`_JAVA_OPTIONS=-Xmx6G`,
 							`SERVER_PORT=${process.env.LAVALINK_PORT}`,
 						],
 						HostConfig: {
-							Links: [
-								`${databaseContainerName}:custombot-${clientId}`,
-							],
-						},
+							ExtraHosts: ["host.docker.internal:host-gateway"],
+							Binds: [`${dataPath}:/var/lib/postgresql/data:rw`]	
+						}
 					});
 
 					container.attach(
@@ -181,6 +135,7 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 						},
 					);
 
+		
 					console.log("Container created successfully", container);
 
 					await container.start();
