@@ -26,6 +26,26 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 						guildId: getId,
 					},
 				});
+
+			if (!getCustombots || getCustombots.length === 0) {
+				reply
+					.status(404)
+					.send({ error: "No custombots found for the guild" });
+				return;
+			}
+
+			if (
+				!getCustombots.every(
+					(bot) =>
+						bot.guildId &&
+						bot.token &&
+						bot.activity &&
+						bot.status,
+				)
+			) {
+				reply.status(500).send({ error: "Invalid custombot data" });
+				return;
+			}
 			console.log("[Server] :: Settings (custombots get) requested");
 			return getCustombots;
 		},
@@ -41,9 +61,45 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 		userId?: string;
 		date?: string;
 	}
-
 	fastify.post(
 		"/custombots/add",
+		{
+			schema: {
+				body: {
+					type: "object",
+					properties: {
+						guildId: { type: "string" },
+						clientId: { type: "string" },
+						token: { type: "string" },
+						activity: { type: "string" },
+						status: { type: "string" },
+						value: { type: "string", nullable: true },
+						userId: { type: "string", nullable: true },
+						date: { type: "string", format: "date-time", nullable: true },
+					},
+					required: ["guildId", "token", "activity", "status"],
+				},
+				response: {
+					200: {
+						type: "object",
+						properties: {
+							id: { type: "string" },
+							guildId: { type: "string" },
+							token: { type: "string" },
+							activity: { type: "string" },
+							status: { type: "string" },
+						},
+						required: ["id", "guildId", "token", "activity", "status"],
+					},
+					500: {
+						type: "object",
+						properties: {
+							error: { type: "string" },
+						},
+					},
+				},
+			},
+		},
 		async (
 			request: FastifyRequest<{ Body: AddCustomBotBody }>,
 			reply: FastifyReply,
@@ -77,11 +133,41 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 	);
 	fastify.post(
 		"/custombots/start",
+		{
+			schema: {
+				body: {
+					type: "object",
+					properties: {
+						token: { type: "string" },
+						id: { type: "string", pattern: "^[0-9]+$" },
+					},
+					required: ["token", "id"],
+				},
+				response: {
+					200: {
+						type: "object",
+						properties: {
+							message: { type: "string" },
+							status: { type: "number" },
+						},
+						required: ["message", "status"],
+					},
+					500: {
+						type: "object",
+						properties: {
+							error: { type: "string" },
+							details: { type: "string" },
+							status: { type: "number" },
+						},
+						required: ["error", "details", "status"],
+					},
+				},
+			},
+		},
 		async (
 			request: FastifyRequest<{
 				Body: {
 					token: string;
-					id: string;
 				};
 			}>,
 			reply: FastifyReply,
@@ -89,10 +175,27 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 			console.log("[Server] :: Custombot start requested");
 			try {
 				const token = request.body.token;
+				if (!token) {
+					reply.status(400).send({
+						error: "Token is required",
+						status: 400,
+					});
+					return;
+				};
 				const clientId = atob(token.split(".")[0]);
+				
+				if (!clientId) {
+					reply.status(400).send({
+						error: "Client ID is required",
+						status: 400,
+					});
+					return;
+				};
+
 				const docker = new Docker({
 					socketPath: "/var/run/docker.sock",
 				});
+				
 				const __filename = fileURLToPath(import.meta.url);
 				const __dirname = dirname(__filename);
 				const dataPath = resolve(__dirname, "../../../../../data");
@@ -135,14 +238,12 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 						},
 					);
 
-					console.log("Container created successfully", container);
-
 					await container.start();
 
 					reply.send({
 						message: "Custombot started successfully",
+						status: 200,
 					});
-					console.log("[Server] :: Custombot started");
 				} catch (error) {
 					console.error(
 						"Error creating or starting container:",
@@ -154,6 +255,7 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 							error instanceof Error
 								? error.message
 								: String(error),
+						status: 500,
 					});
 				}
 			} catch (error) {
