@@ -195,7 +195,7 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 				const docker = new Docker({
 					socketPath: "/var/run/docker.sock",
 				});
-				
+
 				const __filename = fileURLToPath(import.meta.url);
 				const __dirname = dirname(__filename);
 				const dataPath = resolve(__dirname, "../../../../../data");
@@ -268,4 +268,85 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 			}
 		},
 	);
+	fastify.post(
+		"/custombots/delete",
+		{
+			schema: {
+				body: {
+					type: "object",
+					properties: {
+						id: { type: "string" },
+					},
+					required: ["id"],
+				},
+				response: {
+					200: {
+						type: "object",
+						properties: {
+							message: { type: "string" },
+							status: { type: "number" },
+						},
+						required: ["message", "status"],
+					},
+					500: {
+						type: "object",
+						properties: {
+							error: { type: "string" },
+							details: { type: "string" },
+							status: { type: "number" },
+						},
+						required: ["error", "details", "status"],
+					},
+				},
+			},
+		},
+		async (
+			request: FastifyRequest<{
+				Body: {
+					id: string;
+				};
+			}>,
+			reply: FastifyReply,
+		) => {
+			console.log("[Server] :: Custombot delete requested");
+			try {
+				const id = request.body.id;
+				if (!id) {
+					reply.status(400).send({
+						error: "ID is required",
+						status: 400,
+					});
+					return;
+				}
+
+				const docker = new Docker({
+					socketPath: "/var/run/docker.sock",
+				});
+
+				const container = docker.getContainer(`custombot-${id}`);
+				if (!container) {
+					reply.status(404).send({
+						error: "Container not found",
+						status: 404,
+					});
+					return;
+				}
+				await container.stop();
+				await container.remove();
+
+				reply.send({
+					message: "Custombot deleted successfully",
+					status: 200,
+				});
+			} catch (error) {
+				console.error("Error:", error);
+				reply.send({
+					error: "Failed to delete custombot",
+					details:
+						error instanceof Error ? error.message : String(error),
+					status: 500,
+				});
+			}
+
+})
 }
