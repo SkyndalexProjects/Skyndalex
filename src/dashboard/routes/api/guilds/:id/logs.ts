@@ -7,7 +7,16 @@ export default async function manageLogs(fastify: FastifyInstance) {
 			request: FastifyRequest<{ Params: { id: string } }>,
 			reply: FastifyReply,
 		) => {
-			const getId = request.params.id;
+			const getId = request.client.guilds.cache.get(
+				request.params.id,
+			)?.id;
+
+			if (!getId) {
+				return reply.status(404).send({
+					message: "Guild not found",
+					status: 404,
+				});
+			}
 
 			const getLogs = await request.client.prisma.dashboardLogs.findMany({
 				where: {

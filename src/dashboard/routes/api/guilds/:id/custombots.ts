@@ -18,7 +18,14 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 			request: FastifyRequest<{ Params: { id: string } }>,
 			reply: FastifyReply,
 		) => {
-			const getId = request.params.id;
+			const getId = request.client.guilds.cache.get(
+				request.params.id,
+			)?.id;
+
+			if (!getId) {
+				reply.status(404).send({ error: "Guild not found" });
+				return;
+			}
 
 			const getCustombots =
 				await request.client.prisma.custombots.findMany({
@@ -37,10 +44,7 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 			if (
 				!getCustombots.every(
 					(bot) =>
-						bot.guildId &&
-						bot.token &&
-						bot.activity &&
-						bot.status,
+						bot.guildId && bot.token && bot.activity && bot.status,
 				)
 			) {
 				reply.status(500).send({ error: "Invalid custombot data" });
@@ -75,7 +79,11 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 						status: { type: "string" },
 						value: { type: "string", nullable: true },
 						userId: { type: "string", nullable: true },
-						date: { type: "string", format: "date-time", nullable: true },
+						date: {
+							type: "string",
+							format: "date-time",
+							nullable: true,
+						},
 					},
 					required: ["guildId", "token", "activity", "status"],
 				},
@@ -89,7 +97,13 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 							activity: { type: "string" },
 							status: { type: "string" },
 						},
-						required: ["id", "guildId", "token", "activity", "status"],
+						required: [
+							"id",
+							"guildId",
+							"token",
+							"activity",
+							"status",
+						],
 					},
 					500: {
 						type: "object",
@@ -181,16 +195,16 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 						status: 400,
 					});
 					return;
-				};
+				}
 				const clientId = atob(token.split(".")[0]);
-				
+
 				if (!clientId) {
 					reply.status(400).send({
 						error: "Client ID is required",
 						status: 400,
 					});
 					return;
-				};
+				}
 
 				const docker = new Docker({
 					socketPath: "/var/run/docker.sock",
@@ -347,6 +361,6 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 					status: 500,
 				});
 			}
-
-})
+		},
+	);
 }

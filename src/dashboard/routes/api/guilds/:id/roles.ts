@@ -9,7 +9,13 @@ export default async function guildRolesRoute(fastify: FastifyInstance) {
 			reply: FastifyReply,
 		) => {
 			console.log("[Server] :: Roles requested");
-			const getId = request.params.id;
+			const getId = request.client.guilds.cache.get(
+				request.params.id,
+			)?.id;
+			if (!getId) {
+				reply.status(404).send({ error: "Guild not found" });
+				return;
+			}
 
 			const getRoles = Array.from(
 				request.client.guilds.cache.get(getId)?.roles.cache.values() ||
@@ -27,13 +33,8 @@ export default async function guildRolesRoute(fastify: FastifyInstance) {
 				};
 			});
 
-			if (!getRoles.length) {
+			if (getRoles.length <= 0) {
 				reply.status(404).send({ error: "Roles not found" });
-				return;
-			}
-
-			if (!getRoles.length) {
-				reply.status(404).send({ error: "Channels not found" });
 				return;
 			}
 

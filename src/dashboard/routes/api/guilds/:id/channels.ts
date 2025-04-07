@@ -41,24 +41,26 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
 			reply: FastifyReply,
 		) => {
 			console.log("[Server] :: Settings requested");
-			const getId = request.params.id;
-			const guild = request.client.guilds.cache.get(getId);
+			const guild = request.client.guilds.cache.get(
+				request.params.id,
+			)?.id;
+
 			if (!guild) {
 				reply.status(404).send({ error: "Guild not found" });
 				return;
 			}
 
 			const getChannels = request.client.guilds.cache
-				.get(getId)
+				.get(guild)
 				?.channels.cache.map((ch) => {
 					return {
 						id: ch.id,
 						name: ch.name,
 						type: ChannelType[ch.type],
-						guildId: getId,
+						guildId: guild,
 					};
 				});
-				
+
 			if (!getChannels || Array.from(getChannels).length === 0) {
 				reply
 					.status(404)
