@@ -1,16 +1,27 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { DiscordOauthResponse, DiscordUser } from "#types";
+import crypto from "crypto";
+
 export default async function callbackRoute(fastify: FastifyInstance) {
 	fastify.get(
 		"/callback",
 		async (
-			request: FastifyRequest<{ Querystring: { code: string } }>,
+			request: FastifyRequest<{
+				Querystring: { code: string; state: string };
+			}>,
 			reply: FastifyReply,
 		) => {
 			if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
 				throw new Error(
 					"CLIENT_ID or CLIENT_SECRET is not defined in environment variables",
 				);
+			}
+			const cookies = request.cookies;
+			const state = request.query.state;
+
+			if (state !== cookies.csrf_token) {
+				reply.clearCookie("csrf_token");
+				return reply.code(403).send("Invalid state");
 			}
 
 			const params = new URLSearchParams({
@@ -64,10 +75,7 @@ export default async function callbackRoute(fastify: FastifyInstance) {
 					},
 				});
 			}
-			const cookies = request.cookies;
 			if (!cookies.token) {
-				// set token available also for localhost:5173
-
 				reply.setCookie("token", token.access_token, {
 					domain: "localhost",
 					path: "/",
@@ -75,6 +83,7 @@ export default async function callbackRoute(fastify: FastifyInstance) {
 					httpOnly: false,
 				});
 			}
+
 			reply.redirect("http://localhost:5173/");
 		},
 	);
