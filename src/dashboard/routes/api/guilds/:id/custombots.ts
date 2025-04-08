@@ -200,7 +200,9 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 					request.body.requestedByUserId,
 				);
 
-				const guild = request.client.guilds.cache.get(request.body.guildId);
+				const guild = request.client.guilds.cache.get(
+					request.body.guildId,
+				);
 
 				if (!guild) {
 					reply.status(404).send({
