@@ -37,6 +37,7 @@ model Custombots {
   token    String
   activity String @default("Skyndalex v2.0 | discord.skyndalex.com")
   status   String @default("offline")
+  clientId String
 
   @@id([id, guildId])
 }

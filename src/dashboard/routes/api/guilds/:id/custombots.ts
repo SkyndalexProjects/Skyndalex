@@ -3,14 +3,7 @@ import Docker from "dockerode";
 import { resolve } from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-interface Guild {
-	id: string;
-	name: string;
-	icon: string;
-	owner: boolean;
-	permissions: string;
-}
-
+import { PermissionFlagsBits } from "discord.js";
 export default async function manageCustombots(fastify: FastifyInstance) {
 	fastify.post(
 		"/custombots/get",
@@ -96,6 +89,7 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 							token: { type: "string" },
 							activity: { type: "string" },
 							status: { type: "string" },
+							clientId: { type: "string" },
 						},
 						required: [
 							"id",
@@ -119,13 +113,22 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 			reply: FastifyReply,
 		) => {
 			const body = request.body;
-			const { guildId, token, activity, status, value, userId } = body;
+			const {
+				guildId,
+				token,
+				activity,
+				status,
+				value,
+				userId,
+				clientId,
+			} = body;
 			const addCustombot = await request.client.prisma.custombots.create({
 				data: {
 					guildId,
 					token,
 					activity,
 					status,
+					clientId,
 				},
 			});
 
@@ -152,10 +155,11 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 				body: {
 					type: "object",
 					properties: {
-						token: { type: "string" },
-						id: { type: "string", pattern: "^[0-9]+$" },
+						clientId: { type: "string" },
+						requestedByUserId: { type: "string" },
+						guildId: { type: "string" },
 					},
-					required: ["token", "id"],
+					required: ["clientId", "requestedByUserId", "guildId"],
 				},
 				response: {
 					200: {
@@ -181,14 +185,71 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 		async (
 			request: FastifyRequest<{
 				Body: {
-					token: string;
+					clientId: string;
+					requestedByUserId: string;
+					guildId: string;
 				};
 			}>,
 			reply: FastifyReply,
 		) => {
 			console.log("[Server] :: Custombot start requested");
 			try {
-				const token = request.body.token;
+				const clientId = request.body.clientId;
+				console.log("request.body", request.body);
+				const user = request.client.users.cache.get(
+					request.body.requestedByUserId,
+				);
+
+				const guild = request.client.guilds.cache.get(request.body.guildId);
+
+				if (!guild) {
+					reply.status(404).send({
+						error: "Guild not found",
+						status: 404,
+					});
+					return;
+				}
+
+				const member = await guild.members.fetch(
+					request.body.requestedByUserId,
+				);
+				if (!member) {
+					reply.status(404).send({
+						error: "User not found in the guild",
+						status: 404,
+					});
+					return;
+				}
+
+				if (
+					!member.permissions.has(PermissionFlagsBits.Administrator)
+				) {
+					reply.status(403).send({
+						error: "No permissions",
+					});
+					return;
+				}
+
+				const getBot = await request.client.prisma.custombots.findFirst(
+					{
+						where: {
+							guildId: request.body.guildId,
+							clientId: clientId,
+						},
+					},
+				);
+				if (!getBot) {
+					console.log("[Server] :: Custombot not found");
+
+					reply.status(404).send({
+						error: "Custombot not found",
+						status: 404,
+					});
+					return;
+				}
+				const token = getBot.token;
+
+				console.log("[Server] :: Custombot token found", token);
 				if (!token) {
 					reply.status(400).send({
 						error: "Token is required",
@@ -196,7 +257,6 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 					});
 					return;
 				}
-				const clientId = atob(token.split(".")[0]);
 
 				if (!clientId) {
 					reply.status(400).send({
