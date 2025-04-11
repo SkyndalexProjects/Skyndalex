@@ -215,6 +215,7 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 				const member = await guild.members.fetch(
 					request.body.requestedByUserId,
 				);
+
 				if (!member) {
 					reply.status(404).send({
 						error: "User not found in the guild",
