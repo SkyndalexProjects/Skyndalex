@@ -10,7 +10,7 @@ export default async function callbackRoute(fastify: FastifyInstance) {
 				Querystring: { code: string; state: string };
 			}>,
 			reply: FastifyReply,
-		) => {
+		): Promise<void> => {
 			if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
 				throw new Error(
 					"CLIENT_ID or CLIENT_SECRET is not defined in environment variables",
@@ -57,7 +57,7 @@ export default async function callbackRoute(fastify: FastifyInstance) {
 				},
 			);
 			const userData = (await getUserData.json()) as DiscordUser;
-
+			console.log("userData", userData);
 			const existingUser = await request.client.prisma.users.findUnique({
 				where: {
 					userId: userData.id,
