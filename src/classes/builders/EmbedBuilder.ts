@@ -3,7 +3,7 @@ import {
 	type ColorResolvable,
 	EmbedBuilder as embedBuilder,
 } from "discord.js";
-import type { LocaleFieldOptions } from "../../types/structures.js";
+import type { LocaleFieldOptions } from "../../types/index.js";
 import type { SkyndalexClient } from "../Client.js";
 export class EmbedBuilder extends embedBuilder {
 	locale: string;

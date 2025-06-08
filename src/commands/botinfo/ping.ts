@@ -1,8 +1,11 @@
 import {
 	type ChatInputCommandInteraction,
+	MediaGalleryBuilder,
+	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
+import { EmbedBuilder } from "../../classes/builders/index.js";
 
 export async function run(
 	client: SkyndalexClient,
