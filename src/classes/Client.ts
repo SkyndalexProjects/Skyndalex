@@ -1,12 +1,25 @@
-import { ActivityType, Client, GatewayIntentBits, Partials } from "discord.js";
+import {
+	ActivityType,
+	Client,
+	Collection,
+	GatewayIntentBits,
+	Partials,
+} from "discord.js";
 import { Loaders } from "./Loaders.js";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "url";
 import { PrismaClient } from "@prisma/client";
 import { DashboardServer } from "../dashboard/server.js";
-
+import { Command } from "../types/index.js";
+import i18next from "i18next";
+import Backend from "i18next-fs-backend";
 export class SkyndalexClient extends Client {
 	loader = new Loaders();
 	prisma = new PrismaClient();
 	dashboard = new DashboardServer(this);
+	commands: Collection<string, Command> = new Collection();
+	i18n = i18next;
+
 	constructor() {
 		super({
 			intents: [
@@ -30,8 +43,19 @@ export class SkyndalexClient extends Client {
 	}
 
 	async init(token: string) {
+		const __dirname = dirname(fileURLToPath(import.meta.url));
+		await this.i18n.use(Backend).init({
+			fallbackLng: "en-US",
+			ns: ["responses", "commands"],
+			defaultNS: "responses",
+			preload: ["en-US", "pl"],
+			backend: {
+				loadPath: join(__dirname, "/../../i18n/{{lng}}/{{ns}}.json"),
+			},
+		});
 		await this.loader.loadEvents(this, "../events");
 		await this.login(token);
+		this.commands = await this.loader.loadCommands("../commands");
 
 		if (token === process.env.BOT_TOKEN) {
 			console.log("[Server] :: Initializing dashboard");

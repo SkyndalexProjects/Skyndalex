@@ -1,3 +1,10 @@
+import type {
+	Interaction,
+	MessageComponentInteraction,
+	ModalSubmitInteraction,
+	SlashCommandBuilder,
+} from "discord.js";
+import type { SkyndalexClient } from "#classes";
 export interface DiscordOauthResponse {
 	access_token: string;
 	token_type: string;
@@ -25,4 +32,19 @@ export interface DiscordUser {
 	premium_type: number;
 	email: string;
 	verified: boolean;
+}
+export interface Command {
+	category: string;
+	data: SlashCommandBuilder & { integration_types?: string[] };
+	run: (client: SkyndalexClient, interaction: Interaction) => Promise<void>;
+	autocomplete: (interaction: Interaction) => Promise<void>;
+}
+export interface LocaleFieldOptions {
+	name?: string;
+	nameArgs?: Record<string, unknown>;
+	value?: string;
+	valueArgs?: Record<string, unknown>;
+	rawName?: string;
+	rawValue?: string;
+	inline?: boolean;
 }
