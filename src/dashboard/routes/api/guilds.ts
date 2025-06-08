@@ -15,14 +15,11 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 			const token = request.cookies.token;
 			console.log("[Server] :: Guilds requested");
 
-			const response = await fetch(
-				"https://discord.com/api/users/@me/guilds",
-				{
-					headers: {
-						authorization: `Bearer ${token}`,
-					},
+			const response = await fetch("https://discord.com/api/users/@me/guilds", {
+				headers: {
+					authorization: `Bearer ${token}`,
 				},
-			);
+			});
 			if (!response.ok) {
 				reply.status(response.status).send({
 					error: "Failed to fetch guilds",

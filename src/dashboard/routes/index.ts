@@ -6,9 +6,7 @@ export default async function index(fastify: FastifyInstance) {
 
 		if (!token) {
 			if (!process.env.OAUTH_URL) {
-				console.log(
-					"OAUTH_URL is not defined in the environment variables.",
-				);
+				console.log("OAUTH_URL is not defined in the environment variables.");
 				return reply.code(500).send("Server configuration error.");
 			}
 

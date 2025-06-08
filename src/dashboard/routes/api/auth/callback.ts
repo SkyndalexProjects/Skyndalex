@@ -32,30 +32,24 @@ export default async function callbackRoute(fastify: FastifyInstance) {
 				redirect_uri: "http://localhost:3000/api/auth/callback",
 			});
 
-			const response = await fetch(
-				"https://discord.com/api/oauth2/token",
-				{
-					method: "POST",
-					body: params.toString(),
-					headers: {
-						authorization: `Basic ${Buffer.from(
-							`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`,
-						).toString("base64")}`,
-						"Content-Type": "application/x-www-form-urlencoded",
-					},
+			const response = await fetch("https://discord.com/api/oauth2/token", {
+				method: "POST",
+				body: params.toString(),
+				headers: {
+					authorization: `Basic ${Buffer.from(
+						`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`,
+					).toString("base64")}`,
+					"Content-Type": "application/x-www-form-urlencoded",
 				},
-			);
+			});
 
 			const token = (await response.json()) as DiscordOauthResponse;
 
-			const getUserData = await fetch(
-				"https://discord.com/api/users/@me",
-				{
-					headers: {
-						authorization: `Bearer ${token.access_token}`,
-					},
+			const getUserData = await fetch("https://discord.com/api/users/@me", {
+				headers: {
+					authorization: `Bearer ${token.access_token}`,
 				},
-			);
+			});
 			const userData = (await getUserData.json()) as DiscordUser;
 			console.log("userData", userData);
 			const existingUser = await request.client.prisma.users.findUnique({

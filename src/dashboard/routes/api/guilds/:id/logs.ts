@@ -7,9 +7,7 @@ export default async function manageLogs(fastify: FastifyInstance) {
 			request: FastifyRequest<{ Params: { id: string } }>,
 			reply: FastifyReply,
 		) => {
-			const getId = request.client.guilds.cache.get(
-				request.params.id,
-			)?.id;
+			const getId = request.client.guilds.cache.get(request.params.id)?.id;
 
 			if (!getId) {
 				return reply.status(404).send({

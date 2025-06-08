@@ -16,9 +16,7 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
 			reply: FastifyReply,
 		) => {
 			console.log("[Server] :: Settings requested");
-			const getId = request.client.guilds.cache.get(
-				request.params.id,
-			)?.id;
+			const getId = request.client.guilds.cache.get(request.params.id)?.id;
 			if (!getId) {
 				reply.status(404).send({ error: "Guild not found" });
 				return;

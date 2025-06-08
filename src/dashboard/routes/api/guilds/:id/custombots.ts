@@ -11,33 +11,27 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 			request: FastifyRequest<{ Params: { id: string } }>,
 			reply: FastifyReply,
 		) => {
-			const getId = request.client.guilds.cache.get(
-				request.params.id,
-			)?.id;
+			const getId = request.client.guilds.cache.get(request.params.id)?.id;
 
 			if (!getId) {
 				reply.status(404).send({ error: "Guild not found" });
 				return;
 			}
 
-			const getCustombots =
-				await request.client.prisma.custombots.findMany({
-					where: {
-						guildId: getId,
-					},
-				});
+			const getCustombots = await request.client.prisma.custombots.findMany({
+				where: {
+					guildId: getId,
+				},
+			});
 
 			if (!getCustombots || getCustombots.length === 0) {
-				reply
-					.status(404)
-					.send({ error: "No custombots found for the guild" });
+				reply.status(404).send({ error: "No custombots found for the guild" });
 				return;
 			}
 
 			if (
 				!getCustombots.every(
-					(bot) =>
-						bot.guildId && bot.token && bot.activity && bot.status,
+					(bot) => bot.guildId && bot.token && bot.activity && bot.status,
 				)
 			) {
 				reply.status(500).send({ error: "Invalid custombot data" });
@@ -91,13 +85,7 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 							status: { type: "string" },
 							clientId: { type: "string" },
 						},
-						required: [
-							"id",
-							"guildId",
-							"token",
-							"activity",
-							"status",
-						],
+						required: ["id", "guildId", "token", "activity", "status"],
 					},
 					500: {
 						type: "object",
@@ -113,15 +101,8 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 			reply: FastifyReply,
 		) => {
 			const body = request.body;
-			const {
-				guildId,
-				token,
-				activity,
-				status,
-				value,
-				userId,
-				clientId,
-			} = body;
+			const { guildId, token, activity, status, value, userId, clientId } =
+				body;
 			const addCustombot = await request.client.prisma.custombots.create({
 				data: {
 					guildId,
@@ -200,9 +181,7 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 					request.body.requestedByUserId,
 				);
 
-				const guild = request.client.guilds.cache.get(
-					request.body.guildId,
-				);
+				const guild = request.client.guilds.cache.get(request.body.guildId);
 
 				if (!guild) {
 					reply.status(404).send({
@@ -224,23 +203,19 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 					return;
 				}
 
-				if (
-					!member.permissions.has(PermissionFlagsBits.Administrator)
-				) {
+				if (!member.permissions.has(PermissionFlagsBits.Administrator)) {
 					reply.status(403).send({
 						error: "No permissions",
 					});
 					return;
 				}
 
-				const getBot = await request.client.prisma.custombots.findFirst(
-					{
-						where: {
-							guildId: request.body.guildId,
-							clientId: clientId,
-						},
+				const getBot = await request.client.prisma.custombots.findFirst({
+					where: {
+						guildId: request.body.guildId,
+						clientId: clientId,
 					},
-				);
+				});
 				if (!getBot) {
 					console.log("[Server] :: Custombot not found");
 
@@ -322,16 +297,10 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 						status: 200,
 					});
 				} catch (error) {
-					console.error(
-						"Error creating or starting container:",
-						error,
-					);
+					console.error("Error creating or starting container:", error);
 					reply.send({
 						error: "Failed to create or start custombot container",
-						details:
-							error instanceof Error
-								? error.message
-								: String(error),
+						details: error instanceof Error ? error.message : String(error),
 						status: 500,
 					});
 				}
@@ -339,8 +308,7 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 				console.error("Error:", error);
 				reply.send({
 					error: "Failed to start custombot",
-					details:
-						error instanceof Error ? error.message : String(error),
+					details: error instanceof Error ? error.message : String(error),
 				});
 			}
 		},
@@ -419,8 +387,7 @@ export default async function manageCustombots(fastify: FastifyInstance) {
 				console.error("Error:", error);
 				reply.send({
 					error: "Failed to delete custombot",
-					details:
-						error instanceof Error ? error.message : String(error),
+					details: error instanceof Error ? error.message : String(error),
 					status: 500,
 				});
 			}

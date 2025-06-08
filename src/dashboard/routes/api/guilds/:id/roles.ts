@@ -9,17 +9,14 @@ export default async function guildRolesRoute(fastify: FastifyInstance) {
 			reply: FastifyReply,
 		) => {
 			console.log("[Server] :: Roles requested");
-			const getId = request.client.guilds.cache.get(
-				request.params.id,
-			)?.id;
+			const getId = request.client.guilds.cache.get(request.params.id)?.id;
 			if (!getId) {
 				reply.status(404).send({ error: "Guild not found" });
 				return;
 			}
 
 			const getRoles = Array.from(
-				request.client.guilds.cache.get(getId)?.roles.cache.values() ||
-					[],
+				request.client.guilds.cache.get(getId)?.roles.cache.values() || [],
 			).map((role) => {
 				return {
 					id: role.id,
