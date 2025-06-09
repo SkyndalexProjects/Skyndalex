@@ -32,7 +32,7 @@ export async function run(
 			t2v: true,
 			n_prompt: "Hello!!",
 			seed: 3,
-			total_second_length: 1,
+			total_second_length: 5,
 			latent_window_size: 1,
 			steps: 1,
 			cfg: 1,
