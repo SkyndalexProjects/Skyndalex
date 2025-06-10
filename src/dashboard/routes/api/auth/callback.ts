@@ -65,7 +65,6 @@ export default async function callbackRoute(fastify: FastifyInstance) {
 						userId: userData.id,
 						username: userData.username,
 						avatar: userData.avatar ?? "default-avatar",
-						usedCommand: false,
 					},
 				});
 			}

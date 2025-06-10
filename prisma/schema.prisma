@@ -29,3 +29,9 @@ model DashboardLogs {
   userId  String?
   date    BigInt?
 }
+model Users {
+  type     String @default("normal")
+  userId   String @id
+  username String
+  avatar   String
+}
