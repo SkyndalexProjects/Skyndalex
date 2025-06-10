@@ -36,4 +36,13 @@ export default async function userRoutes(fastify: FastifyInstance) {
 			reply.send(rpc);
 		},
 	);
+	fastify.get(
+		"/bot/commands",
+		async (request: FastifyRequest, reply: FastifyReply) => {
+			console.log("[Server] :: Bot commands requested");
+
+			const commands = request.client.commands;
+			reply.send(commands);
+		},
+	)
 }
