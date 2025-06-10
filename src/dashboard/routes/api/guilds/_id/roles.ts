@@ -2,7 +2,7 @@ import { ChannelType } from "discord.js";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 
 export default async function guildRolesRoute(fastify: FastifyInstance) {
-	fastify.post(
+	fastify.get(
 		"/roles",
 		async (
 			request: FastifyRequest<{ Params: { id: string } }>,

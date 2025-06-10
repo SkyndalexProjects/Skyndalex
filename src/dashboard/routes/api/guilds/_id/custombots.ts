@@ -5,7 +5,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { PermissionFlagsBits } from "discord.js";
 export default async function manageCustombots(fastify: FastifyInstance) {
-	fastify.post(
+	fastify.get(
 		"/custombots/get",
 		async (
 			request: FastifyRequest<{ Params: { id: string } }>,

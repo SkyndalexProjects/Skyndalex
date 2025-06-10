@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 
 export default async function guildSettingsRoute(fastify: FastifyInstance) {
-	fastify.post(
+	fastify.get(
 		"/settings",
 		async (
 			request: FastifyRequest<{ Params: { id: string } }>,

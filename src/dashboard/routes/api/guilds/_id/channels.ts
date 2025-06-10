@@ -2,7 +2,7 @@ import { ChannelType } from "discord.js";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 
 export default async function guildSettingsRoute(fastify: FastifyInstance) {
-	fastify.post(
+	fastify.get(
 		"/channels",
 		{
 			schema: {

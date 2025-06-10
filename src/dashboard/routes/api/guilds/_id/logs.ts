@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 
 export default async function manageLogs(fastify: FastifyInstance) {
-	fastify.post(
+	fastify.get(
 		"/logs",
 		async (
 			request: FastifyRequest<{ Params: { id: string } }>,
