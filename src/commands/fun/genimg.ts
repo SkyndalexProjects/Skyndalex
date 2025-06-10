@@ -5,18 +5,17 @@ import {
 	MessageFlags,
 	ButtonBuilder,
 	ButtonStyle,
-	SectionBuilder,
-	TextDisplayComponent,
 	TextDisplayBuilder,
 	ContainerBuilder,
-	MediaGalleryComponent,
 	SeparatorBuilder,
 	SeparatorSpacingSize,
+	ActionRowBuilder,
+	SectionBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
 import { Client } from "@gradio/client";
 import { handleError } from "../../utils/index.js";
-import { EmbedBuilder } from "../../classes/builders/index.js";
+import * as process from "node:process";
 
 export async function run(
 	client: SkyndalexClient,
@@ -26,25 +25,54 @@ export async function run(
 		await interaction.deferReply();
 
 		const prompt = interaction.options.getString("prompt");
-		const negative_prompt =
-			interaction.options.getString("negative_prompt") ||
-			"bad, low quality, blurry, out of focus, dark, low contrast, overexposed, underexposed, pixelated, distorted, noisy, grainy, artifacts, jpeg compression, low resolution, bad lighting, bad composition, bad framing, bad angle, bad perspective";
-
+		const negative_prompt = interaction.options.getString("negative_prompt");
 		const style = interaction.options.getString("style") || "2560 x 1440";
 
+		const getToken = await client.prisma.tokens.findUnique({
+			where: {
+				userId: interaction.user.id,
+			},
+		});
+		if (!getToken?.huggingFaceToken) {
+			const authorizeButton = new ButtonBuilder()
+				.setLabel("Authorize")
+				.setStyle(ButtonStyle.Link)
+				.setURL(
+					process.env.OAUTH_TO_HUGGINGFACE ?? "https://default-auth-url.com",
+				);
+			const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+				authorizeButton,
+			);
+
+			const container = new ContainerBuilder().addTextDisplayComponents(
+				new TextDisplayBuilder().setContent(
+					"You need to authorize to use this command.",
+				),
+			);
+
+			return interaction.editReply({
+				flags: MessageFlags.IsComponentsV2,
+				components: [container, row],
+			});
+		}
+		console.log("getToken", getToken);
 		console.log("negative_prompt", negative_prompt);
 		console.log("style", style);
 
-		const app = await Client.connect("Dagfinn1962/Midjourney-Free");
+		const app = await Client.connect("Dagfinn1962/Midjourney-Free", {
+			hf_token: getToken?.huggingFaceToken,
+		});
+
+		const hasNegativePrompt = negative_prompt !== null;
 
 		const result = await app.predict("/run", {
 			prompt,
 			negative_prompt,
-			use_negative_prompt: true,
+			use_negative_prompt: hasNegativePrompt,
 			style,
 			seed: 0,
-			width: 512,
-			height: 512,
+			width: 1024,
+			height: 1024,
 			guidance_scale: 0.1,
 			randomize_seed: true,
 		});
@@ -62,11 +90,7 @@ export async function run(
 				"**Prompt Details**",
 			);
 			const details = new TextDisplayBuilder().setContent(
-				`Prompt: "**${prompt}**"\nStyle: **${style}**\nNegative Prompt: **${negative_prompt}**`,
-			);
-
-			const actionButtonsTitle = new TextDisplayBuilder().setContent(
-				"**Available actions**",
+				`📝 | Prompt: "**${prompt}**"\n🖼️ | Style: **${style}**\n📘 | Negative Prompt: **${negative_prompt}**`,
 			);
 
 			const separator = new SeparatorBuilder().setSpacing(
@@ -87,9 +111,15 @@ export async function run(
 				.setLabel("Delete")
 				.setStyle(ButtonStyle.Danger);
 
-			const sectionComponent = new SectionBuilder()
-				.addTextDisplayComponents(actionButtonsTitle)
-				.setButtonAccessory(deleteButton);
+			const downloadButton = new ButtonBuilder()
+				.setLabel("Download")
+				.setStyle(ButtonStyle.Link)
+				.setURL(result.data[0][0].image.url);
+
+			const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+				deleteButton,
+				downloadButton,
+			);
 
 			const container = new ContainerBuilder()
 				.addTextDisplayComponents(title, description)
@@ -99,7 +129,7 @@ export async function run(
 				.addSeparatorComponents(separator)
 				.addMediaGalleryComponents(media)
 				.addSeparatorComponents(separator)
-				.addSectionComponents(sectionComponent);
+				.addActionRowComponents(actionRow);
 
 			await interaction.editReply({
 				flags: MessageFlags.IsComponentsV2,

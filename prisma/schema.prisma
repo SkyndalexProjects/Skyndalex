@@ -26,11 +26,15 @@ model Settings {
 model Users {
   type        String  @default("normal")
   userId      String  @id
-  username String
-  avatar String
+  username    String
+  avatar      String
   usedCommand Boolean
 }
-
+model Tokens {
+  id               Int    @default(autoincrement())
+  userId           String @id
+  huggingFaceToken String
+}
 model Custombots {
   id       Int    @default(autoincrement())
   guildId  String
@@ -81,9 +85,9 @@ model AlreadySignedPetitions {
   petitionId Int
 }
 model DashboardLogs {
-    id         Int    @id @default(autoincrement())
+  id      Int     @id @default(autoincrement())
   guildId String
-  value String?
-  userId String?
-  date BigInt?
+  value   String?
+  userId  String?
+  date    BigInt?
 }

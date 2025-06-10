@@ -10,6 +10,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "url";
 import { PrismaClient } from "@prisma/client";
 import { DashboardServer } from "../dashboard/server.js";
+import { AuthServer } from "../auth/server.js";
 import { Command } from "../types/index.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
@@ -17,6 +18,7 @@ export class SkyndalexClient extends Client {
 	loader = new Loaders();
 	prisma = new PrismaClient();
 	dashboard = new DashboardServer(this);
+	auth = new AuthServer(this);
 	commands: Collection<string, Command> = new Collection();
 	i18n = i18next;
 
@@ -60,6 +62,10 @@ export class SkyndalexClient extends Client {
 		if (token === process.env.BOT_TOKEN) {
 			console.log("[Server] :: Initializing dashboard");
 			this.dashboard.init();
+			console.log("[Server] :: Dashboard initialized");
+			console.log("[Server] :: Initializing auth server");
+			this.auth.init();
+			console.log("[Server] :: Auth server initialized");
 		} else {
 			console.log(
 				"[Server] :: Skipping dashboard initialization for custombot",
