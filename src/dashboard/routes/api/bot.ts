@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 
-export default async function userRoutes(fastify: FastifyInstance) {
+export default async function botRoutes(fastify: FastifyInstance) {
 	fastify.get("/bot", async (request: FastifyRequest, reply: FastifyReply) => {
 		const token = request.headers.authorization;
 		console.log("[Server] :: Bot requested");
@@ -44,5 +44,5 @@ export default async function userRoutes(fastify: FastifyInstance) {
 			const commands = request.client.commands;
 			reply.send(commands);
 		},
-	)
+	);
 }
