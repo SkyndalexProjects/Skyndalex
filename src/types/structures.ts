@@ -48,3 +48,10 @@ export interface LocaleFieldOptions {
 	rawValue?: string;
 	inline?: boolean;
 }
+export interface Component {
+	customId: string;
+	run: (
+		client: SkyndalexClient,
+		interaction: MessageComponentInteraction,
+	) => Promise<void>;
+}

@@ -11,15 +11,25 @@ import { fileURLToPath } from "url";
 import { PrismaClient } from "@prisma/client";
 import { DashboardServer } from "../dashboard/server.js";
 import { AuthServer } from "../auth/server.js";
-import { Command } from "../types/index.js";
+import { Command, Component } from "../types/index.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
+import { Connectors, Shoukaku } from "shoukaku";
+const Nodes = [
+	{
+		name: "SkyndalexLava",
+		url: process.env.LAVALINK_URL as string,
+		auth: process.env.LAVALINK_SERVER_PASSWORD as string,
+	},
+];
 export class SkyndalexClient extends Client {
 	loader = new Loaders();
 	prisma = new PrismaClient();
 	dashboard = new DashboardServer(this);
 	auth = new AuthServer(this);
 	commands: Collection<string, Command> = new Collection();
+	components: Collection<string, Component> = new Collection();
+	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 	i18n = i18next;
 
 	constructor() {
@@ -58,7 +68,17 @@ export class SkyndalexClient extends Client {
 		await this.loader.loadEvents(this, "../events");
 		await this.login(token);
 		this.commands = await this.loader.loadCommands("../commands");
+		this.components = await this.loader.loadComponents("../components");
 
+		this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
+
+		this.shoukaku.on("error", (_, error) =>
+			console.error(`[LAVALINK] :: ${error}`),
+		);
+
+		this.shoukaku.on("ready", (name) =>
+			console.log(`Lavalink: Client ${name} is connected to the server.`),
+		);
 		if (token === process.env.BOT_TOKEN) {
 			console.log("[Server] :: Initializing dashboard");
 			this.dashboard.init();

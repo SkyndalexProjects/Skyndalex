@@ -27,24 +27,23 @@ export async function interactionCreate(
 		}
 
 		if (!command) {
-			await interaction
-				.reply({
-					embeds: [embedCommandNotFound],
-					ephemeral: true,
-				})
-				.catch(console.error);
-		} else {
-			try {
-				await command.run(client, interaction);
-			} catch (e) {
+			if (interaction.replied || interaction.deferred) {
+				await interaction
+					.followUp({
+						embeds: [embedCommandNotFound],
+						ephemeral: true,
+					})
+					.catch(console.error);
+			} else {
 				await interaction
 					.reply({
 						embeds: [embedCommandNotFound],
 						ephemeral: true,
 					})
 					.catch(console.error);
-				console.error(e);
 			}
+		} else {
+			await command.run(client, interaction);
 		}
 	}
 
@@ -65,6 +64,47 @@ export async function interactionCreate(
 			await command.autocomplete(interaction);
 		} catch (error) {
 			console.error(error);
+		}
+	}
+	if (interaction.isMessageComponent()) {
+		try {
+			const component = client.components.get(interaction.customId);
+			if (!component) {
+				if (interaction.replied || interaction.deferred) {
+					await interaction
+						.followUp({
+							content: "Component not found",
+							ephemeral: true,
+						})
+						.catch(console.error);
+				} else {
+					await interaction
+						.reply({
+							content: "Component not found",
+							ephemeral: true,
+						})
+						.catch(console.error);
+				}
+			} else {
+				await component.run(client, interaction);
+			}
+		} catch (error) {
+			console.error(error);
+			if (interaction.replied || interaction.deferred) {
+				await interaction
+					.followUp({
+						content: "An error occurred while processing the component",
+						ephemeral: true,
+					})
+					.catch(console.error);
+			} else {
+				await interaction
+					.reply({
+						content: "An error occurred while processing the component",
+						ephemeral: true,
+					})
+					.catch(console.error);
+			}
 		}
 	}
 }
