@@ -10,10 +10,8 @@ import {
 	TextDisplayBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { EmbedBuilder } from "../../classes/builders/index.js";
-import { getRandomCards } from "../../utils/economy/getRandomCards.js";
+import { getRandomCards } from "../../utils/getRandomCards.js";
 import type { Card, Hand } from "#types";
-// Usunięto import formatToEmojis
 
 export async function run(
 	client: SkyndalexClient,
@@ -59,8 +57,6 @@ export async function run(
 		cards: dealerCards,
 		value: dealerCards.reduce((sum, card) => sum + card.value, 0),
 	};
-
-	console.log("Player hand:", playerHand.cards);
 
 	const betText = new TextDisplayBuilder().setContent(`\n\n*Bet: **${bet}**`);
 	const guideText = new TextDisplayBuilder().setContent(
