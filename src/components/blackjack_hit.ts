@@ -149,6 +149,7 @@ export async function run(
 		.setCustomId("blackjack_split")
 		.setLabel("Split")
 		.setStyle(ButtonStyle.Secondary);
+
 	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 		hitButton,
 		standButton,
@@ -161,6 +162,7 @@ export async function run(
 		dealerHand.value >= 21 ||
 		(userHand.value === 21 && dealerHand.value < 21);
 
+	console.log("Did game end?", gameEnded);
 	const container = new ContainerBuilder()
 		.addTextDisplayComponents(title)
 		.addTextDisplayComponents(reason)
@@ -171,12 +173,12 @@ export async function run(
 			dealerCards,
 		)
 		.setAccentColor(embedColor);
+	if (!gameEnded) {
+		container.addActionRowComponents(row);
+	}
 	await interaction.editReply({
 		flags: MessageFlags.IsComponentsV2,
 		components: [container],
 	});
 
-	if (!gameEnded) {
-		container.addActionRowComponents(row);
-	}
 }
