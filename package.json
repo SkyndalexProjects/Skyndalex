@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.52",
-    "@prisma/client": "^5.15.1",
+    "@prisma/client": "^6.0.0",
     "@types/gamedig": "^5.0.2",
     "discord.js": "^14.16.2",
     "gamedig": "^5.0.0",
