@@ -27,7 +27,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.6.4",
     "@types/ms": "^0.7.34",
-    "prisma": "^5.15.1",
+    "prisma": "^6.0.0",
     "tsx": "^4.16.5",
     "typescript": "^5.4.5"
   },
