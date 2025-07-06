@@ -55,3 +55,14 @@ export interface Component {
 		interaction: MessageComponentInteraction,
 	) => Promise<void>;
 }
+
+export interface Card {
+	id: string;
+	name: string;
+	value: number;
+	suit: string;
+}
+export interface Hand {
+	cards: Card[];
+	value: number;
+}
