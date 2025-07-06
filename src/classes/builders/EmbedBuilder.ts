@@ -18,11 +18,13 @@ export class EmbedBuilder extends embedBuilder {
 		return {
 			name:
 				field.rawName ??
-				this.client.i18n.t(field.name, {
-					lng: this.locale,
-					...field.nameArgs,
-				}),
-			value: field.rawValue ?? field.value,
+				(field.name
+					? this.client.i18n.t(field.name, {
+							lng: this.locale,
+							...field.nameArgs,
+						})
+					: ""),
+			value: field.rawValue ?? field.value ?? "",
 			inline: field.inline,
 		};
 	}

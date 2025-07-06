@@ -21,7 +21,7 @@ export async function run(
 	interaction: ChatInputCommandInteraction,
 ) {
 	const botUptimeTimestamp = `<t:${Math.round(
-		client.readyTimestamp / 1000,
+		(client.readyTimestamp ?? Date.now()) / 1000,
 	)}:R>`;
 
 	const serverUptimeTimestamp = `<t:${Math.floor(

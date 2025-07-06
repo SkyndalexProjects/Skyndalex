@@ -9,7 +9,7 @@
     "lint": "npx @biomejs/biome lint ./src",
     "lint:fix": "npx @biomejs/biome check --apply ./src",
     "dev": "npx tsx src/index.ts",
-    "build": "rm -rf dist/ && tsc",
+    "build": "rimraf dist && tsc",
     "migrate:deploy": "prisma migrate deploy",
     "start": "npm run migrate:deploy && node dist/index.js"
   },

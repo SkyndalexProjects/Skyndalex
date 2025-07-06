@@ -24,6 +24,7 @@ export async function run(
 	)
 		return interaction.followUp({
 			content: "Its not your button!",
+			flags: 64,
 		});
 	const matches = [
 		...interaction.message.content.matchAll(/\*\*(.*?)\*\*/g),
@@ -37,7 +38,6 @@ export async function run(
 	const app = await Client.connect(defaultSpace, {
 		hf_token: getToken?.huggingFaceToken,
 	});
-	console.log("jesteś jebanym kurwa gównem");
 
 	const result = await app.predict("/run", {
 		prompt: matches[0],

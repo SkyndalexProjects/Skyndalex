@@ -8,15 +8,16 @@ export async function run(
 	if (
 		interaction.user.id !== interaction?.message?.interactionMetadata?.user?.id
 	)
-		return interaction.reply({
+		return interaction.followUp({
 			content: "Its not your button!",
+			flags: 64,
 		});
 
 	const attachment = interaction.message.attachments.first();
 	if (!attachment) {
 		return interaction.reply({
 			content: "No attachment found to delete.",
-			ephemeral: true,
+			flags: 64,
 		});
 	}
 
