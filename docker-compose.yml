@@ -12,7 +12,7 @@ services:
       db:
         condition: service_started
   lavalink:
-    image: ghcr.io/lavalink-devs/lavalink:4
+    image: ghcr.io/lavalink-devs/lavalink:9930779
     container_name: lavalink
     restart: unless-stopped
     environment:

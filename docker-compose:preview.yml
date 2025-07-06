@@ -12,7 +12,7 @@ services:
       db-preview:
         condition: service_started
   lavalink-preview:
-    image: ghcr.io/lavalink-devs/lavalink:4
+    image: ghcr.io/lavalink-devs/lavalink:9930779
     container_name: lavalink-preview
     restart: unless-stopped
     environment:
