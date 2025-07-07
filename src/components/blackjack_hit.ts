@@ -3,9 +3,13 @@ import {
 	ActionRowBuilder,
 	AttachmentBuilder,
 	ButtonBuilder,
+	ButtonComponent,
 	ButtonStyle,
+	ComponentData,
 	ContainerBuilder,
 	ContainerComponent,
+	Embed,
+	EmbedBuilder,
 	MessageComponent,
 	MessageComponentInteraction,
 	MessageFlags,
@@ -35,36 +39,31 @@ export async function run(
 			flags: 64,
 		});
 
-	const messageComponents: ContainerComponent = interaction.message
-		.components[0] as ContainerComponent;
+	const currentEmbed = interaction.message.embeds[0];
+	if (!currentEmbed) return;
+	const fields = currentEmbed.fields;
+	const buttons = (
+		interaction.message
+			.components[0] as unknown as ActionRowBuilder<ButtonBuilder>
+	).components;
+	const playerField = fields[0];
+	const dealerField = fields[1];
 
 	const userCardsCount: number = +(
-		(
-			(messageComponents?.components[2] as TextDisplayComponent)?.data
-				?.content || ""
-		).match(/Value: \*\*(\d+)\*\*/)?.[1] || "0"
+		(playerField?.value || "").match(/Value: \*\*(\d+)\*\*/)?.[1] || "0"
 	);
-
 	const dealerCardsCount: number = +(
-		(
-			(messageComponents?.components[4] as TextDisplayComponent)?.data
-				?.content || ""
-		).match(/Value: \*\*(\d+)\*\*/)?.[1] || "0"
+		(dealerField?.value || "").match(/Value: \*\*(\d+)\*\*/)?.[1] || "0"
 	);
 
-	const userHand: Hand = {
-		cards: await extractCardsFromContent(
-			(messageComponents.components[2] as TextDisplayComponent)?.data?.content,
-		),
+	const userHand = {
+		cards: await extractCardsFromContent(playerField.value),
 		value: userCardsCount,
 	};
-	const dealerHand: Hand = {
-		cards: await extractCardsFromContent(
-			(messageComponents.components[4] as TextDisplayComponent)?.data?.content,
-		),
+	const dealerHand = {
+		cards: await extractCardsFromContent(dealerField.value),
 		value: dealerCardsCount,
 	};
-
 	const newCards = await getRandomCards(
 		client,
 		interaction,
@@ -72,8 +71,6 @@ export async function run(
 		dealerHand.value,
 	);
 
-	console.log("Hit user hand:", userHand);
-	console.log("new cards:", newCards);
 	userHand.cards.push(...newCards);
 	userHand.value = userHand.cards.reduce((sum, card) => sum + card.value, 0);
 
@@ -115,70 +112,42 @@ export async function run(
 		if (dealerHand.value === 21) reasonContent = "Dealer hit 21 points!";
 		if (userHand.value === 21) reasonContent = "You hit 21 points!";
 	}
-	const title = new TextDisplayBuilder().setContent(titleContent);
-	const reason = new TextDisplayBuilder().setContent(reasonContent);
-	const userCards = new TextDisplayBuilder().setContent(
-		`${await formatToEmojis(userHand)}\n\nValue: **${userHand.value}**`,
-	);
-	const dealerCards = new TextDisplayBuilder().setContent(
-		`${await formatToEmojis(dealerHand)}\n\nValue: **${dealerHand.value}**`,
-	);
-	const userCardsTitle = new TextDisplayBuilder().setContent(
-		`**Your cards:**\n\n`,
-	);
-	const dealerCardsTitle = new TextDisplayBuilder().setContent(
-		`**Dealer cards:**\n\n`,
-	);
-
-	const hitButton = new ButtonBuilder()
-		.setCustomId("blackjack_hit")
-		.setLabel("Hit")
-		.setStyle(ButtonStyle.Primary);
-
-	const standButton = new ButtonBuilder()
-		.setCustomId("blackjack_stand")
-		.setLabel("Stand")
-		.setStyle(ButtonStyle.Success);
-
-	const doubleDownButton = new ButtonBuilder()
-		.setCustomId("blackjack_doubledown")
-		.setLabel("Double down")
-		.setStyle(ButtonStyle.Secondary);
-
-	const splitButton = new ButtonBuilder()
-		.setCustomId("blackjack_split")
-		.setLabel("Split")
-		.setStyle(ButtonStyle.Secondary);
-
-	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-		hitButton,
-		standButton,
-		doubleDownButton,
-		splitButton,
-	);
-
 	const gameEnded =
 		userHand.value >= 21 ||
 		dealerHand.value >= 21 ||
 		(userHand.value === 21 && dealerHand.value < 21);
 
-	console.log("Did game end?", gameEnded);
-	const container = new ContainerBuilder()
-		.addTextDisplayComponents(title)
-		.addTextDisplayComponents(reason)
-		.addTextDisplayComponents(
-			userCardsTitle,
-			userCards,
-			dealerCardsTitle,
-			dealerCards,
-		)
-		.setAccentColor(embedColor);
-	if (!gameEnded) {
-		container.addActionRowComponents(row);
-	}
-	await interaction.editReply({
-		flags: MessageFlags.IsComponentsV2,
-		components: [container],
-	});
+	const embed = new EmbedBuilder()
+		.setTitle(titleContent)
+		.setDescription(reasonContent)
+		.addFields([
+			{
+				name: "Your cards:",
+				value: `${await formatToEmojis(userHand)}\n\nValue: **${userHand.value}**`,
+				inline: true,
+			},
+			{
+				name: "Dealer cards:",
+				value: `${await formatToEmojis(dealerHand)}\n\nValue: **${dealerHand.value}**`,
+				inline: true,
+			},
+		])
+		.setColor(embedColor);
 
+	await interaction.editReply({
+		embeds: [embed],
+		components: [
+			new ActionRowBuilder<ButtonBuilder>().addComponents(
+				buttons.map((button) => {
+					const newButton = ButtonBuilder.from(
+						button as unknown as ButtonComponent,
+					);
+					if (gameEnded) {
+						return newButton.setDisabled(true);
+					}
+					return newButton;
+				}),
+			),
+		],
+	});
 }

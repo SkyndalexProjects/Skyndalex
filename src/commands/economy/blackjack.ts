@@ -12,6 +12,7 @@ import {
 import type { SkyndalexClient } from "#classes";
 import { getRandomCards } from "../../utils/getRandomCards.js";
 import type { Card, Hand } from "#types";
+import { EmbedBuilder } from "../../classes/builders/index.js";
 
 export async function run(
 	client: SkyndalexClient,
@@ -58,51 +59,32 @@ export async function run(
 		value: dealerCards.reduce((sum, card) => sum + card.value, 0),
 	};
 
-	const betText = new TextDisplayBuilder().setContent(`\n\n*Bet: **${bet}**`);
-	const guideText = new TextDisplayBuilder().setContent(
-		`- \`Hit:\` Take another card.\n` +
-			`- \`Stand:\` Keep your current hand.\n` +
-			`- \`Double down:\` Double your bet and take one more card.\n` +
-			`- \`Split:\` Split your hand into two separate hands if you have two cards of the same value.`,
-	);
-
-	const userCardsTitle = new TextDisplayBuilder().setContent(
-		`**Your cards:**\n\n`,
-	);
-
-	const userCards = new TextDisplayBuilder().setContent(
-		`${playerHand.cards
-			.map((card) => `<:${card.name}:${card.id}>`)
-			.join(" ")}\n\nValue: **${playerHand.value}**`,
-	);
-
-	const dealerCardsTitle = new TextDisplayBuilder().setContent(
-		`**Dealer cards:**\n\n`,
-	);
-
-	const dealerCardsDesc = new TextDisplayBuilder().setContent(
-		`${dealerHand.cards
-			.map((card) => `<:${card.name}:${card.id}>`)
-			.join(" ")}\n\nValue: **${dealerHand.value}**`,
-	);
-
-	const separator = new SeparatorBuilder();
-	const container = new ContainerBuilder()
-		.addTextDisplayComponents(
-			guideText,
-			userCardsTitle,
-			userCards,
-			dealerCardsTitle,
-			dealerCardsDesc,
+	const embed = new EmbedBuilder(client, interaction.locale)
+		.setTitle("Game started")
+		.setDescription(
+			`- \`Hit:\` Take another card.\n` +
+				`- \`Stand:\` Keep your current hand.\n` +
+				`- \`Double down:\` Double your bet and take one more card.\n` +
+				`- \`Split:\` Split your hand into two separate hands if you have two cards of the same value.`,
 		)
-		.setAccentColor(0x33ccff)
-		.addSeparatorComponents(separator)
-		.addActionRowComponents(row)
-		.addTextDisplayComponents(betText);
+		.addFields([
+			{
+				name: "Your cards:",
+				value: `${playerHand.cards.map((card) => `<:${card.name}:${card.id}>`).join(" ")}\n\nValue: **${playerHand.value}**`,
+				inline: true,
+			},
+			{
+				name: "Dealer cards:",
+				value: `${dealerHand.cards.map((card) => `<:${card.name}:${card.id}>`).join(" ")}\n\nValue: **${dealerHand.value}**`,
+				inline: true,
+			},
+		])
+		.setColor("Green")
+		.setFooter({ text: `Bet: ${bet}` });
 
 	await interaction.reply({
-		flags: MessageFlags.IsComponentsV2,
-		components: [container],
+		embeds: [embed],
+		components: [row],
 	});
 }
 
