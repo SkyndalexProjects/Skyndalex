@@ -42,13 +42,15 @@ export class DashboardServer {
 		});
 
 		app.addHook('preHandler', async (req, reply) => {
+			console.log("req.headers", req.headers);
 			const origin = req.headers.origin;
 			console.log('Request is coming from:', origin);
 
-			if (origin !== process.env.FRONTEND_URL) {
-				reply.code(403).send({ error: 'Forbidden' });
+			if (origin === undefined || origin === process.env.FRONTEND_URL) {
 				return;
 			}
+
+			reply.code(403).send({ error: 'Forbidden' });
 		});
 
 		const __filename = fileURLToPath(import.meta.url);
