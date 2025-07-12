@@ -64,31 +64,17 @@ export async function run(
 
 	let defaultModel;
 	let apiParameters;
-	let apiEndpoint;
 
 	if (imageBlob) {
-		defaultModel = "OmniGen2/OmniGen2";
+		defaultModel = "black-forest-labs/FLUX.1-Kontext-Dev";
 		apiParameters = {
-			instruction: prompt,
-			width_input: 1024,
-			height_input: 1024,
-			scheduler: "euler",
-			num_inference_steps: 20,
-			image_input_1: imageBlob,
-			image_input_2: null,
-			image_input_3: null,
-			negative_prompt:
-				"(((deformed))), blurry, over saturation, bad anatomy, disfigured, poorly drawn face, mutation, mutated, (extra_limb), (ugly), (poorly drawn hands), fused fingers, messy drawing, broken legs censor, censored, censor_bar",
-			guidance_scale_input: 1,
-			img_guidance_scale_input: 1,
-			cfg_range_start: 0,
-			cfg_range_end: 0,
-			num_images_per_prompt: 1,
-			max_input_image_side_length: 1024,
-			max_pixels: 65536,
-			seed_input: -1,
+			input_image: imageBlob,
+			prompt,
+			seed: 0,
+			randomize_seed: true,
+			guidance_scale: 1,
+			steps: 1,
 		};
-		apiEndpoint = "/run";
 	} else {
 		defaultModel = "black-forest-labs/FLUX.1-dev";
 		apiParameters = {
@@ -100,9 +86,7 @@ export async function run(
 			guidance_scale: 3.5,
 			num_inference_steps: 28,
 		};
-		apiEndpoint = "/infer";
 	}
-	console.log("Using model:", defaultModel);
 	const app = await Client.connect(defaultModel, {
 		hf_token: getToken?.huggingFaceToken,
 	}).catch((error: Error) => {
@@ -112,7 +96,7 @@ export async function run(
 	});
 
 	const result: HuggingFaceSpaceData = await app
-		.predict(apiEndpoint, apiParameters)
+		.predict("/infer", apiParameters)
 		.catch((error: HuggingFaceErrorData) => {
 			console.log(error);
 			if (error) {
