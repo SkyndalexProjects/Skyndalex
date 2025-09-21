@@ -1,4 +1,4 @@
-import Fastify, {FastifyReply, FastifyRequest} from "fastify";
+import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import fastifyCookie from "@fastify/cookie";
 import fastifySession from "@fastify/session";
 import fastifyFlash from "@fastify/flash";
@@ -21,7 +21,7 @@ export class DashboardServer {
 
 	constructor(client: SkyndalexClient) {
 		this.client = client;
-		this.app = Fastify();
+		this.app = Fastify({ logger: true });
 	}
 
 	async init() {
@@ -41,16 +41,12 @@ export class DashboardServer {
 			request.client = this.client;
 		});
 
-		app.addHook('preHandler', async (req, reply) => {
-			console.log("req.headers", req.headers);
+		app.addHook("preHandler", async (req, reply) => {
 			const origin = req.headers.origin;
-			console.log('Request is coming from:', origin);
-
 			if (origin === undefined || origin === process.env.FRONTEND_URL) {
 				return;
 			}
-
-			reply.code(403).send({ error: 'Forbidden' });
+			reply.code(403).send({ error: "Forbidden" });
 		});
 
 		const __filename = fileURLToPath(import.meta.url);

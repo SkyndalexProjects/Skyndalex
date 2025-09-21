@@ -13,6 +13,7 @@ export default async function userRoutes(fastify: FastifyInstance) {
 
 		const user = await response.json();
 
+		console.log("user", user);
 		reply.send(user);
 	});
 }

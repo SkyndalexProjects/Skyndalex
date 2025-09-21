@@ -23,6 +23,6 @@ export default async function index(fastify: FastifyInstance) {
 			return reply.redirect(`${process.env.OAUTH_URL}&state=${state}`);
 		}
 
-		reply.redirect("http://localhost:5173");
+		reply.redirect("http://localhost:5173/dashboard");
 	});
 }

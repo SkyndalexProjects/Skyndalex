@@ -1,9 +1,11 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
+import { request } from "express";
+import * as console from "node:console";
 
 interface Guild {
 	id: string;
 	name: string;
-	icon: string;
+	icon?: string;
 	owner: boolean;
 	permissions: string;
 }
@@ -20,46 +22,46 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 					authorization: `Bearer ${token}`,
 				},
 			});
+			console.log("res.status", response.status);
+
 			if (!response.ok) {
 				reply.status(response.status).send({
 					error: "Failed to fetch guilds",
-					message: await response.text(),
 				});
 				return;
 			}
 
-			const guilds = (await response.json()) as Guild[];
-
-			if (!Array.isArray(guilds)) {
-				reply.status(500).send({ error: "Invalid guilds response" });
-				return;
-			}
-			const botGuildsResponse = await fetch(
-				"https://discord.com/api/users/@me/guilds",
-				{
-					headers: {
-						authorization: `Bot ${process.env.BOT_TOKEN}`,
-					},
-				},
-			);
-
-			if (!botGuildsResponse.ok) {
-				reply.status(botGuildsResponse.status).send({
-					error: "Failed to fetch bot guilds",
-					message: await botGuildsResponse.text(),
-				});
-				return;
+			const guildsAPI = await response.json();
+			console.log("guildsAPI", guildsAPI);
+			if (!Array.isArray(guildsAPI)) {
+				return reply.status(500).send({ error: "Invalid guilds response" });
 			}
 
-			const botGuilds = (await botGuildsResponse.json()) as Guild[];
-			const botGuildIds = new Set(botGuilds.map((guild) => guild.id));
-
-			const guildsWithMoreUserData = guilds.map((guild: Guild) => ({
+			const detailedGuilds = guildsAPI.map((guild: Guild) => ({
 				...guild,
-				isBotAdded: botGuildIds.has(guild.id),
+				isBotAdded: request.client.guilds.cache.has(guild.id),
 			}));
 
-			reply.send(guildsWithMoreUserData);
+			return reply.status(200).send(detailedGuilds);
+		},
+	);
+	fastify.get(
+		`/guild`,
+		async (request: FastifyRequest, reply: FastifyReply) => {
+			console.log("[Server] :: Guild requested");
+			const token = request.cookies?.token;
+			const guildId = request.headers.guildid as string | undefined;
+
+			console.log("guildId", guildId);
+			if (!token) {
+				reply.status(401).send({ error: "No token" });
+				return;
+			}
+
+			// @ts-ignore
+			const guild = request.client.guilds.cache.get(guildId);
+
+			reply.send(guild);
 			return;
 		},
 	);

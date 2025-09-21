@@ -77,7 +77,7 @@ export default async function callbackRoute(fastify: FastifyInstance) {
 				});
 			}
 
-			reply.redirect("http://localhost:5173/");
+			reply.redirect("http://localhost:5173/dashboard/guild");
 		},
 	);
 }
