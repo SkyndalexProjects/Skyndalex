@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
-import { request } from "express";
 import * as console from "node:console";
+import { auth } from "../../auth.js";
+import type { DiscordUser } from "#types";
 
 interface Guild {
 	id: string;
@@ -14,16 +15,26 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 	fastify.get(
 		"/guilds",
 		async (request: FastifyRequest, reply: FastifyReply) => {
-			const token = request.cookies.token;
-			console.log("[Server] :: Guilds requested");
+			const session = await auth.api.getSession({
+				headers: request.headers,
+			});
+			if (!session) {
+				reply.status(401).send({ error: "Unauthorized" });
+				return;
+			}
 
+			const { accessToken } = await auth.api.getAccessToken({
+				body: {
+					providerId: "discord",
+					userId: session.session.userId,
+				},
+				headers: request.headers,
+			});
 			const response = await fetch("https://discord.com/api/users/@me/guilds", {
 				headers: {
-					authorization: `Bearer ${token}`,
+					authorization: `Bearer ${accessToken}`,
 				},
 			});
-			console.log("res.status", response.status);
-
 			if (!response.ok) {
 				reply.status(response.status).send({
 					error: "Failed to fetch guilds",
@@ -32,7 +43,7 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 			}
 
 			const guildsAPI = await response.json();
-			console.log("guildsAPI", guildsAPI);
+
 			if (!Array.isArray(guildsAPI)) {
 				return reply.status(500).send({ error: "Invalid guilds response" });
 			}
@@ -49,17 +60,50 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 		`/guild`,
 		async (request: FastifyRequest, reply: FastifyReply) => {
 			console.log("[Server] :: Guild requested");
-			const token = request.cookies?.token;
 			const guildId = request.headers.guildid as string | undefined;
 
-			console.log("guildId", guildId);
-			if (!token) {
-				reply.status(401).send({ error: "No token" });
+			const session = await auth.api.getSession({
+				headers: request.headers,
+			});
+
+			if (!session) {
+				reply.status(401).send({ error: "Unauthorized" });
 				return;
 			}
 
-			// @ts-ignore
+			const { accessToken } = await auth.api.getAccessToken({
+				body: {
+					providerId: "discord",
+					userId: session.session.userId,
+				},
+				headers: request.headers,
+			});
+
+			if (!guildId) {
+				reply.status(400).send({ error: "No guildId" });
+				return;
+			}
+
 			const guild = request.client.guilds.cache.get(guildId);
+
+			if (!guild) {
+				reply.status(404).send({ error: "Guild not found" });
+				return;
+			}
+
+			const response = await fetch("https://discord.com/api/users/@me", {
+				headers: {
+					authorization: `Bearer ${accessToken}`,
+				},
+			});
+
+			const user = (await response.json()) as DiscordUser;
+			const member = await guild.members.fetch(user?.id);
+
+			if (!member || !member.permissions.has("ManageGuild")) {
+				reply.status(403).send({ error: "No permission" });
+				return;
+			}
 
 			reply.send(guild);
 			return;

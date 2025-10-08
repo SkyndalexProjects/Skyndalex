@@ -8,13 +8,14 @@ import fastifyFormBody from "@fastify/formbody";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import type { SkyndalexClient } from "#classes";
+import { auth } from "./auth.js";
 
 declare module "fastify" {
 	interface FastifyRequest {
 		client: SkyndalexClient;
+		user?: { id: string };
 	}
 }
-// @ts-ignore
 export class DashboardServer {
 	app: Fastify.FastifyInstance;
 	client: SkyndalexClient;
@@ -26,23 +27,69 @@ export class DashboardServer {
 
 	async init() {
 		const app = this.app;
+		app.register(fastifyCors, {
+			origin: process.env.FRONTEND_URL || "http://localhost:3000",
+			credentials: true,
+			allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+		});
 
 		app.register(fastifyCookie);
 		app.register(fastifySession, {
 			secret: process.env.SESSION_SECRET || "defaultsecret",
-			cookie: { secure: true, httpOnly: true },
+			cookie: { secure: false, httpOnly: true, sameSite: "lax" },
 		});
 		app.register(fastifyFlash);
-		app.register(fastifyCors, {
-			origin: process.env.FRONTEND_URL,
-			credentials: true,
+		app.route({
+			method: ["GET", "POST"],
+			url: "/api/auth/*",
+			async handler(request, reply) {
+				try {
+					const url = new URL(request.url, `http://${request.headers.host}`);
+					const headers = new Headers();
+
+					Object.entries(request.headers).forEach(([key, value]) => {
+						if (value) {
+							if (Array.isArray(value)) {
+								value.forEach((v) => headers.append(key, v));
+							} else {
+								headers.append(key, value.toString());
+							}
+						}
+					});
+
+					const req = new Request(url.toString(), {
+						method: request.method,
+						headers,
+						body:
+							request.body &&
+							request.method !== "GET" &&
+							request.method !== "HEAD"
+								? JSON.stringify(request.body)
+								: undefined,
+					});
+
+					const response = await auth.handler(req);
+					reply.status(response.status);
+					response.headers.forEach((value, key) => reply.header(key, value));
+					reply.send(response.body ? await response.text() : null);
+				} catch (error) {
+					app.log.error("Authentication Error:", error);
+					reply.status(500).send({
+						error: "Internal authentication error",
+						code: "AUTH_FAILURE",
+					});
+				}
+			},
 		});
+
 		app.addHook("preHandler", async (request: FastifyRequest) => {
 			request.client = this.client;
 		});
 
 		app.addHook("preHandler", async (req, reply) => {
 			const origin = req.headers.origin;
+
 			if (origin === undefined || origin === process.env.FRONTEND_URL) {
 				return;
 			}
@@ -60,7 +107,10 @@ export class DashboardServer {
 		app.register(fastifyFormBody);
 
 		try {
-			await app.listen({ port: Number(process.env.API_PORT) });
+			await app.listen({
+				port: Number(process.env.API_PORT),
+				host: "localhost",
+			});
 			app.log.info(`[server] listening on ${app.server.address()}`);
 		} catch (err) {
 			app.log.error(err);

@@ -1,28 +1,16 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import crypto from "crypto";
+import { auth } from "../auth.js";
 export default async function index(fastify: FastifyInstance) {
 	fastify.get("/", async (req: FastifyRequest, reply: FastifyReply) => {
-		const token = req.cookies.token;
+		const session = await auth.api.getSession({
+			headers: req.headers,
+		});
+		const state = crypto.randomBytes(32).toString("hex");
 
-		if (!token) {
-			if (!process.env.OAUTH_URL) {
-				console.log("OAUTH_URL is not defined in the environment variables.");
-				return reply.code(500).send("Server configuration error.");
-			}
-
-			const state = crypto.randomBytes(32).toString("hex");
-
-			reply.setCookie("csrf_token", state, {
-				domain: "localhost",
-				path: "/",
-				secure: false,
-				httpOnly: true,
-				maxAge: 100,
-			});
-
+		if (!session) {
 			return reply.redirect(`${process.env.OAUTH_URL}&state=${state}`);
 		}
-
 		reply.redirect("http://localhost:5173/dashboard");
 	});
 }
