@@ -24,7 +24,16 @@ model Custombots {
 
   @@id([id, guildId])
 }
-
+model Settings {
+  guildId                 String  @id
+  autoRole                String?
+  welcomeChannel          String?
+  welcomeTitle            String?
+  goodbyeTitle           String?
+  blockedCommands         String?
+  blockedChannels         String?
+  goodbyeChannel          String?
+}
 model DashboardLogs {
   id      Int     @id @default(autoincrement())
   guildId String
