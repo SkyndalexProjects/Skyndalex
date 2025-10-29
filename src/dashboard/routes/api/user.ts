@@ -24,8 +24,6 @@ export default async function userRoutes(fastify: FastifyInstance) {
 		});
 
 		const user = (await response.json()) as DiscordUser;
-
-		console.log("user", user);
 		reply.send(user);
 	});
 }

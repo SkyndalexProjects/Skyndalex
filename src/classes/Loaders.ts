@@ -67,7 +67,6 @@ export class Loaders {
 			const name = file.split(".")[0];
 			components.set(name, component);
 		}
-		console.log("components", components);
 		return components;
 	}
 	async loadEvents(client: SkyndalexClient, path: string) {

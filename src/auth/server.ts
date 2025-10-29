@@ -58,7 +58,7 @@ export class AuthServer {
 		}
 
 		app.ready(() => {
-			console.log(app.printRoutes());
+			console.log("[Server] :: Server is ready and listening on port 2137");
 		});
 
 		return app;

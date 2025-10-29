@@ -13,29 +13,13 @@ export default async function channels(fastify: FastifyInstance) {
 			console.log("[Server] :: Settings requested");
 			const session = await auth.api.getSession({ headers: request.headers });
 
-			if (!session) {
-				reply.status(401).send({ error: "Unauthorized" });
-				return;
-			}
-
-			const discordUserId = session.user?.id;
-
-			if (!discordUserId) {
-				reply.status(400).send({ error: "Session user id missing" });
-				return;
-			}
-
-			const guild = request.client.guilds.cache.get(request.params.id);
-
-			if (!guild) {
-				reply.status(404).send({ error: "Not found" });
-				return;
-			}
+			const guildId = request.params.id;
+			const guild = request.client.guilds.cache.get(guildId);
 
 			const { accessToken } = await auth.api.getAccessToken({
 				body: {
 					providerId: "discord",
-					userId: session.session.userId,
+					userId: session?.session.userId,
 				},
 				headers: request.headers,
 			});
@@ -54,26 +38,23 @@ export default async function channels(fastify: FastifyInstance) {
 			}
 
 			const user = (await response.json()) as DiscordUser;
-
 			const member = await guild.members.fetch(user.id);
 
-			if (!member) {
-				reply.status(404).send({ error: "Not found." });
-			}
-
-			if (!member.permissions.has(PermissionFlagsBits.ManageGuild)) {
-				reply.status(403).send({ error: "Forbidden." });
-				return;
-			}
-
-			const getChannels = guild.channels.cache.map((ch) => {
-				return {
-					id: ch.id,
-					name: ch.name,
-					type: ChannelType[ch.type],
-					guildId: guild.id,
-				};
-			});
+			const getChannels = guild.channels.cache
+				.filter((ch) => {
+					const permissions = ch.permissionsFor(member);
+					return (
+						permissions && permissions.has(PermissionFlagsBits.ViewChannel)
+					);
+				})
+				.map((ch) => {
+					return {
+						id: ch.id,
+						name: ch.name,
+						type: ChannelType[ch.type],
+						guildId: guild.id,
+					};
+				});
 
 			if (!getChannels || Array.from(getChannels).length === 0) {
 				reply.status(404).send({ error: "No channels found in the guild" });

@@ -9,6 +9,10 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import type { SkyndalexClient } from "#classes";
 import { auth } from "./auth.js";
+import type { DiscordUser } from "../types/index.js";
+import { PermissionFlagsBits } from "discord.js";
+import serveStatic from "serve-static";
+import { request } from "express";
 
 declare module "fastify" {
 	interface FastifyRequest {
@@ -87,6 +91,88 @@ export class DashboardServer {
 			request.client = this.client;
 		});
 
+		app.addHook(
+			"preHandler",
+			async (request: FastifyRequest, reply: FastifyReply) => {
+				const pathOnly = request.url.split("?")[0];
+				const isGuildPath = /^\/api\/guild(?:\/|$)/.test(pathOnly);
+
+				if (isGuildPath) {
+					const session = await auth.api.getSession({
+						headers: request.headers,
+					});
+					const guildId = request.headers.guildid as string | undefined;
+					if (!guildId || !/^\d{17,19}$/.test(guildId)) {
+						console.log("im working");
+						reply.status(400).send({ error: "Invalid guild ID format" });
+						return;
+					}
+					if (!session) {
+						reply.status(401).send({ error: "Unauthorized" });
+						return;
+					}
+					const guild = request.client.guilds.cache.get(guildId);
+
+					if (!guild) {
+						reply.status(404).send({ error: "Not found" });
+						return;
+					}
+
+					console.log("session user", session);
+					//TODO: figure this stupid thing out
+
+					// const dbUser = await request.client.prisma.account.findFirst({
+					//     where: {
+					//         userId: session.session.id,
+					//     }
+					// })
+					// console.log("DB USER", dbUser);
+					// const userDb = await auth.api.accountInfo({
+					//     body: {
+					//         accountId: session.session.userId,
+					//     },
+					//     headers: request.headers
+					// })
+					//
+					// console.log("userDb", userDb);
+					const { accessToken } = await auth.api.getAccessToken({
+						body: {
+							providerId: "discord",
+							userId: session.session.userId,
+						},
+						headers: request.headers,
+					});
+					const response = await fetch("https://discord.com/api/users/@me", {
+						headers: {
+							authorization: `Bearer ${accessToken}`,
+						},
+					});
+					if (!response.ok) {
+						reply.status(response.status).send({
+							error: "Failed to fetch user",
+						});
+						return;
+					}
+
+					const user = (await response.json()) as DiscordUser;
+					const member = await guild.members.fetch(user.id);
+
+					console.log("Member status", member);
+					if (!member) {
+						reply.status(404).send({ error: "Not found." });
+						return;
+					}
+
+					if (!member.permissions.has(PermissionFlagsBits.ManageGuild)) {
+						reply.status(403).send({ error: "Forbidden." });
+						return;
+					}
+				} else {
+					return;
+				}
+			},
+		);
+
 		app.addHook("preHandler", async (req, reply) => {
 			const origin = req.headers.origin;
 
@@ -117,7 +203,7 @@ export class DashboardServer {
 		}
 
 		app.ready(() => {
-			console.log(app.printRoutes());
+			console.log("[Server] :: Dashboard routes loaded");
 		});
 
 		return app;
