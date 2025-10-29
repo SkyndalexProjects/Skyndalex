@@ -102,6 +102,7 @@ export class DashboardServer {
 						headers: request.headers,
 					});
 					const guildId = request.headers.guildid as string | undefined;
+
 					if (!guildId || !/^\d{17,19}$/.test(guildId)) {
 						console.log("im working");
 						reply.status(400).send({ error: "Invalid guild ID format" });
@@ -118,44 +119,7 @@ export class DashboardServer {
 						return;
 					}
 
-					console.log("session user", session);
-					//TODO: figure this stupid thing out
-
-					// const dbUser = await request.client.prisma.account.findFirst({
-					//     where: {
-					//         userId: session.session.id,
-					//     }
-					// })
-					// console.log("DB USER", dbUser);
-					// const userDb = await auth.api.accountInfo({
-					//     body: {
-					//         accountId: session.session.userId,
-					//     },
-					//     headers: request.headers
-					// })
-					//
-					// console.log("userDb", userDb);
-					const { accessToken } = await auth.api.getAccessToken({
-						body: {
-							providerId: "discord",
-							userId: session.session.userId,
-						},
-						headers: request.headers,
-					});
-					const response = await fetch("https://discord.com/api/users/@me", {
-						headers: {
-							authorization: `Bearer ${accessToken}`,
-						},
-					});
-					if (!response.ok) {
-						reply.status(response.status).send({
-							error: "Failed to fetch user",
-						});
-						return;
-					}
-
-					const user = (await response.json()) as DiscordUser;
-					const member = await guild.members.fetch(user.id);
+					const member = await guild.members.fetch(session.user.discordId);
 
 					console.log("Member status", member);
 					if (!member) {

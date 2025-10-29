@@ -16,29 +16,7 @@ export default async function channels(fastify: FastifyInstance) {
 			const guildId = request.params.id;
 			const guild = request.client.guilds.cache.get(guildId);
 
-			const { accessToken } = await auth.api.getAccessToken({
-				body: {
-					providerId: "discord",
-					userId: session?.session.userId,
-				},
-				headers: request.headers,
-			});
-
-			const response = await fetch("https://discord.com/api/users/@me", {
-				headers: {
-					authorization: `Bearer ${accessToken}`,
-				},
-			});
-
-			if (!response.ok) {
-				reply.status(response.status).send({
-					error: "Failed to fetch user",
-				});
-				return;
-			}
-
-			const user = (await response.json()) as DiscordUser;
-			const member = await guild.members.fetch(user.id);
+			const member = await guild.members.fetch(session.user.discordId);
 
 			const getChannels = guild.channels.cache
 				.filter((ch) => {
