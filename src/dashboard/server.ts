@@ -40,9 +40,15 @@ export class DashboardServer {
 
 		app.register(fastifyCookie);
 		app.register(fastifySession, {
-			secret: process.env.SESSION_SECRET || "defaultsecret",
+			secret: process.env.SESSION_SECRET as string,
 			cookie: { secure: false, httpOnly: true, sameSite: "lax" },
 		});
+
+		app.register(import("@fastify/rate-limit"), {
+			max: 100,
+			timeWindow: "1 minute",
+		});
+
 		app.register(fastifyFlash);
 		app.route({
 			method: ["GET", "POST"],

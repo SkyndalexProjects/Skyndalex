@@ -42,6 +42,7 @@
     "@fastify/flash": "^6.0.2",
     "@fastify/formbody": "^8.0.2",
     "@fastify/passport": "^3.0.1",
+    "@fastify/rate-limit": "^10.3.0",
     "@fastify/session": "^11.0.1",
     "@gradio/client": "^1.15.1",
     "@napi-rs/canvas": "^0.1.52",
