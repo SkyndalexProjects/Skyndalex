@@ -58,54 +58,42 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 	fastify.get(
 		`/guild`,
 		async (request: FastifyRequest, reply: FastifyReply) => {
-			console.log("[Server] :: Guild requested");
-			const guildId = request.headers.guildid as string | undefined;
+            try {
+                console.log("[Server] :: Guild requested");
+                const guildId = request.headers.guildid as string | undefined;
 
-			const session = await auth.api.getSession({
-				headers: request.headers,
-			});
+                const session = await auth.api.getSession({
+                    headers: request.headers,
+                });
 
-			if (!session) {
-				reply.status(401).send({ error: "Unauthorized" });
-				return;
-			}
+                if (!session) {
+                    reply.status(401).send({ error: "Unauthorized" });
+                    return;
+                }
 
-			const { accessToken } = await auth.api.getAccessToken({
-				body: {
-					providerId: "discord",
-					userId: session.session.userId,
-				},
-				headers: request.headers,
-			});
+                if (!guildId) {
+                    reply.status(400).send({ error: "No guildId" });
+                    return;
+                }
 
-			if (!guildId) {
-				reply.status(400).send({ error: "No guildId" });
-				return;
-			}
+                const guild = request.client.guilds.cache.get(guildId);
 
-			const guild = request.client.guilds.cache.get(guildId);
+                if (!guild) {
+                    reply.status(404).send({ error: "Guild not found" });
+                    return;
+                }
 
-			if (!guild) {
-				reply.status(404).send({ error: "Guild not found" });
-				return;
-			}
+                const member = await guild.members.fetch(session.user.discordId)
+                if (!member?.permissions.has('ManageGuild')) {
+                    return reply.status(403).send({ error: "Forbidden"});
+                }
 
-			const response = await fetch("https://discord.com/api/users/@me", {
-				headers: {
-					authorization: `Bearer ${accessToken}`,
-				},
-			});
-
-			const user = (await response.json()) as DiscordUser;
-			const member = await guild.members.fetch(user?.id);
-
-			if (!member || !member.permissions.has("ManageGuild")) {
-				reply.status(403).send({ error: "No permission" });
-				return;
-			}
-
-			reply.send(guild);
-			return;
+               return reply.send(guild);
+            } catch (error) {
+                console.error("Error fetching guild:", error);
+                reply.status(500).send({ error: "Internal server error" });
+                return;
+            }
 		},
 	);
 }
