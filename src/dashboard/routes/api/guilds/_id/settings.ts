@@ -45,6 +45,7 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
             if (!member?.permissions.has('ManageGuild')) {
                 return reply.status(403).send({ error: "Forbidden"});
             }
+
             const { guildId: _ignoredGuildId, id: _ignoredId, ...safeBody } = request.body;
 
             try {
@@ -75,6 +76,12 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
             const session = await auth.api.getSession({
                 headers: request.headers,
             });
+
+            if (!session) {
+                reply.status(401).send({ error: "Unauthorized" });
+                return;
+            }
+
             const guild = request.client.guilds.cache.get(guildId);
 
             if (!guild) {

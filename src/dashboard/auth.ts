@@ -57,10 +57,10 @@ export const auth = betterAuth({
 		},
 	},
 	cors: {
-		origin: ["http://localhost:5173"],
+		origin: [process.env.FRONTEND_URL as string],
 		credentials: true,
 	},
 	basePath: "/api/auth",
-	baseURL: "http://localhost:3000",
-	trustedOrigins: ["http://localhost:5173"],
+	baseURL: `${process.env.API_ENDPOINT}:${process.env.API_PORT}`,
+	trustedOrigins: [process.env.FRONTEND_URL as string],
 });

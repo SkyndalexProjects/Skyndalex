@@ -10,43 +10,58 @@ export default async function channels(fastify: FastifyInstance) {
 			request: FastifyRequest<{ Params: { id: string } }>,
 			reply: FastifyReply,
 		) => {
-			console.log("[Server] :: Settings requested");
-			const session = await auth.api.getSession({ headers: request.headers });
+            try {
+                console.log("[Server] :: Settings requested");
+                const guildId = request.params.id;
+                const session = await auth.api.getSession({ headers: request.headers });
 
-			const guildId = request.params.id;
-			const guild = request.client.guilds.cache.get(guildId);
+                if (!session) {
+                    reply.status(401).send({ error: "Unauthorized" });
+                    return;
+                }
 
-			const member = await guild?.members.fetch(session?.user.discordId);
-            if (!member?.permissions.has('ManageGuild')) {
-                return reply.status(403).send({ error: "Forbidden"});
+                const guild = request.client.guilds.cache.get(guildId);
+                if (!guild) {
+                    return reply.status(404).send({ error: "Not found" });
+                }
+                const member = await guild?.members.fetch(session?.user.discordId);
+
+                console.log("User member:", member);
+                if (!member?.permissions.has('ManageGuild')) {
+                    return reply.status(403).send({ error: "Forbidden"});
+                }
+
+                const getChannels = guild?.channels.cache
+                    .filter((ch) => {
+                        const permissions = ch.permissionsFor(member);
+                        return (
+                            permissions && permissions.has(PermissionFlagsBits.ViewChannel)
+                        );
+                    })
+                    .map((ch) => {
+                        return {
+                            id: ch.id,
+                            name: ch.name,
+                            type: ChannelType[ch.type],
+                            guildId: guild.id,
+                        };
+                    });
+
+                if (!getChannels || Array.from(getChannels).length === 0) {
+                    reply.status(404).send({ error: "No channels found in the guild" });
+                    return;
+                }
+
+                if (!getChannels.every((ch) => ch.id && ch.name && ch.type)) {
+                    reply.status(500).send({ error: "Invalid channel data" });
+                    return;
+                }
+
+                return reply.send(channels);
+            } catch (err) {
+                request.log.error({ err }, "channels route failed");
+                return reply.status(500).send({ error: "Internal Server Error" });
             }
-			const getChannels = guild?.channels.cache
-				.filter((ch) => {
-					const permissions = ch.permissionsFor(member);
-					return (
-						permissions && permissions.has(PermissionFlagsBits.ViewChannel)
-					);
-				})
-				.map((ch) => {
-					return {
-						id: ch.id,
-						name: ch.name,
-						type: ChannelType[ch.type],
-						guildId: guild.id,
-					};
-				});
-
-			if (!getChannels || Array.from(getChannels).length === 0) {
-				reply.status(404).send({ error: "No channels found in the guild" });
-				return;
-			}
-
-			if (!getChannels.every((ch) => ch.id && ch.name && ch.type)) {
-				reply.status(500).send({ error: "Invalid channel data" });
-				return;
-			}
-
-			return getChannels;
 		},
 	);
 }
