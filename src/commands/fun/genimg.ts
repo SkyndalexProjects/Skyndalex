@@ -44,7 +44,7 @@ export async function run(
 			.setLabel("Authorize")
 			.setStyle(ButtonStyle.Link)
 			.setURL(
-				process.env.OAUTH_TO_HUGGINGFACE ?? "https://default-auth-url.com",
+				process.env.OAUTH_TO_HUGGINGFACE as string,
 			);
 		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			authorizeButton,

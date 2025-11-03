@@ -52,7 +52,10 @@ export class AuthServer {
 		this.setupRoutes();
 
 		try {
-			await app.listen({ port: 2137, host: "0.0.0.0" });
+            await app.listen({
+                port: Number(2137),
+                host: "localhost",
+            });
 		} catch (err) {
 			app.log.error(err);
 		}
@@ -101,6 +104,7 @@ export class AuthServer {
 
 				const token = (await response.json()) as DiscordOauthResponse;
 
+                console.log("token", token);
 				const getUserData = await fetch("https://discord.com/api/users/@me", {
 					headers: {
 						authorization: `Bearer ${token.access_token}`,
@@ -111,8 +115,9 @@ export class AuthServer {
 				console.log("userData", userData);
 				request.session.userId = userData.id;
 				await request.session.save();
+                console.log("działam tutaj")
 				return reply.redirect(
-					process.env.HF_APP_AUTH_URL ?? "https://default-auth-url.com",
+					process.env.HF_APP_AUTH_URL as string,
 				);
 			},
 		);
@@ -120,7 +125,6 @@ export class AuthServer {
 			console.log("Now at huggingface");
 			const { code } = request.query as { code: string };
 			const userId = request.session.userId;
-			console.log("userId huggingface", userId);
 			if (!code) {
 				return reply.status(400).send({ error: "No authorization code." });
 			}
