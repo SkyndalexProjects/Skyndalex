@@ -116,7 +116,7 @@ export class DashboardServer {
 		try {
 			await app.listen({
 				port: Number(process.env.API_PORT),
-				host: "127.0.0.1",
+				host: "0.0.0.0",
 			});
 			app.log.info(`[server] listening on ${app.server.address()}`);
 		} catch (err) {
