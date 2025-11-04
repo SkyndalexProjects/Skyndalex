@@ -106,10 +106,10 @@ export class DashboardServer {
 		const __filename = fileURLToPath(import.meta.url);
 		const __dirname = dirname(__filename);
 
-		app.register(autoLoad, {
-			dir: path.join(__dirname, "../dashboard/routes"),
-			routeParams: true,
-		});
+        app.register(autoLoad, {
+            dir: path.join(__dirname, "../dashboard/routes"),
+            routeParams: true,
+        });
 
 		app.register(fastifyFormBody);
 
