@@ -34,11 +34,15 @@ export class DashboardServer {
 		});
 
 		app.register(fastifyCookie);
-		app.register(fastifySession, {
-			secret: process.env.SESSION_SECRET as string,
-			cookie: { secure: true, httpOnly: true, sameSite: "lax" },
-		});
-
+        app.register(fastifySession, {
+            secret: process.env.SESSION_SECRET as string,
+            cookie: {
+                secure: true,
+                httpOnly: true,
+                sameSite: "none",
+                domain: ".skyndalex.com",
+            },
+        });
 		app.register(import("@fastify/rate-limit"), {
 			max: 100,
 			timeWindow: "1 minute",
@@ -91,14 +95,13 @@ export class DashboardServer {
 		app.addHook("preHandler", async (request: FastifyRequest) => {
 			request.client = this.client;
 		});
-		app.addHook("preHandler", async (req, reply) => {
-			const origin = req.headers.origin;
-
-			if (origin === undefined || origin === process.env.FRONTEND_URL) {
-				return;
-			}
-			reply.code(403).send({ error: "Forbidden" });
-		});
+        app.addHook("preHandler", async (req, reply) => {
+            if (req.method === "OPTIONS") return;
+            const origin = req.headers.origin;
+            if (origin && origin !== process.env.FRONTEND_URL) {
+                return reply.code(403).send({ error: "Forbidden" });
+            }
+        });
 
 		const __filename = fileURLToPath(import.meta.url);
 		const __dirname = dirname(__filename);
