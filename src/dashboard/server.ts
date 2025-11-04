@@ -27,7 +27,7 @@ export class DashboardServer {
 	async init() {
 		const app = this.app;
 		app.register(fastifyCors, {
-			origin: process.env.FRONTEND_URL || "http://localhost:3000",
+			origin: process.env.FRONTEND_URL,
 			credentials: true,
 			allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
 			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -36,7 +36,7 @@ export class DashboardServer {
 		app.register(fastifyCookie);
 		app.register(fastifySession, {
 			secret: process.env.SESSION_SECRET as string,
-			cookie: { secure: false, httpOnly: true, sameSite: "lax" },
+			cookie: { secure: true, httpOnly: true, sameSite: "lax" },
 		});
 
 		app.register(import("@fastify/rate-limit"), {
