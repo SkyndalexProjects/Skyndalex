@@ -26,12 +26,16 @@ export class DashboardServer {
 
 	async init() {
 		const app = this.app;
-		app.register(fastifyCors, {
-			origin: process.env.FRONTEND_URL,
-			credentials: true,
-			allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-		});
+        app.register(fastifyCors, {
+            origin: [
+                process.env.FRONTEND_URL,
+                'https://beta.skyndalex.com',
+                'https://skyndalex.com'
+            ] as string[],
+            credentials: true,
+            allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        });
 
 		app.register(fastifyCookie);
         app.register(fastifySession, {
@@ -98,11 +102,17 @@ export class DashboardServer {
         app.addHook("preHandler", async (req, reply) => {
             if (req.method === "OPTIONS") return;
             const origin = req.headers.origin;
-            if (origin && origin !== process.env.FRONTEND_URL) {
+            const allowedOrigins = [
+                process.env.FRONTEND_URL,
+                'https://beta.skyndalex.com',
+                'https://skyndalex.com'
+            ];
+
+            if (origin && !allowedOrigins.includes(origin)) {
+                app.log.warn(`Blocked origin: ${origin}`);
                 return reply.code(403).send({ error: "Forbidden" });
             }
         });
-
 		const __filename = fileURLToPath(import.meta.url);
 		const __dirname = dirname(__filename);
 
