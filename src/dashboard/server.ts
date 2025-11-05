@@ -40,12 +40,7 @@ export class DashboardServer {
 		app.register(fastifyCookie);
         app.register(fastifySession, {
             secret: process.env.SESSION_SECRET as string,
-            cookie: {
-                secure: true,
-                httpOnly: true,
-                sameSite: "none",
-                domain: ".skyndalex.com",
-            },
+            cookie: { secure: true, httpOnly: true, sameSite: "lax" },
         });
 		app.register(import("@fastify/rate-limit"), {
 			max: 100,
@@ -55,7 +50,17 @@ export class DashboardServer {
 		app.register(fastifyFlash);
         app.all("/api/auth/*", async (request, reply) => {
             try {
-                const url = new URL(request.url, `http://${request.headers.host}`);
+                const forwardedProto = (
+                    (request.headers['x-forwarded-proto'] as string | undefined) ||
+                    (request.headers['x-forwarded-protocol'] as string | undefined)
+                );
+                const protocol = forwardedProto
+                    ? forwardedProto.split(',')[0].trim()
+                    : ((request.raw as any)?.socket?.encrypted ? 'https' : 'http');
+
+                const host = (request.headers.host as string) || 'localhost';
+                const url = new URL(request.url, `${protocol}://${host}`);
+
                 const headers = new Headers();
 
                 Object.entries(request.headers).forEach(([key, value]) => {
@@ -104,7 +109,7 @@ export class DashboardServer {
             const allowedOrigins = [
                 process.env.FRONTEND_URL,
                 'https://beta.skyndalex.com',
-                'https://skyndalex.com'
+                'https://skyndalex.com',
             ];
 
             if (origin && !allowedOrigins.includes(origin)) {

@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { auth } from "../auth.js";
 export default async function index(fastify: FastifyInstance) {
-	fastify.get("/", async (req: FastifyRequest, reply: FastifyReply) => {
+	fastify.get("/api", async (req: FastifyRequest, reply: FastifyReply) => {
 		const session = await auth.api.getSession({
 			headers: req.headers,
 		});
