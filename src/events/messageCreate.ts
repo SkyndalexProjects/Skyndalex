@@ -24,6 +24,7 @@ export async function messageCreate(client: SkyndalexClient, message: Message) {
 		if ("sendTyping" in message.channel) {
 			await message.channel.sendTyping();
 		}
+
 		const authorizeButton = new ButtonBuilder()
 			.setLabel("Authorize")
 			.setStyle(ButtonStyle.Link)

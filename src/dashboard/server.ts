@@ -53,48 +53,47 @@ export class DashboardServer {
 		});
 
 		app.register(fastifyFlash);
-		app.route({
-			method: ["GET", "POST"],
-			url: "/api/auth/*",
-			async handler(request, reply) {
-				try {
-					const url = new URL(request.url, `http://${request.headers.host}`);
-					const headers = new Headers();
+        app.all("/api/auth/*", async (request, reply) => {
+            try {
+                const url = new URL(request.url, `http://${request.headers.host}`);
+                const headers = new Headers();
 
-					Object.entries(request.headers).forEach(([key, value]) => {
-						if (value) {
-							if (Array.isArray(value)) {
-								value.forEach((v) => headers.append(key, v));
-							} else {
-								headers.append(key, value.toString());
-							}
-						}
-					});
+                Object.entries(request.headers).forEach(([key, value]) => {
+                    if (value) {
+                        if (Array.isArray(value)) {
+                            value.forEach((v) => headers.append(key, v));
+                        } else {
+                            headers.append(key, value.toString());
+                        }
+                    }
+                });
 
-					const req = new Request(url.toString(), {
-						method: request.method,
-						headers,
-						body:
-							request.body &&
-							request.method !== "GET" &&
-							request.method !== "HEAD"
-								? JSON.stringify(request.body)
-								: undefined,
-					});
+                const req = new Request(url.toString(), {
+                    method: request.method,
+                    headers,
+                    body:
+                        request.body &&
+                        request.method !== "GET" &&
+                        request.method !== "HEAD"
+                            ? JSON.stringify(request.body)
+                            : undefined,
+                });
 
-					const response = await auth.handler(req);
-					reply.status(response.status);
-					response.headers.forEach((value, key) => reply.header(key, value));
-					reply.send(response.body ? await response.text() : null);
-				} catch (error) {
-					app.log.error("Authentication Error:", error);
-					reply.status(500).send({
-						error: "Internal authentication error",
-						code: "AUTH_FAILURE",
-					});
-				}
-			},
-		});
+                const response = await auth.handler(req);
+
+                reply.status(response.status);
+                response.headers.forEach((value, key) => reply.header(key, value));
+
+                const body = await response.text();
+                reply.send(body || null);
+            } catch (error) {
+                app.log.error("Authentication Error:", error);
+                reply.status(500).send({
+                    error: "Internal authentication error",
+                    code: "AUTH_FAILURE",
+                });
+            }
+        });
 
 		app.addHook("preHandler", async (request: FastifyRequest) => {
 			request.client = this.client;
