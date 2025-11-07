@@ -41,16 +41,7 @@ export class DashboardServer {
         app.register(fastifyCookie);
         app.register(fastifySession, {
             secret: process.env.SESSION_SECRET as string,
-            cookie: {
-                secure: process.env.PRODUCTION === "true",
-                httpOnly: true,
-                sameSite: (process.env.PRODUCTION === "true" ? "none" : "lax"),
-                domain: process.env.PRODUCTION === "true" && process.env.SESSION_COOKIE_DOMAIN
-                    ? process.env.SESSION_COOKIE_DOMAIN
-                    : undefined,
-                path: "/",
-                maxAge: Number(process.env.SESSION_MAX_AGE) || 24 * 60 * 60,
-            },
+            cookie: { secure: true, httpOnly: true, sameSite: "lax" },
         });
         app.register(import("@fastify/rate-limit"), {
             max: 100,
