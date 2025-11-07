@@ -44,10 +44,12 @@ export class DashboardServer {
             cookie: {
                 secure: process.env.PRODUCTION === "true",
                 httpOnly: true,
-                sameSite: (process.env.PRODUCTION === "true" ? "none" : "lax") as "none" | "lax",
-                domain: process.env.PRODUCTION === "true" ? (process.env.SESSION_COOKIE_DOMAIN || undefined) : undefined,
+                sameSite: (process.env.PRODUCTION === "true" ? "none" : "lax"),
+                domain: process.env.PRODUCTION === "true" && process.env.SESSION_COOKIE_DOMAIN
+                    ? process.env.SESSION_COOKIE_DOMAIN
+                    : undefined,
                 path: "/",
-                maxAge: Number(process.env.SESSION_MAX_AGE) || 24 * 60 * 60 * 1000,
+                maxAge: Number(process.env.SESSION_MAX_AGE) || 24 * 60 * 60,
             },
         });
         app.register(import("@fastify/rate-limit"), {
@@ -126,23 +128,8 @@ export class DashboardServer {
 
                 const response = await auth.handler(req);
                 reply.status(response.status);
-                response.headers.forEach((value, key) => {
-                    if (key.toLowerCase() !== "set-cookie") {
-                        reply.header(key, value);
-                    }
-                });
-
-                const raw = (response.headers as any).raw?.();
-                const setCookies: string[] | undefined = raw ? raw["set-cookie"] : undefined;
-                if (setCookies?.length) {
-                    setCookies.forEach(cookie => reply.header("set-cookie", cookie));
-                } else {
-                    const single = response.headers.get("set-cookie");
-                    if (single) reply.header("set-cookie", single);
-                }
-
-                const bodyText = response.body ? await response.text() : null;
-                reply.send(bodyText);
+                response.headers.forEach((value, key) => reply.header(key, value));
+                reply.send(response.body ? await response.text() : null);
             } catch (error) {
                 console.error("Authentication Error:", error);
                 reply.status(500).send({
