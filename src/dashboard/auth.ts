@@ -73,6 +73,9 @@ export const auth = betterAuth({
 	},
 	advanced: {
 		useSecureCookies: true,
+        crossSubDomainCookies: {
+            enabled: true,
+        },
 	},
 	session: {
 		cookieCache: {
@@ -81,7 +84,12 @@ export const auth = betterAuth({
 		},
 	},
 	cors: {
-		origin: [process.env.FRONTEND_URL as string],
+        origin: [
+            process.env.FRONTEND_URL as string,
+            'https://beta.skyndalex.com',
+            'https://skyndalex.com',
+            'https://api.skyndalex.com'
+        ],
 		credentials: true,
 	},
 	basePath: "/auth",
