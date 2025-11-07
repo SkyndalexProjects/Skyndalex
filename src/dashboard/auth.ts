@@ -23,6 +23,7 @@ export const auth = betterAuth({
 		discord: {
 			clientId: process.env.CLIENT_ID as string,
 			clientSecret: process.env.CLIENT_SECRET as string,
+            disableDefaultScope: true,
             scope: ["identify", "guilds", "guilds.members.read"],
             getUserInfo: async (tokens) => {
 				const req = await fetch("https://discord.com/api/users/@me", {
@@ -75,7 +76,7 @@ export const auth = betterAuth({
 		useSecureCookies: true,
         crossSubDomainCookies: {
             enabled: true,
-            domain: ".skyndalex.com",
+            domain: process.env.OAUTH_DOMAIN as string,
         },
 	},
 	session: {

@@ -10,22 +10,22 @@ import { fileURLToPath } from "url";
 import type { SkyndalexClient } from "#classes";
 import { auth } from "./auth.js";
 declare module "fastify" {
-	interface FastifyRequest {
-		client: SkyndalexClient;
-		user?: { id: string };
-	}
+    interface FastifyRequest {
+        client: SkyndalexClient;
+        user?: { id: string };
+    }
 }
 export class DashboardServer {
-	app: Fastify.FastifyInstance;
-	client: SkyndalexClient;
+    app: Fastify.FastifyInstance;
+    client: SkyndalexClient;
 
-	constructor(client: SkyndalexClient) {
-		this.client = client;
-		this.app = Fastify({ logger: true });
-	}
+    constructor(client: SkyndalexClient) {
+        this.client = client;
+        this.app = Fastify({ logger: true });
+    }
 
-	async init() {
-		const app = this.app;
+    async init() {
+        const app = this.app;
         app.register(fastifyCors, {
             origin: [
                 process.env.FRONTEND_URL,
@@ -38,7 +38,7 @@ export class DashboardServer {
             methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         });
 
-		app.register(fastifyCookie);
+        app.register(fastifyCookie);
         app.register(fastifySession, {
             secret: process.env.SESSION_SECRET as string,
             cookie: {
@@ -50,15 +50,15 @@ export class DashboardServer {
                 maxAge: Number(process.env.SESSION_MAX_AGE) || 24 * 60 * 60 * 1000,
             },
         });
-		app.register(import("@fastify/rate-limit"), {
-			max: 100,
-			timeWindow: "1 minute",
-		});
+        app.register(import("@fastify/rate-limit"), {
+            max: 100,
+            timeWindow: "1 minute",
+        });
 
-		app.register(fastifyFlash);
-		app.addHook("preHandler", async (request: FastifyRequest) => {
-			request.client = this.client;
-		});
+        app.register(fastifyFlash);
+        app.addHook("preHandler", async (request: FastifyRequest) => {
+            request.client = this.client;
+        });
         app.addHook("preHandler", async (req, reply) => {
             if (req.method === "OPTIONS") return;
             const origin = req.headers.origin;
@@ -74,16 +74,15 @@ export class DashboardServer {
                 return reply.code(403).send({ error: "Forbidden" });
             }
         });
-		const __filename = fileURLToPath(import.meta.url);
-		const __dirname = dirname(__filename);
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = dirname(__filename);
 
         app.register(autoLoad, {
             dir: path.join(__dirname, "../dashboard/routes"),
             routeParams: true,
         });
 
-		app.register(fastifyFormBody);
-
+        app.register(fastifyFormBody);
         app.all("/auth/*", async (request: FastifyRequest, reply: FastifyReply) => {
             console.log("test")
             try {
@@ -127,8 +126,23 @@ export class DashboardServer {
 
                 const response = await auth.handler(req);
                 reply.status(response.status);
-                response.headers.forEach((value, key) => reply.header(key, value));
-                reply.send(response.body ? await response.text() : null);
+                response.headers.forEach((value, key) => {
+                    if (key.toLowerCase() !== "set-cookie") {
+                        reply.header(key, value);
+                    }
+                });
+
+                const raw = (response.headers as any).raw?.();
+                const setCookies: string[] | undefined = raw ? raw["set-cookie"] : undefined;
+                if (setCookies?.length) {
+                    setCookies.forEach(cookie => reply.header("set-cookie", cookie));
+                } else {
+                    const single = response.headers.get("set-cookie");
+                    if (single) reply.header("set-cookie", single);
+                }
+
+                const bodyText = response.body ? await response.text() : null;
+                reply.send(bodyText);
             } catch (error) {
                 console.error("Authentication Error:", error);
                 reply.status(500).send({
@@ -138,23 +152,23 @@ export class DashboardServer {
             }
         });
 
-		try {
-			await app.listen({
-				port: Number(process.env.API_PORT),
-				host: "0.0.0.0",
-			});
-			app.log.info(`[server] listening on ${app.server.address()}`);
+        try {
+            await app.listen({
+                port: Number(process.env.API_PORT),
+                host: "0.0.0.0",
+            });
+            app.log.info(`[server] listening on ${app.server.address()}`);
             console.log("routees", app.printRoutes())
-		} catch (err) {
-			app.log.error(err);
-		}
+        } catch (err) {
+            app.log.error(err);
+        }
 
-		app.ready(() => {
-			console.log("[Server] :: Dashboard routes loaded");
-		});
+        app.ready(() => {
+            console.log("[Server] :: Dashboard routes loaded");
+        });
 
-		return app;
-	}
+        return app;
+    }
 }
 
 export default DashboardServer;
