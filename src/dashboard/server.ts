@@ -30,7 +30,8 @@ export class DashboardServer {
             origin: [
                 process.env.FRONTEND_URL,
                 'https://beta.skyndalex.com',
-                'https://skyndalex.com'
+                'https://skyndalex.com',
+                'https://api.skyndalex.com'
             ] as string[],
             credentials: true,
             allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
@@ -58,6 +59,7 @@ export class DashboardServer {
                 process.env.FRONTEND_URL,
                 'https://beta.skyndalex.com',
                 'https://skyndalex.com',
+                'https://api.skyndalex.com'
             ];
 
             if (origin && !allowedOrigins.includes(origin)) {
