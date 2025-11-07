@@ -42,10 +42,10 @@ export class DashboardServer {
         app.register(fastifySession, {
             secret: process.env.SESSION_SECRET as string,
             cookie: {
-                secure: process.env.PRODUCTION,
+                secure: process.env.PRODUCTION === "true",
                 httpOnly: true,
-                sameSite:  process.env.PRODUCTION ? "none" : "lax",
-                domain:  process.env.PRODUCTION ? process.env.SESSION_COOKIE_DOMAIN || undefined : undefined,
+                sameSite: (process.env.PRODUCTION === "true" ? "none" : "lax") as "none" | "lax",
+                domain: process.env.PRODUCTION === "true" ? (process.env.SESSION_COOKIE_DOMAIN || undefined) : undefined,
                 path: "/",
                 maxAge: Number(process.env.SESSION_MAX_AGE) || 24 * 60 * 60 * 1000,
             },
