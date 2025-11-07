@@ -94,5 +94,10 @@ export const auth = betterAuth({
 	},
 	basePath: "/auth",
 	baseURL: process.env.FRONTEND_URL as string,
-	trustedOrigins: [process.env.FRONTEND_URL as string],
+	trustedOrigins: [
+        process.env.FRONTEND_URL as string,
+        'https://beta.skyndalex.com',
+        'https://skyndalex.com',
+        'https://api.skyndalex.com'
+    ]
 });
