@@ -80,15 +80,18 @@ export class DashboardServer {
         app.all("/auth/*", async (request: FastifyRequest, reply: FastifyReply) => {
             console.log("test")
             try {
-                const forwardedProto = (
-                    (request.headers['x-forwarded-proto'] as string | undefined) ||
-                    (request.headers['x-forwarded-protocol'] as string | undefined)
-                );
+                const forwardedProto = (request.headers['x-forwarded-proto'] as string) ||
+                    (request.headers['x-forwarded-protocol'] as string);
                 const protocol = forwardedProto
                     ? forwardedProto.split(',')[0].trim()
-                    : ((request.raw as any)?.socket?.encrypted ? 'https' : 'http');
+                    : 'https';
 
-                const host = (request.headers.host as string) || 'localhost';
+                const forwardedHost = (request.headers['x-forwarded-host'] as string) ||
+                    (request.headers.host as string) ||
+                    'localhost' || '127.0.0.1'
+
+                const host = forwardedHost.split(',')[0].trim();
+
                 const url = new URL(request.url, `${protocol}://${host}`);
 
                 console.log("API Auth Request URL:", url.toString());
