@@ -75,7 +75,7 @@ export const auth = betterAuth({
 		useSecureCookies: true,
         crossSubDomainCookies: {
             enabled: true,
-            domain: "beta.skyndalex.com"
+            domain: "api.skyndalex.com"
         },
 	},
 	session: {
