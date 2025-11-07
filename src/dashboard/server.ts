@@ -19,7 +19,7 @@ export class DashboardServer {
 
     constructor(client: SkyndalexClient) {
         this.client = client;
-        this.app = Fastify({ logger: true });
+        this.app = Fastify({ logger: true, trustProxy: true });
     }
 
     async init() {
@@ -113,9 +113,16 @@ export class DashboardServer {
                 const response = await auth.handler(req);
 
                 response.headers.forEach((value, key) => {
+                    if (key.toLowerCase() === 'set-cookie') return;
                     reply.header(key, value);
                 });
-
+                const rawSetCookie = (response as any).headers?.raw?.()?.['set-cookie'];
+                if (rawSetCookie && Array.isArray(rawSetCookie)) {
+                    reply.raw.setHeader('Set-Cookie', rawSetCookie);
+                } else {
+                    const single = response.headers.get('set-cookie');
+                    if (single) reply.raw.setHeader('Set-Cookie', [single]);
+                }
                 reply.status(response.status);
                 reply.send(response.body ? await response.text() : null);
             } catch (error) {
