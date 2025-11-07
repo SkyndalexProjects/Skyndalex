@@ -84,7 +84,7 @@ export const auth = betterAuth({
 		origin: [process.env.FRONTEND_URL as string],
 		credentials: true,
 	},
-	basePath: "/api/auth",
+	basePath: "/auth",
 	baseURL: process.env.FRONTEND_URL as string,
 	trustedOrigins: [process.env.FRONTEND_URL as string],
 });

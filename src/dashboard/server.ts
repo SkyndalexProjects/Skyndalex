@@ -48,58 +48,6 @@ export class DashboardServer {
 		});
 
 		app.register(fastifyFlash);
-        app.all("/api/auth/*", async (request, reply) => {
-            try {
-                const forwardedProto = (
-                    (request.headers['x-forwarded-proto'] as string | undefined) ||
-                    (request.headers['x-forwarded-protocol'] as string | undefined)
-                );
-                const protocol = forwardedProto
-                    ? forwardedProto.split(',')[0].trim()
-                    : ((request.raw as any)?.socket?.encrypted ? 'https' : 'http');
-
-                const host = (request.headers.host as string) || 'localhost';
-                const url = new URL(request.url, `${protocol}://${host}`);
-
-                const headers = new Headers();
-
-                Object.entries(request.headers).forEach(([key, value]) => {
-                    if (value) {
-                        if (Array.isArray(value)) {
-                            value.forEach((v) => headers.append(key, v));
-                        } else {
-                            headers.append(key, value.toString());
-                        }
-                    }
-                });
-
-                const req = new Request(url.toString(), {
-                    method: request.method,
-                    headers,
-                    body:
-                        request.body &&
-                        request.method !== "GET" &&
-                        request.method !== "HEAD"
-                            ? JSON.stringify(request.body)
-                            : undefined,
-                });
-
-                const response = await auth.handler(req);
-
-                reply.status(response.status);
-                response.headers.forEach((value, key) => reply.header(key, value));
-
-                const body = await response.text();
-                reply.send(body || null);
-            } catch (error) {
-                app.log.error("Authentication Error:", error);
-                reply.status(500).send({
-                    error: "Internal authentication error",
-                    code: "AUTH_FAILURE",
-                });
-            }
-        });
-
 		app.addHook("preHandler", async (request: FastifyRequest) => {
 			request.client = this.client;
 		});
@@ -127,12 +75,64 @@ export class DashboardServer {
 
 		app.register(fastifyFormBody);
 
+        app.all("/auth/*", async (request: FastifyRequest, reply: FastifyReply) => {
+            console.log("test")
+            try {
+                const forwardedProto = (
+                    (request.headers['x-forwarded-proto'] as string | undefined) ||
+                    (request.headers['x-forwarded-protocol'] as string | undefined)
+                );
+                const protocol = forwardedProto
+                    ? forwardedProto.split(',')[0].trim()
+                    : ((request.raw as any)?.socket?.encrypted ? 'https' : 'http');
+
+                const host = (request.headers.host as string) || 'localhost';
+                const url = new URL(request.url, `${protocol}://${host}`);
+
+                console.log("API Auth Request URL:", url.toString());
+                const headers = new Headers();
+
+                Object.entries(request.headers).forEach(([key, value]) => {
+                    if (value) {
+                        if (Array.isArray(value)) {
+                            value.forEach((v) => headers.append(key, v));
+                        } else {
+                            headers.append(key, value.toString());
+                        }
+                    }
+                });
+
+                const req = new Request(url.toString(), {
+                    method: request.method,
+                    headers,
+                    body:
+                        request.body &&
+                        request.method !== "GET" &&
+                        request.method !== "HEAD"
+                            ? JSON.stringify(request.body)
+                            : undefined,
+                });
+
+                const response = await auth.handler(req);
+                reply.status(response.status);
+                response.headers.forEach((value, key) => reply.header(key, value));
+                reply.send(response.body ? await response.text() : null);
+            } catch (error) {
+                console.error("Authentication Error:", error);
+                reply.status(500).send({
+                    error: "Internal authentication error",
+                    code: "AUTH_FAILURE",
+                });
+            }
+        });
+
 		try {
 			await app.listen({
 				port: Number(process.env.API_PORT),
 				host: "0.0.0.0",
 			});
 			app.log.info(`[server] listening on ${app.server.address()}`);
+            console.log("routees", app.printRoutes())
 		} catch (err) {
 			app.log.error(err);
 		}
