@@ -73,7 +73,7 @@ export const auth = betterAuth({
 		},
 	},
 	advanced: {
-		useSecureCookies: true,
+        useSecureCookies: process.env.PRODUCTION === "true",
         crossSubDomainCookies: {
             enabled: true,
             domain: process.env.OAUTH_DOMAIN as string,
@@ -95,7 +95,7 @@ export const auth = betterAuth({
 		credentials: true,
 	},
 	basePath: "/auth",
-	baseURL: process.env.FRONTEND_URL as string,
+	baseURL: process.env.BACKEND_URL as string,
 	trustedOrigins: [
         process.env.FRONTEND_URL as string,
         'https://beta.skyndalex.com',

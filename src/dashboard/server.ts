@@ -1,7 +1,5 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import fastifyCookie from "@fastify/cookie";
-import fastifySession from "@fastify/session";
-import fastifyFlash from "@fastify/flash";
 import fastifyCors from "@fastify/cors";
 import autoLoad from "@fastify/autoload";
 import fastifyFormBody from "@fastify/formbody";
@@ -39,16 +37,11 @@ export class DashboardServer {
         });
 
         app.register(fastifyCookie);
-        app.register(fastifySession, {
-            secret: process.env.SESSION_SECRET as string,
-            cookie: { secure: true, httpOnly: true, sameSite: "lax" },
-        });
         app.register(import("@fastify/rate-limit"), {
             max: 100,
             timeWindow: "1 minute",
         });
 
-        app.register(fastifyFlash);
         app.addHook("preHandler", async (request: FastifyRequest) => {
             request.client = this.client;
         });
@@ -118,8 +111,12 @@ export class DashboardServer {
                 });
 
                 const response = await auth.handler(req);
+
+                response.headers.forEach((value, key) => {
+                    reply.header(key, value);
+                });
+
                 reply.status(response.status);
-                response.headers.forEach((value, key) => reply.header(key, value));
                 reply.send(response.body ? await response.text() : null);
             } catch (error) {
                 console.error("Authentication Error:", error);
