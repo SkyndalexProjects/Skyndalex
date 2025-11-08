@@ -71,6 +71,10 @@ export class DashboardServer {
         app.register(fastifyFormBody);
         app.all("/auth/*", async (request: FastifyRequest, reply: FastifyReply) => {
             console.log("test")
+            console.log("Request cookies:", request.cookies);
+            console.log("Request headers:", request.headers);
+            console.log("Request reply headers:", reply.headers);
+
             try {
                 const forwardedProto = (request.headers['x-forwarded-proto'] as string) ||
                     (request.headers['x-forwarded-protocol'] as string);
@@ -111,16 +115,16 @@ export class DashboardServer {
                 });
 
                 const response = await auth.handler(req);
+                const responseBody = await response.text();
 
                 console.log("Auth Response Status:", response.status);
                 console.log("Auth Response Headers:", Array.from(response.headers.entries()));
-                console.log("Auth Response Body:", await response.clone().text());
+                console.log("Auth Response Body:", responseBody);
 
                 response.headers.forEach((value, key) => reply.header(key, value));
 
-                console.log("reply.headers", reply.getHeaders())
                 reply.status(response.status);
-                reply.send(response.body ? await response.text() : null);
+                reply.send(responseBody || null);
             } catch (error) {
                 console.error("Authentication Error:", error);
                 reply.status(500).send({

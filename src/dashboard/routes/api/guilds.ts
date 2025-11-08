@@ -15,10 +15,9 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 	fastify.get(
 		"/guilds",
 		async (request: FastifyRequest, reply: FastifyReply) => {
-			const session = await auth.api.getSession({
-				headers: request.headers,
-			});
-			if (!session) {
+            const session = await auth.api.getSession({ headers: request.headers });
+
+            if (!session) {
 				reply.status(401).send({ error: "Unauthorized" });
 				return;
 			}
