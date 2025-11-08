@@ -123,8 +123,8 @@ export class DashboardServer {
                 console.log("Auth Response Headers:", Array.from(response.headers.entries()));
                 console.log("Auth Response Body:", responseBody);
 
-                response.headers.forEach((value, key) => reply.header(key, value));
-
+                const h = response.headers.forEach((value, key) => reply.header(key, value));
+                console.log("h", h);
                 reply.status(response.status);
                 reply.send(responseBody || null);
             } catch (error) {
