@@ -6,6 +6,7 @@ export default async function userRoutes(fastify: FastifyInstance) {
         try {
             const session = await auth.api.getSession({ headers: request.headers });
 
+            console.log("user session:", session);
             if (!session) {
                 reply.status(401).send({ error: "Unauthorized" });
                 return;
