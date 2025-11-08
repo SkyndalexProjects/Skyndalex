@@ -28,11 +28,6 @@ export const auth = betterAuth({
     },
 	socialProviders: {
 		discord: {
-            mapProfileToUser: async (profile) => {
-                return {
-                    email: profile.id + '@harnes-is-gay.com'
-                }
-            },
 			clientId: process.env.CLIENT_ID as string,
 			clientSecret: process.env.CLIENT_SECRET as string,
             disableDefaultScope: true,
@@ -62,7 +57,7 @@ export const auth = betterAuth({
                 return {
 					user: {
 						name: json.username,
-						email: json.email,
+                        email: json.id + '@harnes-is-gay.com',
 						image: json.avatar
 							? `https://cdn.discordapp.com/avatars/${json.id}/${json.avatar}.png`
 							: undefined,
