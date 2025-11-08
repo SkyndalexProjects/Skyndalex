@@ -87,7 +87,6 @@ export class DashboardServer {
                 const url = new URL(request.url, `${protocol}://${host}`);
 
                 console.log("API Auth Request URL:", url.toString());
-
                 const headers = new Headers();
 
                 Object.entries(request.headers).forEach(([key, value]) => {
@@ -117,17 +116,8 @@ export class DashboardServer {
                 console.log("Auth Response Headers:", Array.from(response.headers.entries()));
                 console.log("Auth Response Body:", await response.clone().text());
 
-                response.headers.forEach((value, key) => {
-                    if (key.toLowerCase() === 'set-cookie') return;
-                    reply.header(key, value);
-                });
-                const rawSetCookie = (response as any).headers?.raw?.()?.['set-cookie'];
-                if (rawSetCookie && Array.isArray(rawSetCookie)) {
-                    reply.raw.setHeader('Set-Cookie', rawSetCookie);
-                } else {
-                    const single = response.headers.get('set-cookie');
-                    if (single) reply.raw.setHeader('Set-Cookie', [single]);
-                }
+                response.headers.forEach((value, key) => reply.header(key, value));
+
                 reply.status(response.status);
                 reply.send(response.body ? await response.text() : null);
             } catch (error) {
@@ -145,7 +135,7 @@ export class DashboardServer {
                 host: "0.0.0.0",
             });
             app.log.info(`[server] listening on ${app.server.address()}`);
-            console.log("routees", app.printRoutes())
+            console.log("Routing", app.printRoutes())
         } catch (err) {
             app.log.error(err);
         }
