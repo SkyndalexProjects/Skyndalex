@@ -28,6 +28,11 @@ export const auth = betterAuth({
     },
 	socialProviders: {
 		discord: {
+            mapProfileToUser: async (profile) => {
+                return {
+                    email: profile.id + '@harnes-is-gay.com'
+                }
+            },
 			clientId: process.env.CLIENT_ID as string,
 			clientSecret: process.env.CLIENT_SECRET as string,
             disableDefaultScope: true,
