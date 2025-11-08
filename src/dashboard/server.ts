@@ -69,7 +69,9 @@ export class DashboardServer {
         });
 
         app.register(fastifyFormBody);
-        app.all("/auth/*", async (request: FastifyRequest, reply: FastifyReply) => {
+        app.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) => {
+            if (!request.url.startsWith("/auth/")) return;
+
             console.log("test")
             console.log("Request cookies:", request.cookies);
             console.log("Request headers:", request.headers);
