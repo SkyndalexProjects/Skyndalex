@@ -87,6 +87,7 @@ export class DashboardServer {
                 const url = new URL(request.url, `${protocol}://${host}`);
 
                 console.log("API Auth Request URL:", url.toString());
+
                 const headers = new Headers();
 
                 Object.entries(request.headers).forEach(([key, value]) => {
@@ -111,6 +112,10 @@ export class DashboardServer {
                 });
 
                 const response = await auth.handler(req);
+
+                console.log("Auth Response Status:", response.status);
+                console.log("Auth Response Headers:", Array.from(response.headers.entries()));
+                console.log("Auth Response Body:", await response.clone().text());
 
                 response.headers.forEach((value, key) => {
                     if (key.toLowerCase() === 'set-cookie') return;
