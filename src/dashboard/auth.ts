@@ -50,6 +50,7 @@ export const auth = betterAuth({
                 return {
 					user: {
 						name: json.username,
+						email: json.email,
 						image: json.avatar
 							? `https://cdn.discordapp.com/avatars/${json.id}/${json.avatar}.png`
 							: undefined,
