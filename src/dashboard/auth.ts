@@ -75,7 +75,7 @@ export const auth = betterAuth({
 	advanced: {
         useSecureCookies: true,
         crossSubDomainCookies: {
-            enabled: true,
+            enabled: false,
             domain: process.env.OAUTH_DOMAIN as string,
         },
 	},
