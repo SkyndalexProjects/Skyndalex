@@ -118,6 +118,7 @@ export class DashboardServer {
 
                 response.headers.forEach((value, key) => reply.header(key, value));
 
+                console.log("reply.headers", reply.getHeaders())
                 reply.status(response.status);
                 reply.send(response.body ? await response.text() : null);
             } catch (error) {

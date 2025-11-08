@@ -1,9 +1,12 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { auth } from "../../auth.js";
 import type { DiscordUser } from "#types";
+import console from "node:console";
 export default async function userRoutes(fastify: FastifyInstance) {
 	fastify.get("/user", async (request: FastifyRequest, reply: FastifyReply) => {
         try {
+            console.log("hey headers are you there", request.headers);
+
             const session = await auth.api.getSession({ headers: request.headers });
 
             console.log("user session:", session);
