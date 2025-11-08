@@ -79,9 +79,6 @@ export const auth = betterAuth({
 			},
 		},
 	},
-	advanced: {
-        useSecureCookies: true,
-	},
 	session: {
 		cookieCache: {
 			enabled: true,
