@@ -20,6 +20,9 @@ export const auth = betterAuth({
 		provider: "postgresql",
 	}),
 	socialProviders: {
+        emailAndPassword: {
+            enabled: false
+        },
 		discord: {
 			clientId: process.env.CLIENT_ID as string,
 			clientSecret: process.env.CLIENT_SECRET as string,
