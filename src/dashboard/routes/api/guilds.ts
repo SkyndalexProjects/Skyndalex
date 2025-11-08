@@ -15,6 +15,7 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 	fastify.get(
 		"/guilds",
 		async (request: FastifyRequest, reply: FastifyReply) => {
+            console.log("hey headers are you there", request.headers);
 			const session = await auth.api.getSession({
 				headers: request.headers,
 			});
