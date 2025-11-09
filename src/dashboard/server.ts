@@ -130,11 +130,7 @@ export class DashboardServer {
                     reply.header(key, value);
                     console.log(`Setting header: ${key} = ${value}`);
                 });
-                const setCookieHeader = response.headers.get('set-cookie');
-                if (setCookieHeader) {
-                    console.log("Manual Set-Cookie:", setCookieHeader);
-                    reply.header('set-cookie', setCookieHeader);
-                }
+
                 reply.status(response.status);
                 reply.send(responseBody || null);
             } catch (error) {
@@ -147,9 +143,11 @@ export class DashboardServer {
         });
         app.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) => {
             if (request.url.startsWith("/auth/")) return;
+            // I know library already has cookie parser but idc
 
             try {
-                const sessionCookie = request.cookies['better-auth.session_token'];
+                const sessionCookie = request.cookies['__Secure-better-auth.session_token'] ||
+                    request.cookies['better-auth.session_token'];
 
                 if (!sessionCookie) {
                     console.log("No session cookie found");
