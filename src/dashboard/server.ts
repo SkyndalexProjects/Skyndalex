@@ -130,6 +130,11 @@ export class DashboardServer {
                     reply.header(key, value);
                     console.log(`Setting header: ${key} = ${value}`);
                 });
+                const setCookieHeader = response.headers.get('set-cookie');
+                if (setCookieHeader) {
+                    console.log("Manual Set-Cookie:", setCookieHeader);
+                    reply.header('set-cookie', setCookieHeader);
+                }
                 reply.status(response.status);
                 reply.send(responseBody || null);
             } catch (error) {
