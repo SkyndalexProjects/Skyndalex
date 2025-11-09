@@ -157,7 +157,7 @@ export class DashboardServer {
                 const cookieHeader = request.headers.cookie || '';
                 const sessionCookie = cookieHeader
                     .split(';')
-                    .find(c => c.trim().startsWith('__Secure-better-auth.session_token='))
+                    .find(c => c.trim().startsWith('__Secure-better-auth.session_token'))
                     ?.split('=')[1];
                 console.log("Found session cookie:", sessionCookie ? 'yes' : 'no');
                 if (!sessionCookie) {
