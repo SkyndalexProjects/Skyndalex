@@ -5,9 +5,10 @@ import console from "node:console";
 export default async function userRoutes(fastify: FastifyInstance) {
 	fastify.get("/user", async (request: FastifyRequest, reply: FastifyReply) => {
         try {
-            console.log("hey headers are you there", request.headers);
-
-            const session = await auth.api.getSession({ headers: request.headers });
+            console.log("Request.headers /user endpoint", request.headers);
+            // Get reply headers
+            console.log("Reply.headers /user endpoint", reply.getHeaders());
+            const session = await auth.api.getSession({ headers: reply.getHeaders() });
 
             console.log("user session:", session);
             if (!session) {
