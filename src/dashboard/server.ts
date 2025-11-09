@@ -151,19 +151,10 @@ export class DashboardServer {
         });
         app.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) => {
             if (request.url.startsWith("/auth/")) return;
-            // I know library already has cookie parser but idc
 
             try {
-                const cookieHeader = request.headers.cookie || '';
-                const sessionCookie = cookieHeader
-                    .split(';')
-                    .find(c => c.trim().startsWith('__Secure-better-auth.session_token'))
-                    ?.split('=')[1];
-                console.log("Found session cookie:", sessionCookie ? 'yes' : 'no');
-                if (!sessionCookie) {
-                    console.log("No session cookie found");
-                    return;
-                }
+                console.log("All cookies:", request.cookies);
+                console.log("Cookie header:", request.headers.cookie);
 
                 const session = await auth.api.getSession({
                     headers: request.headers as any,
@@ -173,7 +164,7 @@ export class DashboardServer {
                     request.user = { id: session.user.id };
                     console.log("Session validated for user:", session.user.id);
                 } else {
-                    console.log("Invalid session token");
+                    console.log("No valid session found");
                 }
             } catch (error) {
                 console.error("Session validation error:", error);
