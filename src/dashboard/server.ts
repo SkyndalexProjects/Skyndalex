@@ -34,6 +34,8 @@ export class DashboardServer {
             credentials: true,
             allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
             methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            preflightContinue: false,
+            optionsSuccessStatus: 204
         });
 
         app.register(fastifyCookie);
