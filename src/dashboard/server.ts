@@ -19,7 +19,19 @@ export class DashboardServer {
 
     constructor(client: SkyndalexClient) {
         this.client = client;
-        this.app = Fastify({ logger: true, trustProxy: true });
+        this.app = Fastify({
+            logger: {
+                transport: {
+                    target: 'pino-pretty',
+                    options: {
+                        translateTime: 'HH:MM:ss Z',
+                        ignore: 'pid,hostname',
+                        colorize: true
+                    }
+                }
+            },
+            trustProxy: true
+        });
     }
 
     async init() {
@@ -82,12 +94,6 @@ export class DashboardServer {
         app.register(fastifyFormBody);
         app.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) => {
             if (!request.url.startsWith("/auth/")) return;
-
-            console.log("test")
-            console.log("Request cookies:", request.cookies);
-            console.log("Request headers:", request.headers);
-            console.log("Request reply headers:", reply.headers);
-
             try {
                 const forwardedProto = (request.headers['x-forwarded-proto'] as string) ||
                     (request.headers['x-forwarded-protocol'] as string);
@@ -103,7 +109,6 @@ export class DashboardServer {
 
                 const url = new URL(request.url, `${protocol}://${host}`);
 
-                console.log("API Auth Request URL:", url.toString());
                 const headers = new Headers();
 
                 Object.entries(request.headers).forEach(([key, value]) => {
@@ -130,10 +135,6 @@ export class DashboardServer {
                 const response = await auth.handler(req);
                 const responseBody = await response.text();
 
-                console.log("Auth Response Status:", response.status);
-                console.log("Auth Response Headers:", Array.from(response.headers.entries()));
-                console.log("Auth Response Body:", responseBody);
-
                 response.headers.forEach((value, key) => {
                     reply.header(key, value);
                     console.log(`Setting header: ${key} = ${value}`);
@@ -153,9 +154,6 @@ export class DashboardServer {
             if (request.url.startsWith("/auth/")) return;
 
             try {
-                console.log("All cookies:", request.cookies);
-                console.log("Cookie header:", request.headers.cookie);
-
                 const session = await auth.api.getSession({
                     headers: request.headers as any,
                 });

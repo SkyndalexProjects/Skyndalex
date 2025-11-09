@@ -48,6 +48,10 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
 
             const { guildId: _ignoredGuildId, id: _ignoredId, ...safeBody } = request.body;
 
+            if (safeBody.error) {
+                console.log("harnes is gay")
+                return reply.code(400).send({ error: "Invalid body content" });
+            }
             try {
                 const result = await request.client.prisma.settings.upsert({
                     where: { guildId },
@@ -98,20 +102,16 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
                 reply.status(403).send({ error: "Forbidden." });
                 return;
             }
-            try {
-                const settings = await request.client.prisma.settings.findUnique({
-                    where: { guildId },
-                });
 
-                if (!settings) {
-                    return reply.code(404).send({ error: "Settings not found" });
-                }
+            const settings = await request.client.prisma.settings.findUnique({
+                where: { guildId },
+            });
 
-                return reply.send(settings);
-            } catch (e) {
-                request.log.error(e);
-                return reply.code(500).send({ error: "Failed to fetch settings" });
-            }
+
+            console.log("Fetched settings for guild:", guildId, settings);
+
+            if (!settings) return reply.send({});
+            return reply.send(settings);
         },
     );
 }
