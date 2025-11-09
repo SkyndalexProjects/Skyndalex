@@ -38,7 +38,15 @@ export class DashboardServer {
             optionsSuccessStatus: 204
         });
 
-        app.register(fastifyCookie);
+        app.register(fastifyCookie, {
+            secret: process.env.COOKIE_SECRET || 'super-secret-key',
+            parseOptions: {
+                secure: true,
+                sameSite: 'none',
+                httpOnly: true
+            }
+        });
+
         app.register(import("@fastify/rate-limit"), {
             max: 100,
             timeWindow: "1 minute",
