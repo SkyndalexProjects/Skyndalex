@@ -39,7 +39,7 @@ export class DashboardServer {
         });
 
         app.register(fastifyCookie, {
-            secret: process.env.COOKIE_SECRET || 'super-secret-key',
+            secret: process.env.BETTER_AUTH_SECRET || 'super-secret-key',
             parseOptions: {
                 secure: true,
                 sameSite: 'none',
@@ -154,9 +154,12 @@ export class DashboardServer {
             // I know library already has cookie parser but idc
 
             try {
-                const sessionCookie = request.cookies['__Secure-better-auth.session_token'] ||
-                    request.cookies['better-auth.session_token'];
-
+                const cookieHeader = request.headers.cookie || '';
+                const sessionCookie = cookieHeader
+                    .split(';')
+                    .find(c => c.trim().startsWith('__Secure-better-auth.session_token='))
+                    ?.split('=')[1];
+                console.log("Found session cookie:", sessionCookie ? 'yes' : 'no');
                 if (!sessionCookie) {
                     console.log("No session cookie found");
                     return;
