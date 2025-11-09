@@ -86,6 +86,26 @@ export const auth = betterAuth({
             enabled: true,
             domain: process.env.OAUTH_DOMAIN as string,
         },
+        cookiePrefix: "skyndalex",
+        cookies: {
+            session_token: {
+                name: "session_token",
+                attributes: {
+                    sameSite: 'none',
+                    secure: true,
+                    httpOnly: true,
+                }
+            },
+            csrf_token: {
+                name: "csrf_token",
+                attributes: {
+                    sameSite: 'none',
+                    secure: true,
+                    httpOnly: true,
+                }
+            },
+
+        }
 	},
 	session: {
 		cookieCache: {
