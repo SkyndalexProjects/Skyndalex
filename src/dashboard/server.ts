@@ -62,6 +62,7 @@ export class DashboardServer {
                 return reply.code(403).send({ error: "Forbidden" });
             }
         });
+
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = dirname(__filename);
 
@@ -139,7 +140,31 @@ export class DashboardServer {
                 });
             }
         });
+        app.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) => {
+            if (request.url.startsWith("/auth/")) return;
 
+            try {
+                const sessionCookie = request.cookies['better-auth.session_token'];
+
+                if (!sessionCookie) {
+                    console.log("No session cookie found");
+                    return;
+                }
+
+                const session = await auth.api.getSession({
+                    headers: request.headers as any,
+                });
+
+                if (session) {
+                    request.user = { id: session.user.id };
+                    console.log("Session validated for user:", session.user.id);
+                } else {
+                    console.log("Invalid session token");
+                }
+            } catch (error) {
+                console.error("Session validation error:", error);
+            }
+        });
         try {
             await app.listen({
                 port: Number(process.env.API_PORT),

@@ -95,6 +95,7 @@ export const auth = betterAuth({
         cookie: {
             sameSite: 'none',
             secure: true,
+            httpOnly: true,
         }
 	},
 	cors: {
