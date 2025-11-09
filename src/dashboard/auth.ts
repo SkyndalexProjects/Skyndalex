@@ -6,7 +6,8 @@ import { DiscordUser } from "../types/index.js";
 const prisma = new PrismaClient({
     datasources: {
         db: { url: process.env.DATABASE_URL }
-    }
+    },
+    log: ["query", "info", "warn", "error"]
 });
 const REQUIRED_GUILD_ID = "1058882286210261073"; // "skyndalex"
 const REQUIRED_ROLE_ID = "1059077097945051237"; // "support"
