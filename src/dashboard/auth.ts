@@ -120,6 +120,7 @@ export const auth = betterAuth({
 	cors: {
         origin: [
             process.env.FRONTEND_URL as string,
+            process.env.FRONTEND_DEV as string,
             'https://beta.skyndalex.com',
             'https://skyndalex.com',
             'https://api.skyndalex.com'
@@ -130,6 +131,7 @@ export const auth = betterAuth({
 	baseURL: process.env.BACKEND_URL as string,
 	trustedOrigins: [
         process.env.FRONTEND_URL as string,
+        process.env.FRONTEND_DEV as string,
         'https://beta.skyndalex.com',
         'https://skyndalex.com',
         'https://api.skyndalex.com'

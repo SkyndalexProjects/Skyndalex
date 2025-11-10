@@ -49,6 +49,7 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 			const detailedGuilds = guildsAPI.map((guild: Guild) => ({
 				...guild,
 				isBotAdded: request.client.guilds.cache.has(guild.id),
+                approximate_member_count: request.client.guilds.cache.get(guild.id)?.memberCount || 0,
 			}));
 
 			return reply.status(200).send(detailedGuilds);

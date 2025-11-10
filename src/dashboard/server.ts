@@ -39,6 +39,7 @@ export class DashboardServer {
         app.register(fastifyCors, {
             origin: [
                 process.env.FRONTEND_URL,
+                process.env.FRONTEND_DEV,
                 'https://beta.skyndalex.com',
                 'https://skyndalex.com',
                 'https://api.skyndalex.com'
@@ -72,6 +73,7 @@ export class DashboardServer {
             const origin = req.headers.origin;
             const allowedOrigins = [
                 process.env.FRONTEND_URL,
+                process.env.FRONTEND_DEV,
                 'https://beta.skyndalex.com',
                 'https://skyndalex.com',
                 'https://api.skyndalex.com'
