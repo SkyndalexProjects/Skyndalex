@@ -113,6 +113,17 @@ export class DashboardServer {
 
                 const headers = new Headers();
 
+                const session = await auth.api.getSession({
+                    headers: request.headers as any,
+                });
+
+                if (session) {
+                    request.user = { id: session.user.id };
+                    console.log("Session validated for user:", session.user.id);
+                } else {
+                    console.log("No valid session found");
+                }
+
                 Object.entries(request.headers).forEach(([key, value]) => {
                     if (value) {
                         if (Array.isArray(value)) {
@@ -150,24 +161,6 @@ export class DashboardServer {
                     error: "Internal authentication error",
                     code: "AUTH_FAILURE",
                 });
-            }
-        });
-        app.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) => {
-            if (request.url.startsWith("/auth/")) return;
-
-            try {
-                const session = await auth.api.getSession({
-                    headers: request.headers as any,
-                });
-
-                if (session) {
-                    request.user = { id: session.user.id };
-                    console.log("Session validated for user:", session.user.id);
-                } else {
-                    console.log("No valid session found");
-                }
-            } catch (error) {
-                console.error("Session validation error:", error);
             }
         });
         try {
