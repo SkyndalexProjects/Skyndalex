@@ -1,6 +1,6 @@
 import { ChannelType, PermissionFlagsBits } from "discord.js";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
-import { auth } from "../../../../auth.js";
+import { auth } from "../../../../../auth.js";
 import type { DiscordUser } from "#types";
 
 export default async function channels(fastify: FastifyInstance) {

@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
-import {auth} from "../../../../auth.js";
+import {auth} from "../../../../../auth.js";
 import {PermissionFlagsBits} from "discord.js";
 
 type SettingsPayload = Record<string, unknown>;

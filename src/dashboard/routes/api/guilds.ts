@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import * as console from "node:console";
-import { auth } from "../../auth.js";
+import { auth } from "../../../auth.js";
 import type { DiscordUser } from "#types";
 
 interface Guild {

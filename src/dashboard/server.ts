@@ -6,7 +6,7 @@ import fastifyFormBody from "@fastify/formbody";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import type { SkyndalexClient } from "#classes";
-import { auth } from "./auth.js";
+import { auth } from "../auth.js";
 declare module "fastify" {
     interface FastifyRequest {
         client: SkyndalexClient;
@@ -119,7 +119,6 @@ export class DashboardServer {
 
                 if (session) {
                     request.user = { id: session.user.id };
-                    console.log("Session validated for user:", session.user.id);
                 } else {
                     console.log("No valid session found");
                 }
@@ -150,7 +149,6 @@ export class DashboardServer {
 
                 response.headers.forEach((value, key) => {
                     reply.header(key, value);
-                    console.log(`Setting header: ${key} = ${value}`);
                 });
 
                 reply.status(response.status);
