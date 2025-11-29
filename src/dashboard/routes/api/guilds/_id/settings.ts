@@ -40,6 +40,7 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
                 return;
             }
 
+            // @ts-ignore
             const member = await guild.members.fetch(session.user.discordId)
 
             if (!member?.permissions.has('ManageGuild')) {
@@ -92,6 +93,7 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
                 reply.status(404).send({ error: "Not found" });
                 return;
             }
+            // @ts-ignore
             const member = await guild.members.fetch(session?.user.discordId);
             if (!member) {
                 reply.status(404).send({ error: "Not found." });

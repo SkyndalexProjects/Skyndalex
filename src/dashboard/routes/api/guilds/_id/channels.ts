@@ -19,6 +19,7 @@ export default async function channels(fastify: FastifyInstance) {
             const guildId = request.params.id;
             const guild = request.client.guilds.cache.get(guildId);
 
+            // @ts-ignore
             const member = await guild?.members.fetch(session?.user.discordId);
             if (!member?.permissions.has('ManageGuild')) {
                 return reply.status(403).send({ error: "Forbidden"});

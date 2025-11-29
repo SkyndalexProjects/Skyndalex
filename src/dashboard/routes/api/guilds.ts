@@ -83,7 +83,9 @@ export default async function guildsRoute(fastify: FastifyInstance) {
                     return;
                 }
 
+                // @ts-ignore
                 const member = await guild.members.fetch(session.user.discordId)
+
                 if (!member?.permissions.has('ManageGuild')) {
                     return reply.status(403).send({ error: "Forbidden"});
                 }
