@@ -31,6 +31,34 @@ export async function run(
         }
     })
 
+    if(
+        !getDiscordAccounts ||
+        !getDiscordAccounts.accessToken ||
+        getDiscordAccounts.accessToken.length <= 0
+    ) {
+        const authorizeButton = new ButtonBuilder()
+            .setLabel("Authorize")
+            .setStyle(ButtonStyle.Link)
+            .setURL(
+                process.env.OAUTH_TO_HUGGINGFACE as string,
+            );
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+            authorizeButton,
+        );
+
+        const container = new ContainerBuilder()
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent("\**Authorization required.\**"),
+                new TextDisplayBuilder().setContent("> ℹ️ | After clicking \"Authorize\", you will be redirected to the \*bot dashboard.\*\n\n> ℹ️ | It should automatically login you with Discord, and then you will need to \*click button on the center of the website\* to link your account with Huggingface platform.\n\n> ℹ️ It all should take a \*few seconds\* (If you are already logged in, everything happens instantly)"),
+            )
+            .setAccentColor(0xffff00);
+
+        return interaction.reply({
+            flags: MessageFlags.IsComponentsV2,
+            components: [container, row],
+        });
+    }
+
     if (getDiscordAccounts) {
         const getHuggingfaceAccount = await client.prisma.account.findFirst({
             where: {
@@ -45,35 +73,6 @@ export async function run(
         const imageBlob = image
             ? await fetch(image.url).then((res) => res.blob())
             : null;
-        console.log("Image attachment:", image);
-
-
-        if (
-            !getHuggingfaceAccount ||
-            !getHuggingfaceAccount.accessToken ||
-            getHuggingfaceAccount.accessToken.length <= 0
-        ) {
-            const authorizeButton = new ButtonBuilder()
-                .setLabel("Authorize")
-                .setStyle(ButtonStyle.Link)
-                .setURL(
-                    process.env.OAUTH_TO_HUGGINGFACE as string,
-                );
-            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-                authorizeButton,
-            );
-
-            const container = new ContainerBuilder()
-                .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent("Authorization required."),
-                )
-                .setAccentColor(0xffff00);
-
-            return interaction.editReply({
-                flags: MessageFlags.IsComponentsV2,
-                components: [container, row],
-            });
-        }
 
         let defaultModel;
         let apiParameters;
