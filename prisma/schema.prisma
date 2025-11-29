@@ -8,12 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Tokens {
-  id               Int    @default(autoincrement())
-  userId           String @id
-  huggingFaceToken String
-}
-
 model Custombots {
   id       Int    @default(autoincrement())
   guildId  String
