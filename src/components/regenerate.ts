@@ -29,86 +29,86 @@ export async function run(
 	const matches = [
 		...interaction.message.content.matchAll(/\*\*(.*?)\*\*/g),
 	].map((match) => match[1]);
-    const getDiscordAccounts = await client.prisma.account.findFirst({
-        where: {
-            accountId: interaction.user.id,
-            providerId: "discord"
-        }
-    })
-    if (getDiscordAccounts) {
-        const getHuggingfaceAccount = await client.prisma.account.findFirst({
-            where: {
-                userId: getDiscordAccounts.userId,
-                providerId: "huggingface"
-            }
-        });
-        const defaultSpace = "Dagfinn1962/Midjourney-Free";
-        const app = await Client.connect(defaultSpace, {
-            hf_token: getHuggingfaceAccount?.accessToken,
-        });
+	const getDiscordAccounts = await client.prisma.account.findFirst({
+		where: {
+			accountId: interaction.user.id,
+			providerId: "discord",
+		},
+	});
+	if (getDiscordAccounts) {
+		const getHuggingfaceAccount = await client.prisma.account.findFirst({
+			where: {
+				userId: getDiscordAccounts.userId,
+				providerId: "huggingface",
+			},
+		});
+		const defaultSpace = "Dagfinn1962/Midjourney-Free";
+		const app = await Client.connect(defaultSpace, {
+			hf_token: getHuggingfaceAccount?.accessToken,
+		});
 
-        const result = await app.predict("/run", {
-            prompt: matches[0],
-            negative_prompt: null,
-            use_negative_prompt: false,
-            style: matches[2],
-            seed: 0,
-            width: 1024,
-            height: 1024,
-            guidance_scale: 0.1,
-            randomize_seed: true,
-        });
-        console.log("result.stage", result.stage);
-        // TODO: move image generator to the classes to avoid code duplication
+		const result = await app.predict("/run", {
+			prompt: matches[0],
+			negative_prompt: null,
+			use_negative_prompt: false,
+			style: matches[2],
+			seed: 0,
+			width: 1024,
+			height: 1024,
+			guidance_scale: 0.1,
+			randomize_seed: true,
+		});
+		console.log("result.stage", result.stage);
+		// TODO: move image generator to the classes to avoid code duplication
 
-        if (result.stage === "error") {
-            const authorizeButton = new ButtonBuilder()
-                .setLabel("Authorize")
-                .setStyle(ButtonStyle.Link)
-                .setURL(
-                    process.env.OAUTH_TO_HUGGINGFACE ?? "https://default-auth-url.com",
-                );
-            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-                authorizeButton,
-            );
+		if (result.stage === "error") {
+			const authorizeButton = new ButtonBuilder()
+				.setLabel("Authorize")
+				.setStyle(ButtonStyle.Link)
+				.setURL(
+					process.env.OAUTH_TO_HUGGINGFACE ?? "https://default-auth-url.com",
+				);
+			const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+				authorizeButton,
+			);
 
-            const container = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(
-                    "You need to authorize to use this button.",
-                ),
-            );
+			const container = new ContainerBuilder().addTextDisplayComponents(
+				new TextDisplayBuilder().setContent(
+					"You need to authorize to use this button.",
+				),
+			);
 
-            return interaction.reply({
-                flags: MessageFlags.IsComponentsV2,
-                components: [container, row],
-            });
-        } else {
-            const deleteButton = new ButtonBuilder()
-                .setCustomId("delete-button")
-                .setLabel("Delete")
-                .setStyle(ButtonStyle.Danger);
+			return interaction.reply({
+				flags: MessageFlags.IsComponentsV2,
+				components: [container, row],
+			});
+		} else {
+			const deleteButton = new ButtonBuilder()
+				.setCustomId("delete-button")
+				.setLabel("Delete")
+				.setStyle(ButtonStyle.Danger);
 
-            const regenerate = new ButtonBuilder()
-                .setCustomId("regenerate")
-                .setLabel("I want MORE regenerated!")
-                .setStyle(ButtonStyle.Primary);
+			const regenerate = new ButtonBuilder()
+				.setCustomId("regenerate")
+				.setLabel("I want MORE regenerated!")
+				.setStyle(ButtonStyle.Primary);
 
-            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-                deleteButton,
-                regenerate,
-            );
+			const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+				deleteButton,
+				regenerate,
+			);
 
-            const imageResponse = await fetch(result.data[0][0].image.url);
-            const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
-            const attachment = new AttachmentBuilder(imageBuffer, {
-                name: "generated-image.png",
-            });
+			const imageResponse = await fetch(result.data[0][0].image.url);
+			const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+			const attachment = new AttachmentBuilder(imageBuffer, {
+				name: "generated-image.png",
+			});
 
-            await interaction.editReply({
-                content: `**${matches[0]}** - Re-Generated by **${interaction.user.username}** *(style: **${matches[2]}**)*`,
-                components: [row],
-                files: [attachment],
-            });
-        }
-    }
+			await interaction.editReply({
+				content: `**${matches[0]}** - Re-Generated by **${interaction.user.username}** *(style: **${matches[2]}**)*`,
+				components: [row],
+				files: [attachment],
+			});
+		}
+	}
 }

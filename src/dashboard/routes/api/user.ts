@@ -4,34 +4,34 @@ import type { DiscordUser } from "#types";
 import console from "node:console";
 export default async function userRoutes(fastify: FastifyInstance) {
 	fastify.get("/user", async (request: FastifyRequest, reply: FastifyReply) => {
-        try {
-            console.log("request.headers /user endpoint", request.headers);
-            const session = await auth.api.getSession({ headers: request.headers });
+		try {
+			console.log("request.headers /user endpoint", request.headers);
+			const session = await auth.api.getSession({ headers: request.headers });
 
-            console.log("user session:", session);
-            if (!session) {
-                reply.status(401).send({ error: "Unauthorized" });
-                return;
-            }
+			console.log("user session:", session);
+			if (!session) {
+				reply.status(401).send({ error: "Unauthorized" });
+				return;
+			}
 
-            const { accessToken } = await auth.api.getAccessToken({
-                body: {
-                    providerId: "discord",
-                    userId: session.session.userId,
-                },
-                headers: request.headers,
-            });
-            const response = await fetch("https://discord.com/api/users/@me", {
-                headers: {
-                    authorization: `Bearer ${accessToken}`,
-                },
-            });
+			const { accessToken } = await auth.api.getAccessToken({
+				body: {
+					providerId: "discord",
+					userId: session.session.userId,
+				},
+				headers: request.headers,
+			});
+			const response = await fetch("https://discord.com/api/users/@me", {
+				headers: {
+					authorization: `Bearer ${accessToken}`,
+				},
+			});
 
-            const user = (await response.json()) as DiscordUser;
-            reply.send(user);
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-            reply.status(500).send({ error: "Something went wrong" });
-        }
+			const user = (await response.json()) as DiscordUser;
+			reply.send(user);
+		} catch (error) {
+			console.error("Error fetching user data:", error);
+			reply.status(500).send({ error: "Something went wrong" });
+		}
 	});
 }

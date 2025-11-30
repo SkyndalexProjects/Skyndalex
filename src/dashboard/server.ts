@@ -8,176 +8,182 @@ import { fileURLToPath } from "url";
 import type { SkyndalexClient } from "#classes";
 import { auth } from "../auth.js";
 declare module "fastify" {
-    interface FastifyRequest {
-        client: SkyndalexClient;
-        user?: { id: string };
-    }
+	interface FastifyRequest {
+		client: SkyndalexClient;
+		user?: { id: string };
+	}
 }
 export class DashboardServer {
-    app: Fastify.FastifyInstance;
-    client: SkyndalexClient;
+	app: Fastify.FastifyInstance;
+	client: SkyndalexClient;
 
-    constructor(client: SkyndalexClient) {
-        this.client = client;
-        this.app = Fastify({
-            logger: {
-                transport: {
-                    target: 'pino-pretty',
-                    options: {
-                        translateTime: 'HH:MM:ss Z',
-                        ignore: 'pid,hostname',
-                        colorize: true
-                    }
-                }
-            },
-            trustProxy: true
-        });
-    }
+	constructor(client: SkyndalexClient) {
+		this.client = client;
+		this.app = Fastify({
+			logger: {
+				transport: {
+					target: "pino-pretty",
+					options: {
+						translateTime: "HH:MM:ss Z",
+						ignore: "pid,hostname",
+						colorize: true,
+					},
+				},
+			},
+			trustProxy: true,
+		});
+	}
 
-    async init() {
-        const app = this.app;
-        app.register(fastifyCors, {
-            origin: [
-                process.env.FRONTEND_URL,
-                process.env.FRONTEND_DEV,
-                'https://beta.skyndalex.com',
-                'https://skyndalex.com',
-                'https://api.skyndalex.com'
-            ] as string[],
-            credentials: true,
-            allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            preflightContinue: false,
-            optionsSuccessStatus: 204
-        });
+	async init() {
+		const app = this.app;
+		app.register(fastifyCors, {
+			origin: [
+				process.env.FRONTEND_URL,
+				process.env.FRONTEND_DEV,
+				"https://beta.skyndalex.com",
+				"https://skyndalex.com",
+				"https://api.skyndalex.com",
+			] as string[],
+			credentials: true,
+			allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+			preflightContinue: false,
+			optionsSuccessStatus: 204,
+		});
 
-        app.register(fastifyCookie, {
-            secret: process.env.BETTER_AUTH_SECRET || 'super-secret-key',
-            parseOptions: {
-                secure: true,
-                sameSite: 'none',
-                httpOnly: true
-            }
-        });
+		app.register(fastifyCookie, {
+			secret: process.env.BETTER_AUTH_SECRET || "super-secret-key",
+			parseOptions: {
+				secure: true,
+				sameSite: "none",
+				httpOnly: true,
+			},
+		});
 
-        app.register(import("@fastify/rate-limit"), {
-            max: 100,
-            timeWindow: "1 minute",
-        });
+		app.register(import("@fastify/rate-limit"), {
+			max: 100,
+			timeWindow: "1 minute",
+		});
 
-        app.addHook("preHandler", async (request: FastifyRequest) => {
-            request.client = this.client;
-        });
-        app.addHook("preHandler", async (req, reply) => {
-            if (req.method === "OPTIONS") return;
-            const origin = req.headers.origin;
-            const allowedOrigins = [
-                process.env.FRONTEND_URL,
-                process.env.FRONTEND_DEV,
-                'https://beta.skyndalex.com',
-                'https://skyndalex.com',
-                'https://api.skyndalex.com'
-            ];
+		app.addHook("preHandler", async (request: FastifyRequest) => {
+			request.client = this.client;
+		});
+		app.addHook("preHandler", async (req, reply) => {
+			if (req.method === "OPTIONS") return;
+			const origin = req.headers.origin;
+			const allowedOrigins = [
+				process.env.FRONTEND_URL,
+				process.env.FRONTEND_DEV,
+				"https://beta.skyndalex.com",
+				"https://skyndalex.com",
+				"https://api.skyndalex.com",
+			];
 
-            if (origin && !allowedOrigins.includes(origin)) {
-                app.log.warn(`Blocked origin: ${origin}`);
-                return reply.code(403).send({ error: "Forbidden" });
-            }
-        });
+			if (origin && !allowedOrigins.includes(origin)) {
+				app.log.warn(`Blocked origin: ${origin}`);
+				return reply.code(403).send({ error: "Forbidden" });
+			}
+		});
 
-        const __filename = fileURLToPath(import.meta.url);
-        const __dirname = dirname(__filename);
+		const __filename = fileURLToPath(import.meta.url);
+		const __dirname = dirname(__filename);
 
-        app.register(autoLoad, {
-            dir: path.join(__dirname, "../dashboard/routes"),
-            routeParams: true,
-        });
+		app.register(autoLoad, {
+			dir: path.join(__dirname, "../dashboard/routes"),
+			routeParams: true,
+		});
 
-        app.register(fastifyFormBody);
-        app.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) => {
-            if (!request.url.startsWith("/auth/")) return;
-            try {
-                const forwardedProto = (request.headers['x-forwarded-proto'] as string) ||
-                    (request.headers['x-forwarded-protocol'] as string);
-                const protocol = forwardedProto
-                    ? forwardedProto.split(',')[0].trim()
-                    : 'https';
+		app.register(fastifyFormBody);
+		app.addHook(
+			"preHandler",
+			async (request: FastifyRequest, reply: FastifyReply) => {
+				if (!request.url.startsWith("/auth/")) return;
+				try {
+					const forwardedProto =
+						(request.headers["x-forwarded-proto"] as string) ||
+						(request.headers["x-forwarded-protocol"] as string);
+					const protocol = forwardedProto
+						? forwardedProto.split(",")[0].trim()
+						: "https";
 
-                const forwardedHost = (request.headers['x-forwarded-host'] as string) ||
-                    (request.headers.host as string) ||
-                    'localhost' || '127.0.0.1'
+					const forwardedHost =
+						(request.headers["x-forwarded-host"] as string) ||
+						(request.headers.host as string) ||
+						"localhost" ||
+						"127.0.0.1";
 
-                const host = forwardedHost.split(',')[0].trim();
+					const host = forwardedHost.split(",")[0].trim();
 
-                const url = new URL(request.url, `${protocol}://${host}`);
+					const url = new URL(request.url, `${protocol}://${host}`);
 
-                const headers = new Headers();
+					const headers = new Headers();
 
-                const session = await auth.api.getSession({
-                    headers: request.headers as any,
-                });
+					const session = await auth.api.getSession({
+						headers: request.headers as any,
+					});
 
-                if (session) {
-                    request.user = { id: session.user.id };
-                } else {
-                    console.log("No valid session found");
-                }
+					if (session) {
+						request.user = { id: session.user.id };
+					} else {
+						console.log("No valid session found");
+					}
 
-                Object.entries(request.headers).forEach(([key, value]) => {
-                    if (value) {
-                        if (Array.isArray(value)) {
-                            value.forEach((v) => headers.append(key, v));
-                        } else {
-                            headers.append(key, value.toString());
-                        }
-                    }
-                });
+					Object.entries(request.headers).forEach(([key, value]) => {
+						if (value) {
+							if (Array.isArray(value)) {
+								value.forEach((v) => headers.append(key, v));
+							} else {
+								headers.append(key, value.toString());
+							}
+						}
+					});
 
-                const req = new Request(url.toString(), {
-                    method: request.method,
-                    headers,
-                    body:
-                        request.body &&
-                        request.method !== "GET" &&
-                        request.method !== "HEAD"
-                            ? JSON.stringify(request.body)
-                            : undefined,
-                });
+					const req = new Request(url.toString(), {
+						method: request.method,
+						headers,
+						body:
+							request.body &&
+							request.method !== "GET" &&
+							request.method !== "HEAD"
+								? JSON.stringify(request.body)
+								: undefined,
+					});
 
-                const response = await auth.handler(req);
-                const responseBody = await response.text();
+					const response = await auth.handler(req);
+					const responseBody = await response.text();
 
-                response.headers.forEach((value, key) => {
-                    reply.header(key, value);
-                });
+					response.headers.forEach((value, key) => {
+						reply.header(key, value);
+					});
 
-                reply.status(response.status);
-                reply.send(responseBody || null);
-            } catch (error) {
-                console.error("Authentication Error:", error);
-                reply.status(500).send({
-                    error: "Internal authentication error",
-                    code: "AUTH_FAILURE",
-                });
-            }
-        });
-        try {
-            await app.listen({
-                port: Number(process.env.API_PORT),
-                host: "0.0.0.0",
-            });
-            app.log.info(`[server] listening on ${app.server.address()}`);
-            console.log("Routing", app.printRoutes())
-        } catch (err) {
-            app.log.error(err);
-        }
+					reply.status(response.status);
+					reply.send(responseBody || null);
+				} catch (error) {
+					console.error("Authentication Error:", error);
+					reply.status(500).send({
+						error: "Internal authentication error",
+						code: "AUTH_FAILURE",
+					});
+				}
+			},
+		);
+		try {
+			await app.listen({
+				port: Number(process.env.API_PORT),
+				host: "0.0.0.0",
+			});
+			app.log.info(`[server] listening on ${app.server.address()}`);
+			console.log("Routing", app.printRoutes());
+		} catch (err) {
+			app.log.error(err);
+		}
 
-        app.ready(() => {
-            console.log("[Server] :: Dashboard routes loaded");
-        });
+		app.ready(() => {
+			console.log("[Server] :: Dashboard routes loaded");
+		});
 
-        return app;
-    }
+		return app;
+	}
 }
 
 export default DashboardServer;

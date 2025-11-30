@@ -15,9 +15,9 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 	fastify.get(
 		"/guilds",
 		async (request: FastifyRequest, reply: FastifyReply) => {
-            const session = await auth.api.getSession({ headers: request.headers });
+			const session = await auth.api.getSession({ headers: request.headers });
 
-            if (!session) {
+			if (!session) {
 				reply.status(401).send({ error: "Unauthorized" });
 				return;
 			}
@@ -49,7 +49,8 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 			const detailedGuilds = guildsAPI.map((guild: Guild) => ({
 				...guild,
 				isBotAdded: request.client.guilds.cache.has(guild.id),
-                approximate_member_count: request.client.guilds.cache.get(guild.id)?.memberCount || 0,
+				approximate_member_count:
+					request.client.guilds.cache.get(guild.id)?.memberCount || 0,
 			}));
 
 			return reply.status(200).send(detailedGuilds);
@@ -58,44 +59,44 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 	fastify.get(
 		`/guild`,
 		async (request: FastifyRequest, reply: FastifyReply) => {
-            try {
-                console.log("[Server] :: Guild requested");
-                const guildId = request.headers.guildid as string | undefined;
+			try {
+				console.log("[Server] :: Guild requested");
+				const guildId = request.headers.guildid as string | undefined;
 
-                const session = await auth.api.getSession({
-                    headers: request.headers,
-                });
+				const session = await auth.api.getSession({
+					headers: request.headers,
+				});
 
-                if (!session) {
-                    reply.status(401).send({ error: "Unauthorized" });
-                    return;
-                }
+				if (!session) {
+					reply.status(401).send({ error: "Unauthorized" });
+					return;
+				}
 
-                if (!guildId) {
-                    reply.status(400).send({ error: "No guildId" });
-                    return;
-                }
+				if (!guildId) {
+					reply.status(400).send({ error: "No guildId" });
+					return;
+				}
 
-                const guild = request.client.guilds.cache.get(guildId);
+				const guild = request.client.guilds.cache.get(guildId);
 
-                if (!guild) {
-                    reply.status(404).send({ error: "Guild not found" });
-                    return;
-                }
+				if (!guild) {
+					reply.status(404).send({ error: "Guild not found" });
+					return;
+				}
 
-                // @ts-ignore
-                const member = await guild.members.fetch(session.user.discordId)
+				// @ts-ignore
+				const member = await guild.members.fetch(session.user.discordId);
 
-                if (!member?.permissions.has('ManageGuild')) {
-                    return reply.status(403).send({ error: "Forbidden"});
-                }
+				if (!member?.permissions.has("ManageGuild")) {
+					return reply.status(403).send({ error: "Forbidden" });
+				}
 
-               return reply.send(guild);
-            } catch (error) {
-                console.error("Error fetching guild:", error);
-                reply.status(500).send({ error: "Internal server error" });
-                return;
-            }
+				return reply.send(guild);
+			} catch (error) {
+				console.error("Error fetching guild:", error);
+				reply.status(500).send({ error: "Internal server error" });
+				return;
+			}
 		},
 	);
 }
