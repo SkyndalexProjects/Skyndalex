@@ -13,7 +13,9 @@ import { DashboardServer } from "../dashboard/server.js";
 import { Command, Component } from "../types/index.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
+
 import { Connectors, Shoukaku } from "shoukaku";
+import {deploy} from "#utils";
 // const Nodes = [
 // 	{
 // 		name: "SkyndalexLava",
@@ -67,8 +69,9 @@ export class SkyndalexClient extends Client {
 		await this.login(token);
 		this.commands = await this.loader.loadCommands("../commands");
 		this.components = await this.loader.loadComponents("../components");
+        await deploy(this);
 
-		// this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
+        // this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 		//
 		// this.shoukaku.on("error", (_, error) =>
 		// 	console.error(`[LAVALINK] :: ${error}`),
