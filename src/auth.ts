@@ -10,7 +10,7 @@ const prisma = new PrismaClient({
 });
 
 const REQUIRED_GUILD_ID = "1058882286210261073";
-const REQUIRED_ROLE_ID = "1059077097945051237";
+const REQUIRED_ROLE_ID = "1195511658609651864";
 const isProd = process.env.NODE_ENV === "production";
 
 interface DiscordGuildMember {

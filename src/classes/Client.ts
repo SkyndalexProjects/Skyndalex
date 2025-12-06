@@ -15,7 +15,9 @@ import i18next from "i18next";
 import Backend from "i18next-fs-backend";
 
 import { Connectors, Shoukaku } from "shoukaku";
-import {deploy} from "#utils";
+import { deploy } from "#utils";
+import { GlobalFonts } from "@napi-rs/canvas";
+
 // const Nodes = [
 // 	{
 // 		name: "SkyndalexLava",
@@ -56,6 +58,19 @@ export class SkyndalexClient extends Client {
 
 	async init(token: string) {
 		const __dirname = dirname(fileURLToPath(import.meta.url));
+		GlobalFonts.registerFromPath(
+			join(__dirname, "..", "assets", "fonts", "dotmatri.ttf"),
+			"DotMatrix",
+		);
+		GlobalFonts.registerFromPath(
+			join(__dirname, "..", "assets", "fonts", "MyriadPro-Regular.ttf"),
+			"MyriadPro",
+		);
+		GlobalFonts.registerFromPath(
+			join(__dirname, "..", "assets", "fonts", "gg-sans.ttf"),
+			"ggsans",
+		);
+
 		await this.i18n.use(Backend).init({
 			fallbackLng: "en-US",
 			ns: ["responses", "commands"],
@@ -69,9 +84,9 @@ export class SkyndalexClient extends Client {
 		await this.login(token);
 		this.commands = await this.loader.loadCommands("../commands");
 		this.components = await this.loader.loadComponents("../components");
-        await deploy(this);
+		await deploy(this);
 
-        // this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
+		// this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 		//
 		// this.shoukaku.on("error", (_, error) =>
 		// 	console.error(`[LAVALINK] :: ${error}`),
