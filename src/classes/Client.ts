@@ -13,26 +13,37 @@ import { DashboardServer } from "../dashboard/server.js";
 import { Command, Component } from "../types/index.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
+import {  RadioPlayer } from "#modules";
 
 import { Connectors, Shoukaku } from "shoukaku";
 import { deploy } from "#utils";
 import { GlobalFonts } from "@napi-rs/canvas";
 
-// const Nodes = [
-// 	{
-// 		name: "SkyndalexLava",
-// 		url: process.env.LAVALINK_URL as string,
-// 		auth: process.env.LAVALINK_SERVER_PASSWORD as string,
-// 	},
-// ];
+console.log("LAVALINK_URL:", process.env.LAVALINK_URL);
+console.log("LAVALINK_SERVER_PASSWORD:", process.env.LAVALINK_SERVER_PASSWORD);
+const Nodes = [
+	{
+		name: "SkyndalexLava",
+		url: process.env.LAVALINK_URL as string,
+		auth: process.env.LAVALINK_SERVER_PASSWORD as string,
+	},
+];
+
+interface radioStatus {
+    requestedBy: string;
+    radioStation: string;
+    resourceUrl: string;
+}
 export class SkyndalexClient extends Client {
 	loader = new Loaders();
 	prisma = new PrismaClient();
 	dashboard = new DashboardServer(this);
 	commands: Collection<string, Command> = new Collection();
 	components: Collection<string, Component> = new Collection();
-	// shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
-	i18n = i18next;
+	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
+    radio = new RadioPlayer(this);
+    radioInstances = new Map<string, radioStatus>();
+    i18n = i18next;
 
 	constructor() {
 		super({
@@ -81,20 +92,22 @@ export class SkyndalexClient extends Client {
 			},
 		});
 		await this.loader.loadEvents(this, "../events");
-		await this.login(token);
-		this.commands = await this.loader.loadCommands("../commands");
-		this.components = await this.loader.loadComponents("../components");
-		await deploy(this);
+        this.shoukaku.on("ready", (name) =>
+            console.log(`Lavalink: Client ${name} is connected to the server.`),
+        );
+        this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 
-		// this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
-		//
-		// this.shoukaku.on("error", (_, error) =>
-		// 	console.error(`[LAVALINK] :: ${error}`),
-		// );
-		//
-		// this.shoukaku.on("ready", (name) =>
-		// 	console.log(`Lavalink: Client ${name} is connected to the server.`),
-		// );
+        this.shoukaku.on("error", (_, error) =>
+            console.error(`[LAVALINK] :: ${error}`),
+        );
+
+
+        await this.login(token);
+        this.commands = await this.loader.loadCommands("../commands");
+        this.components = await this.loader.loadComponents("../components");
+        await deploy(this);
+
+
 		if (token === process.env.BOT_TOKEN) {
 			console.log("[Server] :: Initializing dashboard");
 			await this.dashboard.init();

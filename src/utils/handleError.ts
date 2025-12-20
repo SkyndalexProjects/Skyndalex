@@ -20,7 +20,7 @@ export async function handleError(
 		.setDescription(`\`\`\`js\n${error.stack}\`\`\``)
 		.setColor("Red")
 		.setFooter({
-			text: `Guild: ${interaction.guild?.name} [${interaction.guild?.id}] | User: ${interaction.user.username} [${interaction.user.id}] `,
+			text: `Guild: ${interaction.guild?.name} [${interaction.guild?.id}] | User: ${interaction.user?.username} [${interaction?.user?.id}] `,
 			iconURL: client.user?.displayAvatarURL(),
 		});
 
@@ -32,17 +32,19 @@ export async function handleError(
 		.setDescription("SYSTEM_ERROR_SENT")
 		.setColor("Red");
 
-	if (!interaction.deferred && !interaction.replied) {
-		await interaction.reply({
-			embeds: [embedError],
-			components: [],
-			files: [],
-		});
-	} else {
-		await interaction.editReply({
-			embeds: [embedError],
-			components: [],
-			files: [],
-		});
-	}
+    if (interaction && typeof interaction.reply === 'function') {
+        if (!interaction.deferred && !interaction.replied) {
+            await interaction.reply({
+                embeds: [embedError],
+                components: [],
+                files: [],
+            });
+        } else if (typeof interaction.editReply === 'function') {
+            await interaction.editReply({
+                embeds: [embedError],
+                components: [],
+                files: [],
+            });
+        }
+    }
 }
