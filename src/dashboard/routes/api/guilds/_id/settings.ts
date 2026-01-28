@@ -57,7 +57,6 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
 			} = request.body;
 
 			if (safeBody.error) {
-				console.log("harnes is gay");
 				return reply.code(400).send({ error: "Invalid body content" });
 			}
 			try {

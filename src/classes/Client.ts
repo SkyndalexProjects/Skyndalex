@@ -13,14 +13,11 @@ import { DashboardServer } from "../dashboard/server.js";
 import { Command, Component } from "../types/index.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
-import {  RadioPlayer } from "#modules";
-
+import { RadioPlayer } from "#modules";
 import { Connectors, Shoukaku } from "shoukaku";
 import { deploy } from "#utils";
 import { GlobalFonts } from "@napi-rs/canvas";
 
-console.log("LAVALINK_URL:", process.env.LAVALINK_URL);
-console.log("LAVALINK_SERVER_PASSWORD:", process.env.LAVALINK_SERVER_PASSWORD);
 const Nodes = [
 	{
 		name: "SkyndalexLava",
@@ -33,6 +30,10 @@ interface radioStatus {
     requestedBy: string;
     radioStation: string;
     resourceUrl: string;
+	requestedByAvatarURL: string;
+	voiceChannelId: string;
+	executionDate: number;
+
 }
 export class SkyndalexClient extends Client {
 	loader = new Loaders();

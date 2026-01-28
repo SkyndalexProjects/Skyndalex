@@ -28,6 +28,7 @@ export async function run(
                 title?: string;
                 country?: { title?: string };
                 place?: { title?: string };
+                executionDate?: number;
             };
         };
         if (!station) {
@@ -72,6 +73,9 @@ export async function run(
                 }
             });
             radioDetailsJson = await getRadioDetails.json() as RadioDetailsJson;
+
+            radioDetailsJson.data = radioDetailsJson.data ?? {};
+            radioDetailsJson.data.executionDate = Date.now();
         } else if (provider === "radio-browser") {
             const response = await fetch(`https://de1.api.radio-browser.info/json/stations/byuuid/${station}`);
             const stations = (await response.json()) as RadioBrowserStationQueryResult[];
@@ -87,8 +91,18 @@ export async function run(
                 };
             }
         }
+
+        client.radioInstances.set(interaction.guild.id, {
+            requestedBy: interaction.user.id,
+            requestedByAvatarURL: interaction.user.displayAvatarURL(),
+            radioStation: radioDetailsJson?.data?.title ?? "Unknown",
+            resourceUrl: station,
+            voiceChannelId: memberChannel.id,
+            executionDate: Date.now(),
+        });
+
         const btn1 = new ButtonBuilder(client, interaction.locale)
-            .setStyle(ButtonStyle.Success)
+            .setStyle(ButtonStyle.Primary)
             .setLabel("❤️")
             .setCustomId(`addLikedRadio`)
 
@@ -97,7 +111,13 @@ export async function run(
             .setLabel("🛑")
             .setCustomId(`stopRadio`)
 
+        const btn3 = new ButtonBuilder(client, interaction.locale)
+            .setStyle(ButtonStyle.Success)
+            .setLabel("▶️")
+            .setCustomId('playRadio')
+            .setDisabled(false);
         const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+            btn3,
             btn1,
             btn2,
         );
@@ -106,6 +126,7 @@ export async function run(
             `-# 🔗 | Tip: You can manage the radio playback via [Dashboard](https://chuj.pl)\n-# ⚠️ | Be aware that some stations might have inaccurate metadata or might not work as expected.`,
         )
         const title = new TextDisplayBuilder().setContent("**Now Playing**")
+
         const desc = new TextDisplayBuilder().setContent(
                 `📻 | Station: [\`${radioDetailsJson?.data?.title ?? "Unknown"}\`](https://chuj.pl)\n🌍 | Country: \`${radioDetailsJson?.data?.country?.title ?? "Unknown"}\`\n🏙️ | From city: **${radioDetailsJson?.data?.place?.title ?? "Unknown"}**\n🔊 | Voice Channel: <#${memberChannel.id}>\n💾 | Provider: \`${provider}\`\n`,
             )
