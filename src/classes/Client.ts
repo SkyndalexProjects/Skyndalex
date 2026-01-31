@@ -27,14 +27,14 @@ const Nodes = [
 ];
 
 interface radioStatus {
-    requestedBy: string;
-    radioStation: string;
-    resourceUrl: string;
-	requestedByAvatarURL: string;
+	requestedBy: string;
+	radioStation: string;
+	resourceUrl: string;
 	voiceChannelId: string;
 	executionDate: number;
-
+	status: "playing" | "stopped" | "switched";
 }
+
 export class SkyndalexClient extends Client {
 	loader = new Loaders();
 	prisma = new PrismaClient();
@@ -42,9 +42,9 @@ export class SkyndalexClient extends Client {
 	commands: Collection<string, Command> = new Collection();
 	components: Collection<string, Component> = new Collection();
 	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
-    radio = new RadioPlayer(this);
-    radioInstances = new Map<string, radioStatus>();
-    i18n = i18next;
+	radio = new RadioPlayer(this);
+	radioInstances = new Map<string, radioStatus>();
+	i18n = i18next;
 
 	constructor() {
 		super({
@@ -93,21 +93,19 @@ export class SkyndalexClient extends Client {
 			},
 		});
 		await this.loader.loadEvents(this, "../events");
-        this.shoukaku.on("ready", (name) =>
-            console.log(`Lavalink: Client ${name} is connected to the server.`),
-        );
-        this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
+		this.shoukaku.on("ready", (name) =>
+			console.log(`Lavalink: Client ${name} is connected to the server.`),
+		);
+		this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 
-        this.shoukaku.on("error", (_, error) =>
-            console.error(`[LAVALINK] :: ${error}`),
-        );
+		this.shoukaku.on("error", (_, error) =>
+			console.error(`[LAVALINK] :: ${error}`),
+		);
 
-
-        await this.login(token);
-        this.commands = await this.loader.loadCommands("../commands");
-        this.components = await this.loader.loadComponents("../components");
-        await deploy(this);
-
+		await this.login(token);
+		this.commands = await this.loader.loadCommands("../commands");
+		this.components = await this.loader.loadComponents("../components");
+		await deploy(this);
 
 		if (token === process.env.BOT_TOKEN) {
 			console.log("[Server] :: Initializing dashboard");

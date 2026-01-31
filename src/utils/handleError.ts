@@ -32,19 +32,19 @@ export async function handleError(
 		.setDescription("SYSTEM_ERROR_SENT")
 		.setColor("Red");
 
-    if (interaction && typeof interaction.reply === 'function') {
-        if (!interaction.deferred && !interaction.replied) {
-            await interaction.reply({
-                embeds: [embedError],
-                components: [],
-                files: [],
-            });
-        } else if (typeof interaction.editReply === 'function') {
-            await interaction.editReply({
-                embeds: [embedError],
-                components: [],
-                files: [],
-            });
-        }
-    }
+	if (interaction && typeof interaction.reply === "function") {
+		if (!interaction.deferred && !interaction.replied) {
+			await interaction.reply({
+				embeds: [embedError],
+				components: [],
+				files: [],
+			});
+		} else if (typeof interaction.editReply === "function") {
+			await interaction.editReply({
+				embeds: [embedError],
+				components: [],
+				files: [],
+			});
+		}
+	}
 }

@@ -7,10 +7,16 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import type { SkyndalexClient } from "#classes";
 import { auth } from "../auth.js";
+import { Guild, GuildMember } from "discord.js";
+type SessionData = Awaited<ReturnType<typeof auth.api.getSession>>;
+
 declare module "fastify" {
 	interface FastifyRequest {
 		client: SkyndalexClient;
 		user?: { id: string };
+		session?: SessionData;
+		guild?: Guild;
+		member?: GuildMember;
 	}
 }
 export class DashboardServer {
