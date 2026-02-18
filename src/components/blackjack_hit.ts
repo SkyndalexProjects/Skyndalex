@@ -1,29 +1,13 @@
 import { SkyndalexClient } from "../classes/index.js";
 import {
 	ActionRowBuilder,
-	AttachmentBuilder,
 	ButtonBuilder,
-	ButtonComponent,
-	ButtonStyle,
-	ComponentData,
-	ContainerBuilder,
-	ContainerComponent,
-	Embed,
 	EmbedBuilder,
-	MessageComponent,
 	MessageComponentInteraction,
-	MessageFlags,
-	SeparatorBuilder,
-	TextDisplayBuilder,
-	TextDisplayComponent,
-	TopLevelComponent,
+	type ActionRow,
+	type ButtonComponent,
 } from "discord.js";
-import { Card, Hand } from "../types/index.js";
-import {
-	formatToEmojis,
-	extractCardsFromContent,
-	getRandomCards,
-} from "#utils";
+import { hit, calculateHandValue, evaluateBlackjackOutcome } from "#utils";
 
 export async function run(
 	client: SkyndalexClient,
@@ -31,91 +15,49 @@ export async function run(
 ) {
 	await interaction.deferUpdate();
 
-	if (
-		interaction.user.id !== interaction?.message?.interactionMetadata?.user?.id
-	)
+	const game = client.blackjackGames.get(interaction.user.id);
+
+	if (!game)
 		return interaction.followUp({
-			content: "Its not your button!",
+			content: "No active game found.",
 			flags: 64,
 		});
 
-	const currentEmbed = interaction.message.embeds[0];
-	if (!currentEmbed) return;
-	const fields = currentEmbed.fields;
-	const buttons = (
-		interaction.message
-			.components[0] as unknown as ActionRowBuilder<ButtonBuilder>
-	).components;
-	const playerField = fields[0];
-	const dealerField = fields[1];
+	const playerHand = hit(client, interaction.user.id);
+	if (!playerHand) return;
 
-	const userCardsCount: number = +(
-		(playerField?.value || "").match(/Value: \*\*(\d+)\*\*/)?.[1] || "0"
-	);
-	const dealerCardsCount: number = +(
-		(dealerField?.value || "").match(/Value: \*\*(\d+)\*\*/)?.[1] || "0"
+	const dealerHand = game.dealerCards;
+	const dealerValue = calculateHandValue(
+		dealerHand.filter((card) => card.visible),
 	);
 
-	const userHand = {
-		cards: await extractCardsFromContent(playerField.value),
-		value: userCardsCount,
-	};
-	const dealerHand = {
-		cards: await extractCardsFromContent(dealerField.value),
-		value: dealerCardsCount,
-	};
-	const newCards = await getRandomCards(
-		client,
-		interaction,
-		userHand.value,
-		dealerHand.value,
-	);
-
-	userHand.cards.push(...newCards);
-	userHand.value = userHand.cards.reduce((sum, card) => sum + card.value, 0);
-
-	dealerHand.cards.push(...newCards);
-	dealerHand.value = dealerHand.cards.reduce(
-		(sum, card) => sum + card.value,
-		0,
-	);
+	// console.log("HIT playerHand", playerHand)
 
 	let titleContent = "";
 	let reasonContent = "";
-	let embedColor = 0;
+	let embedColor = 0x000000;
+	let status = 0;
 
-	if (userHand.value >= 21) {
-		titleContent = "**You have busted!**\n\n";
-		reasonContent = "*You exceeded 21 points. You lose.*";
-		embedColor = 0xff6666;
-	} else if (
-		dealerHand.value >= 21 ||
-		userHand.value > dealerHand.value ||
-		(userHand.value === 21 && dealerHand.value < 21)
-	) {
-		titleContent = `**You win!**\n\n`;
-		reasonContent = "You win against the dealer!";
-		embedColor = 0x32cd32;
-		if (dealerHand.value >= 21)
-			reasonContent = "Dealer passed 21 points. You win!";
-		if (userHand.value === 21 && dealerHand.value < 21)
-			reasonContent = "You hit 21 points! You win!";
+	if (playerHand.value > 21) {
+		const outcome = evaluateBlackjackOutcome(playerHand.value, dealerValue);
+
+		titleContent = outcome.titleContent;
+		reasonContent = outcome.reasonContent;
+		embedColor = outcome.embedColor;
+		status = outcome.status;
 	} else {
-		titleContent = `**Your turn!**\n\n`;
-		reasonContent = "You can hit, stand, double down or split.";
-		embedColor = 0x3498db;
-
-		if (userHand.value === dealerHand.value) {
-			titleContent = "**Tie**";
-			reasonContent = " It's a tie!";
-		}
-		if (dealerHand.value === 21) reasonContent = "Dealer hit 21 points!";
-		if (userHand.value === 21) reasonContent = "You hit 21 points!";
+		titleContent = interaction.message.embeds[0]?.title ?? "";
+		reasonContent = interaction.message.embeds[0]?.description ?? "";
+		embedColor = interaction.message.embeds[0]?.color ?? 0xffa500;
+		status = 0;
 	}
-	const gameEnded =
-		userHand.value >= 21 ||
-		dealerHand.value >= 21 ||
-		(userHand.value === 21 && dealerHand.value < 21);
+
+	const gameEnded = status !== 0;
+
+	if (gameEnded) {
+		// console.log("GAME ENDED SUCCESSFULLY");
+		client.blackjackGames.delete(interaction.user.id);
+	}
 
 	const embed = new EmbedBuilder()
 		.setTitle(titleContent)
@@ -123,31 +65,30 @@ export async function run(
 		.addFields([
 			{
 				name: "Your cards:",
-				value: `${await formatToEmojis(userHand)}\n\nValue: **${userHand.value}**`,
+				value: `${playerHand.cards
+					.map((card) => `<:${card.name}:${card.id}>`)
+					.join(" ")}\n\nValue: **${playerHand.value}**`,
 				inline: true,
 			},
 			{
 				name: "Dealer cards:",
-				value: `${await formatToEmojis(dealerHand)}\n\nValue: **${dealerHand.value}**`,
+				value: `${dealerHand
+					.map((card) => (card.visible ? `<:${card.name}:${card.id}>` : "🂠"))
+					.join(" ")}\n\nValue: **${dealerValue}**`,
 				inline: true,
 			},
 		])
 		.setColor(embedColor);
 
-	await interaction.editReply({
-		embeds: [embed],
-		components: [
-			new ActionRowBuilder<ButtonBuilder>().addComponents(
-				buttons.map((button) => {
-					const newButton = ButtonBuilder.from(
-						button as unknown as ButtonComponent,
-					);
-					if (gameEnded) {
-						return newButton.setDisabled(true);
-					}
-					return newButton;
-				}),
-			),
-		],
-	});
+	const actionRow = interaction.message
+		.components[0] as ActionRow<ButtonComponent>;
+	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+		...actionRow.components.map((b) => {
+			const button = ButtonBuilder.from(b);
+			if (gameEnded) button.setDisabled(true);
+			return button;
+		}),
+	);
+
+	await interaction.editReply({ embeds: [embed], components: [row] });
 }

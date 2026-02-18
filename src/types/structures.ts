@@ -60,9 +60,16 @@ export interface Card {
 	id: string;
 	name: string;
 	value: number;
-	suit: string;
+	suit: "spade" | "heart" | "diamond" | "club";
+	visible: boolean;
 }
 export interface Hand {
 	cards: Card[];
 	value: number;
+}
+export interface BlackjackState {
+	deck: Card[];
+	playerCards: Card[];
+	dealerCards: Card[];
+	bet: number;
 }

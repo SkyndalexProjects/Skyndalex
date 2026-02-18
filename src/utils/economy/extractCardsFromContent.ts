@@ -1,5 +1,5 @@
 export async function extractCardsFromContent(content: string) {
-	console.log("extractCardsFromContent called with content:", content);
+	// console.log("extractCardsFromContent called with content:", content);
 	const cardRegex = /<:(\w+):(\d+)>/g;
 	const extractedCards: {
 		id: string;
@@ -13,7 +13,7 @@ export async function extractCardsFromContent(content: string) {
 		const cardId = match[2];
 		let value: number;
 
-		console.log("cardName:", cardName);
+		// console.log("cardName:", cardName);
 		if (cardName.includes("A")) {
 			value = 11; // Ace
 		} else if (["J", "Q", "K"].includes(cardName)) {

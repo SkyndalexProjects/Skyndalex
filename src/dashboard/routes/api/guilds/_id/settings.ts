@@ -13,7 +13,7 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
 			}>,
 			reply: FastifyReply,
 		) => {
-			const guildId = request.params.id
+			const guildId = request.params.id;
 			if (
 				typeof request.body !== "object" ||
 				request.body === null ||
@@ -57,7 +57,7 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
 			request: FastifyRequest<{ Params: { id: string } }>,
 			reply: FastifyReply,
 		) => {
-			const guildId = request.params.id
+			const guildId = request.params.id;
 
 			const settings = await request.client.prisma.settings.findUnique({
 				where: { guildId },

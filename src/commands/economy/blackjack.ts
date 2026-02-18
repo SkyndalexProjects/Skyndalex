@@ -3,89 +3,65 @@ import {
 	ButtonBuilder,
 	ButtonStyle,
 	type ChatInputCommandInteraction,
-	ContainerBuilder,
-	MessageFlags,
-	SeparatorBuilder,
 	SlashCommandBuilder,
-	TextDisplayBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { getRandomCards } from "../../utils/getRandomCards.js";
-import type { Card, Hand } from "#types";
+import { calculateHandValue, blackjackInit } from "#utils";
 import { EmbedBuilder } from "../../classes/builders/index.js";
 
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	const bet = interaction.options.getString("bet");
-
-	const hitButton = new ButtonBuilder()
-		.setCustomId("blackjack_hit")
-		.setLabel("Hit")
-		.setStyle(ButtonStyle.Primary);
-
-	const standButton = new ButtonBuilder()
-		.setCustomId("blackjack_stand")
-		.setLabel("Stand")
-		.setStyle(ButtonStyle.Success);
-
-	const doubleDownButton = new ButtonBuilder()
-		.setCustomId("blackjack_doubledown")
-		.setLabel("Double down")
-		.setStyle(ButtonStyle.Secondary);
-
-	const splitButton = new ButtonBuilder()
-		.setCustomId("blackjack_split")
-		.setLabel("Split")
-		.setStyle(ButtonStyle.Secondary);
+	const bet = Number(interaction.options.getString("bet") || "0");
 
 	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-		hitButton,
-		standButton,
-		doubleDownButton,
-		splitButton,
+		new ButtonBuilder()
+			.setCustomId("blackjack_hit")
+			.setLabel("Hit")
+			.setStyle(ButtonStyle.Primary),
+		new ButtonBuilder()
+			.setCustomId("blackjack_stand")
+			.setLabel("Stand")
+			.setStyle(ButtonStyle.Success),
+		new ButtonBuilder()
+			.setCustomId("blackjack_doubledown")
+			.setLabel("Double down")
+			.setStyle(ButtonStyle.Secondary),
+		new ButtonBuilder()
+			.setCustomId("blackjack_split")
+			.setLabel("Split")
+			.setStyle(ButtonStyle.Secondary),
 	);
 
-	const playerCards = await getRandomCards(client, interaction);
-	const playerHand: Hand = {
-		cards: playerCards,
-		value: playerCards.reduce((sum, card) => sum + card.value, 0),
-	};
-
-	const dealerCards = await getRandomCards(client, interaction);
-	const dealerHand: Hand = {
-		cards: dealerCards,
-		value: dealerCards.reduce((sum, card) => sum + card.value, 0),
-	};
+	const game = await blackjackInit(client, interaction.user.id, bet);
+	const playerValue = calculateHandValue(game.playerCards);
+	const dealerVisible = game.dealerCards[0];
 
 	const embed = new EmbedBuilder(client, interaction.locale)
-		.setTitle("Game started")
+		.setTitle("Blackjack started")
 		.setDescription(
-			`- \`Hit:\` Take another card.\n` +
-				`- \`Stand:\` Keep your current hand.\n` +
-				`- \`Double down:\` Double your bet and take one more card.\n` +
-				`- \`Split:\` Split your hand into two separate hands if you have two cards of the same value.`,
+			"- `Hit`: Take another card.\n" +
+				"- `Stand`: Keep your current hand.\n" +
+				"- `Double down`: Double your bet and take one more card.\n" +
+				"- `Split`: Split your hand if you have two cards of the same value.",
 		)
 		.addFields([
 			{
 				name: "Your cards:",
-				value: `${playerHand.cards.map((card) => `<:${card.name}:${card.id}>`).join(" ")}\n\nValue: **${playerHand.value}**`,
+				value: `${game.playerCards.map((card) => `<:${card.name}:${card.id}>`).join(" ")}\n\nValue: **${playerValue}**`,
 				inline: true,
 			},
 			{
 				name: "Dealer cards:",
-				value: `${dealerHand.cards.map((card) => `<:${card.name}:${card.id}>`).join(" ")}\n\nValue: **${dealerHand.value}**`,
+				value: `<:${dealerVisible.name}:${dealerVisible.id}> :white_large_square:\n\nValue: **${dealerVisible.value}**`,
 				inline: true,
 			},
 		])
 		.setColor("Green")
 		.setFooter({ text: `Bet: ${bet}` });
 
-	await interaction.reply({
-		embeds: [embed],
-		components: [row],
-	});
+	await interaction.reply({ embeds: [embed], components: [row] });
 }
 
 export const data = new SlashCommandBuilder()

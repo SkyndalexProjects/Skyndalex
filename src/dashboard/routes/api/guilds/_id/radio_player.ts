@@ -1,6 +1,6 @@
 import { ChannelType, PermissionFlagsBits } from "discord.js";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
-import {requireGuildPermission} from "../../../../middleware/auth.js";
+import { requireGuildPermission } from "../../../../middleware/auth.js";
 
 const equalizerPresets = [
 	{
@@ -157,8 +157,7 @@ export default async function player(fastify: FastifyInstance) {
 			request: FastifyRequest<{ Params: { id: string } }>,
 			reply: FastifyReply,
 		) => {
-
-			const guildId = request.params.id
+			const guildId = request.params.id;
 			const playerInstance = request.client.radioInstances.get(guildId);
 			reply.send(playerInstance);
 		},

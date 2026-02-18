@@ -10,7 +10,12 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "url";
 import { PrismaClient } from "@prisma/client";
 import { DashboardServer } from "../dashboard/server.js";
-import { Command, Component } from "../types/index.js";
+import {
+	BlackjackState,
+	type Card,
+	Command,
+	Component,
+} from "../types/index.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
 import { RadioPlayer } from "#modules";
@@ -34,7 +39,6 @@ interface radioStatus {
 	executionDate: number;
 	status: "playing" | "stopped" | "switched";
 }
-
 export class SkyndalexClient extends Client {
 	loader = new Loaders();
 	prisma = new PrismaClient();
@@ -44,6 +48,7 @@ export class SkyndalexClient extends Client {
 	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 	radio = new RadioPlayer(this);
 	radioInstances = new Map<string, radioStatus>();
+	blackjackGames = new Map<string, BlackjackState>();
 	i18n = i18next;
 
 	constructor() {
