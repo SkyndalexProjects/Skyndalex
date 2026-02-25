@@ -5,11 +5,8 @@ import {
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
 import { CanvasTextAlign, createCanvas, loadImage } from "@napi-rs/canvas";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
-import { getLines } from "../../utils/getLines.js";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { join } from "path";
+import { getLines } from "#utils";
 
 export async function run(
 	client: SkyndalexClient,
@@ -19,9 +16,8 @@ export async function run(
 
 	const text = interaction.options.getString("text", true);
 	const imgPath = join(
-		__dirname,
-		"..",
-		"..",
+		process.cwd(),
+		"src",
 		"assets",
 		"imgs",
 		"empty_screen.png",
