@@ -40,6 +40,12 @@ export class EmbedBuilder extends embedBuilder {
 		);
 		return this;
 	}
+
+	setRawDescription(description: string): this {
+		super.setDescription(description);
+		return this;
+	}
+
 	setFooter({
 		text,
 		textArgs,

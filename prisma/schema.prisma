@@ -1,11 +1,9 @@
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Custombots {
@@ -18,6 +16,7 @@ model Custombots {
 
   @@id([id, guildId])
 }
+
 model Settings {
   guildId         String   @id
   autoRole        String?
@@ -28,6 +27,7 @@ model Settings {
   blockedChannels String[] @default([])
   goodbyeChannel  String?
 }
+
 model DashboardLogs {
   id      Int     @id @default(autoincrement())
   guildId String
@@ -54,6 +54,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   discordId     String?   @unique
+
   @@unique([email])
   @@map("user")
 }
@@ -90,6 +91,15 @@ model Account {
   updatedAt             DateTime  @updatedAt
 
   @@map("account")
+}
+
+model economy {
+  id      String @id
+  userId  String
+  balance Int    @default(0)
+  bank    Int    @default(0)
+
+  @@map("economy")
 }
 
 model Verification {

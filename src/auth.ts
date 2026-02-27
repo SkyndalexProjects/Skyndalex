@@ -1,14 +1,13 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { PrismaClient } from "@prisma/client";
 import { DiscordUser } from "./types/index.js";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient({
-	datasources: {
-		db: { url: process.env.DATABASE_URL },
-	},
+const adapter = new PrismaPg({
+	connectionString: process.env.DATABASE_URL,
 });
-
+const prisma = new PrismaClient({ adapter });
 const REQUIRED_GUILD_ID = "1058882286210261073";
 const REQUIRED_ROLE_ID = "1195511658609651864";
 const isProd = process.env.NODE_ENV === "production";

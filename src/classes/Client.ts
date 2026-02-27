@@ -1,3 +1,4 @@
+import "dotenv/config";
 import {
 	ActivityType,
 	Client,
@@ -10,18 +11,14 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "url";
 import { PrismaClient } from "@prisma/client";
 import { DashboardServer } from "../dashboard/server.js";
-import {
-	BlackjackState,
-	type Card,
-	Command,
-	Component,
-} from "../types/index.js";
+import { BlackjackState, Command, Component } from "../types/index.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
 import { RadioPlayer } from "#modules";
 import { Connectors, Shoukaku } from "shoukaku";
 import { deploy } from "#utils";
 import { GlobalFonts } from "@napi-rs/canvas";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 const Nodes = [
 	{
@@ -30,7 +27,10 @@ const Nodes = [
 		auth: process.env.LAVALINK_SERVER_PASSWORD as string,
 	},
 ];
-
+console.log("Nodes", Nodes);
+const adapter = new PrismaPg({
+	connectionString: process.env.DATABASE_URL,
+});
 interface radioStatus {
 	requestedBy: string;
 	radioStation: string;
@@ -41,7 +41,7 @@ interface radioStatus {
 }
 export class SkyndalexClient extends Client {
 	loader = new Loaders();
-	prisma = new PrismaClient();
+	prisma = new PrismaClient({ adapter });
 	dashboard = new DashboardServer(this);
 	commands: Collection<string, Command> = new Collection();
 	components: Collection<string, Component> = new Collection();
