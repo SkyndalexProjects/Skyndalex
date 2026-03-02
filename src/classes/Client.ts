@@ -103,9 +103,17 @@ export class SkyndalexClient extends Client {
 		);
 		this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 
-		this.shoukaku.on("error", (_, error) =>
-			console.error(`[LAVALINK] :: ${error}`),
-		);
+		this.shoukaku.on('error', (name, error) => {
+			console.error(`[LAVALINK] node ${name} errored:`, error)
+		})
+
+		this.shoukaku.on('close', (name, code, reason) => {
+			console.warn(`[LAVALINK] Node ${name} closed: ${code} | ${reason}`);
+		});
+
+		this.shoukaku.on('disconnect', (name, players, moved) => {
+			console.warn(`[LAVALINK] Node ${name} disconnected.`);
+		});
 
 		await this.login(token);
 		this.commands = await this.loader.loadCommands("../commands");
