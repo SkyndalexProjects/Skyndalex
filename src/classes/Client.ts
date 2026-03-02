@@ -45,7 +45,7 @@ export class SkyndalexClient extends Client {
 	dashboard = new DashboardServer(this);
 	commands: Collection<string, Command> = new Collection();
 	components: Collection<string, Component> = new Collection();
-	shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
+	shoukaku!: Shoukaku;
 	radio = new RadioPlayer(this);
 	radioInstances = new Map<string, radioStatus>();
 	blackjackGames = new Map<string, BlackjackState>();
@@ -98,24 +98,23 @@ export class SkyndalexClient extends Client {
 			},
 		});
 		await this.loader.loadEvents(this, "../events");
-		this.shoukaku.on("ready", (name) =>
-			console.log(`Lavalink: Client ${name} is connected to the server.`),
-		);
 		this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
 
-		this.shoukaku.on('error', (name, error) => {
-			console.error(`[LAVALINK] node ${name} errored:`, error)
-		})
+		this.shoukaku.on("ready", (name) =>
+			console.log(`[LAVALINK] Client ${name} is connected to the server.`)
+		);
 
-		this.shoukaku.on('close', (name, code, reason) => {
+		this.shoukaku.on("error", (name, error) => {
+			console.error(`[LAVALINK] node ${name} errored:`, error);
+		});
+
+		this.shoukaku.on("close", (name, code, reason) => {
 			console.warn(`[LAVALINK] Node ${name} closed: ${code} | ${reason}`);
 		});
 
-
-		this.shoukaku.on('disconnect', (name, count) => {
+		this.shoukaku.on("disconnect", (name, count) => {
 			console.warn(`[LAVALINK] Node ${name} disconnected. Players affected: ${count}`);
 		});
-
 		await this.login(token);
 		this.commands = await this.loader.loadCommands("../commands");
 		this.components = await this.loader.loadComponents("../components");
