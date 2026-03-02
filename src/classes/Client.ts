@@ -111,8 +111,9 @@ export class SkyndalexClient extends Client {
 			console.warn(`[LAVALINK] Node ${name} closed: ${code} | ${reason}`);
 		});
 
-		this.shoukaku.on('disconnect', (name, players, moved) => {
-			console.warn(`[LAVALINK] Node ${name} disconnected.`);
+
+		this.shoukaku.on('disconnect', (name, count) => {
+			console.warn(`[LAVALINK] Node ${name} disconnected. Players affected: ${count}`);
 		});
 
 		await this.login(token);
