@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   stable:
     image: "skyndalex:stable"
@@ -5,14 +7,12 @@ services:
       - .env
     ports:
       - "3000:3000"
-    links:
+    depends_on:
       - lavalink
       - db
-    depends_on:
-      lavalink:
-        condition: service_started
-      db:
-        condition: service_started
+    networks:
+      - skynet
+
   lavalink:
     image: ghcr.io/lavalink-devs/lavalink:9930779
     container_name: lavalink
@@ -21,10 +21,12 @@ services:
       - _JAVA_OPTIONS=-Xmx6G
       - SERVER_PORT=${LAVALINK_PORT}
       - LAVALINK_SERVER_PASSWORD=${LAVALINK_SERVER_PASSWORD}
-      - SERVER_ADDRESS=${LAVALINK_URL}
     volumes:
       - ./application.yml:/opt/Lavalink/application.yml
       - ./plugins/:/opt/Lavalink/plugins/
+    networks:
+      - skynet
+
   db:
     container_name: postgres
     image: postgres
@@ -37,7 +39,9 @@ services:
       POSTGRES_DB: ${POSTGRES_DATABASE}
     volumes:
       - ./db:/data/postgres
-      - type: tmpfs
-        target: /dev/shm
-        tmpfs:
-          size: 134217728
+    networks:
+      - skynet
+
+networks:
+  skynet:
+    driver: bridge
