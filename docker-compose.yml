@@ -22,7 +22,6 @@ services:
       - SERVER_PORT=${LAVALINK_PORT}
       - LAVALINK_SERVER_PASSWORD=${LAVALINK_SERVER_PASSWORD}
     volumes:
-      - ./application.yml:/opt/Lavalink/application.yml
       - ./plugins/:/opt/Lavalink/plugins/
   db:
     container_name: postgres
