@@ -21,6 +21,7 @@ services:
       - _JAVA_OPTIONS=-Xmx6G
       - SERVER_PORT=${LAVALINK_PORT}
       - LAVALINK_SERVER_PASSWORD=${LAVALINK_SERVER_PASSWORD}
+      - SERVER_ADDRESS=${LAVALINK_URL}
     volumes:
       - ./application.yml:/opt/Lavalink/application.yml
       - ./plugins/:/opt/Lavalink/plugins/
