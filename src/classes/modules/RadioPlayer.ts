@@ -2,11 +2,80 @@ import type { TrackResult } from "shoukaku";
 import type { SkyndalexClient } from "#classes";
 import { handleError } from "#utils";
 import type { ChatInputCommandInteraction } from "discord.js";
+import type { Player } from "shoukaku";
 
 export class RadioPlayer {
 	constructor(private readonly client: SkyndalexClient) {
 		this.client = client;
 	}
+
+	private async setupPlayerEventListeners(player: Player, trackResult: TrackResult)  {
+		player.on("end", data => {
+			console.log("END")
+			if (data.reason !== "replaced") player.playTrack({
+				track: { encoded: trackResult.data.encoded }
+			})
+		});
+		player.on("stuck", () => {
+			console.log("RADIO IS STUCK")
+			player.playTrack({
+				track: { encoded: trackResult.data.encoded }
+			})
+		})
+		player.on("exception", () => {
+			console.log("EXCEPTION")
+			player.playTrack({
+				track: { encoded: trackResult.data.encoded }
+			})
+		})
+	}
+
+	private setRadioInstance(
+		client: SkyndalexClient,
+		guildId: string,
+		status: "switched" | "playing" | "stopped",
+		requesterId: string,
+		id: string,
+		resourceUrl: string,
+		channelId: string,
+	) {
+		client.radioInstances.set(guildId, {
+			status,
+			requestedBy: requesterId,
+			radioStation: id,
+			resourceUrl,
+			voiceChannelId: channelId,
+			executionDate: Date.now(),
+		});
+	}
+
+	private async playAndSetup(
+		player: Player,
+		resourceUrl: string,
+		client: SkyndalexClient,
+		guildId: string,
+		status: "switched" | "playing",
+		requesterId: string,
+		id: string,
+		channelId: string,
+	): Promise<{ id: string; action: string } | null> {
+		const result = await player.node.rest.resolve(resourceUrl);
+
+		if (!result || result.loadType === "error") {
+			return { id, action: "error" };
+		}
+
+		const trackResult = result as TrackResult;
+		await player.playTrack({
+			track: { encoded: trackResult.data.encoded },
+		});
+
+		this.setupPlayerEventListeners(player, trackResult);
+		this.setRadioInstance(client, guildId, status, requesterId, id, resourceUrl, channelId);
+
+		return null;
+	}
+
 	async startRadio(
 		client: SkyndalexClient,
 		station: string,
@@ -51,29 +120,23 @@ export class RadioPlayer {
 				console.log("Player already exists for guild, switching track.");
 				const player = client.shoukaku.players.get(guildId);
 				if (player) {
-					const result = await player.node.rest.resolve(resourceUrl);
 					client.radioInstances.delete(guildId);
 
-					if (!result || result.loadType === "error") {
-						return { id, action: "error" };
-					}
-
-					const trackResult = result as TrackResult;
-					await player.playTrack({
-						track: { encoded: trackResult.data.encoded },
-					});
-
-					client.radioInstances.set(guildId, {
-						status: "switched",
-						requestedBy: requesterId,
-						radioStation: id,
+					const error = await this.playAndSetup(
+						player,
 						resourceUrl,
-						voiceChannelId: channelId,
-						executionDate: Date.now(),
-					});
+						client,
+						guildId,
+						"switched",
+						requesterId,
+						id,
+						channelId,
+					);
+					if (error) return error;
 
 					return { id, action: "switched" };
 				}
+
 			}
 
 			const player = await client.shoukaku.joinVoiceChannel({
@@ -82,34 +145,17 @@ export class RadioPlayer {
 				shardId: 0,
 			});
 
-			client.radioInstances.set(guildId, {
-				status: "playing",
-				requestedBy: requesterId,
-				radioStation: id,
+			const error = await this.playAndSetup(
+				player,
 				resourceUrl,
-				voiceChannelId: channelId,
-				executionDate: Date.now(),
-			});
-
-			const result = await player.node.rest.resolve(resourceUrl);
-
-			if (!result || result.loadType === "error") {
-				return { id, action: "error" };
-			}
-
-			const trackResult = result as TrackResult;
-			client.radioInstances.delete(guildId);
-
-			await player.playTrack({ track: { encoded: trackResult.data.encoded } });
-
-			client.radioInstances.set(guildId, {
-				status: "playing",
-				requestedBy: requesterId,
-				radioStation: id,
-				resourceUrl,
-				voiceChannelId: channelId,
-				executionDate: Date.now(),
-			});
+				client,
+				guildId,
+				"playing",
+				requesterId,
+				id,
+				channelId,
+			);
+			if (error) return error;
 
 			return { id, action: "played" };
 		} catch (e) {

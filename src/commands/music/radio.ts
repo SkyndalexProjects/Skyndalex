@@ -106,7 +106,7 @@ export async function run(
 			}
 		}
 
-		client.radioInstances.set(interaction.guild.id, {
+		const radioInstance = client.radioInstances.set(interaction.guild.id, {
 			status: "playing",
 			requestedBy: interaction.user.id,
 			radioStation: radioDetailsJson?.data?.title ?? "Unknown",
@@ -130,31 +130,32 @@ export async function run(
 			.setLabel("▶️")
 			.setCustomId("playRadio")
 			.setDisabled(false);
+
+
 		const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			btn3,
 			btn1,
 			btn2,
 		);
 
-		const dashboardTip = new TextDisplayBuilder().setContent(
-			`-# 🔗 | Tip: You can manage the radio playback via [Dashboard](https://chuj.pl)\n-# ⚠️ | Be aware that some stations might have inaccurate metadata or might not work as expected.`,
-		);
+
 		const title = new TextDisplayBuilder().setContent("**Now Playing**");
 
+		const statusText = currentRadioAction.action === "switched" ? "🔄 Switched" : "▶️ Playing";
 		const desc = new TextDisplayBuilder().setContent(
-			`📻 | Station: [\`${radioDetailsJson?.data?.title ?? "Unknown"}\`](https://chuj.pl)\n🌍 | Country: \`${radioDetailsJson?.data?.country?.title ?? "Unknown"}\`\n🏙️ | From city: **${radioDetailsJson?.data?.place?.title ?? "Unknown"}**\n🔊 | Voice Channel: <#${memberChannel.id}>\n💾 | Provider: \`${provider}\`\n`,
+			`⏯️ | State: ${statusText}\n📻 | Station: [\`${radioDetailsJson?.data?.title ?? "Unknown"}\`](https://chuj.pl)\n🌍 | Country: \`${radioDetailsJson?.data?.country?.title ?? "Unknown"}\`\n🏙️ | From city: **${radioDetailsJson?.data?.place?.title ?? "Unknown"}**\n🔊 | Voice Channel: <#${memberChannel.id}>\n💾 | Provider: \`${provider}\`\n`,
 		);
 
 		const footer = new TextDisplayBuilder().setContent(
-			`-# 👍 | Do you like this station? Click the ❤️ button to add it to your liked stations!\n-# ❤️ | Enjoying the bot? Consider supporting us at [topgg](https://chuj.pl)`,
+			`-# 🔗 | Tip: You can manage the radio playback via [Dashboard](https://chuj.pl)\n-# ⚠️ | Be aware that some stations might have inaccurate metadata or might not work as expected.\n-# 👍 | Do you like this station? Click the ❤️ button to add it to your liked stations!\n-# ❤️ | Enjoying the bot? Consider supporting us at [topgg](https://chuj.pl)`,
 		);
 		const separator = new SeparatorBuilder().setSpacing(
 			SeparatorSpacingSize.Large,
 		);
 		const container = new ContainerBuilder()
-			.addTextDisplayComponents(dashboardTip)
+			.addTextDisplayComponents(title, desc)
 			.addSeparatorComponents(separator)
-			.addTextDisplayComponents(title, desc, footer)
+			.addTextDisplayComponents(footer)
 			.addSeparatorComponents(separator)
 			.addActionRowComponents(actionRow);
 

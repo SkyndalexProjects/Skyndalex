@@ -98,7 +98,11 @@ export class SkyndalexClient extends Client {
 			},
 		});
 		await this.loader.loadEvents(this, "../events");
-		this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes);
+		this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes, {
+			reconnectTries: 5,
+			reconnectInterval: 5000,
+			moveOnDisconnect: false,
+		});
 
 		this.shoukaku.on("ready", (name) =>
 			console.log(`[LAVALINK] Client ${name} is connected to the server.`)
@@ -117,8 +121,10 @@ export class SkyndalexClient extends Client {
 		});
 
 		await this.login(token);
+
 		this.commands = await this.loader.loadCommands("../commands");
 		this.components = await this.loader.loadComponents("../components");
+
 		await deploy(this);
 
 		if (token === process.env.BOT_TOKEN) {
