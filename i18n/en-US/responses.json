@@ -132,33 +132,31 @@
     },
     "rob": {
       "success": [
-        "> You snuck into someone's house and stole their wallet. You earned `${{amount}}`!",
-        "> You pickpocketed a rich businessman on the subway. You earned `${{amount}}`!",
-        "> You broke into a car and found cash in the glove box. You earned `${{amount}}`!",
-        "> You snatched a purse and ran before anyone noticed. You earned `${{amount}}`!",
-        "> You robbed a convenience store at gunpoint. You earned `${{amount}}`!",
-        "> You distracted a street vendor and stole from the register. You earned `${{amount}}`!",
-        "> You found an unlocked bike and sold it for parts. You earned `${{amount}}`!",
-        "> You stole packages from doorsteps around the neighborhood. You earned `${{amount}}`!",
-        "> You scammed tourists with fake tickets. You earned `${{amount}}`!",
-        "> You broke into a storage unit and found valuables. You earned `${{amount}}`!",
-        "> You robbed a drunk guy stumbling home from the bar. You earned `${{amount}}`!",
-        "> You hacked into someone's bank account. You earned `${{amount}}`!",
-        "> You impersonated a delivery driver and stole packages. You earned `${{amount}}`!",
-        "> You shoplifted from a department store without getting caught. You earned `${{amount}}`!",
-        "> You found a dropped wallet and kept all the cash. You earned `${{amount}}`!"
+        "> You snuck into {{target}}'s house and stole their wallet. You earned `${{amount}}`!",
+        "> You pickpocketed {{target}} on the subway. You earned `${{amount}}`!",
+        "> You broke into {{target}}'s car and found cash in the glove box. You earned `${{amount}}`!",
+        "> You snatched {{target}}'s purse and ran before anyone noticed. You earned `${{amount}}`!",
+        "> You distracted {{target}} and stole from their pockets. You earned `${{amount}}`!",
+        "> You stole packages from {{target}}'s doorstep. You earned `${{amount}}`!",
+        "> You scammed {{target}} with fake tickets. You earned `${{amount}}`!",
+        "> You broke into {{target}}'s storage unit and found valuables. You earned `${{amount}}`!",
+        "> You robbed {{target}} while they were stumbling home. You earned `${{amount}}`!",
+        "> You hacked into {{target}}'s bank account. You earned `${{amount}}`!",
+        "> You impersonated a delivery driver and stole {{target}}'s packages. You earned `${{amount}}`!",
+        "> You shoplifted from {{target}}'s store without getting caught. You earned `${{amount}}`!",
+        "> You found {{target}}'s dropped wallet and kept all the cash. You earned `${{amount}}`!"
       ],
       "fail": [
-        "> You tried to rob someone but they fought back. You lost `${{amount}}`!",
-        "> Security cameras caught you stealing. You lost `${{amount}}`!",
-        "> The police chased you and you had to pay a fine. You lost `${{amount}}`!",
-        "> Your target was actually an undercover cop. You lost `${{amount}}`!",
-        "> You tripped the alarm and had to flee empty-handed. You lost `${{amount}}`!",
-        "> The person you tried to rob was broke. You lost `${{amount}}`!",
-        "> You got caught on a doorbell camera and had to pay restitution. You lost `${{amount}}`!",
-        "> The store had better security than you expected. You lost `${{amount}}`!",
-        "> A bystander tackled you and held you for the cops. You lost `${{amount}}`!",
-        "> Your getaway car wouldn't start. You lost `${{amount}}`!"
+        "> You tried to rob {{target}} but they fought back. You lost `${{amount}}`!",
+        "> {{target}}'s security cameras caught you stealing. You lost `${{amount}}`!",
+        "> {{target}} called the police and you had to pay a fine. You lost `${{amount}}`!",
+        "> {{target}} was actually an undercover cop. You lost `${{amount}}`!",
+        "> You tripped {{target}}'s alarm and had to flee empty-handed. You lost `${{amount}}`!",
+        "> {{target}} had nothing in their wallet. You lost `${{amount}}`!",
+        "> {{target}}'s doorbell camera caught you and you had to pay restitution. You lost `${{amount}}`!",
+        "> {{target}} had better security than you expected. You lost `${{amount}}`!",
+        "> {{target}} tackled you and held you for the cops. You lost `${{amount}}`!",
+        "> Your getaway car wouldn't start and {{target}} caught you. You lost `${{amount}}`!"
       ]
     },
     "crime": {
@@ -223,5 +221,14 @@
         "> Your sugar daddy cut you off. You lost `${{amount}}`!"
       ]
     }
+  },
+  "fun": {
+    "random_dog_title": "\uD83D\uDC36 | Dog",
+    "random_cat_title": "\uD83D\uDC31 | Cat",
+    "ship_title": "❤️ | Test",
+    "ship_punch": "My data says that **{{ user1 }}** isn't really fond of **{{ user2 }}**. This is probably because the generator showed that their love level is only `{{ percentage }}`% :sob:",
+    "ship_hug": "Wow, it's quite possible that **{{ user1 }}** and **{{ user2 }}** could be a great couple! Their love level is `{{ percentage }}`% :heart:",
+    "ship_kiss": "It's almost certain! **{{ user1 }}** and **{{ user2 }}** are an ideal couple! Their love level is `{{ percentage }}`% :heart_eyes:",
+    "ship_no_same_user": "You can't ship the same users."
   }
 }

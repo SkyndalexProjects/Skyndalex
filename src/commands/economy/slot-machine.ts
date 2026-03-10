@@ -155,6 +155,7 @@ export async function run(
 	if (isWin) {
 		descriptionContent += "🎉 **WINNER!** 🎉\n\n";
 		descriptionContent += "**Winning Lines:**\n";
+		await client.economy.setMoney(client, interaction.user.id, +profit);
 		for (const win of wins) {
 			descriptionContent += `• ${win.line}: ${win.symbol.emoji} ${win.symbol.name} (x${win.symbol.multiplier})\n`;
 		}
@@ -165,6 +166,7 @@ export async function run(
 		descriptionContent += "❌ **No matches this time...**\n\n";
 		descriptionContent += `💰 **Bet:** ${bet}\n`;
 		descriptionContent += `📉 **Lost:** -${bet}`;
+		await client.economy.setMoney(client, interaction.user.id, -bet);
 	}
 
 	const description = new TextDisplayBuilder().setContent(descriptionContent);

@@ -206,12 +206,18 @@ export async function run(
 
 	if (existingGame) {
 		if (existingGame.players.has(userId)) {
+			const previousBet = existingGame.players.get(userId)!.bet;
+			await client.economy.setMoney(client, userId, previousBet);
+			await client.economy.setMoney(client, userId, -bet);
+
 			existingGame.players.set(userId, { bet, space, username });
 			await interaction.reply({
 				content: `✅ Updated your bet to **${bet}** on **${space}**!`,
 				ephemeral: true,
 			});
 		} else {
+			await client.economy.setMoney(client, userId, -bet);
+
 			existingGame.players.set(userId, { bet, space, username });
 			await interaction.reply({
 				content: `✅ You joined the roulette! Bet: **${bet}** on **${space}**`,
@@ -233,6 +239,8 @@ export async function run(
 		}
 		return;
 	}
+
+	await client.economy.setMoney(client, userId, -bet);
 
 	const endTime = Date.now() + 15000;
 	const players = new Map<
@@ -292,6 +300,7 @@ export async function run(
 			const winnings = won ? playerData.bet * multiplier : 0;
 
 			if (won) {
+				await client.economy.setMoney(client, _playerId, winnings);
 				winners.push(
 					`✅ **${playerData.username}** won **${winnings}** (bet ${playerData.bet} on ${playerData.space})`,
 				);

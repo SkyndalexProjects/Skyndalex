@@ -14,7 +14,7 @@ import { DashboardServer } from "../dashboard/server.js";
 import { BlackjackState, Command, Component } from "../types/index.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
-import { RadioPlayer } from "#modules";
+import { EconomyManager, RadioPlayer } from "#modules";
 import { Connectors, Shoukaku } from "shoukaku";
 import { deploy } from "#utils";
 import { GlobalFonts } from "@napi-rs/canvas";
@@ -47,6 +47,7 @@ export class SkyndalexClient extends Client {
 	components: Collection<string, Component> = new Collection();
 	shoukaku!: Shoukaku;
 	radio = new RadioPlayer(this);
+	economy = new EconomyManager(this);
 	radioInstances = new Map<string, radioStatus>();
 	blackjackGames = new Map<string, BlackjackState>();
 	i18n = i18next;
@@ -75,6 +76,7 @@ export class SkyndalexClient extends Client {
 
 	async init(token: string) {
 		const __dirname = dirname(fileURLToPath(import.meta.url));
+
 		GlobalFonts.registerFromPath(
 			join(__dirname, "..", "assets", "fonts", "dotmatri.ttf"),
 			"DotMatrix",
@@ -87,6 +89,10 @@ export class SkyndalexClient extends Client {
 			join(__dirname, "..", "assets", "fonts", "gg-sans.ttf"),
 			"ggsans",
 		);
+		GlobalFonts.registerFromPath(
+			join(__dirname, "..", "assets", "fonts", "Poppins-SemiBold.ttf"),
+			"poppins",
+		);
 
 		await this.i18n.use(Backend).init({
 			fallbackLng: "en-US",
@@ -97,7 +103,9 @@ export class SkyndalexClient extends Client {
 				loadPath: join(__dirname, "/../../i18n/{{lng}}/{{ns}}.json"),
 			},
 		});
+
 		await this.loader.loadEvents(this, "../events");
+
 		this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this), Nodes, {
 			reconnectTries: 5,
 			reconnectInterval: 5000,
@@ -105,7 +113,7 @@ export class SkyndalexClient extends Client {
 		});
 
 		this.shoukaku.on("ready", (name) =>
-			console.log(`[LAVALINK] Client ${name} is connected to the server.`)
+			console.log(`[LAVALINK] Client ${name} is connected to the server.`),
 		);
 
 		this.shoukaku.on("error", (name, error) => {
@@ -117,7 +125,9 @@ export class SkyndalexClient extends Client {
 		});
 
 		this.shoukaku.on("disconnect", (name, count) => {
-			console.warn(`[LAVALINK] Node ${name} disconnected. Players affected: ${count}`);
+			console.warn(
+				`[LAVALINK] Node ${name} disconnected. Players affected: ${count}`,
+			);
 		});
 
 		await this.login(token);

@@ -9,25 +9,29 @@ export class RadioPlayer {
 		this.client = client;
 	}
 
-	private async setupPlayerEventListeners(player: Player, trackResult: TrackResult)  {
-		player.on("end", data => {
-			console.log("END")
-			if (data.reason !== "replaced") player.playTrack({
-				track: { encoded: trackResult.data.encoded }
-			})
+	private async setupPlayerEventListeners(
+		player: Player,
+		trackResult: TrackResult,
+	) {
+		player.on("end", (data) => {
+			console.log("END");
+			if (data.reason !== "replaced")
+				player.playTrack({
+					track: { encoded: trackResult.data.encoded },
+				});
 		});
 		player.on("stuck", () => {
-			console.log("RADIO IS STUCK")
+			console.log("RADIO IS STUCK");
 			player.playTrack({
-				track: { encoded: trackResult.data.encoded }
-			})
-		})
+				track: { encoded: trackResult.data.encoded },
+			});
+		});
 		player.on("exception", () => {
-			console.log("EXCEPTION")
+			console.log("EXCEPTION");
 			player.playTrack({
-				track: { encoded: trackResult.data.encoded }
-			})
-		})
+				track: { encoded: trackResult.data.encoded },
+			});
+		});
 	}
 
 	private setRadioInstance(
@@ -66,12 +70,22 @@ export class RadioPlayer {
 		}
 
 		const trackResult = result as TrackResult;
+
 		await player.playTrack({
 			track: { encoded: trackResult.data.encoded },
 		});
 
 		this.setupPlayerEventListeners(player, trackResult);
-		this.setRadioInstance(client, guildId, status, requesterId, id, resourceUrl, channelId);
+
+		this.setRadioInstance(
+			client,
+			guildId,
+			status,
+			requesterId,
+			id,
+			resourceUrl,
+			channelId,
+		);
 
 		return null;
 	}
@@ -136,7 +150,6 @@ export class RadioPlayer {
 
 					return { id, action: "switched" };
 				}
-
 			}
 
 			const player = await client.shoukaku.joinVoiceChannel({

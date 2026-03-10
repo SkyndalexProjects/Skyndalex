@@ -93,12 +93,15 @@ model Account {
   @@map("account")
 }
 
-model economy {
-  id      String @id
-  userId  String
-  balance Int    @default(0)
-  bank    Int    @default(0)
+model Economy {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  bank      Int?     @default(0)
+  wallet    Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
+  @@index([userId])
   @@map("economy")
 }
 

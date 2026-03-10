@@ -6,33 +6,33 @@ import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
 
 const successChance = 0.75;
+const cooldown = 24 * 60 * 60 * 1000;
 
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
-	const isSuccess = Math.random() < successChance;
-	const amount = Math.floor(Math.random() * 100) + 1;
+	const userId = interaction.user.id;
 
-	const status = isSuccess ? "success" : "fail";
-	const messagesKey = `economy.work.${status}`;
+	const economy = await client.prisma.economy.findUnique({
+		where: { userId },
+	});
 
-	const messages = client.i18n.t(messagesKey, {
-		lng: interaction.locale,
-		returnObjects: true,
-	}) as string[];
+	if (economy) {
+		const nextAvailable = new Date(economy.updatedAt.getTime() + cooldown);
+		if (Date.now() < nextAvailable.getTime()) {
+			const timestamp = Math.floor(nextAvailable.getTime() / 1000);
+			const embed = new EmbedBuilder(client, interaction.locale)
+				.setRawDescription(
+					`You already worked recently! You can work again <t:${timestamp}:R> (<t:${timestamp}:F>).`,
+				)
+				.setColor("Red");
 
-	const randomIndex = Math.floor(Math.random() * messages.length);
-	const message = messages[randomIndex].replace(
-		"{{amount}}",
-		amount.toString(),
-	);
+			return interaction.reply({ embeds: [embed], ephemeral: true });
+		}
+	}
 
-	const embed = new EmbedBuilder(client, interaction.locale)
-		.setRawDescription(message)
-		.setColor(isSuccess ? "Green" : "Red");
-
-	await interaction.reply({ embeds: [embed] });
+	await client.economy.resolveGambleAction(interaction, "work", successChance);
 }
 
 export const data = new SlashCommandBuilder()

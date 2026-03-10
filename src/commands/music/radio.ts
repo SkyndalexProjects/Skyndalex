@@ -106,7 +106,7 @@ export async function run(
 			}
 		}
 
-		const radioInstance = client.radioInstances.set(interaction.guild.id, {
+		client.radioInstances.set(interaction.guild.id, {
 			status: "playing",
 			requestedBy: interaction.user.id,
 			radioStation: radioDetailsJson?.data?.title ?? "Unknown",
@@ -131,17 +131,16 @@ export async function run(
 			.setCustomId("playRadio")
 			.setDisabled(false);
 
-
 		const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			btn3,
 			btn1,
 			btn2,
 		);
 
-
 		const title = new TextDisplayBuilder().setContent("**Now Playing**");
 
-		const statusText = currentRadioAction.action === "switched" ? "🔄 Switched" : "▶️ Playing";
+		const statusText =
+			currentRadioAction.action === "switched" ? "🔄 Switched" : "▶️ Playing";
 		const desc = new TextDisplayBuilder().setContent(
 			`⏯️ | State: ${statusText}\n📻 | Station: [\`${radioDetailsJson?.data?.title ?? "Unknown"}\`](https://chuj.pl)\n🌍 | Country: \`${radioDetailsJson?.data?.country?.title ?? "Unknown"}\`\n🏙️ | From city: **${radioDetailsJson?.data?.place?.title ?? "Unknown"}**\n🔊 | Voice Channel: <#${memberChannel.id}>\n💾 | Provider: \`${provider}\`\n`,
 		);
