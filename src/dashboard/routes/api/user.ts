@@ -5,10 +5,8 @@ import console from "node:console";
 export default async function userRoutes(fastify: FastifyInstance) {
 	fastify.get("/user", async (request: FastifyRequest, reply: FastifyReply) => {
 		try {
-			console.log("request.headers /user endpoint", request.headers);
 			const session = await auth.api.getSession({ headers: request.headers });
 
-			console.log("user session:", session);
 			if (!session) {
 				reply.status(401).send({ error: "Unauthorized" });
 				return;
@@ -28,6 +26,7 @@ export default async function userRoutes(fastify: FastifyInstance) {
 			});
 
 			const user = (await response.json()) as DiscordUser;
+
 			reply.send(user);
 		} catch (error) {
 			console.error("Error fetching user data:", error);

@@ -1,5 +1,6 @@
 import {
-	type ChatInputCommandInteraction, MessageFlags,
+	type ChatInputCommandInteraction,
+	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
@@ -16,14 +17,14 @@ export async function run(
 	if (target.id === userId) {
 		return interaction.reply({
 			content: "> You can't rob yourself!",
-			flags: MessageFlags.Ephemeral
+			flags: MessageFlags.Ephemeral,
 		});
 	}
 
 	if (target.bot) {
 		return interaction.reply({
 			content: "> You can't rob a bot!",
-			flags: MessageFlags.Ephemeral
+			flags: MessageFlags.Ephemeral,
 		});
 	}
 
@@ -36,7 +37,7 @@ export async function run(
 	if (targetWallet <= 0) {
 		return interaction.reply({
 			content: `> **${target.username}** has nothing in their wallet to steal!`,
-			flags: MessageFlags.Ephemeral
+			flags: MessageFlags.Ephemeral,
 		});
 	}
 

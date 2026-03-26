@@ -42,6 +42,7 @@ export default async function guildsRoute(fastify: FastifyInstance) {
 			}
 
 			const guildsAPI = await response.json();
+
 			if (!Array.isArray(guildsAPI)) {
 				return reply.status(500).send({ error: "Invalid guilds response" });
 			}

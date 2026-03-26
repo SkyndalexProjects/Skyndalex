@@ -115,3 +115,17 @@ model Verification {
 
   @@map("verification")
 }
+
+enum RadioProvider {
+  RADIO_GARDEN  @map("radio.garden")
+  RADIO_BROWSER @map("radio-browser")
+}
+
+model RadioRecentPlays {
+  id          Int           @id @default(autoincrement())
+  guildId     String
+  userId      String
+  provider    RadioProvider
+  stationName String
+  playedAt    DateTime      @default(now())
+}
