@@ -17,7 +17,7 @@ import type {
 	RadioBrowserStationQueryResult,
 	radioStationSearchQueryResult,
 } from "#types";
-
+import { RadioProvider } from "@prisma/client";
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction<"cached">,
@@ -29,7 +29,9 @@ export async function run(
 		const source2 = interaction.options.getString("source2");
 
 		const station = source1 ?? source2;
-		const provider = source1 ? "radio.garden" : "radio-browser";
+		const provider = source1
+			? RadioProvider.RADIO_GARDEN
+			: RadioProvider.RADIO_BROWSER;
 
 		type RadioDetailsJson = {
 			data?: {
@@ -71,9 +73,20 @@ export async function run(
 				})}`,
 			});
 		}
+
 		let radioDetailsJson: RadioDetailsJson = {};
-		if (provider === "radio.garden") {
-			const channelId = station.split("/").pop();
+		if (provider === RadioProvider.RADIO_GARDEN) {
+			const channelId = station
+				.replace(/\?.*$/, "")
+				.replace(/\/+$/, "")
+				.split("/")
+				.pop();
+
+			if (!channelId) {
+				return await interaction.editReply({
+					content: "No station channel ID",
+				});
+			}
 			const getRadioDetails = await fetch(
 				`https://radio.garden/api/ara/content/channel/${channelId}/`,
 				{
@@ -87,13 +100,12 @@ export async function run(
 
 			radioDetailsJson.data = radioDetailsJson.data ?? {};
 			radioDetailsJson.data.executionDate = Date.now();
-		} else if (provider === "radio-browser") {
+		} else if (provider === RadioProvider.RADIO_BROWSER) {
 			const response = await fetch(
 				`https://de1.api.radio-browser.info/json/stations/byuuid/${station}`,
 			);
 			const stations =
 				(await response.json()) as RadioBrowserStationQueryResult[];
-			console.log("radio.browser stations:", stations);
 			if (stations && stations.length > 0) {
 				const s = stations[0];
 				radioDetailsJson = {
@@ -141,6 +153,17 @@ export async function run(
 
 		const statusText =
 			currentRadioAction.action === "switched" ? "🔄 Switched" : "▶️ Playing";
+		const stationName = radioDetailsJson?.data?.title ?? "Unknown";
+
+		await client.prisma.radioRecentPlays.create({
+			data: {
+				guildId: interaction.guild.id,
+				userId: interaction.user.id,
+				provider,
+				stationName,
+			},
+		});
+
 		const desc = new TextDisplayBuilder().setContent(
 			`⏯️ | State: ${statusText}\n📻 | Station: [\`${radioDetailsJson?.data?.title ?? "Unknown"}\`](https://chuj.pl)\n🌍 | Country: \`${radioDetailsJson?.data?.country?.title ?? "Unknown"}\`\n🏙️ | From city: **${radioDetailsJson?.data?.place?.title ?? "Unknown"}**\n🔊 | Voice Channel: <#${memberChannel.id}>\n💾 | Provider: \`${provider}\`\n`,
 		);
@@ -156,7 +179,8 @@ export async function run(
 			.addSeparatorComponents(separator)
 			.addTextDisplayComponents(footer)
 			.addSeparatorComponents(separator)
-			.addActionRowComponents(actionRow);
+			.addActionRowComponents(actionRow)
+			.setAccentColor(0x4caf7a);
 
 		await interaction.editReply({
 			flags: MessageFlags.IsComponentsV2,

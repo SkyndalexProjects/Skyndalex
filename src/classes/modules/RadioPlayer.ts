@@ -3,35 +3,11 @@ import type { SkyndalexClient } from "#classes";
 import { handleError } from "#utils";
 import type { ChatInputCommandInteraction } from "discord.js";
 import type { Player } from "shoukaku";
+import { RadioProvider } from "@prisma/client";
 
 export class RadioPlayer {
 	constructor(private readonly client: SkyndalexClient) {
 		this.client = client;
-	}
-
-	private async setupPlayerEventListeners(
-		player: Player,
-		trackResult: TrackResult,
-	) {
-		player.on("end", (data) => {
-			console.log("END");
-			if (data.reason !== "replaced")
-				player.playTrack({
-					track: { encoded: trackResult.data.encoded },
-				});
-		});
-		player.on("stuck", () => {
-			console.log("RADIO IS STUCK");
-			player.playTrack({
-				track: { encoded: trackResult.data.encoded },
-			});
-		});
-		player.on("exception", () => {
-			console.log("EXCEPTION");
-			player.playTrack({
-				track: { encoded: trackResult.data.encoded },
-			});
-		});
 	}
 
 	private setRadioInstance(
@@ -75,7 +51,7 @@ export class RadioPlayer {
 			track: { encoded: trackResult.data.encoded },
 		});
 
-		this.setupPlayerEventListeners(player, trackResult);
+		client.dashboard.broadcastRadioUpdate(guildId, "radio_updated");
 
 		this.setRadioInstance(
 			client,
@@ -103,7 +79,7 @@ export class RadioPlayer {
 			let resourceUrl: string;
 			let id: string;
 
-			if (provider === "radio.garden") {
+			if (provider === RadioProvider.RADIO_GARDEN) {
 				id = (() => {
 					const lastSegment = station.match(/\/([^\/?#]+)(?:[?#].*)?$/);
 					if (lastSegment && lastSegment[1]) return lastSegment[1];

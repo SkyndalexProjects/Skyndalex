@@ -71,7 +71,8 @@ export async function run(
 	const container = new ContainerBuilder()
 		.addTextDisplayComponents(title, desc)
 		.addSeparatorComponents(separator)
-		.addTextDisplayComponents(footer);
+		.addTextDisplayComponents(footer)
+		.setAccentColor(0x3e6bff);
 
 	await interaction.editReply({
 		flags: MessageFlags.IsComponentsV2,

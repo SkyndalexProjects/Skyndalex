@@ -21,31 +21,6 @@ export async function run(
 		});
 	} else {
 		await player.setGlobalVolume(volumeValue);
-
-		await player.setEqualizer([
-			{ band: 0, gain: 0.25 },
-			{ band: 1, gain: 0.2 },
-			{ band: 2, gain: 0.15 },
-			{ band: 3, gain: 0.1 },
-		]);
-		//
-		// await player.setKaraoke({
-		//     level: 1.75,
-		//     monoLevel: 1.0,
-		//     filterBand: 220,
-		//     filterWidth: 100
-		// });
-		//
-		// await player.setDistortion({
-		//     sinOffset: 0.0,
-		//     sinScale: 0.5,
-		//     cosOffset: 0.0,
-		//     cosScale: 0.5,
-		//     tanOffset: 0.0,
-		//     tanScale: 0.5,
-		//     offset: 0.0,
-		//     scale: 0.75
-		// });
 	}
 
 	return await interaction.reply({
@@ -64,6 +39,5 @@ export const data = new SlashCommandBuilder()
 			.setName("value")
 			.setDescription("Volume value between 0 and 100")
 			.setRequired(true)
-			.setMinValue(0)
-			.setMaxValue(1000),
+			.setMinValue(0),
 	);
