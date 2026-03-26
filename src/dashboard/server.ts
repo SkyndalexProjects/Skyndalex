@@ -1,13 +1,20 @@
-import Fastify, { FastifyReply, FastifyRequest } from "fastify";
+import Fastify, {
+	FastifyInstance,
+	FastifyReply,
+	FastifyRequest,
+} from "fastify";
 import fastifyCookie from "@fastify/cookie";
 import fastifyCors from "@fastify/cors";
 import autoLoad from "@fastify/autoload";
 import fastifyFormBody from "@fastify/formbody";
+import websocket from "@fastify/websocket";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import type { SkyndalexClient } from "#classes";
 import { auth } from "../auth.js";
 import { Guild, GuildMember } from "discord.js";
+import type { WebSocket } from "ws";
+
 type SessionData = Awaited<ReturnType<typeof auth.api.getSession>>;
 
 declare module "fastify" {
@@ -22,7 +29,7 @@ declare module "fastify" {
 export class DashboardServer {
 	app: Fastify.FastifyInstance;
 	client: SkyndalexClient;
-
+	wsSubscriptions = new Map<string, Set<WebSocket>>();
 	constructor(client: SkyndalexClient) {
 		this.client = client;
 		this.app = Fastify({
@@ -52,7 +59,7 @@ export class DashboardServer {
 			] as string[],
 			credentials: true,
 			allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
 			preflightContinue: false,
 			optionsSuccessStatus: 204,
 		});
@@ -60,7 +67,7 @@ export class DashboardServer {
 		app.register(fastifyCookie, {
 			secret: process.env.BETTER_AUTH_SECRET || "super-secret-key",
 			parseOptions: {
-				secure: true,
+				secure: process.env.NODE_ENV === "production",
 				sameSite: "none",
 				httpOnly: true,
 			},
@@ -173,6 +180,174 @@ export class DashboardServer {
 				}
 			},
 		);
+
+		await app.register(import("@fastify/websocket"));
+
+		const wsSubscriptions = this.wsSubscriptions;
+
+		await app.register(async function (fastify) {
+			fastify.get("/ws", { websocket: true }, (socket: WebSocket, req) => {
+				app.log.info({ readyState: socket.readyState }, "WS connected");
+
+				try {
+					socket.send(JSON.stringify({ type: "hello", ts: Date.now() }));
+				} catch {
+					// ignore
+				}
+
+				let isAlive = true;
+				socket.on("pong", () => {
+					isAlive = true;
+				});
+
+				const heartbeat = setInterval(() => {
+					if ((socket as any).readyState !== (socket as any).OPEN) return;
+					if (!isAlive) {
+						try {
+							(socket as any).terminate();
+						} catch {
+							// ignore
+						}
+						return;
+					}
+					isAlive = false;
+					try {
+						(socket as any).ping();
+					} catch {
+						// ignore
+					}
+				}, 30000);
+
+				const subscribedGuilds = new Set<string>();
+
+				const safeSend = (payload: unknown) => {
+					if ((socket as any).readyState !== (socket as any).OPEN) return;
+					try {
+						socket.send(JSON.stringify(payload));
+					} catch (err) {
+						app.log.warn({ err }, "WS send failed");
+					}
+				};
+
+				interface BaseMessage {
+					type: string;
+				}
+
+				interface PingMessage extends BaseMessage {
+					type: "ping";
+				}
+
+				interface SubscribeMessage extends BaseMessage {
+					type: "subscribe";
+					guildId: string;
+				}
+
+				interface UnsubscribeMessage extends BaseMessage {
+					type: "unsubscribe";
+					guildId: string;
+				}
+
+				interface IncomingMessageMap {
+					ping: PingMessage;
+					subscribe: SubscribeMessage;
+					unsubscribe: UnsubscribeMessage;
+				}
+
+				type IncomingMessage =
+					| IncomingMessageMap["ping"]
+					| IncomingMessageMap["subscribe"]
+					| IncomingMessageMap["unsubscribe"];
+
+				function isIncomingMessage(msg: unknown): msg is IncomingMessage {
+					if (typeof msg !== "object" || msg === null) return false;
+
+					const m = msg as Record<string, unknown>;
+
+					console.log("Received message", m);
+					if (typeof m.type !== "string") return false;
+
+					if (m.type === "ping") return true;
+
+					return (
+						(m.type === "subscribe" || m.type === "unsubscribe") &&
+						typeof m.guildId === "string"
+					);
+				}
+				socket.on("message", (raw) => {
+					void (async () => {
+						const text = Buffer.isBuffer(raw)
+							? raw.toString("utf8")
+							: raw instanceof ArrayBuffer
+								? Buffer.from(raw).toString("utf8")
+								: Array.isArray(raw)
+									? Buffer.concat(raw).toString("utf8")
+									: "";
+
+						if (!text || text.length > 16_384) {
+							return safeSend({ type: "error", error: "Payload too large" });
+						}
+
+						let parsed: unknown;
+						try {
+							parsed = JSON.parse(text);
+						} catch {
+							return safeSend({ type: "error", error: "Invalid JSON" });
+						}
+						if (!isIncomingMessage(parsed)) {
+							return safeSend({
+								type: "error",
+								error: "Invalid message shape",
+							});
+						}
+
+						const msg = parsed;
+						if (msg.type === "ping") {
+							return safeSend({ type: "pong" });
+						}
+						app.log.info(
+							{ type: msg.type, guildId: msg.guildId },
+							"WS message",
+						);
+						const guildId = String(msg?.guildId || "").trim();
+						if (!guildId)
+							return safeSend({ type: "error", error: "Missing guildId" });
+
+						if (msg.type === "subscribe") {
+							safeSend({ type: "subscribe_received", guildId });
+
+							let set = wsSubscriptions.get(guildId);
+							if (!set) {
+								set = new Set<WebSocket>();
+								wsSubscriptions.set(guildId, set);
+							}
+
+							set.add(socket);
+							subscribedGuilds.add(guildId);
+
+							app.log.info({ guildId, subs: set.size }, "WS subscribed");
+							return safeSend({ type: "subscribed", guildId });
+						}
+						wsSubscriptions.get(guildId)?.delete(socket);
+						subscribedGuilds.delete(guildId);
+						app.log.info({ guildId }, "WS unsubscribed");
+						return safeSend({ type: "unsubscribed", guildId });
+					})();
+				});
+
+				socket.on("close", () => {
+					app.log.info("WS closed");
+					clearInterval(heartbeat);
+					for (const guildId of subscribedGuilds) {
+						wsSubscriptions.get(guildId)?.delete(socket);
+					}
+				});
+
+				socket.on("error", (err: any) => {
+					app.log.warn({ err }, "WS error");
+				});
+			});
+		});
+
 		try {
 			await app.listen({
 				port: Number(process.env.API_PORT),
@@ -189,6 +364,33 @@ export class DashboardServer {
 		});
 
 		return app;
+	}
+
+	broadcastRadioUpdate(
+		guildId: string,
+		type: "radio_updated" | "recent_plays_updated" = "radio_updated",
+	) {
+		const sockets = this.wsSubscriptions.get(guildId);
+		if (!sockets || sockets.size === 0) {
+			this.app.log.info(
+				{ guildId, type, subs: 0 },
+				"WS radio broadcast skipped",
+			);
+			return;
+		}
+		this.app.log.info(
+			{ guildId, type, subs: sockets.size },
+			"WS radio broadcast",
+		);
+		const payload = JSON.stringify({ type, guildId, ts: Date.now() });
+		for (const socket of sockets) {
+			if (socket.readyState !== socket.OPEN) continue;
+			try {
+				socket.send(payload);
+			} catch {
+				// TODO: handle failed sends (cleanup dead sockets)
+			}
+		}
 	}
 }
 
