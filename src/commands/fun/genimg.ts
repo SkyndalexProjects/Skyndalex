@@ -67,6 +67,7 @@ export async function run(
 			},
 		});
 
+		console.log("Huggingface account", getHuggingfaceAccount)
 		await interaction.deferReply();
 		const prompt = interaction.options.getString("prompt");
 		const image = interaction.options.getAttachment("image");
@@ -78,14 +79,17 @@ export async function run(
 		let apiParameters;
 
 		if (imageBlob) {
-			defaultModel = "black-forest-labs/FLUX.1-Kontext-Dev";
+			defaultModel = "black-forest-labs/FLUX.2-dev";
 			apiParameters = {
-				input_image: imageBlob,
 				prompt,
+				input_images: [],
 				seed: 0,
 				randomize_seed: true,
-				guidance_scale: 1,
-				steps: 1,
+				width: 1024,
+				height: 1024,
+				num_inference_steps: 30,
+				guidance_scale: 4,
+				prompt_upsampling: true,
 			};
 		} else {
 			defaultModel = "black-forest-labs/FLUX.1-dev";
@@ -95,8 +99,8 @@ export async function run(
 				randomize_seed: true,
 				width: 1024,
 				height: 1024,
-				guidance_scale: 3.5,
-				num_inference_steps: 28,
+				num_inference_steps: 30,
+				guidance_scale: 4,
 			};
 		}
 
@@ -126,10 +130,19 @@ export async function run(
 
 					let errorMessage =
 						"The token you were using is already used up. To use the command again, you must log in via Huggingface. It is **free**, Skyndalex is in no way associated with this platform.";
+
+
 					if (error.title === "ZeroGPU quota exceeded") {
-						errorMessage =
-							`**ZeroGPU quota exceeded**\n` +
-							`To continue, you must wait for the quota to reset or upgrade your Huggingface account. You can also try again later. Or, try using a different account.`;
+						const match = error.message?.match(/Try again in (\d{1,2}):(\d{2}):(\d{2})/);
+						if (match) {
+							const [, hours, minutes, seconds] = match.map(Number);
+							const now = Math.floor(Date.now() / 1000);
+							const resetTimestamp = now + hours * 3600 + minutes * 60 + seconds;
+							const discordTimestamp = `<t:${resetTimestamp}:R>`; // Relative time
+							errorMessage =
+								`**ZeroGPU quota exceeded**\n` +
+								`To continue, you must wait for the quota to reset ${discordTimestamp} or upgrade your Huggingface account. You can also try again later or use a different account.`;
+						}
 					} else {
 						console.error(error);
 						errorMessage = `**Error occurred**\n${error.message || "Unknown error"}\n\n...`;
