@@ -16,6 +16,8 @@ export async function run(
 ) {
 	await interaction.deferReply();
 	const text = interaction.options.getString("text");
+	if (!text) return;
+
 	const imagePath = join(
 		process.cwd(),
 		"src",

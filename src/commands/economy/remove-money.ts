@@ -18,6 +18,8 @@ export async function run(
 	}
 
 	const target = interaction.options.getUser("target");
+	if (!target) return;
+
 	const amount = Number(interaction.options.getString("amount"));
 
 	const economy = await client.prisma.economy.findUnique({

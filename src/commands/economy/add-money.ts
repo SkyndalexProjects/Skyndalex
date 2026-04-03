@@ -11,6 +11,7 @@ export async function run(
 	interaction: ChatInputCommandInteraction,
 ) {
 	const target = interaction.options.getUser("target");
+	if (!target) return;
 
 	const amount = Number(interaction.options.getString("amount"));
 
