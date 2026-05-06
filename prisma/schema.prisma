@@ -26,6 +26,7 @@ model Settings {
   blockedCommands String[] @default([])
   blockedChannels String[] @default([])
   goodbyeChannel  String?
+  djRole          String?
 }
 
 model DashboardLogs {
