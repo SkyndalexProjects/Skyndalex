@@ -51,7 +51,11 @@ const queue: QueueItem[] = [];
 const gallerySessions = new Map<string, GenimgSession>();
 let isQueueProcessing = false;
 
-function buildQueueMessage(position: number, fact: string, prompt: string): string {
+function buildQueueMessage(
+	position: number,
+	fact: string,
+	prompt: string,
+): string {
 	return [
 		`${LOADING_ICON} **Image request queued**`,
 		`**Position:** ${position}`,
@@ -75,7 +79,11 @@ const deleteButton = new ButtonBuilder()
 
 const row = new ActionRowBuilder<ButtonBuilder>().addComponents(deleteButton);
 
-function buildGalleryContainer(prompt: string, requesterName: string, fileNames: string[]) {
+function buildGalleryContainer(
+	prompt: string,
+	requesterName: string,
+	fileNames: string[],
+) {
 	const mediaGallery = new MediaGalleryBuilder().addItems(
 		fileNames.map((fileName, index) =>
 			new MediaGalleryItemBuilder()
@@ -86,11 +94,11 @@ function buildGalleryContainer(prompt: string, requesterName: string, fileNames:
 
 	return new ContainerBuilder()
 		.addTextDisplayComponents(
-			new TextDisplayBuilder().setContent(`### ${prompt}`))
+			new TextDisplayBuilder().setContent(`### ${prompt}`),
+		)
 		.addMediaGalleryComponents(mediaGallery)
 		.addActionRowComponents(row);
 }
-
 
 async function generateVariant(prompt: string, seed: number): Promise<Buffer> {
 	const response = await fetch(INVOKE_URL, {
@@ -165,7 +173,8 @@ async function processQueue(): Promise<void> {
 					}),
 			);
 			const fileNames = attachments.map(
-				(attachment, index) => attachment.name ?? `generated-image-${index + 1}.jpg`,
+				(attachment, index) =>
+					attachment.name ?? `generated-image-${index + 1}.jpg`,
 			);
 
 			const reply = await item.interaction.editReply({
