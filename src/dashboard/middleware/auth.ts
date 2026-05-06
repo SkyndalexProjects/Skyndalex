@@ -12,8 +12,15 @@ export async function requireGuildPermission(
 	}
 
 	const guildId = request.params.id;
+
 	const guild = request.client.guilds.cache.get(guildId);
 
+	// const getDJRole = await request.client.prisma.settings.findUnique({
+	// 	where: {
+	// 		guildId
+	// 	},
+	// })
+	// console.log("DJ Role", getDJRole)
 	if (!guild) {
 		return reply.status(404).send({ error: "Guild not found" });
 	}

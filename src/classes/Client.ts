@@ -19,6 +19,7 @@ import { Connectors, Shoukaku } from "shoukaku";
 import { deploy } from "#utils";
 import { GlobalFonts } from "@napi-rs/canvas";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { createClient, type RedisClientType } from "redis";
 
 const Nodes = [
 	{
@@ -42,6 +43,7 @@ interface radioStatus {
 export class SkyndalexClient extends Client {
 	loader = new Loaders();
 	prisma = new PrismaClient({ adapter });
+	redis!: RedisClientType;
 	dashboard = new DashboardServer(this);
 	commands: Collection<string, Command> = new Collection();
 	components: Collection<string, Component> = new Collection();
@@ -134,6 +136,35 @@ export class SkyndalexClient extends Client {
 
 		this.commands = await this.loader.loadCommands("../commands");
 		this.components = await this.loader.loadComponents("../components");
+
+		this.redis = createClient({
+			url: process.env.REDIS_URL
+		});
+
+		this.redis.on("connect", () => {
+			console.log("[Redis] socket connected (TCP established)");
+		});
+
+		this.redis.on("ready", () => {
+			console.log("[Redis] ready (handshake done, commands can run)");
+		});
+
+		this.redis.on("reconnecting", () => {
+			console.warn("[Redis] reconnecting...");
+		});
+
+		this.redis.on("end", () => {
+			console.warn("[Redis] connection closed");
+		});
+
+		this.redis.on("timeout", () => {
+			console.error("[Redis] timeout");
+		});
+		this.redis.on("error", (err) => {
+			console.error("[Redis] error", err);
+		});
+
+		await this.redis.connect();
 
 		await deploy(this);
 
