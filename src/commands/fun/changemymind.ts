@@ -20,7 +20,6 @@ export async function run(
 
 	const imagePath = join(
 		process.cwd(),
-		"src",
 		"assets",
 		"imgs",
 		"change_my_mind.jpg",

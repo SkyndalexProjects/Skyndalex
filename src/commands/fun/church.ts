@@ -17,7 +17,6 @@ export async function run(
 	const text = interaction.options.getString("text", true);
 	const imgPath = join(
 		process.cwd(),
-		"src",
 		"assets",
 		"imgs",
 		"empty_screen.png",
