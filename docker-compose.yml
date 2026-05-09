@@ -8,10 +8,13 @@ services:
     links:
       - lavalink
       - db
+      - redis
     depends_on:
       lavalink:
         condition: service_started
       db:
+        condition: service_started
+      redis:
         condition: service_started
   lavalink:
     image: ghcr.io/lavalink-devs/lavalink:4-alpine
@@ -39,3 +42,12 @@ services:
         target: /dev/shm
         tmpfs:
           size: 134217728
+  redis:
+    container_name: redis
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - ./redis_data:/data
