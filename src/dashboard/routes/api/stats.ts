@@ -8,15 +8,6 @@ export default async function userRoutes(fastify: FastifyInstance) {
     fastify.get("/stats", async (request: FastifyRequest, reply: FastifyReply) => {
         try {
             console.log("[/stats] Request started");
-
-            const session = await auth.api.getSession({ headers: request.headers });
-
-            if (!session) {
-                console.log("[/stats] No valid session");
-                reply.status(401).send({ error: "Unauthorized" });
-                return;
-            }
-
             const client = request.client;
 
             reply.send({
