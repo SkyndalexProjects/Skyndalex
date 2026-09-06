@@ -11,9 +11,10 @@ type Component =
 	| APIComponentInContainer
 	| APIComponentInMessageActionRow;
 
-type ButtonReplacement =
-	Pick<APIButtonComponentWithCustomId, "custom_id" | "style">
-	& { label: string };
+type ButtonReplacement = Pick<
+	APIButtonComponentWithCustomId,
+	"custom_id" | "style"
+> & { label: string };
 
 export function swapButton(
 	components: readonly APIMessageTopLevelComponent[],

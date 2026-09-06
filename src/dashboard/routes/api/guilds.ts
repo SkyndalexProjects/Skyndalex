@@ -137,12 +137,9 @@ export default async function guildsRoute(
 
 				const cachedGuildsJson = await redis.get(`guilds:${userId}`);
 
-				const cachedGuilds: SerializedGuildList[] | null =
-					cachedGuildsJson
-						? (JSON.parse(
-							cachedGuildsJson,
-						) as SerializedGuildList[])
-						: null;
+				const cachedGuilds: SerializedGuildList[] | null = cachedGuildsJson
+					? (JSON.parse(cachedGuildsJson) as SerializedGuildList[])
+					: null;
 
 				if (cachedGuilds) {
 					console.log(
@@ -155,9 +152,7 @@ export default async function guildsRoute(
 					return;
 				}
 
-				console.log(
-					"[/guilds] Cache MISS, fetching access token",
-				);
+				console.log("[/guilds] Cache MISS, fetching access token");
 
 				const tokenResponse = await auth.api.getAccessToken({
 					body: {
@@ -174,14 +169,9 @@ export default async function guildsRoute(
 				}
 
 				const controller = new AbortController();
-				const timeoutId = setTimeout(
-					() => controller.abort(),
-					5000,
-				);
+				const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-				console.log(
-					"[/guilds] Fetching guilds from Discord API",
-				);
+				console.log("[/guilds] Fetching guilds from Discord API");
 
 				let response: Response;
 
@@ -200,20 +190,12 @@ export default async function guildsRoute(
 					clearTimeout(timeoutId);
 				}
 
-				console.log(
-					"[/guilds] Discord API response:",
-					response.status,
-				);
+				console.log("[/guilds] Discord API response:", response.status);
 
 				if (!response.ok) {
-					console.log(
-						"[/guilds] Discord API error:",
-						response.status,
-					);
+					console.log("[/guilds] Discord API error:", response.status);
 
-					reply
-						.status(500)
-						.send({ error: "Failed to load guilds" });
+					reply.status(500).send({ error: "Failed to load guilds" });
 
 					return;
 				}
@@ -221,13 +203,9 @@ export default async function guildsRoute(
 				const guildsAPI: unknown = await response.json();
 
 				if (!Validator.guildArray(guildsAPI)) {
-					console.log(
-						"[/guilds] Invalid guilds response",
-					);
+					console.log("[/guilds] Invalid guilds response");
 
-					reply
-						.status(500)
-						.send({ error: "Failed to load guilds" });
+					reply.status(500).send({ error: "Failed to load guilds" });
 
 					return;
 				}
@@ -240,11 +218,8 @@ export default async function guildsRoute(
 
 				const filteredGuilds = guildsAPI.filter((guild) => {
 					const isOwner = guild.owner === true;
-					const permissions = BigInt(
-						guild.permissions ?? "0",
-					);
-					const hasAdmin =
-						(permissions & BigInt(0x8)) === BigInt(0x8);
+					const permissions = BigInt(guild.permissions ?? "0");
+					const hasAdmin = (permissions & BigInt(0x8)) === BigInt(0x8);
 					const canManage = isOwner || hasAdmin;
 
 					if (!canManage) {
@@ -263,22 +238,16 @@ export default async function guildsRoute(
 				);
 
 				const guilds = filteredGuilds.map((guild) => {
-					const isBotAdded =
-						request.client.guilds.cache.has(guild.id);
+					const isBotAdded = request.client.guilds.cache.has(guild.id);
 
 					const memberCount =
-						request.client.guilds.cache.get(guild.id)
-							?.memberCount ?? 0;
+						request.client.guilds.cache.get(guild.id)?.memberCount ?? 0;
 
 					console.log(
 						`[/guilds] Guild ${guild.id}: botAdded=${isBotAdded}, memberCount=${memberCount}`,
 					);
 
-					return Serializer.guildList(
-						guild,
-						isBotAdded,
-						memberCount,
-					);
+					return Serializer.guildList(guild, isBotAdded, memberCount);
 				});
 
 				await redis.setEx(
@@ -287,20 +256,13 @@ export default async function guildsRoute(
 					JSON.stringify(guilds),
 				);
 
-				console.log(
-					"[/guilds] Cached guilds, sending response",
-				);
+				console.log("[/guilds] Cached guilds, sending response");
 
 				reply.status(200).send(guilds);
 			} catch (error) {
-				console.error(
-					"[/guilds] CRITICAL ERROR:",
-					error,
-				);
+				console.error("[/guilds] CRITICAL ERROR:", error);
 
-				reply
-					.status(500)
-					.send({ error: "Failed to load guilds" });
+				reply.status(500).send({ error: "Failed to load guilds" });
 			}
 		},
 	);
@@ -321,17 +283,13 @@ export default async function guildsRoute(
 					return;
 				}
 
-				const guildId = (
-					request.headers["x-guild-id"] ||
-					request.headers.guildid
-				) as string | undefined;
+				const guildId = (request.headers["x-guild-id"] ||
+					request.headers.guildid) as string | undefined;
 
 				console.log("[/guild] GuildId:", guildId);
 
 				if (!Validator.guildId(guildId)) {
-					console.log(
-						"[/guild] Invalid guild ID format",
-					);
+					console.log("[/guild] Invalid guild ID format");
 
 					reply.status(400).send({
 						error: "Invalid request",
@@ -342,16 +300,11 @@ export default async function guildsRoute(
 
 				const redis = request.client.redis as RedisClientType;
 
-				const cachedGuildJson = await redis.get(
-					`guild:${guildId}`,
-				);
+				const cachedGuildJson = await redis.get(`guild:${guildId}`);
 
-				const cachedGuild: SerializedGuildDetail | null =
-					cachedGuildJson
-						? (JSON.parse(
-							cachedGuildJson,
-						) as SerializedGuildDetail)
-						: null;
+				const cachedGuild: SerializedGuildDetail | null = cachedGuildJson
+					? (JSON.parse(cachedGuildJson) as SerializedGuildDetail)
+					: null;
 
 				if (cachedGuild) {
 					console.log("[/guild] Cache HIT");
@@ -359,17 +312,12 @@ export default async function guildsRoute(
 					return;
 				}
 
-				console.log(
-					"[/guild] Cache MISS, fetching from bot cache",
-				);
+				console.log("[/guild] Cache MISS, fetching from bot cache");
 
-				const guild =
-					request.client.guilds.cache.get(guildId);
+				const guild = request.client.guilds.cache.get(guildId);
 
 				if (!guild) {
-					console.log(
-						"[/guild] Guild not found in cache",
-					);
+					console.log("[/guild] Guild not found in cache");
 
 					reply.status(404).send({
 						error: "Guild not accessible",
@@ -378,35 +326,23 @@ export default async function guildsRoute(
 					return;
 				}
 
-				console.log(
-					"[/guild] Guild found:",
-					guild.name,
-				);
+				console.log("[/guild] Guild found:", guild.name);
 
 				let discordUserId: string;
 
 				try {
-					console.log(
-						"[/guild] Fetching access token",
-					);
+					console.log("[/guild] Fetching access token");
 
-					const tokenResponse =
-						await auth.api.getAccessToken({
-							body: {
-								providerId: "discord",
-								userId: session.session.userId,
-							},
-							headers: request.headers,
-						});
+					const tokenResponse = await auth.api.getAccessToken({
+						body: {
+							providerId: "discord",
+							userId: session.session.userId,
+						},
+						headers: request.headers,
+					});
 
-					if (
-						!Validator.token(
-							tokenResponse.accessToken,
-						)
-					) {
-						console.log(
-							"[/guild] Invalid access token",
-						);
+					if (!Validator.token(tokenResponse.accessToken)) {
+						console.log("[/guild] Invalid access token");
 
 						reply.status(401).send({
 							error: "Unauthorized",
@@ -415,9 +351,7 @@ export default async function guildsRoute(
 						return;
 					}
 
-					console.log(
-						"[/guild] Fetching Discord user info",
-					);
+					console.log("[/guild] Fetching Discord user info");
 
 					const userResponse = await fetch(
 						"https://discord.com/api/v10/users/@me",
@@ -441,15 +375,10 @@ export default async function guildsRoute(
 						return;
 					}
 
-					const discordUser: unknown =
-						await userResponse.json();
+					const discordUser: unknown = await userResponse.json();
 
-					if (
-						!Validator.discordUser(discordUser)
-					) {
-						console.error(
-							"[/guild] Invalid Discord user response",
-						);
+					if (!Validator.discordUser(discordUser)) {
+						console.error("[/guild] Invalid Discord user response");
 
 						reply.status(500).send({
 							error: "Authorization failed",
@@ -460,15 +389,9 @@ export default async function guildsRoute(
 
 					discordUserId = discordUser.id;
 
-					console.log(
-						"[/guild] Discord user ID:",
-						discordUserId,
-					);
+					console.log("[/guild] Discord user ID:", discordUserId);
 				} catch (error) {
-					console.error(
-						"[/guild] Error getting Discord user ID:",
-						error,
-					);
+					console.error("[/guild] Error getting Discord user ID:", error);
 
 					reply.status(500).send({
 						error: "Authorization failed",
@@ -485,17 +408,11 @@ export default async function guildsRoute(
 						discordUserId,
 					);
 
-					member =
-						await guild.members.fetch(discordUserId);
+					member = await guild.members.fetch(discordUserId);
 
-					console.log(
-						"[/guild] Member fetched successfully",
-					);
+					console.log("[/guild] Member fetched successfully");
 				} catch (error) {
-					console.error(
-						"[/guild] Error fetching member:",
-						error,
-					);
+					console.error("[/guild] Error fetching member:", error);
 
 					reply.status(500).send({
 						error: "Access denied",
@@ -504,23 +421,18 @@ export default async function guildsRoute(
 					return;
 				}
 
-				const isOwner =
-					member.id === guild.ownerId;
+				const isOwner = member.id === guild.ownerId;
 
-				const hasManageGuild =
-					member.permissions.has("ManageGuild");
+				const hasManageGuild = member.permissions.has("ManageGuild");
 
-				const canManage =
-					isOwner || hasManageGuild;
+				const canManage = isOwner || hasManageGuild;
 
 				console.log(
 					`[/guild] User permissions: owner=${isOwner}, manageGuild=${hasManageGuild}, canManage=${canManage}`,
 				);
 
 				if (!canManage) {
-					console.log(
-						"[/guild] User lacks permission to manage guild",
-					);
+					console.log("[/guild] User lacks permission to manage guild");
 
 					reply.status(403).send({
 						error: "Access denied",
@@ -529,14 +441,13 @@ export default async function guildsRoute(
 					return;
 				}
 
-				const serializedGuild =
-					Serializer.guildDetail({
-						id: guild.id,
-						name: guild.name,
-						icon: guild.icon,
-						ownerId: guild.ownerId,
-						memberCount: guild.memberCount,
-					});
+				const serializedGuild = Serializer.guildDetail({
+					id: guild.id,
+					name: guild.name,
+					icon: guild.icon,
+					ownerId: guild.ownerId,
+					memberCount: guild.memberCount,
+				});
 
 				await redis.setEx(
 					`guild:${guildId}`,
@@ -544,16 +455,11 @@ export default async function guildsRoute(
 					JSON.stringify(serializedGuild),
 				);
 
-				console.log(
-					"[/guild] Returning guild details",
-				);
+				console.log("[/guild] Returning guild details");
 
 				reply.status(200).send(serializedGuild);
 			} catch (error) {
-				console.error(
-					"[/guild] CRITICAL ERROR:",
-					error,
-				);
+				console.error("[/guild] CRITICAL ERROR:", error);
 
 				reply.status(500).send({
 					error: "Access denied",

@@ -50,9 +50,7 @@ export async function run(
 
 		const container = new ContainerBuilder()
 			.addTextDisplayComponents(
-				new TextDisplayBuilder().setContent(
-					"**Authorization required.**",
-				),
+				new TextDisplayBuilder().setContent("**Authorization required.**"),
 				new TextDisplayBuilder().setContent(
 					'> ℹ️ | After clicking "Authorize", you will be redirected to the *bot dashboard.*\n\n> ℹ️ | It should automatically login you with Discord, and then you will need to *click button on the center of the website* to link your account with Huggingface platform.\n\n> ℹ️ It all should take a *few seconds* (If you are already logged in, everything happens instantly)',
 				),
@@ -103,8 +101,7 @@ export async function run(
 				.setLabel("Authorize")
 				.setStyle(ButtonStyle.Link)
 				.setURL(
-					process.env.OAUTH_TO_HUGGINGFACE ??
-					"https://default-auth-url.com",
+					process.env.OAUTH_TO_HUGGINGFACE ?? "https://default-auth-url.com",
 				);
 
 			const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -161,14 +158,12 @@ export async function run(
 					.setLabel("Authorize")
 					.setStyle(ButtonStyle.Link)
 					.setURL(
-						process.env.OAUTH_TO_HUGGINGFACE ??
-						"https://default-auth-url.com",
+						process.env.OAUTH_TO_HUGGINGFACE ?? "https://default-auth-url.com",
 					);
 
-				const row =
-					new ActionRowBuilder<ButtonBuilder>().addComponents(
-						authorizeButton,
-					);
+				const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+					authorizeButton,
+				);
 
 				const errorMessage = `**Error occurred**\n${
 					hfError.message ?? "Unknown error"
@@ -191,9 +186,7 @@ export async function run(
 
 		if (result?.data) {
 			const imageResponse = await fetch(result.data[0].url);
-			const imageBuffer = Buffer.from(
-				await imageResponse.arrayBuffer(),
-			);
+			const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
 
 			const attachment = new AttachmentBuilder(imageBuffer, {
 				name: "generated-image.png",
@@ -310,9 +303,7 @@ export const data = new SlashCommandBuilder()
 	.addAttachmentOption((option) =>
 		option
 			.setName("image")
-			.setDescription(
-				"An image to use as a reference for the generation",
-			),
+			.setDescription("An image to use as a reference for the generation"),
 	)
 	.setIntegrationTypes([0, 1])
 	.setContexts([0, 1, 2]);

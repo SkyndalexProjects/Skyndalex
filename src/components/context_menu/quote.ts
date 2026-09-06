@@ -1,363 +1,363 @@
 import {
-    type CanvasTextAlign,
-    createCanvas,
-    loadImage,
-    type SKRSContext2D,
+	type CanvasTextAlign,
+	createCanvas,
+	loadImage,
+	type SKRSContext2D,
 } from "@napi-rs/canvas";
 import {
-    AttachmentBuilder,
-    ApplicationCommandType,
-    ContextMenuCommandBuilder,
-    type MessageContextMenuCommandInteraction,
-    type User,
+	AttachmentBuilder,
+	ApplicationCommandType,
+	ContextMenuCommandBuilder,
+	type MessageContextMenuCommandInteraction,
+	type User,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
 import { getLines } from "#utils";
 
 const canvasConfig = {
-    width: 1200,
-    height: 675,
+	width: 1200,
+	height: 675,
 
-    avatar: {
-        x: 0,
-        y: 0,
-        width: 550,
-        height: 675,
-        blurStartX: 220,
-        fadeStartX: 330,
-        fadeEndX: 470,
-    },
+	avatar: {
+		x: 0,
+		y: 0,
+		width: 550,
+		height: 675,
+		blurStartX: 220,
+		fadeStartX: 330,
+		fadeEndX: 470,
+	},
 
-    text: {
-        x: 730,
-        centerX: 820,
-        centerY: 300,
-        maxWidth: 600,
-        maxHeight: 600,
-        maxFontSize: 80,
-        minFontSize: 15,
-        lineHeightMultiplier: 1.4,
-        fontFamily: `"RougeScript", "Segoe Script", cursive`,
-    },
+	text: {
+		x: 730,
+		centerX: 820,
+		centerY: 300,
+		maxWidth: 600,
+		maxHeight: 600,
+		maxFontSize: 80,
+		minFontSize: 15,
+		lineHeightMultiplier: 1.4,
+		fontFamily: `"RougeScript", "Segoe Script", cursive`,
+	},
 
-    author: {
-        x: 700,
-        y: 400,
-        font: `normal 32px poppins, Poppins, sans-serif`,
-        gap: 3,
-        height: 20,
-    },
+	author: {
+		x: 700,
+		y: 400,
+		font: `normal 32px poppins, Poppins, sans-serif`,
+		gap: 3,
+		height: 20,
+	},
 
-    colors: {
-        background: "#000000",
-        text: "#ffffff",
-        author: "#bdbdbd",
-    },
+	colors: {
+		background: "#000000",
+		text: "#ffffff",
+		author: "#bdbdbd",
+	},
 };
 
 type QuoteLayout = {
-    fontSize: number;
-    lineHeight: number;
-    lines: string[];
+	fontSize: number;
+	lineHeight: number;
+	lines: string[];
 };
 
 class QuoteImageRenderer {
-    public async render(options: {
-        message: string;
-        author: string;
-        user: User;
-    }): Promise<Buffer> {
-        const canvas = createCanvas(canvasConfig.width, canvasConfig.height);
-        const ctx = canvas.getContext("2d");
+	public async render(options: {
+		message: string;
+		author: string;
+		user: User;
+	}): Promise<Buffer> {
+		const canvas = createCanvas(canvasConfig.width, canvasConfig.height);
+		const ctx = canvas.getContext("2d");
 
-        this.drawBackground(ctx);
-        await this.drawGreyscaleAvatar(ctx, options.user);
-        this.drawQuoteAndAuthor(ctx, options.message, options.author);
+		this.drawBackground(ctx);
+		await this.drawGreyscaleAvatar(ctx, options.user);
+		this.drawQuoteAndAuthor(ctx, options.message, options.author);
 
-        return canvas.toBuffer("image/png");
-    }
+		return canvas.toBuffer("image/png");
+	}
 
-    private get quoteFontFamily() {
-        return canvasConfig.text.fontFamily;
-    }
+	private get quoteFontFamily() {
+		return canvasConfig.text.fontFamily;
+	}
 
-    private getQuoteFont(fontSize: number) {
-        return `${fontSize}px ${this.quoteFontFamily}`;
-    }
+	private getQuoteFont(fontSize: number) {
+		return `${fontSize}px ${this.quoteFontFamily}`;
+	}
 
-    private drawBackground(ctx: SKRSContext2D) {
-        ctx.fillStyle = canvasConfig.colors.background;
-        ctx.fillRect(0, 0, canvasConfig.width, canvasConfig.height);
-    }
+	private drawBackground(ctx: SKRSContext2D) {
+		ctx.fillStyle = canvasConfig.colors.background;
+		ctx.fillRect(0, 0, canvasConfig.width, canvasConfig.height);
+	}
 
-    private async drawGreyscaleAvatar(ctx: SKRSContext2D, user: User) {
-        const avatarURL = user.displayAvatarURL({ extension: "png", size: 1024 });
-        const avatar = await loadImage(avatarURL);
+	private async drawGreyscaleAvatar(ctx: SKRSContext2D, user: User) {
+		const avatarURL = user.displayAvatarURL({ extension: "png", size: 1024 });
+		const avatar = await loadImage(avatarURL);
 
-        const avatarCanvas = createCanvas(
-            canvasConfig.avatar.width,
-            canvasConfig.avatar.height,
-        );
-        const avatarCtx = avatarCanvas.getContext("2d");
+		const avatarCanvas = createCanvas(
+			canvasConfig.avatar.width,
+			canvasConfig.avatar.height,
+		);
+		const avatarCtx = avatarCanvas.getContext("2d");
 
-        const scale = Math.max(
-            canvasConfig.avatar.width / avatar.width,
-            canvasConfig.avatar.height / avatar.height,
-        );
-        const scaledWidth = avatar.width * scale;
-        const scaledHeight = avatar.height * scale;
-        const dx = (canvasConfig.avatar.width - scaledWidth) / 2;
-        const dy = (canvasConfig.avatar.height - scaledHeight) / 2;
+		const scale = Math.max(
+			canvasConfig.avatar.width / avatar.width,
+			canvasConfig.avatar.height / avatar.height,
+		);
+		const scaledWidth = avatar.width * scale;
+		const scaledHeight = avatar.height * scale;
+		const dx = (canvasConfig.avatar.width - scaledWidth) / 2;
+		const dy = (canvasConfig.avatar.height - scaledHeight) / 2;
 
-        avatarCtx.filter = "none";
-        avatarCtx.drawImage(avatar, dx, dy, scaledWidth, scaledHeight);
+		avatarCtx.filter = "none";
+		avatarCtx.drawImage(avatar, dx, dy, scaledWidth, scaledHeight);
 
-        const blurCanvas = createCanvas(
-            canvasConfig.avatar.width,
-            canvasConfig.avatar.height,
-        );
-        const blurCtx = blurCanvas.getContext("2d");
+		const blurCanvas = createCanvas(
+			canvasConfig.avatar.width,
+			canvasConfig.avatar.height,
+		);
+		const blurCtx = blurCanvas.getContext("2d");
 
-        blurCtx.drawImage(avatar, dx, dy, scaledWidth, scaledHeight);
-        blurCtx.filter = "none";
+		blurCtx.drawImage(avatar, dx, dy, scaledWidth, scaledHeight);
+		blurCtx.filter = "none";
 
-        const maskCanvas = createCanvas(
-            canvasConfig.avatar.width,
-            canvasConfig.avatar.height,
-        );
-        const maskCtx = maskCanvas.getContext("2d");
+		const maskCanvas = createCanvas(
+			canvasConfig.avatar.width,
+			canvasConfig.avatar.height,
+		);
+		const maskCtx = maskCanvas.getContext("2d");
 
-        const blurMask = maskCtx.createLinearGradient(
-            canvasConfig.avatar.blurStartX,
-            0,
-            canvasConfig.avatar.fadeEndX,
-            0,
-        );
-        blurMask.addColorStop(0, "rgba(255, 255, 255, 0)");
-        blurMask.addColorStop(0.5, "rgba(255, 255, 255, 0.5)");
-        blurMask.addColorStop(1, "rgba(255, 255, 255, 1)");
+		const blurMask = maskCtx.createLinearGradient(
+			canvasConfig.avatar.blurStartX,
+			0,
+			canvasConfig.avatar.fadeEndX,
+			0,
+		);
+		blurMask.addColorStop(0, "rgba(255, 255, 255, 0)");
+		blurMask.addColorStop(0.5, "rgba(255, 255, 255, 0.5)");
+		blurMask.addColorStop(1, "rgba(255, 255, 255, 1)");
 
-        maskCtx.fillStyle = blurMask;
-        maskCtx.fillRect(
-            0,
-            0,
-            canvasConfig.avatar.width,
-            canvasConfig.avatar.height,
-        );
+		maskCtx.fillStyle = blurMask;
+		maskCtx.fillRect(
+			0,
+			0,
+			canvasConfig.avatar.width,
+			canvasConfig.avatar.height,
+		);
 
-        blurCtx.globalCompositeOperation = "destination-in";
-        blurCtx.drawImage(maskCanvas, 0, 0);
-        blurCtx.globalCompositeOperation = "source-over";
+		blurCtx.globalCompositeOperation = "destination-in";
+		blurCtx.drawImage(maskCanvas, 0, 0);
+		blurCtx.globalCompositeOperation = "source-over";
 
-        avatarCtx.drawImage(blurCanvas, 0, 0);
+		avatarCtx.drawImage(blurCanvas, 0, 0);
 
-        this.applyGreyscale(avatarCtx);
-        this.applyAvatarFade(avatarCtx);
+		this.applyGreyscale(avatarCtx);
+		this.applyAvatarFade(avatarCtx);
 
-        ctx.drawImage(
-            avatarCanvas,
-            canvasConfig.avatar.x,
-            canvasConfig.avatar.y,
-            canvasConfig.avatar.width,
-            canvasConfig.avatar.height,
-        );
-    }
+		ctx.drawImage(
+			avatarCanvas,
+			canvasConfig.avatar.x,
+			canvasConfig.avatar.y,
+			canvasConfig.avatar.width,
+			canvasConfig.avatar.height,
+		);
+	}
 
-    private applyGreyscale(ctx: SKRSContext2D) {
-        const imageData = ctx.getImageData(
-            0,
-            0,
-            canvasConfig.avatar.width,
-            canvasConfig.avatar.height,
-        );
-        const pixels = imageData.data;
+	private applyGreyscale(ctx: SKRSContext2D) {
+		const imageData = ctx.getImageData(
+			0,
+			0,
+			canvasConfig.avatar.width,
+			canvasConfig.avatar.height,
+		);
+		const pixels = imageData.data;
 
-        for (let i = 0; i < pixels.length; i += 4) {
-            const grey =
-                pixels[i] * 0.299 + pixels[i + 1] * 0.587 + pixels[i + 2] * 0.114;
+		for (let i = 0; i < pixels.length; i += 4) {
+			const grey =
+				pixels[i] * 0.299 + pixels[i + 1] * 0.587 + pixels[i + 2] * 0.114;
 
-            pixels[i] = grey;
-            pixels[i + 1] = grey;
-            pixels[i + 2] = grey;
-        }
+			pixels[i] = grey;
+			pixels[i + 1] = grey;
+			pixels[i + 2] = grey;
+		}
 
-        ctx.putImageData(imageData, 0, 0);
-    }
+		ctx.putImageData(imageData, 0, 0);
+	}
 
-    private applyAvatarFade(ctx: SKRSContext2D) {
-        const avatarFadeMask = createCanvas(
-            canvasConfig.avatar.width,
-            canvasConfig.avatar.height,
-        );
-        const avatarFadeMaskCtx = avatarFadeMask.getContext("2d");
+	private applyAvatarFade(ctx: SKRSContext2D) {
+		const avatarFadeMask = createCanvas(
+			canvasConfig.avatar.width,
+			canvasConfig.avatar.height,
+		);
+		const avatarFadeMaskCtx = avatarFadeMask.getContext("2d");
 
-        const avatarAlphaFade = avatarFadeMaskCtx.createLinearGradient(
-            canvasConfig.avatar.fadeStartX,
-            0,
-            canvasConfig.avatar.fadeEndX,
-            0,
-        );
+		const avatarAlphaFade = avatarFadeMaskCtx.createLinearGradient(
+			canvasConfig.avatar.fadeStartX,
+			0,
+			canvasConfig.avatar.fadeEndX,
+			0,
+		);
 
-        avatarAlphaFade.addColorStop(0, "rgba(255, 255, 255, 1)");
-        avatarAlphaFade.addColorStop(0.5, "rgba(255, 255, 255, 0.5)");
-        avatarAlphaFade.addColorStop(1, "rgba(255, 255, 255, 0)");
+		avatarAlphaFade.addColorStop(0, "rgba(255, 255, 255, 1)");
+		avatarAlphaFade.addColorStop(0.5, "rgba(255, 255, 255, 0.5)");
+		avatarAlphaFade.addColorStop(1, "rgba(255, 255, 255, 0)");
 
-        avatarFadeMaskCtx.fillStyle = "#ffffff";
-        avatarFadeMaskCtx.fillRect(
-            0,
-            0,
-            canvasConfig.avatar.fadeStartX,
-            canvasConfig.avatar.height,
-        );
+		avatarFadeMaskCtx.fillStyle = "#ffffff";
+		avatarFadeMaskCtx.fillRect(
+			0,
+			0,
+			canvasConfig.avatar.fadeStartX,
+			canvasConfig.avatar.height,
+		);
 
-        avatarFadeMaskCtx.fillStyle = avatarAlphaFade;
-        avatarFadeMaskCtx.fillRect(
-            canvasConfig.avatar.fadeStartX,
-            0,
-            canvasConfig.avatar.fadeEndX - canvasConfig.avatar.fadeStartX,
-            canvasConfig.avatar.height,
-        );
+		avatarFadeMaskCtx.fillStyle = avatarAlphaFade;
+		avatarFadeMaskCtx.fillRect(
+			canvasConfig.avatar.fadeStartX,
+			0,
+			canvasConfig.avatar.fadeEndX - canvasConfig.avatar.fadeStartX,
+			canvasConfig.avatar.height,
+		);
 
-        ctx.globalCompositeOperation = "destination-in";
-        ctx.drawImage(avatarFadeMask, 0, 0);
-        ctx.globalCompositeOperation = "source-over";
-    }
+		ctx.globalCompositeOperation = "destination-in";
+		ctx.drawImage(avatarFadeMask, 0, 0);
+		ctx.globalCompositeOperation = "source-over";
+	}
 
-    private getQuoteLayout(ctx: SKRSContext2D, text: string): QuoteLayout {
-        for (
-            let fontSize = canvasConfig.text.maxFontSize;
-            fontSize >= canvasConfig.text.minFontSize;
-            fontSize -= 2
-        ) {
-            const lineHeight = Math.round(
-                fontSize * canvasConfig.text.lineHeightMultiplier,
-            );
+	private getQuoteLayout(ctx: SKRSContext2D, text: string): QuoteLayout {
+		for (
+			let fontSize = canvasConfig.text.maxFontSize;
+			fontSize >= canvasConfig.text.minFontSize;
+			fontSize -= 2
+		) {
+			const lineHeight = Math.round(
+				fontSize * canvasConfig.text.lineHeightMultiplier,
+			);
 
-            ctx.font = this.getQuoteFont(fontSize);
+			ctx.font = this.getQuoteFont(fontSize);
 
-            const lines = getLines(ctx, text, canvasConfig.text.maxWidth);
-            const totalHeight = lines.length * lineHeight;
+			const lines = getLines(ctx, text, canvasConfig.text.maxWidth);
+			const totalHeight = lines.length * lineHeight;
 
-            if (totalHeight <= canvasConfig.text.maxHeight) {
-                return { fontSize, lineHeight, lines };
-            }
-        }
+			if (totalHeight <= canvasConfig.text.maxHeight) {
+				return { fontSize, lineHeight, lines };
+			}
+		}
 
-        return this.getFallbackQuoteLayout(ctx, text);
-    }
+		return this.getFallbackQuoteLayout(ctx, text);
+	}
 
-    private getFallbackQuoteLayout(
-        ctx: SKRSContext2D,
-        text: string,
-    ): QuoteLayout {
-        const fontSize = canvasConfig.text.minFontSize;
-        const lineHeight = Math.round(
-            fontSize * canvasConfig.text.lineHeightMultiplier,
-        );
+	private getFallbackQuoteLayout(
+		ctx: SKRSContext2D,
+		text: string,
+	): QuoteLayout {
+		const fontSize = canvasConfig.text.minFontSize;
+		const lineHeight = Math.round(
+			fontSize * canvasConfig.text.lineHeightMultiplier,
+		);
 
-        ctx.font = this.getQuoteFont(fontSize);
+		ctx.font = this.getQuoteFont(fontSize);
 
-        const lines = getLines(ctx, text, canvasConfig.text.maxWidth);
-        const maxLines = Math.max(
-            1,
-            Math.floor(canvasConfig.text.maxHeight / lineHeight),
-        );
-        const visibleLines = lines.slice(0, maxLines);
+		const lines = getLines(ctx, text, canvasConfig.text.maxWidth);
+		const maxLines = Math.max(
+			1,
+			Math.floor(canvasConfig.text.maxHeight / lineHeight),
+		);
+		const visibleLines = lines.slice(0, maxLines);
 
-        if (lines.length > maxLines) {
-            const lastLine = visibleLines[visibleLines.length - 1] ?? "";
-            let trimmedLine = lastLine;
+		if (lines.length > maxLines) {
+			const lastLine = visibleLines[visibleLines.length - 1] ?? "";
+			let trimmedLine = lastLine;
 
-            while (
-                trimmedLine.length > 0 &&
-                ctx.measureText(`${trimmedLine}...`).width > canvasConfig.text.maxWidth
-                ) {
-                trimmedLine = trimmedLine.slice(0, -1).trimEnd();
-            }
+			while (
+				trimmedLine.length > 0 &&
+				ctx.measureText(`${trimmedLine}...`).width > canvasConfig.text.maxWidth
+			) {
+				trimmedLine = trimmedLine.slice(0, -1).trimEnd();
+			}
 
-            visibleLines[visibleLines.length - 1] = `${trimmedLine}...`;
-        }
+			visibleLines[visibleLines.length - 1] = `${trimmedLine}...`;
+		}
 
-        return { fontSize, lineHeight, lines: visibleLines };
-    }
+		return { fontSize, lineHeight, lines: visibleLines };
+	}
 
-    private drawQuoteAndAuthor(ctx: SKRSContext2D, text: string, author: string) {
-        const { fontSize, lineHeight, lines } = this.getQuoteLayout(ctx, text);
-        const totalTextHeight = lines.length * lineHeight;
-        const totalBlockHeight =
-            totalTextHeight + canvasConfig.author.gap + canvasConfig.author.height;
+	private drawQuoteAndAuthor(ctx: SKRSContext2D, text: string, author: string) {
+		const { fontSize, lineHeight, lines } = this.getQuoteLayout(ctx, text);
+		const totalTextHeight = lines.length * lineHeight;
+		const totalBlockHeight =
+			totalTextHeight + canvasConfig.author.gap + canvasConfig.author.height;
 
-        let y = canvasConfig.text.centerY - totalBlockHeight / 2;
+		let y = canvasConfig.text.centerY - totalBlockHeight / 2;
 
-        y = Math.max(40, Math.min(y, canvasConfig.height - totalBlockHeight - 40));
+		y = Math.max(40, Math.min(y, canvasConfig.height - totalBlockHeight - 40));
 
-        ctx.font = this.getQuoteFont(fontSize);
-        ctx.fillStyle = canvasConfig.colors.text;
-        ctx.textAlign = "center" as CanvasTextAlign;
-        ctx.textBaseline = "top";
+		ctx.font = this.getQuoteFont(fontSize);
+		ctx.fillStyle = canvasConfig.colors.text;
+		ctx.textAlign = "center" as CanvasTextAlign;
+		ctx.textBaseline = "top";
 
-        for (const line of lines) {
-            ctx.fillText(line, canvasConfig.text.centerX, y);
-            y += lineHeight;
-        }
+		for (const line of lines) {
+			ctx.fillText(line, canvasConfig.text.centerX, y);
+			y += lineHeight;
+		}
 
-        this.drawAuthor(ctx, author, y + canvasConfig.author.gap);
-    }
+		this.drawAuthor(ctx, author, y + canvasConfig.author.gap);
+	}
 
-    private drawAuthor(ctx: SKRSContext2D, author: string, y: number) {
-        ctx.font = canvasConfig.author.font;
-        ctx.fillStyle = canvasConfig.colors.author;
-        ctx.textAlign = "center" as CanvasTextAlign;
-        ctx.textBaseline = "top";
+	private drawAuthor(ctx: SKRSContext2D, author: string, y: number) {
+		ctx.font = canvasConfig.author.font;
+		ctx.fillStyle = canvasConfig.colors.author;
+		ctx.textAlign = "center" as CanvasTextAlign;
+		ctx.textBaseline = "top";
 
-        const authorText = `— ${author}`;
-        const maxWidth = canvasConfig.text.maxWidth;
+		const authorText = `— ${author}`;
+		const maxWidth = canvasConfig.text.maxWidth;
 
-        if (ctx.measureText(authorText).width <= maxWidth) {
-            ctx.fillText(authorText, canvasConfig.text.centerX, y);
-            return;
-        }
+		if (ctx.measureText(authorText).width <= maxWidth) {
+			ctx.fillText(authorText, canvasConfig.text.centerX, y);
+			return;
+		}
 
-        let trimmedAuthor = authorText;
+		let trimmedAuthor = authorText;
 
-        while (
-            trimmedAuthor.length > 0 &&
-            ctx.measureText(`${trimmedAuthor}...`).width > maxWidth
-            ) {
-            trimmedAuthor = trimmedAuthor.slice(0, -1).trimEnd();
-        }
+		while (
+			trimmedAuthor.length > 0 &&
+			ctx.measureText(`${trimmedAuthor}...`).width > maxWidth
+		) {
+			trimmedAuthor = trimmedAuthor.slice(0, -1).trimEnd();
+		}
 
-        ctx.fillText(`${trimmedAuthor}...`, canvasConfig.text.centerX, y);
-    }
+		ctx.fillText(`${trimmedAuthor}...`, canvasConfig.text.centerX, y);
+	}
 }
 
 export async function run(
-    _client: SkyndalexClient,
-    interaction: MessageContextMenuCommandInteraction,
+	_client: SkyndalexClient,
+	interaction: MessageContextMenuCommandInteraction,
 ) {
-    const message = interaction.targetMessage;
-    const user = message.author;
-    const author =
-        interaction.guild?.members.cache.get(user.id)?.displayName ??
-        user.displayName ??
-        user.username;
+	const message = interaction.targetMessage;
+	const user = message.author;
+	const author =
+		interaction.guild?.members.cache.get(user.id)?.displayName ??
+		user.displayName ??
+		user.username;
 
-    await interaction.deferReply();
+	await interaction.deferReply();
 
-    const renderer = new QuoteImageRenderer();
-    const imageBuffer = await renderer.render({
-        message: message.content,
-        author,
-        user,
-    });
+	const renderer = new QuoteImageRenderer();
+	const imageBuffer = await renderer.render({
+		message: message.content,
+		author,
+		user,
+	});
 
-    const attachment = new AttachmentBuilder(imageBuffer, {
-        name: "quote.png",
-    });
+	const attachment = new AttachmentBuilder(imageBuffer, {
+		name: "quote.png",
+	});
 
-    await interaction.editReply({ files: [attachment] });
+	await interaction.editReply({ files: [attachment] });
 }
 
 export const data = new ContextMenuCommandBuilder()
-    .setName("Make It Quote")
-    .setType(ApplicationCommandType.Message);
+	.setName("Make It Quote")
+	.setType(ApplicationCommandType.Message);

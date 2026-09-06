@@ -110,7 +110,7 @@ export async function interactionCreate(
 	) {
 		try {
 			const contextMenu = client.components.get(interaction.commandName);
-			console.log("Context menu command", contextMenu)
+			console.log("Context menu command", contextMenu);
 			if (!contextMenu) {
 				if (interaction.replied || interaction.deferred) {
 					await interaction
@@ -144,5 +144,4 @@ export async function interactionCreate(
 
 		return;
 	}
-
 }

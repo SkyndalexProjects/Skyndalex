@@ -20,11 +20,7 @@ export async function extractCardsFromContent(
 				return 11;
 			}
 
-			if (
-				name.includes("J") ||
-				name.includes("Q") ||
-				name.includes("K")
-			) {
+			if (name.includes("J") || name.includes("Q") || name.includes("K")) {
 				return 10;
 			}
 

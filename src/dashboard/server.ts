@@ -185,15 +185,11 @@ export class DashboardServer {
 	private readonly publicOrigin: string;
 	private readonly apiPort: number;
 
-	constructor(
-		client: SkyndalexClient,
-		options: DashboardServerOptions = {},
-	) {
+	constructor(client: SkyndalexClient, options: DashboardServerOptions = {}) {
 		this.client = client;
 
 		this.authorizeGuildSubscription =
-			options.authorizeGuildSubscription ??
-			(() => false);
+			options.authorizeGuildSubscription ?? (() => false);
 
 		this.apiPort = parsePort(process.env.API_PORT);
 

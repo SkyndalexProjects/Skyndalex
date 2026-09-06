@@ -76,9 +76,7 @@ export class Loaders {
 				for (const file of contextMenuFiles) {
 					if (!file.endsWith(".js") && !file.endsWith(".ts")) continue;
 
-					const component = await import(
-						`${path}/${entry.name}/${file}`
-						);
+					const component = await import(`${path}/${entry.name}/${file}`);
 
 					components.set(component.data.name, component);
 				}

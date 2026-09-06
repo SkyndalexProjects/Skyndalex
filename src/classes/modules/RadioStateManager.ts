@@ -70,7 +70,10 @@ export class RadioStateManager {
 				const textChannel = await this.client.channels
 					.fetch(instance.textChannelId)
 					.catch(() => null);
-				if (textChannel && typeof (textChannel as TextChannel).send === "function") {
+				if (
+					textChannel &&
+					typeof (textChannel as TextChannel).send === "function"
+				) {
 					/*
 
 	const guildId = interaction.guild.id;

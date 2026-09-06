@@ -18,8 +18,7 @@ export async function deploy(client: SkyndalexClient) {
 				if (subcommand !== "index") continue;
 
 				const subcommands = commands.filter(
-					(_value, k) =>
-						k.startsWith(`${name}/`) && k !== `${name}/index`,
+					(_value, k) => k.startsWith(`${name}/`) && k !== `${name}/index`,
 				);
 
 				const command = cmd.data;
@@ -46,12 +45,9 @@ export async function deploy(client: SkyndalexClient) {
 					data.type === ApplicationCommandType.Message),
 		);
 
-	await client.rest.put(
-		`/applications/${client.user?.id}/commands`,
-		{
-			body: [...parsedCommands, ...contextMenus],
-		},
-	);
+	await client.rest.put(`/applications/${client.user?.id}/commands`, {
+		body: [...parsedCommands, ...contextMenus],
+	});
 
 	return commands;
 }
