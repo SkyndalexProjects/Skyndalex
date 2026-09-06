@@ -1,5 +1,6 @@
-import { SkyndalexClient } from "#classes";
 import dotenv from "dotenv";
+import { SkyndalexClient } from "#classes";
+
 dotenv.config();
 
 const botToken = process.env.BOT_TOKEN;

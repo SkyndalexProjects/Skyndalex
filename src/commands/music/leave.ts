@@ -1,15 +1,10 @@
 import {
 	type ChatInputCommandInteraction,
-	ChannelType,
 	ContainerBuilder,
 	MessageFlags,
-	SeparatorBuilder,
-	SeparatorSpacingSize,
 	SlashCommandBuilder,
 	TextDisplayBuilder,
-	Message,
 } from "discord.js";
-import { RadioProvider } from "@prisma/client";
 import type { SkyndalexClient } from "#classes";
 export async function run(
 	client: SkyndalexClient,
@@ -29,7 +24,7 @@ export async function run(
 		});
 	}
 
-	const getInstance = client.radioInstances.get(guildId);
+	const getInstance = client.radioStateManager.getInstance(guildId);
 
 	if (!getInstance) {
 		return await interaction.editReply({
@@ -37,10 +32,7 @@ export async function run(
 		});
 	}
 
-	client.radioInstances.delete(guildId);
-	client.dashboard?.broadcastRadioUpdate(guildId, "radio_updated");
-
-	await client.shoukaku.leaveVoiceChannel(interaction.guild.id);
+	await client.radioStateManager.deleteInstance(guildId);
 
 	const title = new TextDisplayBuilder().setContent(
 		"**Left & Radio instance deleted**\n\n-# Dashboard websocket informed successfully",

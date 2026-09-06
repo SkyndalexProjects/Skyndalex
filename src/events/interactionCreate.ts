@@ -68,7 +68,12 @@ export async function interactionCreate(
 	}
 	if (interaction.isMessageComponent()) {
 		try {
-			const component = client.components.get(interaction.customId);
+			const [componentId, ...args] = interaction.customId.split("-");
+
+			const component = client.components.get(componentId);
+			console.log("Component:", componentId);
+			console.log("Args:", args);
+
 			if (!component) {
 				if (interaction.replied || interaction.deferred) {
 					await interaction
@@ -85,26 +90,18 @@ export async function interactionCreate(
 						})
 						.catch(console.error);
 				}
-			} else {
-				await component.run(client, interaction);
+
+				return;
 			}
+
+			await component.run(client, interaction, args);
 		} catch (error) {
 			console.error(error);
-			if (interaction.replied || interaction.deferred) {
-				await interaction
-					.followUp({
-						content: "An error occurred while processing the component",
-						ephemeral: true,
-					})
-					.catch(console.error);
-			} else {
-				await interaction
-					.reply({
-						content: "An error occurred while processing the component",
-						ephemeral: true,
-					})
-					.catch(console.error);
-			}
+			await client.errorHandling.handleComponentError(
+				client,
+				error as Error,
+				interaction,
+			);
 		}
 	}
 }

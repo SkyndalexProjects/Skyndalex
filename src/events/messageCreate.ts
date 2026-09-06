@@ -1,4 +1,4 @@
-import type { SkyndalexClient } from "#classes";
+import process from "node:process";
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -8,7 +8,7 @@ import {
 	MessageFlags,
 	TextDisplayBuilder,
 } from "discord.js";
-import process from "node:process";
+import type { SkyndalexClient } from "#classes";
 import type { HuggingfaceRouterData } from "#types";
 
 const HUGGINGFACE_CHAT_COMPLETIONS_URL =

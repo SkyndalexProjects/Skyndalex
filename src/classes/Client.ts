@@ -1,25 +1,32 @@
 import "dotenv/config";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { GlobalFonts } from "@napi-rs/canvas";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@prisma/client";
 import {
 	ActivityType,
 	Client,
 	Collection,
 	GatewayIntentBits,
+	Options,
 	Partials,
 } from "discord.js";
-import { Loaders, Logger } from "#classes";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "url";
-import { PrismaClient } from "@prisma/client";
-import { DashboardServer } from "../dashboard/server.js";
-import { BlackjackState, Command, Component } from "../types/index.js";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
-import { EconomyManager, RadioPlayer } from "#modules";
-import { Connectors, Shoukaku } from "shoukaku";
-import { deploy } from "#utils";
-import { GlobalFonts } from "@napi-rs/canvas";
-import { PrismaPg } from "@prisma/adapter-pg";
 import { createClient, type RedisClientType } from "redis";
+import { Connectors, Shoukaku } from "shoukaku";
+import { Loaders } from "#classes";
+import { EconomyManager, RadioPlayer, RadioStateManager } from "#modules";
+import { deploy } from "#utils";
+import { DashboardServer } from "../dashboard/server.js";
+import type {
+	BlackjackState,
+	Command,
+	Component,
+	RadioInstanceState,
+} from "../types/index.js";
+import { ErrorHandling } from "./ErrorHandling.js";
 
 const Nodes = [
 	{
@@ -32,13 +39,13 @@ console.log("Nodes", Nodes);
 const adapter = new PrismaPg({
 	connectionString: process.env.DATABASE_URL,
 });
-interface radioStatus {
-	requestedBy: string;
-	radioStation: string;
-	resourceUrl: string;
-	voiceChannelId: string;
-	executionDate: number;
-	status: "playing" | "stopped" | "switched";
+declare module "discord.js" {
+	interface Client {
+		prisma: PrismaClient;
+		radio: RadioPlayer;
+		economy: EconomyManager;
+		radioStateManager: RadioStateManager;
+	}
 }
 export class SkyndalexClient extends Client {
 	loader = new Loaders();
@@ -50,8 +57,15 @@ export class SkyndalexClient extends Client {
 	shoukaku!: Shoukaku;
 	radio = new RadioPlayer(this);
 	economy = new EconomyManager(this);
-	radioInstances = new Map<string, radioStatus>();
+	radioStateManager = new RadioStateManager(this);
+	radioInstances = new Map<string, RadioInstanceState>();
 	blackjackGames = new Map<string, BlackjackState>();
+	voiceSessions = new Map<
+		string,
+		{ guildId: string; channelId: string; joinedAt: number }
+	>();
+	voiceTotals = new Map<string, number>();
+	errorHandling = new ErrorHandling();
 	i18n = i18next;
 
 	constructor() {
@@ -68,10 +82,25 @@ export class SkyndalexClient extends Client {
 			presence: {
 				activities: [
 					{
-						name: `Version: ${process.env.npm_package_version} | discord.skyndalex.com`,
+						name: `🎉 https://dashboard.skyndalex.com`,
 						type: ActivityType.Playing,
 					},
 				],
+			},
+			sweepers: {
+				...Options.DefaultSweeperSettings,
+				messages: {
+					interval: 3600,
+					lifetime: 3600,
+				},
+				threads: {
+					interval: 3600,
+					lifetime: 3600,
+				},
+				users: {
+					interval: 3_600,
+					filter: () => (user) => user.bot && user.id !== user.client.user.id,
+				},
 			},
 		});
 	}
@@ -96,6 +125,10 @@ export class SkyndalexClient extends Client {
 			"poppins",
 		);
 
+		GlobalFonts.registerFromPath(
+			join(process.cwd(), "assets", "fonts", "RougeScript-Regular.ttf"),
+			"RougeScript",
+		);
 		await this.i18n.use(Backend).init({
 			fallbackLng: "en-US",
 			ns: ["responses", "commands"],
@@ -138,7 +171,7 @@ export class SkyndalexClient extends Client {
 		this.components = await this.loader.loadComponents("../components");
 
 		this.redis = createClient({
-			url: process.env.REDIS_URL
+			url: process.env.REDIS_URL,
 		});
 
 		this.redis.on("connect", () => {

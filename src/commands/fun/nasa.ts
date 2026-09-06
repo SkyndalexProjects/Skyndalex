@@ -1,9 +1,9 @@
 import {
 	type ChatInputCommandInteraction,
-	SlashCommandBuilder,
+	ContainerBuilder,
 	MediaGalleryBuilder,
 	MessageFlags,
-	ContainerBuilder,
+	SlashCommandBuilder,
 	TextDisplayBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
