@@ -2,8 +2,8 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 
 const successChance = 0.75;
 const cooldown = 24 * 60 * 60 * 1000;

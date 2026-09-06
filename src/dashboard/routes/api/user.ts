@@ -1,7 +1,7 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
-import { auth } from "../../../auth.js";
-import type { DiscordUser } from "#types";
 import console from "node:console";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import type { DiscordUser } from "#types";
+import { auth } from "../../../auth.js";
 export default async function userRoutes(fastify: FastifyInstance) {
 	fastify.get("/user", async (request: FastifyRequest, reply: FastifyReply) => {
 		try {

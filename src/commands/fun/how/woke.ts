@@ -168,7 +168,7 @@ function getWokeLevel(count: {
 }
 
 export async function run(
-	client: SkyndalexClient,
+	_client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
 	const steamid = interaction.options.getString("steamid");
