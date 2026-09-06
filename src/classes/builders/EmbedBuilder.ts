@@ -1,7 +1,7 @@
 import {
-	type APIEmbedField,
 	type ColorResolvable,
 	EmbedBuilder as embedBuilder,
+	type RestOrArray,
 } from "discord.js";
 import type { LocaleFieldOptions } from "../../types/index.js";
 import type { SkyndalexClient } from "../Client.js";
@@ -66,7 +66,8 @@ export class EmbedBuilder extends embedBuilder {
 	setColor(color: ColorResolvable): this {
 		return super.setColor(color);
 	}
-	addFields(fields: APIEmbedField[]) {
-		return super.addFields(fields.map((field) => this.mapField(field)));
+	addFields(...fields: RestOrArray<LocaleFieldOptions>): this {
+		const fieldsArray = Array.isArray(fields[0]) ? fields[0] : fields;
+		return super.addFields(fieldsArray.map((field) => this.mapField(field)));
 	}
 }
