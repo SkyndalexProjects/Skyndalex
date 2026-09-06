@@ -1,6 +1,6 @@
-import type { SkyndalexClient } from "#classes";
-import { readdir } from "fs/promises";
+import { readdir } from "node:fs/promises";
 import { Collection } from "discord.js";
+import type { SkyndalexClient } from "#classes";
 import type { Command, Component } from "../types/index.js";
 
 export class Loaders {
