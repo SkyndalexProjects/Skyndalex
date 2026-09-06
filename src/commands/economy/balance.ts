@@ -2,8 +2,8 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 
 export async function run(
 	client: SkyndalexClient,
@@ -14,8 +14,8 @@ export async function run(
 		where: { userId: target?.id },
 	});
 
-	const wallet = economy?.wallet ?? 0;
-	const bank = economy?.bank ?? 0;
+	const wallet = Number(economy?.wallet ?? 0);
+	const bank = Number(economy?.bank ?? 0);
 	const total = wallet + bank;
 
 	const embed = new EmbedBuilder(client, interaction.locale)

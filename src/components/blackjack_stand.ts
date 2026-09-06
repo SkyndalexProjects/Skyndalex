@@ -1,17 +1,17 @@
-import { SkyndalexClient } from "../classes/index.js";
 import {
+	type ActionRow,
 	ActionRowBuilder,
 	ButtonBuilder,
-	EmbedBuilder,
-	MessageComponentInteraction,
-	type ActionRow,
 	type ButtonComponent,
+	EmbedBuilder,
+	type MessageComponentInteraction,
 } from "discord.js";
 import {
 	calculateHandValue,
 	evaluateBlackjackOutcome,
 	pickRandomCard,
 } from "#utils";
+import type { SkyndalexClient } from "../classes/index.js";
 
 export async function run(
 	client: SkyndalexClient,

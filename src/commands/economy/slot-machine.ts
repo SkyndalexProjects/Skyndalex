@@ -7,8 +7,8 @@ import {
 	SlashCommandBuilder,
 	TextDisplayBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 
 const symbols = [
 	{ emoji: "🍒", weight: 30, multiplier: 2, name: "Cherry" },
@@ -132,6 +132,17 @@ export async function run(
 			.setRawDescription("❌ Please enter a valid bet amount greater than 0!")
 			.setColor("Red");
 		return interaction.reply({ embeds: [embed], ephemeral: true });
+	}
+	const economy = await client.prisma.economy.findUnique({
+		where: { userId: interaction.user.id },
+	});
+	const bank = economy?.bank ?? 0;
+
+	if (bank <= 0) {
+		return interaction.reply({
+			content: "> You don't have any money in your bank to withdraw.",
+			flags: MessageFlags.Ephemeral,
+		});
 	}
 
 	const grid = generateGrid();

@@ -5,7 +5,7 @@ import {
 import type { SkyndalexClient } from "../../../classes/index.js";
 
 export async function run(
-	client: SkyndalexClient,
+	_client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
 	interaction.reply("item create");

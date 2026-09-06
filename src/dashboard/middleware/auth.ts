@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from "fastify";
+import type { FastifyReply, FastifyRequest } from "fastify";
 import { auth } from "../../auth.js";
 
 export async function requireGuildPermission(

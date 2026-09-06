@@ -1,9 +1,9 @@
-import type { SkyndalexClient } from "#classes";
 import {
 	type APIMessageComponentEmoji,
 	type ButtonStyle,
 	ButtonBuilder as buttonBuilder,
 } from "discord.js";
+import type { SkyndalexClient } from "#classes";
 export class ButtonBuilder extends buttonBuilder {
 	locale: string;
 	constructor(

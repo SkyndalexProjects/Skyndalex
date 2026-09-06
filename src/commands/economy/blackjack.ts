@@ -6,7 +6,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { calculateHandValue, blackjackInit } from "#utils";
+import { blackjackInit, calculateHandValue } from "#utils";
 import { EmbedBuilder } from "../../classes/builders/index.js";
 
 export async function run(
@@ -14,6 +14,35 @@ export async function run(
 	interaction: ChatInputCommandInteraction,
 ) {
 	const bet = Number(interaction.options.getString("bet") || "0");
+	if (!Number.isSafeInteger(bet) || bet <= 0) {
+		return interaction.reply({
+			content:
+				"```ansi\n> \u001b[2;33m\u001b[2;40mPlease enter a valid bet amount greater than 0.\u001b[0m\n```",
+			ephemeral: true,
+		});
+	}
+	if (client.blackjackGames.has(interaction.user.id)) {
+		return interaction.reply({
+			content:
+				"```ansi\n> \u001b[2;33m\u001b[2;40mYou already have an active Blackjack game.\u001b[0m\n```",
+			ephemeral: true,
+		});
+	}
+	const economy = await client.prisma.economy.findUnique({
+		where: { userId: interaction.user.id },
+	});
+
+	const wallet = economy?.wallet ?? 0;
+
+	if (wallet < bet) {
+		return interaction.reply({
+			content:
+				"```ansi\n" +
+				`⚠ | \u001b[2;33m\u001b[2;40mYou don't have enough money to start this game.\u001b[0m\n` +
+				`\`\`\`\n> ${wallet} < ${bet}`,
+			ephemeral: true,
+		});
+	}
 
 	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 		new ButtonBuilder()

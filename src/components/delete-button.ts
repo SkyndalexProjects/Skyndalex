@@ -1,5 +1,5 @@
-import { SkyndalexClient } from "../classes/index.js";
-import { MessageComponentInteraction } from "discord.js";
+import type { MessageComponentInteraction } from "discord.js";
+import type { SkyndalexClient } from "../classes/index.js";
 
 export async function run(
 	_client: SkyndalexClient,

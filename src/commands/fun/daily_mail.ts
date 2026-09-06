@@ -1,18 +1,18 @@
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { type CanvasTextAlign, createCanvas, loadImage } from "@napi-rs/canvas";
 import {
 	AttachmentBuilder,
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { CanvasTextAlign, createCanvas, loadImage } from "@napi-rs/canvas";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
 import { getLines } from "../../utils/getLines.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export async function run(
-	client: SkyndalexClient,
+	_client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
 	await interaction.deferReply();

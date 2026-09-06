@@ -3,14 +3,23 @@ import {
 	PermissionFlagsBits,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction,
 ) {
 	const target = interaction.options.getUser("target");
+
+	console.log("target.bot", target?.bot);
+	if (target?.bot) {
+		return interaction.reply({
+			content:
+				"```ansi\n❌ | \u001b[2;31m\u001b[2;40mCannot add money to the bot\u001b[0m\n```",
+		});
+	}
+
 	if (!target) return;
 
 	const amount = Number(interaction.options.getString("amount"));
@@ -18,7 +27,7 @@ export async function run(
 	if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
 		return interaction.reply({
 			content:
-				"> You need the **Manage Guild** permission to use this command.",
+				"```ansi\n❌ | \u001b[2;31m\u001b[2;40mYou need the Manage Guild permission to use this command.\u001b[0m\n```",
 		});
 	} else {
 		await client.economy.setMoney(client, target?.id, +amount);
