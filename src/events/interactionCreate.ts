@@ -104,4 +104,45 @@ export async function interactionCreate(
 			);
 		}
 	}
+	if (
+		interaction.isUserContextMenuCommand() ||
+		interaction.isMessageContextMenuCommand()
+	) {
+		try {
+			const contextMenu = client.components.get(interaction.commandName);
+			console.log("Context menu command", contextMenu)
+			if (!contextMenu) {
+				if (interaction.replied || interaction.deferred) {
+					await interaction
+						.followUp({
+							content: "Context menu command not found",
+							ephemeral: true,
+						})
+						.catch(console.error);
+				} else {
+					await interaction
+						.reply({
+							content: "Context menu command not found",
+							ephemeral: true,
+						})
+						.catch(console.error);
+				}
+
+				return;
+			}
+
+			await contextMenu.run(client, interaction, []);
+		} catch (error) {
+			console.error(error);
+
+			await client.errorHandling.handleComponentError(
+				client,
+				error as Error,
+				interaction,
+			);
+		}
+
+		return;
+	}
+
 }
