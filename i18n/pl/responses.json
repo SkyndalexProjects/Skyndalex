@@ -2,7 +2,8 @@
   "SYSTEM_ERROR_SENT": "> ❌ | An error occurred while executing the command. The error has been sent to the bot administrators. Please try again later.\n\n-# ➡️ | You may consider to join our 🔗 [support](https://discord.gg/SVN6HXCKT3) and tell us about it!",
   "RADIO_FAVORITE_ADD": "Add to favorites",
   "RADIO_STOP": "Stop",
-
+  "VOLUME_SET_SUCCESS": "> 🔊 | Ustawiono głośność na `{{volume}}%`. Poczekaj chwilę, aż zmiana zostanie zastosowana.",
+  "VOLUME_NO_ACTIVE_PLAYER": "> ❌ | Player jest nieaktywny.",
   "economy": {
     "work": {
       "success": [
@@ -220,6 +221,25 @@
         "> Impreza, na której tańczyłeś, odmówiła zapłaty. Straciłeś `${{amount}}`!",
         "> Twój sugar daddy cię porzucił. Straciłeś `${{amount}}`!"
       ]
+    }
+  },
+  "info": {
+    "cache_stats_title": "### 📊 :: **Statystyki**",
+    "cache_stats": "🏛️ | Serwery: **{{guilds}}**\n👥 | Użytkownicy: **{{users}}**\n📢 | Kanały: **{{channels}}**\n😊 | Emotikony: **{{emojis}}**",
+    "system_stats_title": "### ⚙️ :: **Zasoby Systemowe**",
+    "system_stats": "- Pamięć Procesu:\n  Heap: `{{heapUsed}}`/`{{heapTotal}}` MB\n  {{heapBar}}\n  RSS: `{{rss}}` MB | Zewnętrzna: `{{external}}` MB\n\n- Pamięć Maszyny:\n  Użyta: `{{usedMem}}`/`{{totalMem}}` GB\n  {{memBar}}\n  Dostępna: `{{freeMem}}` GB\n\n- Czas Działania Bota: {{botUptime}}\n- Czas Działania Serwera: {{serverUptime}}",
+    "packages_version_title": "### 📦 :: Wersje",
+    "packages_version": "🔷 | Discord.js: | `v{{discordjs}}`\n💚 | Node.js: | `v{{nodejs}}`\n🖱️ | System: | `{{osName}} {{osVersion}}`",
+    "buttons": {
+      "add": "📥 Dodaj Bota",
+      "website": "🌐 Strona",
+      "dashboard": "📊 Panel"
+    },
+    "ping": {
+      "title": "🏓 Pong!",
+      "roundtrip_latency": "📡 Opóźnienie Discorda",
+      "websocket_latency": "🌐 Opóźnienie WebSocketa",
+      "status": "📶 Stan"
     }
   }
 }

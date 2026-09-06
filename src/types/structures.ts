@@ -1,7 +1,7 @@
+import type { RadioProvider } from "@prisma/client";
 import type {
 	Interaction,
 	MessageComponentInteraction,
-	ModalSubmitInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
@@ -52,6 +52,7 @@ export interface Component {
 	customId: string;
 	run: (
 		client: SkyndalexClient,
+		interaction1: Interaction<"cached">,
 		interaction: MessageComponentInteraction,
 	) => Promise<void>;
 }
@@ -72,4 +73,15 @@ export interface BlackjackState {
 	playerCards: Card[];
 	dealerCards: Card[];
 	bet: number;
+}
+export interface RadioInstanceState {
+	requestedBy: string;
+	radioStation: string;
+	stationSource: string;
+	resourceUrl: string;
+	voiceChannelId: string;
+	executionDate: number;
+	provider: RadioProvider;
+	status: "playing" | "stopped" | "switched";
+	textChannelId: string;
 }

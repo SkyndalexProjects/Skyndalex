@@ -2,7 +2,6 @@
   "SYSTEM_ERROR_SENT": "> ❌ | An error occurred while executing the command. The error has been sent to the bot administrators. Please try again later.\n\n-# ➡️ | You may consider to join our 🔗 [support](https://discord.gg/SVN6HXCKT3) and tell us about it!",
   "RADIO_FAVORITE_ADD": "Add to favorites",
   "RADIO_STOP": "Stop",
-
   "economy": {
     "work": {
       "success": [
@@ -220,6 +219,25 @@
         "> The party you danced at refused to pay. You lost `${{amount}}`!",
         "> Your sugar daddy cut you off. You lost `${{amount}}`!"
       ]
+    }
+  },
+  "info": {
+    "cache_stats_title": "### 📊 :: **Stats**",
+    "cache_stats": "🏛️ | Guilds: **{{guilds}}**\n👥 | Users: **{{users}}**\n📢 | Channels: **{{channels}}**\n😊 | Emojis: **{{emojis}}**",
+    "system_stats_title": "### ⚙️ :: **System Resources**",
+    "system_stats": "- Process Memory:\n  Heap: `{{heapUsed}}`/`{{heapTotal}}` MB\n  {{heapBar}}\n  RSS: `{{rss}}` MB | External: `{{external}}` MB\n\n- Machine Memory:\n  Used: `{{usedMem}}`/`{{totalMem}}` GB\n  {{memBar}}\n  Available: `{{freeMem}}` GB\n\n- Bot Uptime: {{botUptime}}\n- Server Uptime: {{serverUptime}}",
+    "packages_version_title": "### 📦 :: Versions",
+    "packages_version": "🔷 | Discord.js: | `v{{discordjs}}`\n💚 | Node.js: | `v{{nodejs}}`\n🖱️ | OS: | `{{osName}} {{osVersion}}`",
+    "buttons": {
+      "add": "📥 Add Bot",
+      "website": "🌐 Website",
+      "dashboard": "📊 Dashboard"
+    },
+    "ping": {
+      "title": "🏓 Pong!",
+      "roundtrip_latency": "📡 Roundtrip Latency",
+      "websocket_latency": "🌐 WebSocket Latency",
+      "status": "📶 Status"
     }
   },
   "fun": {

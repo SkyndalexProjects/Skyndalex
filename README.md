@@ -22,6 +22,15 @@ sudo docker build --tag skyndalex:preview .
 sudo docker compose -f docker-compose:preview.yml up
 ```
 
+# Containers
+
+- Lavalink
+
+`docker run -d --name lavalink -p 2333:2333 -e SERVER_PORT=2333 -e LAVALINK_SERVER_PASSWORD=yourserverpassword ghcr.io/lavalink-devs/lavalink:4-alpine`
+
+- Redis
+
+`docker run -d --name redis -p 2136:6379 redis:latest`
 ## Links
 
 - [skyndalex.com](https://skyndalex.com)
