@@ -95,15 +95,81 @@ model Account {
 }
 
 model Economy {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  bank      Int?     @default(0)
-  wallet    Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String    @id @default(cuid())
+  userId         String    @unique
+  wallet         BigInt    @default(0)
+  bank           BigInt    @default(0)
+  xp             BigInt    @default(0)
+  level          BigInt    @default(1)
+  dailyStreak    BigInt    @default(0)
+  lastDailyAt    DateTime?
+  lastActiveAt   DateTime?
+  dailyClaimedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@index([userId])
+  @@index([level])
+  @@index([xp])
   @@map("economy")
+}
+
+model EconomyTransaction {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    BigInt
+  type      String
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([type])
+  @@map("economy_transactions")
+}
+
+enum CollectibleStatus {
+  PENDING
+  ACTIVE
+  SOLD
+  TRADED
+  BURNED
+  EXPIRED
+}
+
+enum CollectibleRarity {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+model Collectible {
+  id     String @id @default(cuid())
+  userId String
+
+  imageUrl String
+  prompt   String?
+
+  rarity CollectibleRarity @default(COMMON)
+  value  BigInt
+
+  attack  BigInt?
+  defense BigInt?
+  luck    BigInt?
+
+  status    CollectibleStatus @default(PENDING)
+  expiresAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([status])
+  @@index([expiresAt])
+  @@index([rarity])
+  @@index([value])
+  @@map("collectibles")
 }
 
 model Verification {
@@ -129,4 +195,18 @@ model RadioRecentPlays {
   provider    RadioProvider
   stationName String
   playedAt    DateTime      @default(now())
+}
+
+model RadioFavorites {
+  id            Int           @id @default(autoincrement())
+  userId        String
+  provider      RadioProvider
+  stationName   String
+  stationSource String
+  resourceUrl   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([userId, provider, stationSource])
+  @@index([userId])
 }
