@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { requireGuildPermission } from "../../../../middleware/auth.js";
 
 const equalizerPresets = [
@@ -208,7 +208,7 @@ export default async function player(fastify: FastifyInstance) {
 
 			request.client.dashboard?.broadcastRadioUpdate(guildId, "radio_updated");
 
-			return reply.send(request.client.radioInstances.get(guildId));
+			return reply.send(request.client.radioStateManager.getInstance(guildId));
 		},
 	);
 
@@ -263,7 +263,7 @@ export default async function player(fastify: FastifyInstance) {
 			request: FastifyRequest<{ Params: { id: string } }>,
 			reply: FastifyReply,
 		) => {
-			const playerInstance = request.client.radioInstances.get(
+			const playerInstance = request.client.radioStateManager.getInstance(
 				request.params.id,
 			);
 			reply.send(playerInstance ?? null);

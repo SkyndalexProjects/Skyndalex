@@ -1,6 +1,7 @@
+import { RadioProvider } from "@prisma/client";
 import {
-	type ChatInputCommandInteraction,
 	ChannelType,
+	type ChatInputCommandInteraction,
 	ContainerBuilder,
 	MessageFlags,
 	SeparatorBuilder,
@@ -8,8 +9,8 @@ import {
 	SlashCommandBuilder,
 	TextDisplayBuilder,
 } from "discord.js";
-import { RadioProvider } from "@prisma/client";
 import type { SkyndalexClient } from "#classes";
+
 export async function run(
 	client: SkyndalexClient,
 	interaction: ChatInputCommandInteraction<"cached">,
@@ -19,9 +20,9 @@ export async function run(
 	const channel = interaction.options.getChannel("channel");
 	const guildId = interaction.guild.id;
 
-	const instanceByGuild = client.radioInstances.get(guildId);
+	const instanceByGuild = client.radioStateManager.getInstance(guildId);
 	const instanceByChannel = channel
-		? client.radioInstances.get(`${guildId}-${channel.id}`)
+		? client.radioStateManager.getInstance(`${guildId}-${channel.id}`)
 		: undefined;
 
 	const instance = instanceByChannel ?? instanceByGuild;
@@ -38,22 +39,32 @@ export async function run(
 		});
 	}
 
+	let song: { streamTitle?: string; icyName?: string };
+	try {
+		song = await client.radio.fetchCurrentlyPlayingSong(instance.resourceUrl);
+	} catch (error) {
+		console.error("Failed to fetch currently playing song", error);
+		song = {};
+	}
+
+	const streamTitle = song.streamTitle ?? "Unknown track";
+
+	const statusEmoji = instance.status === "playing" ? "▶️" : "⏯️";
 	const statusText =
-		instance.status === "playing"
-			? "▶️ Playing"
-			: `⏯️ | State: ${instance.status}`;
+		instance.status === "playing" ? "Playing" : `State: ${instance.status}`;
+
 	const provider = instance.resourceUrl?.includes("radio.garden")
 		? RadioProvider.RADIO_GARDEN
 		: RadioProvider.RADIO_BROWSER;
 
-	const stationName = instance.radioStation ?? "Unknown";
+	const stationName = instance.radioStation ?? song.icyName ?? "Unknown";
 	const executionDate = instance.executionDate ?? Date.now();
 	const requestedBy = instance.requestedBy;
 
 	const title = new TextDisplayBuilder().setContent("**Now Playing**");
 
 	const desc = new TextDisplayBuilder().setContent(
-		`⏯️ | State: ${statusText}\n` +
+		`${statusEmoji} | ${statusText}: **\`${streamTitle}\`**\n` +
 			`📻 | Station: \`${stationName}\`\n` +
 			`🔊 | Voice Channel: <#${instance.voiceChannelId}>\n` +
 			`💾 | Provider: \`${provider}\`\n` +
@@ -65,9 +76,11 @@ export async function run(
 		"-# 🔗 | Tip: You can manage the radio playback via Dashboard\n" +
 			"-# ⚠️ | Some stations might have inaccurate metadata or might not work as expected.",
 	);
+
 	const separator = new SeparatorBuilder().setSpacing(
 		SeparatorSpacingSize.Large,
 	);
+
 	const container = new ContainerBuilder()
 		.addTextDisplayComponents(title, desc)
 		.addSeparatorComponents(separator)
