@@ -1,17 +1,16 @@
-import { SkyndalexClient } from "../classes/index.js";
+import process from "node:process";
+import { Client } from "@gradio/client";
 import {
 	ActionRowBuilder,
 	AttachmentBuilder,
 	ButtonBuilder,
 	ButtonStyle,
 	ContainerBuilder,
-	MessageComponentInteraction,
+	type MessageComponentInteraction,
 	MessageFlags,
 	TextDisplayBuilder,
 } from "discord.js";
-import { Client } from "@gradio/client";
-import process from "node:process";
-import { handleError } from "../utils/index.js";
+import type { SkyndalexClient } from "../classes/index.js";
 
 export async function run(
 	client: SkyndalexClient,

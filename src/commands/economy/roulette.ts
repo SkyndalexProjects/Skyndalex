@@ -9,6 +9,7 @@ import {
 	TextDisplayBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
+
 //TODO: remove multipliers (or make them better)
 
 const RED_NUMBERS = [
@@ -55,7 +56,11 @@ function checkWin(
 	let won = false;
 	let multiplier = 0;
 
-	if (!isNaN(Number(space)) && Number(space) >= 0 && Number(space) <= 36) {
+	if (
+		!Number.isNaN(Number(space)) &&
+		Number(space) >= 0 &&
+		Number(space) <= 36
+	) {
 		if (Number(space) === result) {
 			won = true;
 			multiplier = 36;
@@ -152,7 +157,7 @@ function buildBettingContainer(
 function buildResultsContainer(
 	result: number,
 	resultColor: string,
-	resultEmoji: string,
+	_resultEmoji: string,
 	winners: string[],
 	losers: string[],
 	playerCount: number,
@@ -203,10 +208,22 @@ export async function run(
 	const username = interaction.user.username;
 
 	const existingGame = activeGames.get(channelId);
+	const economy = await client.prisma.economy.findUnique({
+		where: { userId },
+	});
+	const bank = economy?.bank ?? 0;
+
+	if (bank <= 0) {
+		return interaction.reply({
+			content: "> You don't have any money in your bank to withdraw.",
+			flags: MessageFlags.Ephemeral,
+		});
+	}
 
 	if (existingGame) {
 		if (existingGame.players.has(userId)) {
-			const previousBet = existingGame.players.get(userId)!.bet;
+			const previousBet = existingGame.players.get(userId)?.bet;
+
 			await client.economy.setMoney(client, userId, previousBet);
 			await client.economy.setMoney(client, userId, -bet);
 
@@ -325,7 +342,7 @@ export async function run(
 				components: [resultsContainer],
 				flags: MessageFlags.IsComponentsV2,
 			});
-		} catch (e) {
+		} catch (_e) {
 			if (interaction.channel?.isSendable()) {
 				await interaction.channel.send({
 					components: [resultsContainer],

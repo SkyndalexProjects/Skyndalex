@@ -3,6 +3,7 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
+
 interface BingImage {
 	startdate: string;
 	fullstartdate: string;

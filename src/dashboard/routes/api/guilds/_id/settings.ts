@@ -1,6 +1,6 @@
-import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
+import type { Guild } from "discord.js";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { requireGuildPermission } from "../../../../middleware/auth.js";
-import { Guild } from "discord.js";
 
 type SettingsBody = {
 	autoRole?: string | null;
@@ -224,7 +224,8 @@ export default async function guildSettingsRoute(fastify: FastifyInstance) {
 		) => {
 			const guildId = request.params.id;
 			const body = request.body;
-			const guild = request.guild!;
+			const guild = request.guild;
+			if (!guild) return reply.code(500).send({ error: "Guild not found" });
 
 			try {
 				const validationIssues = await validateSettingsPayload(
