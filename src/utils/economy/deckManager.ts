@@ -27,7 +27,7 @@ export async function buildDeck(client: SkyndalexClient): Promise<Card[]> {
 			let value = 0;
 			if (rank === "A") value = 11;
 			else if (["J", "Q", "K"].includes(rank)) value = 10;
-			else value = parseInt(rank);
+			else value = parseInt(rank, 10);
 
 			return {
 				id: emoji.id,
@@ -52,10 +52,10 @@ export function pickRandomCard(deck: Card[]): Card {
 
 export function calculateHandValue(cards: Card[]): number {
 	let value = 0;
-	let aces = 0;
+	let _aces = 0;
 	for (const card of cards) {
 		value += card.value;
-		if (card.value === 11) aces += 1;
+		if (card.value === 11) _aces += 1;
 	}
 	return value;
 }

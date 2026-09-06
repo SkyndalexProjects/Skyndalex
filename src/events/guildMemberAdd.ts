@@ -1,10 +1,9 @@
-import type { SkyndalexClient } from "#classes";
 import {
 	ContainerBuilder,
-	GuildMember,
-	MessageFlags,
+	type GuildMember,
 	TextDisplayBuilder,
 } from "discord.js";
+import type { SkyndalexClient } from "#classes";
 
 export async function guildMemberAdd(
 	client: SkyndalexClient,
@@ -18,7 +17,7 @@ export async function guildMemberAdd(
 	const welcomeChannel = member.guild.channels.cache.get(
 		settings.welcomeChannel,
 	);
-	if (!welcomeChannel || !welcomeChannel.isTextBased()) return;
+	if (!welcomeChannel?.isTextBased()) return;
 
 	const title = new TextDisplayBuilder().setContent(
 		`### Welcome to the server, ${member.user.username}!`,

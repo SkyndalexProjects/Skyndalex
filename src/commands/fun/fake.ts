@@ -1,16 +1,16 @@
 import {
+	type CanvasTextAlign,
+	createCanvas,
+	loadImage,
+	type SKRSContext2D,
+} from "@napi-rs/canvas";
+import {
 	AttachmentBuilder,
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
-	User,
+	type User,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import {
-	CanvasTextAlign,
-	createCanvas,
-	loadImage,
-	SKRSContext2D,
-} from "@napi-rs/canvas";
 import { getLines } from "#utils";
 
 const canvasConfig = {
@@ -61,12 +61,12 @@ function calculateDimensions(text: string) {
 	let maxWidth = 0;
 
 	for (const word of words) {
-		const testLine = currentLine + word + " ";
+		const testLine = `${currentLine + word} `;
 		const width = ctx.measureText(testLine).width;
 
 		if (width > canvasConfig.maxWidth - canvasConfig.text.leftX) {
 			maxWidth = Math.max(maxWidth, ctx.measureText(currentLine).width);
-			currentLine = word + " ";
+			currentLine = `${word} `;
 		} else {
 			currentLine = testLine;
 		}

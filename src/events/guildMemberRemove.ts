@@ -1,10 +1,9 @@
-import type { SkyndalexClient } from "#classes";
 import {
 	ContainerBuilder,
-	GuildMember,
-	MessageFlags,
+	type GuildMember,
 	TextDisplayBuilder,
 } from "discord.js";
+import type { SkyndalexClient } from "#classes";
 
 export async function guildMemberRemove(
 	client: SkyndalexClient,
@@ -18,7 +17,7 @@ export async function guildMemberRemove(
 	const goodbyeChannel = member.guild.channels.cache.get(
 		settings.goodbyeChannel,
 	);
-	if (!goodbyeChannel || !goodbyeChannel.isTextBased()) return;
+	if (!goodbyeChannel?.isTextBased()) return;
 
 	const title = new TextDisplayBuilder().setContent(
 		`### Goodbye, ${member.user.username}!`,

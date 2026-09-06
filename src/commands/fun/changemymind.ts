@@ -1,11 +1,11 @@
+import { join } from "node:path";
+import { createCanvas, loadImage } from "@napi-rs/canvas";
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { GlobalFonts, createCanvas, loadImage } from "@napi-rs/canvas";
 import { getLines } from "#utils";
-import { join } from "path";
 
 const canvas = createCanvas(384, 385);
 const ctx = canvas.getContext("2d");
@@ -18,12 +18,7 @@ export async function run(
 	const text = interaction.options.getString("text");
 	if (!text) return;
 
-	const imagePath = join(
-		process.cwd(),
-		"assets",
-		"imgs",
-		"change_my_mind.jpg",
-	);
+	const imagePath = join(process.cwd(), "assets", "imgs", "change_my_mind.jpg");
 
 	const img = await loadImage(imagePath);
 

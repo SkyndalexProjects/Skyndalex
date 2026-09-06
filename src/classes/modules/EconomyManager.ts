@@ -1,6 +1,6 @@
 import type { ChatInputCommandInteraction } from "discord.js";
-import type { SkyndalexClient } from "#classes";
 import { EmbedBuilder } from "#builders";
+import type { SkyndalexClient } from "#classes";
 
 interface GambleResult {
 	isSuccess: boolean;
@@ -51,23 +51,17 @@ export class EconomyManager {
 		userId: string,
 		value: number,
 	): Promise<number> {
-		if (value > 0) {
+		if (value !== 0) {
 			const result = await client.prisma.economy.upsert({
 				where: { userId: userId },
 				update: { wallet: { increment: value } },
 				create: { userId: userId, wallet: value },
 			});
 			return result.wallet;
-		} else if (value < 0) {
-			const result = await client.prisma.economy.update({
-				where: { userId: userId },
-				data: { wallet: { decrement: Math.abs(value) } },
-			});
-			return result.wallet;
 		}
 
 		const current = await client.prisma.economy.findUnique({
-			where: { userId: userId },
+			where: { userId },
 		});
 		return current?.wallet ?? 0;
 	}
