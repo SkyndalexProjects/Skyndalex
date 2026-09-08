@@ -1,14 +1,8 @@
-import { join } from "node:path";
-import { createCanvas, loadImage } from "@napi-rs/canvas";
 import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { getLines } from "#utils";
-
-const canvas = createCanvas(384, 385);
-const ctx = canvas.getContext("2d");
 
 export async function run(
 	_client: SkyndalexClient,
@@ -18,31 +12,15 @@ export async function run(
 	const text = interaction.options.getString("text");
 	if (!text) return;
 
-	const imagePath = join(process.cwd(), "assets", "imgs", "change_my_mind.jpg");
-
-	const img = await loadImage(imagePath);
-
-	ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-	ctx.font = "20px Poppins-SemiBold";
-	ctx.fillStyle = "black";
-	ctx.textAlign = "left";
-
-	const maxWidth = 225;
-	const lineHeight = 22;
-
-	const lines = getLines(ctx, text, maxWidth);
-	let startY = 240;
-
-	for (const line of lines) {
-		ctx.fillText(line, 110, startY);
-		startY += lineHeight;
-	}
-
-	const image = await canvas.encode("png");
+	const attachment = await _client.canvas.changeMyMind.createAttachment(
+		{
+			text,
+		},
+		"quote.png",
+	);
 
 	await interaction.editReply({
-		files: [Buffer.from(image)],
+		files: [attachment],
 	});
 }
 

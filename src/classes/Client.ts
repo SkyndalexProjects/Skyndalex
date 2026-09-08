@@ -27,6 +27,9 @@ import type {
 	RadioInstanceState,
 } from "../types/index.js";
 import { ErrorHandling } from "./ErrorHandling.js";
+import { QuoteImageRenderer } from "./modules/canvas/QuoteImageRenderer.js";
+import { DailyMailRenderer } from "./modules/canvas/DailyMailRenderer.js";
+import { ChangeMyMindRenderer } from "./modules/canvas/ChangeMyMindRenderer.js";
 
 const Nodes = [
 	{
@@ -60,6 +63,11 @@ export class SkyndalexClient extends Client {
 	radioStateManager = new RadioStateManager(this);
 	radioInstances = new Map<string, RadioInstanceState>();
 	blackjackGames = new Map<string, BlackjackState>();
+	canvas = {
+		quote: new QuoteImageRenderer(),
+		dailyMail: new DailyMailRenderer(),
+		changeMyMind: new ChangeMyMindRenderer(),
+	};
 	voiceSessions = new Map<
 		string,
 		{ guildId: string; channelId: string; joinedAt: number }

@@ -1,15 +1,8 @@
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { type CanvasTextAlign, createCanvas, loadImage } from "@napi-rs/canvas";
 import {
-	AttachmentBuilder,
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
 import type { SkyndalexClient } from "#classes";
-import { getLines } from "../../utils/getLines.js";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export async function run(
 	_client: SkyndalexClient,
@@ -18,48 +11,14 @@ export async function run(
 	await interaction.deferReply();
 
 	const text = interaction.options.getString("text", true);
-	const imgPath = join(
-		__dirname,
-		"..",
-		"..",
-		"assets",
-		"imgs",
-		"daily_mail.png",
-	);
-	const img = await loadImage(imgPath);
-
-	const width = img.width;
-	const height = img.height;
-
-	const canvas = createCanvas(width, height);
-	const ctx = canvas.getContext("2d");
-
-	ctx.drawImage(img, 0, 0, width, height);
-
-	ctx.font = "24px MyriadPro";
-	ctx.textAlign = "left" as CanvasTextAlign;
-	ctx.textBaseline = "top";
-	ctx.fillStyle = "#000000";
-	ctx.strokeStyle = "#000000";
-	ctx.lineWidth = 2;
-
 	const cleanText = text.replace(/,/g, "");
 
-	const leftX = 10;
-	const maxWidth = 370;
-	const lineHeight = 28;
-
-	const lines = getLines(ctx, cleanText, maxWidth);
-	let startY = 80;
-
-	for (const line of lines) {
-		ctx.strokeText(line, leftX, startY);
-		ctx.fillText(line, leftX, startY);
-		startY += lineHeight;
-	}
-
-	const buffer = canvas.toBuffer("image/png");
-	const attachment = new AttachmentBuilder(buffer, { name: "screen.png" });
+	const attachment = await _client.canvas.dailyMail.createAttachment(
+		{
+			text: cleanText,
+		},
+		"quote.png",
+	);
 	await interaction.editReply({ files: [attachment] });
 }
 

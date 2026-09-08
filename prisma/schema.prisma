@@ -210,3 +210,14 @@ model RadioFavorites {
   @@unique([userId, provider, stationSource])
   @@index([userId])
 }
+
+model UserQuotes {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  quote     String
+  author    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
